@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Registration school fees{% endtrans %}{% endblock %}
+
+{% block subTitle %}
+    {% trans %}MANAGEMENT OF FEES PAYABLE{% endtrans %}
+{% endblock %}
+{% block infoMessage %}
+    {% include "includes/_info_message.html.twig" %}
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+
+    {{form_start(registrationHistoryForm)}}
+        <div class="row">
+            <div class="col-md-3 border-bottom-0 indigo-gradient">
+                <div class="form-group">
+                    {{form_row(registrationHistoryForm.schoolFees)}}
+                </div>
+            </div>
+            <div class="col-md-3 border-bottom-0 green-gradient">
+                <div class="form-group">
+                    {{form_row(registrationHistoryForm.apeeFees)}}
+                </div>
+            </div>
+            <div class="col-md-3 border-bottom-0 orange-gradient">
+                <div class="form-group">
+                    {{form_row(registrationHistoryForm.computerFees)}}
+                </div>
+            </div>
+            <div class="col-md-3 border-bottom-0 blue-gradient">
+                <div class="form-group">
+                    {{form_row(registrationHistoryForm.medicalBookletFees)}}
+                </div>
+            </div>
+        </div>
+        <div class="row mt-1">
+            <div class="col-md-3 border-bottom-0 blue-gradient">
+                <div class="form-group">
+                    {{form_row(registrationHistoryForm.cleanSchoolFees)}}
+                </div>
+            </div>
+            <div class="col-md-3 border-bottom-0 orange-gradient">
+                <div class="form-group">
+                    {{form_row(registrationHistoryForm.photoFees)}}
+                </div>
+            </div>
+            <div class="col-md-3 border-bottom-0 green-gradient">
+                <div class="form-group">
+                    {{form_row(registrationHistoryForm.examFees)}}
+                </div>
+            </div>
+            <div class="col-md-3 border-bottom-0 indigo-gradient">
+                <div class="form-group">
+                    {{form_row(registrationHistoryForm.stampFees)}}
+                </div>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-3">
+                 <a class="btn btn-outline-success" data-bs-toggle="tooltip" title="Gérer les frais de {{ student.fullName }}" href="{{ path('registration_schoolFees', {'slugStudent': student.slug, 'headmasterFees': headmasterFees}) }}">{% trans %}Manage{% endtrans %}</a>
+            </div>
+            <div class="col-md-6">
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7">
+                    <i class="fa fa-save"></i>
+                    {% trans %}Save modifications{% endtrans %}</button>
+            </div>
+        </div>
+
+    {{form_end(registrationHistoryForm)}}
+</div>
+{% endblock %}

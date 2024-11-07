@@ -1,0 +1,338 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Display Student{% endtrans %}{% endblock %}
+
+{% block infoMessage %}
+    {% include "includes/_info_message.html.twig" %}
+{% endblock %}
+
+{% block stylesheets %}
+	<style>
+		th,
+		tfoot {
+			font-size: 15px !important;
+			text-align: center !important;
+			font-weight: bold !important;
+			background-color: #F1F1F1 !important;
+		}
+
+		tr:hover {
+			background-color: rgba(62, 128, 235, 0.2) !important;
+			color: #3e80eb !important;
+		}
+
+        .td {
+			text-align: center !important;
+		}
+	</style>
+{% endblock %}
+
+{% block body %}
+<!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+
+    {% if is_granted('ROLE_PROVISEUR') or is_granted('ROLE_INTENDANT') or is_granted('ROLE_ADMIN') or headmasterFees == 1 %}
+        <!--Page header-->
+        <div class="page-header">
+            <div class="page-leftheader">
+                <h4 class="page-title mb-0 text-primary"><i class="fa fa-money me-2"></i>{% trans %}STUDENTS REGISTRATION MANAGMENT{% endtrans %}</h4>
+            </div>
+            <div class="page-rightheader">
+                <div class="btn-list">
+                    <a href="{{ path('registration_printSchoolFeesStatement') }}" class="btn btn-outline-primary" name="printSchoolFeesStatement" target="_blank">
+                        <i class="fa fa-print"></i>
+                        {% trans %}Print Financial Statements{% endtrans %}
+                    </a>
+
+                    <a href="{{ path('print_student_solvable_all') }}" class="btn btn-outline-primary" target="_blank"><i class="fa fa-thumbs-o-up me-2"></i>
+                        {% trans %}List of solvents{% endtrans %}
+                    </a>
+                    <a href="{{ path('print_student_insolvable_all') }}" class="btn btn-outline-danger" target="_blank"><i class="fa fa-thumbs-o-down me-2"></i>
+                        {% trans %}List of insolvents{% endtrans %}
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!--End Page header-->
+        
+     {% else %}
+        {% trans %}STUDENTS MANAGMENT{% endtrans %}
+     {% endif %}
+
+
+    <!-- Row -->
+    <div class="row mt-4">
+        <div class="col-lg-12">
+            <div class="expanel expanel-primary border-primary">
+                <div class="expanel-heading">
+                    <h3 class="expanel-title"></h3>
+                </div>
+                <div class="expanel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <form action="{{ path('registration_feesStatement', {'headmasterFees': headmasterFees}) }}" method="post">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <select class="form-control select2-show-search" data-placeholder="Choose a classroom" name="classroom" id="classroom" required="required" style="border: 1px solid #0f0;">
+                                                <option label="Choose a classroom" value="">
+                                                    {% trans %}Choose a classroom{% endtrans %}
+                                                </option>
+                                                {% if subSystem == 'Francophone / French Speaker' %}
+                                                    {% if school.education.education == 'Général' %}
+                                                        {% include "includes/_selectClassrooms.html.twig" %}
+                                                        {% else %}
+                                                            {% include "includes/_selectClassroomsTech.html.twig" %}
+                                                    {% endif %}
+                                                    {% else %}
+                                                        {% include "includes/_selectClassroomsEn.html.twig" %}
+                                                {% endif %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="displayStudents">
+                                                <i class="fa fa-list"></i>
+                                                {% trans %}Display{% endtrans %}
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <a class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="displayStudents" href="{{ path('student_saveStudent') }}">
+                                                <i class="fa fa-plus"></i>
+                                                {% trans %}Add student{% endtrans %}
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="col-md-6 text-right">
+                            <button type="button" class="btn btn-primary  mt-1 mb-1 me-3 form-control-sm">
+                                <span>{% trans %}Total effective of the establishment{% endtrans %}</span>
+                                <span class="badge bg-white text-dark rounded-pill">{{ numberOfStudentInSchool }}</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+	<!--End Row -->
+    {% if methodIsPost %} 
+        <span class="badge badge-default mt-2"> <u>NB</u> : {% trans %}All amounts are in{% endtrans %} F CFA</span>
+        <div class="card border-primary">
+            <div class="card-header">
+                <div class="col-md-4">
+                    {% if students|length > 0 %}
+                        <a href="{{ path('registration_printSchoolFeesStatement', {'slugClassroom': selectedClassroom.slug}) }}" target="_blank" class="btn btn-outline-primary btn-medium w-100 br-7" name="printSchoolFeesStatement">
+                            <i class="fa fa-print"></i>
+                        {% trans %}Print the class financial statement{% endtrans %}
+                        </a>
+                    {% endif %}
+                </div>
+                <div class="col-md-2">
+                    <a type="button" class="btn btn-primary">
+                        <span>{% trans %}Class{% endtrans %}</span>
+                        <span class="badge bg-white text-dark rounded-pill">{{ selectedClassroom.classroom }}</span>
+                    </a>
+                </div>
+                <div class="col-md-2"> 
+                    <a type="button" class="btn btn-primary">
+                        <span>{% trans %}Effective{% endtrans %}</span>
+                        <span class="badge bg-white text-dark rounded-pill">{{ students|length }}</span>
+                    </a>
+                </div>
+
+                <div class="col-md-2 text-center"> 
+                    <a href="{{ path('print_student_solvable', {'slugClassroom': selectedClassroom.slug}) }}" class="btn btn-outline-success" target="_blank">
+                        <i class="fa fa-print"></i>
+                        <span>{% trans %}Solvents{% endtrans %}</span>
+                        <i class="fa fa-smile-o"></i>
+                    </a> 
+                </div>
+               
+                <div class="col-md-2 text-right"> 
+                    <a href="{{ path('print_student_insolvable', {'slugClassroom': selectedClassroom.slug}) }}" class="btn btn-outline-danger" target="_blank">
+                        <i class="fa fa-print"></i>
+                        <span>{% trans %}Insolvents{% endtrans %}</span>
+                        <i class="fa fa-meh-o"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="card-body ">
+                {% if methodIsPost %}
+                {# <div class="row p-2">
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-primary  mt-1 mb-1 me-3 form-control-sm">
+                            <span>{% trans %}PTA{% endtrans %}</span>
+                            <span class="badge bg-white text-dark rounded-pill">{{ feesTable.apeeFees }}</span>
+                        </button>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="button" class="btn btn-primary  mt-1 mb-1 me-3 form-control-sm">
+                            <span>{% trans %}IT Fees{% endtrans %}</span>
+                            <span class="badge bg-white text-dark rounded-pill">{{ feesTable.computerFees }}</span>
+                        </button>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="button" class="btn btn-primary  mt-1 mb-1 me-3 form-control-sm">
+                            <span>{% trans %}Medical booklet{% endtrans %}</span>
+                            <span class="badge bg-white text-dark rounded-pill">{{ feesTable.medicalBookletFees }}</span>
+                        </button>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-primary  mt-1 mb-1 me-3 form-control-sm">
+                            <span>{% trans %}Clean school{% endtrans %}</span>
+                            <span class="badge bg-white text-dark rounded-pill">{{ feesTable.cleanSchoolFees }}</span>
+                        </button>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-primary  mt-1 mb-1 me-3 form-control-sm">
+                            <span>{% trans %}Photo{% endtrans %}</span>
+                            <span class="badge bg-white text-dark rounded-pill">{{ feesTable.photoFees }}</span>
+                        </button>
+                    </div>
+                
+                    {% if classroomLevel == 4 or classroomLevel == 6 or classroomLevel == 7 %}
+                        
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-primary  mt-1 mb-1 me-3 form-control-sm">
+                                <span>{% trans %}Stamp{% endtrans %}</span>
+                                <span class="badge bg-white text-dark rounded-pill">{{ feesTable.stampFees }}</span>
+                            </button>
+                        </div>
+                        
+                    {% endif %}
+                </div> #}
+
+                {% endif %}
+                <div class="table-responsive">
+                    {% if methodIsPost %}
+                    <table border="1" class="table table-striped table-bordered text-nowrap key-buttons" id="example" >
+                        <thead>
+                            <tr class="text-center">
+                                <th class="border-bottom-0 green-gradient" style="vertical-align: middle;">{% trans %}Photo{% endtrans %}</th>
+                                <th class="border-bottom-0 indigo-gradient" style="vertical-align: middle;">{% trans %}Full name{% endtrans %}</th>
+
+                                <th class="border-bottom-0 blue-gradient" style="vertical-align: middle;">{% trans %}PTA{% endtrans %}</th>
+
+                                <th class="border-bottom-0 indigo-gradient" style="vertical-align: middle;">{% trans %}IT Fees{% endtrans %}</th>
+
+                                <th class="border-bottom-0 orange-gradient" style="vertical-align: middle;">{% trans %}Booklet{% endtrans %}</th>
+
+                                <th class="border-bottom-0 blue-gradient" style="vertical-align: middle;">{% trans %}Cl Schl{% endtrans %}</th>
+
+                                <th class="border-bottom-0 indigo-gradient" style="vertical-align: middle;">{% trans %}Photo{% endtrans %}</th>
+
+                                <th class="border-bottom-0 green-gradient" style="vertical-align: middle;">{% trans %}State{% endtrans %}</th>
+                                <th class="border-bottom-0 orange-gradient" style="vertical-align: middle;">{% trans %}Actions{% endtrans %}</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr class="text-center">
+                                <th class="border-bottom-0 green-gradient" style="vertical-align: middle;">{% trans %}Photo{% endtrans %}</th>
+                                <th class="border-bottom-0 indigo-gradient" style="vertical-align: middle;">{% trans %}Full name{% endtrans %}</th>
+
+                                <th class="border-bottom-0 blue-gradient" style="vertical-align: middle;">{% trans %}PTA{% endtrans %}</th>
+
+                                <th class="border-bottom-0 indigo-gradient" style="vertical-align: middle;">{% trans %}IT Fees{% endtrans %}</th>
+
+                                <th class="border-bottom-0 orange-gradient" style="vertical-align: middle;">{% trans %}Booklet{% endtrans %}</th>
+
+                                <th class="border-bottom-0 blue-gradient" style="vertical-align: middle;">{% trans %}Cl Schl{% endtrans %}</th>
+
+                                <th class="border-bottom-0 indigo-gradient" style="vertical-align: middle;">{% trans %}Photo{% endtrans %}</th>
+
+                                <th class="border-bottom-0 green-gradient" style="vertical-align: middle;">{% trans %}State{% endtrans %}</th>
+                                <th class="border-bottom-0 orange-gradient" style="vertical-align: middle;">{% trans %}Actions{% endtrans %}</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% for registrationHistory in registrationHistories %}
+                                {% set student = registrationHistory.student %}
+                                {% set registrations = registrationHistory.registration %}
+
+                                {# {% set registration = student.registration ? student.registration : emptyRegistration %} #}
+                                {% set totalApeeFees = 0 %}
+                                {% set totalComputerFees = 0 %}
+                                {% set totalMedicalBookletFees = 0 %}
+                                {% set totalCleanSchoolFees = 0 %}
+                                {% set totalPhotoFees = 0 %}
+
+                                {% for registration in registrations %}
+                                    {% set totalApeeFees = totalApeeFees + registration.apeeFees %}
+
+                                    {% set totalComputerFees = totalComputerFees + registration.computerFees %}
+
+                                    {% set totalMedicalBookletFees = totalMedicalBookletFees + registration.medicalBookletFees %}
+
+                                    {% set totalCleanSchoolFees = totalCleanSchoolFees + registration.cleanSchoolFees %}
+
+                                    {% set totalPhotoFees = totalPhotoFees + registration.photoFees %}
+                                {% endfor %}
+
+                                <tr class="table-subheader">
+                                    <td><img src="{{ student.photo ? asset('images/students/' ~ student.photo) : asset('images/students/defaultPhoto.jpg')}}" alt="photo" width="50" height="60"></td>
+                                    
+                                    <td style="vertical-align: middle;">
+                                        {{ student.fullName }}
+                                    </td>
+
+                                    <td style="vertical-align: middle;" class="td">
+                                    {{ totalApeeFees }} / {{ feesTable.apeeFees }}</td>
+
+                                    <td style="vertical-align: middle;" class="td">{{ totalComputerFees }} / {{ feesTable.computerFees }}</td>
+
+                                    <td style="vertical-align: middle;" class="td">{{ totalMedicalBookletFees }} / {{ feesTable.medicalBookletFees }}</td>
+
+                                    <td style="vertical-align: middle;" class="td">{{ totalCleanSchoolFees }} / {{ feesTable.cleanSchoolFees }}</td>
+
+                                    <td style="vertical-align: middle;" class="td">{{ totalPhotoFees }} / {{ feesTable.photoFees }}</td>
+
+                                    <td style="vertical-align: middle;" class="td">
+                                        {% set totalAvance = totalApeeFees + totalComputerFees + totalMedicalBookletFees + totalCleanSchoolFees + totalPhotoFees %}
+
+                                        {% set totalFees = feesTable.apeeFees + feesTable.computerFees + feesTable.medicalBookletFees + feesTable.cleanSchoolFees + feesTable.photoFees %}
+
+                                        {% if totalFees - totalAvance == 0 %}
+                                            <span class="badge badge-gradient-success mt-2">Paid</span>
+                                            {% else %}
+                                                <span class="badge badge-gradient-danger mt-2">Not Paid</span>
+                                        {% endif %}
+                                    </td>
+
+                                    <td style="vertical-align: middle;">
+                                        <div class="btn-group">
+                                            <a href="javascript:void(0);" class="btn btn-light btn-sm" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options <i class="fa fa-angle-down"></i></a>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="{{ path('print_quitus', {'slugStudent': student.slug}) }}" target="_blank"><i class="fe fe-printer me-2"></i> {% trans %}Quitus{% endtrans %}</a>
+
+                                                <a class="dropdown-item" href="{{ path('registration_printStudentFeesHistory', {'slugStudent': student.slug}) }}" target="_blank"><i class="fe fe-printer me-2"></i> {% trans %}Payment history{% endtrans %}</a>
+
+                                                <a class="dropdown-item" href="{{ path('registration_printPaymentReceipt', {'slugStudent': student.slug}) }}"  target="_blank"><i class="fe fe-printer me-2"></i> {% trans %}Payment receipt{% endtrans %}</a>
+
+                                                <a class="dropdown-item" href="{{ path('registration_schoolFees', {'slugStudent': student.slug, 'headmasterFees': headmasterFees}) }}"><i class="fe fe-edit me-2"></i> {% trans %}To manage{% endtrans %}</a>
+                                            </div>
+                                        </div>
+                                        
+                                    </td>
+                                    
+                                </tr>
+                                
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

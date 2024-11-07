@@ -1,0 +1,450 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Note entry{% endtrans %}{% endblock %}
+
+{% block subTitle %}
+    {% trans %}NOTE MANAGEMENT{% endtrans %}
+    {% if is_granted ('ROLE_ADMIN') %}
+         {% trans %}OF{% endtrans %} [ {{teacher.fullName }} ]
+    {% endif %}
+{% endblock %}
+{% block infoMessage %}
+    {% include "includes/_info_message.html.twig" %}
+{% endblock %}
+
+{% block currentUser %}
+    {{teacher.fullName }}
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        input{
+            background-color: rgba(62, 128, 235, 0.2) !important;
+            color: #3e80eb !important;
+        }
+        th{
+            text-align: center !important;
+            font-weight : bold !important;
+            background-color: rgba(200,200, 200, 0.2) !important;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+  <!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+        
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary"><i class="fe fe-edit me-2"></i> {% trans %}Mark recorder{% endtrans %} - {{ teacher.fullName }}</h4>
+                </div>
+                <div class="page-rightheader">
+                    <div class="btn-list">
+                        
+                    </div>
+                </div>
+            </div>
+            <!--End Page header-->
+            <div class="card border-primary">
+                <div class="card-header pt-5">
+                    <div class="col-md-12">
+                        <form action="{{ path('evaluation_markRecorder', {'slugTeacher': teacher.slug}) }}" method="post">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <select name="sequence" id="sequence" class="form-control select2 custom-select" data-placeholder="Choisir une période" required="required">
+                                            <option label="Choisir une période"></option>
+                                            {% for sequence in sequences %}
+                                                <option value="{{sequence.id}}" 
+                                                {% if selectedSequence is defined %}
+                                                    {% if selectedSequence.id == sequence.id %}
+                                                        selected
+                                                    {% endif %}
+                                                {% endif %}
+                                                >
+                                                {% trans %}Evaluation{% endtrans %} {{sequence.sequence}}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group" >
+                                        <select name="lesson" id="lesson" class="form-control select2 custom-select" data-placeholder="Choisir un cours" required="required">
+                                            <option label="Choisir un cours"></option>
+                                                {% for lesson in lessons %}
+                                                    <option value="{{lesson.id}}"
+                                                    {% if selectedLesson is defined %}
+                                                        {% if selectedLesson.id == lesson.id %}
+                                                            selected
+                                                        {% endif %}
+                                                    {% endif %}
+                                                    >
+                                                        {{lesson.subject.subject}} --- {{lesson.classroom.classroom}}
+                                                    </option>
+                                                {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="displayMarkRecorder">
+                                            <i class="fa fa-eye"></i>
+                                            {% trans %}Display{% endtrans %}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {% if selectedSequence is defined %}
+                                    {% if not is_granted('ROLE_ADMIN') %}
+                                        {% if evaluations|length > 0  and evaluationToUpdate == null and skillToUpdate == null %}
+                                            {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+                                                <div class="col-md-4" style="vertical-align:middle;">
+
+                                                    <a class="btn btn-outline-danger btn-medium w-100 br-7" href="javascript:void(0);" 
+                                                        onclick="swal({
+                                                            'title': '{% trans %}Warning !{% endtrans %}', 
+                                                            'type': 'warning', 
+                                                            'text': '{% trans %}Do you want to delete assessment ?{% endtrans %}', 
+                                                            'showCancelButton': true, 
+                                                            'confirmButtonText': '{% trans %}YES{% endtrans %}', 
+                                                            'confirmButtonColor': '#f00', 
+                                                            'cancelButtonText': '{% trans %}NO{% endtrans %}', 
+                                                            'cancelButtonColor': '#207C08', 
+                                                            'confirmButtonPath': '{{ path('evaluation_markRecorder', {'slugTeacher': teacher.slug, 'deleteAllMarks': 1, 'sequenceSelectionnee': selectedSequence.sequence, 'lessonSelectionnee': selectedLesson.id }) }} '});">
+                                                        <i class="fa fa-trash me-2"></i>
+                                                        {% trans %}Delete assessment N° {% endtrans %} {{ selectedSequence.sequence }}
+                                                            
+                                                    </a>
+                                                    
+                                                </div>
+                                            {% endif %}
+                                        {% endif %}
+                                        {% if evaluations|length == 0 %}
+                                            <div class="col-md-2 text-right">
+                                                <form action="{{ path('evaluation_markRecorder', {'slugTeacher': teacher.slug}) }}" method="POST" onreset="return confirm('{% trans %}Do you want to reset all typed marks ?{% endtrans %}')">  
+                                                    <input type="hidden" name="numberOfStudents" value="{{ students|length }}">
+                                                    <input type="hidden" name="sequence" value="{{ selectedSequence.id }}">
+                                                    <input type="hidden" name="lesson" value="{{ selectedLesson.id }}">
+
+                                                    <button type="submit" class="btn btn-outline-danger btn-medium w-100 br-7" name="saveNotEvaluatedMark">
+                                                        <i class="si si-close"></i> {% trans %}Not assessed{% endtrans %}
+                                                    </button>
+                                                </form>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button type="button" class="btn btn-primary mb-1 me-3">
+                                                    <span>{% trans %}Effective{% endtrans %}</span>
+                                                    <span class="badge bg-white text-dark rounded-pill">{{ students|length }}</span>
+                                                </button>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% if selectedSequence is defined %}
+                <div class="card border-primary">
+                        
+                    {% if not is_granted('ROLE_ADMIN') %}
+                        {% if evaluations|length > 0  and evaluationToUpdate == null and skillToUpdate == null %}
+                            {# Si les notes sont déjà saisies #}
+                            {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+                                {# Si le verrou n'est pas activé #}
+                                <div class="card-header pt-5">
+                                    <div class="col-md-8">
+                                        <form action="{{ path('evaluation_markRecorder', {'slug': teacher.slug}) }}" method="post">
+                                            <input type="hidden" name="sequence" value="{{ selectedSequence.id }}">
+                                            <input type="hidden" name="lesson" value="{{ selectedLesson.id }}">
+                                            <div class="row mt-1">
+                                                <div class="col-md-6">
+                                                    <button type="button" class="btn btn-primary mb-1">
+                                                        <span>{% trans %}Recontribute the marks to this evaluation{% endtrans %}</span>
+                                                        <span class="badge bg-white text-dark"><i class="fa fa-fw fa-hand-o-right" style="color: #007f7f;"></i></span>
+                                                    </button>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <select name="newSequence" id="sequence" class="form-control select2 custom-select" required="required">
+                                                        <option value="">{% trans %}Choose{% endtrans %}</option>
+
+                                                        {% for sequence in sequences %}
+                                                            {% if sequence.sequence > selectedSequence.sequence %}
+                                                                <option value="{{ sequence.id }}">
+                                                                {% trans %}Evaluation{% endtrans %} {{ sequence.sequence }}
+                                                                </option>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="renewMark">
+                                                        <i class="fa fa-arrow-right"></i>
+                                                        {% trans %}Renew{% endtrans %}
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                    
+                    <div class="card-body">
+                        {% if selectedSequence is defined %}
+                            {% if students|length > 0 %}
+                                {# affichage de la liste des elèves #}
+                                {% if evaluationToUpdate == null and skillToUpdate == null %}
+                                    {% if evaluations|length > 0 %}
+                                        {# affichage de la liste des elèves si les notes existent déjà #}
+                                        <div class="row mb-5">
+                                            <div class="col-md-2 text-right mt-1">
+                                                <h3 class="text-blue"><span class="badge bg-primary"><b>{% trans %}Target skill{% endtrans %}</b> </span></h3>
+                                            </div>
+                                            <div class="col-md-8">
+                                                {# <input type="text" readonly="readonly" value="{{ skill.skill }}"  class="form-control" > #}
+                                                <input type="text" readonly="readonly" value="{{ skill ? skill.skill : '//'}}"  class="form-control" >
+                                            </div>
+                                            <div class="col-md-2">
+                                                {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+                                                    <form action="{{ path('evaluation_markRecorder', { 'slugTeacher': teacher.slug }) }}" method="post">
+                                                        <input type="hidden" name="sequence" value="{{ selectedSequence.id }}">
+                                                        <input type="hidden" name="lesson" value="{{ selectedLesson.id }}">
+                                                        <input type="hidden" name="oldSkill" value="{{ skill ? skill.skill : "//" }}">
+
+                                                        <button type="submit" class="btn btn-outline-primary" data-bs-toggle="tooltip" title="Modifier la compétence visée" name="skillToUpdate">
+                                                            <i class="fa fa-pencil-square-o"></i>
+                                                        </button>
+                                                </form>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <table border="1" class="table table-striped" border="2" id="dataTable" width="100%" cellspacing="0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="border-bottom-0 indigo-gradient">{% trans %}N°{% endtrans %}</th>
+                                                            <th class="border-bottom-0 green-gradient">{% trans %}Full name{% endtrans %}</th>
+                                                            <th class="border-bottom-0 orange-gradient">{% trans %}Note/20{% endtrans %}</th>
+                                                            <th class="border-bottom-0 blue-gradient">{% trans %}Actions{% endtrans %}</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <th class="border-bottom-0 indigo-gradient">{% trans %}N°{% endtrans %}</th>
+                                                            <th class="border-bottom-0 green-gradient">{% trans %}Full name{% endtrans %}</th>
+                                                            <th class="border-bottom-0 orange-gradient">{% trans %}Note/20{% endtrans %}</th>
+                                                            <th class="border-bottom-0 blue-gradient">{% trans %}Actions{% endtrans %}</th>
+                                                        </tr>
+                                                    </tfoot>
+                                                    {% set i = 1 %}
+                                                    {% for evaluation in evaluations %}
+                                                        <tr class="table-row">
+                                                            {# <td>
+                                                                <input type="hidden" name="student{{i}}" value="{{ evaluation.student.id }}">
+                                                            </td> #}
+                                                            <td style="text-align: center; vertical-align:middle;">{{ i }}</td>
+                                                            <td style="vertical-align:middle;">
+                                                                {{ evaluation.student.fullName }}
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" name="mark{{i}}" readonly="readonly" class="form-control"
+                                                                    {% if evaluation.mark == unrankedMark %}
+                                                                        value="/"
+                                                                    {% else %}
+                                                                        value="{{ evaluation.mark }}"
+                                                                    {% endif %}
+                                                                >
+                                                            </td>
+                                                            {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+                                                                <td style="text-align: center; vertical-align:middle;">
+                                                                    <form action="{{ path('evaluation_markRecorder', {'slugTeacher': teacher.slug}) }}" method="post">
+                                                                        <input type="hidden" name="evaluation" value="{{ evaluation.id }}">
+                                                                        <input type="hidden" name="lesson" value="{{ selectedLesson.id }}">
+                                                                        <input type="hidden" name="sequence" value="{{ selectedSequence.id }}">
+
+                                                                        <button type="submit" class="btn btn-outline-primary" data-bs-toggle="tooltip" title="Modifier la note de {{ evaluation.student.fullName }}" name="markToUpdate">
+                                                                            <i class="fa fa-pencil-square-o"></i>
+                                                                        </button>
+
+                                                                    </form>
+                                                                </td>
+                                                            {% endif %}
+                                                        </tr>
+                                                        {% set i = i+1 %}
+                                                    {% endfor %}
+                                                </table>
+                                            </div>
+                                        </div>
+                                        {# fin affichage de la liste des elèves si les notes existent deja #}
+                                    {% else %}
+                                        {# affichage de la liste des elèves si les notes n'existent pas encore #}
+                                        {% if not is_granted('ROLE_ADMIN') %}
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+                                                    <form action="{{ path('evaluation_markRecorder', {'slugTeacher': teacher.slug}) }}" method="POST" onreset="return confirm('Do you want to reset all typed marks ?')">  
+                                                        <input type="hidden" name="numberOfStudents" value="{{ students|length }}">
+                                                        <input type="hidden" name="sequence" value="{{ selectedSequence.id }}">
+                                                        <input type="hidden" name="lesson" value="{{ selectedLesson.id }}">
+                                                        <div class="row mb-5">
+                                                            {% if skill is not null %}
+                                                            <div class="col-md-2 text-left mt-1">
+                                                                <h3 class="text-blue"><span class="badge bg-primary"><b>{% trans %}Target skill{% endtrans %}</b> </span></h3>
+                                                            </div>
+                                                            <div class="col-md-10">
+                                                                {# {{ skill.skill }}  #}
+                                                                <input type="text" readonly="readonly" value="{{ skill.skill }}"  class="form-control" >
+                                                            </div>
+                                                            {% else %}
+                                                            <div class="col-md-2 text-right mt-1">
+                                                                <label for="skill">
+                                                                    <h3 class="text-blue"><span class="badge bg-primary"><b>{% trans %}Target skill{% endtrans %}</b> </span></h3>
+                                                                    
+                                                                </label>
+                                                            </div>
+                                                            <div class="col-md-10">
+                                                                <input type="text" name="skill" id="skill" class="form-control" required autofocus>
+                                                            </div>
+                                                                
+                                                            {% endif %}
+
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <table border="1" class="table table-striped text-left" border="2">
+                                                                    <thead>
+                                                                    <tr>
+                                                                        <th class="border-bottom-0 indigo-gradient">{% trans %}N°{% endtrans %}</th>
+                                                                        <th class="border-bottom-0 green-gradient" colspan="2">{% trans %}Full name{% endtrans %}</th>
+                                                                        <th class="border-bottom-0 orange-gradient">{% trans %}Note/20{% endtrans %}</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tfoot>
+                                                                    <tr>
+                                                                        <th class="border-bottom-0 indigo-gradient">{% trans %}N°{% endtrans %}</th>
+                                                                        <th class="border-bottom-0 green-gradient" colspan="2">{% trans %}Full name{% endtrans %}</th>
+                                                                        <th class="border-bottom-0 orange-gradient">{% trans %}Note/20{% endtrans %}</th>
+                                                                    </tr>
+                                                                </tfoot>
+                                                                {% set i = 1 %}
+                                                                {% for student in students %}
+                                                                    <tr class="table-row">
+                                                                        <td style="text-align:center !important; vertical-align: middle !important;">{{ i }}</td>
+                                                                        <td style="text-align:center !important; vertical-align: middle !important;">
+                                                                            <input type="hidden" name="student{{i}}" value="{{ student.id }}">
+                                                                        </td>
+                                                                        <td style="vertical-align: middle !important;">
+                                                                            {{ student.fullName }}
+                                                                        </td>
+                                                                        <td style="text-align:center !important; vertical-align: middle !important;">
+                                                                            <input type="number" name="mark{{i}}" required="required" min="0" max="20" step="0.01" class="form-control">
+                                                                                
+                                                                        </td>
+                                                                    </tr>
+                                                                    {% set i = i+1 %}
+                                                                {% endfor %}
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-3">
+                                                                <button type="reset" class="btn btn-outline-danger btn-medium w-100 br-7">
+                                                                    <i class="fa fa-eraser"></i>
+                                                                    {% trans %}Erase everything{% endtrans %}
+                                                                </button>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="saveMark" id="soumission" onclick='btnSoumission(soumission)'>
+                                                                    <i class="fe fe-save"></i> {% trans %}Save{% endtrans %}
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                    {% else %}
+                                                    {% trans %}Access denied. The entry of grades counting for this quarter is locked{% endtrans %}
+                                                {% endif %}
+                                                
+                                                </div>
+                                            </div>
+                                        {% else %}
+                                            <div class="row">
+                                                <div class="col-md-12 text-center">
+                                                    {% trans %}These notes are not yet entered by the teacher{% endtrans %}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        
+                                    {% endif %}
+                                    {# fin affichage de la liste des elèves si les notes n'existent pas encore #}
+                                {% elseif skillToUpdate != null %}
+                                    {# affichage du formulaire de modification de la compétence #}
+                                    {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+                                        <form action="{{ path('evaluation_markRecorder', {'slugTeacher': teacher.slug}) }}" method="post">
+                                            <input type="hidden" name="sequence" value="{{ selectedSequence.id }}">
+                                            <input type="hidden" name="lesson" value="{{ selectedLesson.id }}">
+                                            <input type="hidden" name="oldSkillId" value="{{ skillToUpdate.id }}">
+
+                                            <div class="row mb-5">
+                                                <div class="col-md-2 text-right mt-1">
+                                                    <h3 class="text-blue"><span class="badge bg-primary"><b>{% trans %}Target skill{% endtrans %}</b> </span></h3>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <input type="text" name="newSkill" value="{{ skillToUpdate.skill }}" class="form-control">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="updateSkill">
+                                                        <i class="fa fa-save"></i>
+                                                        {% trans %}Save Changes{% endtrans %}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    {% endif %}
+                                    {# fin affichage du formulaire de modification de la compétence #}
+                                {% else %}
+                                    {# affichage du formulaire de modification d'une note #}
+                                    {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+                                        <form action="{{ path('evaluation_markRecorder', {'slugTeacher': teacher.slug}) }}" method="post">
+                                            <input type="hidden" name="lesson" value="{{ selectedLesson.id }}">
+                                            <input type="hidden" name="sequence" value="{{ selectedSequence.id }}">
+                                            <input type="hidden" name="evaluationToUpdate" value="{{ evaluationToUpdate.id }}">
+                                            <div class="row mb-5 mt-5">
+                                                <div class="col-md-6 text-right mt-2">
+                                                    <h4 class="text-blue"><span class="badge bg-primary">{{ evaluationToUpdate.student.fullName }}</span></h4>
+                                                    
+                                                </div>
+                                                <div class="col-md-2 text-left">
+                                                    <input type="number" name="mark" required="required" min="0" max="20" step="0.01" value="{{ evaluationToUpdate.mark }}" class="form-control">
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="updateMark">
+                                                        <i class="fa fa-save me-2"></i>
+                                                        {% trans %}Save Changes{% endtrans %}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    {% endif %}
+                                    {# fin affichage du formulaire de modification d'une note #}
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

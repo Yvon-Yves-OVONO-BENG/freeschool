@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+	<head>
+		<!-- Meta data -->
+		<meta charset="UTF-8">
+		<meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=0'>
+		<meta content="Freeschool - Application complète de gestions scolaire" name="description">
+		<meta content="Spruko Private Limited" name="author">
+		<meta name="keywords" content="admin, admin template, dashboard, admin dashboard, responsive, bootstrap, bootstrap 5, admin theme, admin themes, bootstrap admin template, scss, ui, crm, modern, flat">
+
+		<!-- Title -->
+		<title>{% block title %}{% endblock %}</title>
+
+		<!--Favicon -->
+		<link rel="icon" href="{{asset('build/custom2/images/brand/favicon.png')}}" type="image/x-icon"/>
+
+		<!--Bootstrap css -->
+		<link href="{{asset('build/custom2/plugins/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+
+		<!-- Style css -->
+		<link href="{{asset('build/custom2/css/style.css')}}" rel="stylesheet" />
+		<link href="{{asset('build/custom2/css/dark.css')}}" rel="stylesheet" />
+		<link href="{{asset('build/custom2/css/skin-modes.css')}}" rel="stylesheet" />
+
+		<!-- Animate css -->
+		<link href="{{asset('build/custom2/css/animated.css')}}" rel="stylesheet" />
+
+		<!-- P-scroll bar css-->
+		<link href="{{asset('build/custom2/plugins/p-scrollbar/p-scrollbar.css')}}" rel="stylesheet" />
+
+		<!---Icons css-->
+		<link href="{{asset('build/custom2/css/icons.css')}}" rel="stylesheet" />
+
+		<!-- Simplebar css -->
+		<link rel="stylesheet" href="{{asset('build/custom2/plugins/simplebar/css/simplebar.css')}}">
+
+		<!-- INTERNAL Select2 css -->
+		<link href="{{asset('build/custom2/plugins/select2/select2.min.css')}}" rel="stylesheet" />
+
+	    <!-- Color Skin css -->
+		<link id="theme" href="{{asset('build/custom2/colors/color1.css')}}" rel="stylesheet" type="text/css"/>
+		<!--- INTERNAL Sweetalert css-->
+		<link href="{{ asset ('build/custom2/plugins/sweet-alert/jquery.sweet-modal.min.css')}}" rel="stylesheet" />
+		<link href="{{ asset ('build/custom2/plugins/sweet-alert/sweetalert.css')}}" rel="stylesheet" />
+
+
+		{% block stylesheets %}{% endblock %}
+
+	</head>
+
+	<body class="bg-primary register-2">
+		{# On recupère la session #}
+		{% set mySession = app.session.get('mySession') %}
+		{% set currentSchoolYear = "Since 2019" %}
+		{% set schoolName = "FREESCHOOL" %}
+
+		{% set currentUser = app.user %}
+
+		{% if mySession is not null %}
+			{# On recupère l'année en cours dans la session #}
+			{% if mySession.schoolYear is not null %}
+				{% set currentSchoolYear = mySession.schoolYear.schoolYear %}
+			{% endif %}
+			{# On recupère le nom de l'établissement francophone ou anglophone #}
+			{% if  mySession.school is not null %}
+				{% if app.request.locale == 'fr' %}
+					{% set schoolName = mySession.school.frenchName %}
+					{% elseif app.request.locale == 'en' %}
+					{% set schoolName = mySession.school.englishName %}
+				{% endif %}
+				
+			{% endif %}
+		{% endif %}
+
+		<!---Global-loader-->
+		<div id="global-loader" >
+			<img src="{{asset('build/custom2/images/svgs/loader3.svg')}}" alt="loader" style="width: 74px; height: 74px;">
+		</div>
+		<!--- End Global-loader-->
+
+		<div class="box">
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+		</div>
+		<!-- Page -->
+		<div class="page">
+			<div class="page-main">
+
+				<!-- App-Content -->
+				<div class="hor-content main-content">
+					<div class="container">
+
+						<!--Page header-->
+						<div class="page-header">
+							<div class="page-leftheader">
+								<h4 class="page-title mb-0 text-primary">{% block subTitle %}{% endblock %}</h4>
+							</div>
+							<div class="page-rightheader">
+								{% block infoMessage %}{% endblock %}
+							</div>
+						</div>
+						<!--End Page header-->
+
+						<!-- children body -->
+						{% block body %}{% endblock %}
+						<!-- End children body  -->
+
+		<!-- End Page -->
+		
+			</div>
+		</div>
+
+		<!-- Jquery js-->
+		<script src="{{asset('build/custom2/js/jquery.min.js')}}"></script>
+
+		<!-- Bootstrap5 js-->
+		<script src="{{asset('build/custom2/plugins/bootstrap/popper.min.js')}}"></script>
+		<script src="{{asset('build/custom2/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
+
+		<!--Othercharts js-->
+		<script src="{{asset('build/custom2/plugins/othercharts/jquery.sparkline.min.js')}}"></script>
+
+		<script src="{{asset('build/custom2/js/apexcharts.js')}}"></script>
+
+		<!--INTERNAL Moment js-->
+		<script src="{{asset('build/custom2/plugins/moment/moment.js')}}"></script>
+
+		<!--Custom scripts for this page-->
+		{# <script src="{{asset('build/custom2/vendor/sb-admin-datatables.min.js')}}"></script> #}
+		
+		<!-- INTERNAL Select2 js -->
+		<script src="{{asset('build/custom2/plugins/select2/select2.full.min.js')}}"></script>
+		<script src="{{asset('build/custom2/js/select2.js')}}"></script>
+
+		<!-- Simplebar JS -->
+		<script src="{{asset('build/custom2/plugins/simplebar/js/simplebar.min.js')}}"></script>
+
+		<!-- Rounded bar chart js-->
+		<script src="{{asset('build/custom2/js/rounded-barchart.js')}}"></script>
+
+		<!-- Custom js-->
+		<script src="{{asset('build/custom2/js/custom.js')}}"></script>
+
+		<!-- Show Password -->
+		<script src="{{asset('build/custom2/js/bootstrap-show-password.min.js')}}"></script>
+
+		<!--Form Validations js-->
+		<script src="{{asset('build/custom2/js/form-vallidations.js')}}"></script>
+		
+		<script src="{{ asset ('build/custom2/js/circle-progress.min.js')}}"></script>
+		<!-- INTERNAL Sweet alert js -->
+		<script src="{{ asset ('build/custom2/plugins/sweet-alert/jquery.sweet-modal.min.js')}}"></script>
+		<script src="{{ asset ('build/custom2/plugins/sweet-alert/sweetalert.min.js')}}"></script>
+		<script src="{{ asset ('build/custom2/js/sweet-alert.js')}}"></script>
+		
+
+		{# Script qui efface les messages d'information après 5 secondes #}
+		<script>
+			setTimeout(() => {
+				const infoMessages = document.querySelectorAll(".infoMessage");
+				for (let index = 0; index < infoMessages.length; index++) {
+					infoMessages[index].style.display = "none";
+				}
+			}, 20000);
+		</script>
+
+		{% block javascripts %}{% endblock %}
+	</body>
+</html>

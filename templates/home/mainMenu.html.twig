@@ -1,0 +1,103 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Main menu{% endblock %}
+
+{% block stylesheets %}
+	<link href="{{ asset ('build/custom2/iconfonts/feather/feather.css')}}" rel="stylesheet"/>
+	<link rel="stylesheet" href="{{ asset ('build/custom2/plugins/notify/css/notifIt.css')}}">
+{% endblock %}
+
+{% block body %}
+
+{% for message in app.flashes('info')  %}
+	{# <div class="alert alert-danger">{{ message }}</div> #}
+    <div class="alert alert-success" role="alert">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true">×</button>
+		<i class="fa fa-check-circle-o me-2" aria-hidden="true"></i>{{ message }}
+    </div>										
+	<!-- NOTIFICATIONS js-->
+	{# <script src="{{ asset ('build/custom2/js/notifications.js')}}"></script> #}
+
+	<!-- INTERNAL Notifications js -->
+	{# <script src="{{ asset ('build/custom2/plugins/notify/js/rainbow.js')}}"></script>
+	<script src="{{ asset ('build/custom2/plugins/notify/js/sample.js')}}"></script>
+	<script src="{{ asset ('build/custom2/plugins/notify/js/notifIt.js')}}"></script>
+	<script>
+		notif({
+				type: "success",
+				msg: "<b>{{ message }}</b>",
+				position: "center",
+				width: 500,
+				height: 60,
+				autohide: true
+			});
+	</script> #}
+
+{% endfor %}
+
+ <!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary">
+                        <i class="fe fe-grid me-2"></i> {% trans %}MAIN MENU{% endtrans %}
+                    </h4>
+                </div>
+                <div class="page-rightheader">
+                    <div class="btn-list">
+                        <a class="btn btn-outline-primary btn-medium w-100 br-7" href="{{ path('home_chooseSchoolYear') }}" style="font-size: 1rem;">
+                            <i class="fa fa-calendar"></i>
+                            {% trans %}Change school year{% endtrans %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!--End Page header-->
+            <!--Row-->
+            <div  class="row" style="margin-top: 20px !important;">
+                <div class="col-md-12">
+                    <div class="card border-primary">
+                        <div class="card-body">
+                            <div class="btn-list">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <a href="{{ path('login', {'duty': headmasterDuty}) }}" class="btn btn-outline-primary btn-lg btn-block"><i class="fa fa-user-circle-o me-2"></i> {% trans %}Headmaster{% endtrans %}</a>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <a href="{{ path('login') }}" class="btn btn-outline-primary btn-lg btn-block"><i class="fe fe-users me-2"></i> {% trans %}Administrators{% endtrans %}</a>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <a href="{{ path('login', {'duty': censorDuty}) }}" class="btn btn-outline-primary btn-lg btn-block"><i class="fe fe-users me-2"></i> {% trans %}Vice-Principal{% endtrans %}</a>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <a href="{{ path('login', {'duty': supervisorDuty}) }}" class="btn btn-outline-primary btn-lg btn-block"><i class="fe fe-users me-2"></i>  {% trans %}Sen. Dis. Master{% endtrans %}</a>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 50px !important;">
+                                    <div class="col-md-3">
+                                        <a href="{{ path('login', {'duty': teacherDuty}) }}" class="btn btn-outline-primary btn-lg btn-block"><i class="fa fa-users me-2"></i> {% trans %}Teachers{% endtrans %}</a>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <a  href="{{ path('login', {'duty': apDuty}) }}" class="btn btn-outline-primary btn-lg btn-block"><i class="fa fa-users me-2"></i> {% trans %}Educational facilitators{% endtrans %}</a>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <a href="{{ path('login', {'duty': treasurerDuty}) }}" class="btn btn-outline-primary btn-lg btn-block"><i class="fe fe-user me-2"></i> {% trans %}Bursar/Steward{% endtrans %}</a>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <a href="{{ path('login', {'duty': secretaryDuty}) }}" class="btn btn-outline-primary btn-lg btn-block"><i class="fa fa-users me-2"></i> {% trans %}Secretaries{% endtrans %}</a>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

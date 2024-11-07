@@ -1,0 +1,153 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}My planned number of lessons{% endtrans %}{% endblock %}
+
+{% block infoMessage %}
+    {% include "includes/_info_message.html.twig" %}
+{% endblock %}
+
+{% block currentUser %}
+    {{teacher.fullName }}
+{% endblock %}
+
+{% block body %}
+<!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+        
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary">
+                        <i class="fe fe-book me-2"></i> {% trans %}DISPLAY LESSON PLANNED{% endtrans %}
+                    </h4>
+                </div>
+				<div class="page-rightheader">
+                    <div class="btn-list">
+                        <a href="{{ path('print_progress_tracking_sheet', {'slugTeacher': app.user.teacher.slug}) }}" target="_blank" class="btn btn-outline-primary">
+							<i class="fa fa-print me-2"></i>
+							{% trans %}Print my progress tracking sheet{% endtrans %}
+						</a>
+                    </div>
+                </div>
+            </div>
+
+					<!-- Row -->
+					<div class="row">
+						<div class="col-12">
+							<!--div-->
+							<div class="card border-primary">
+								<div class="card-header">
+									<div class="col-md-8">
+										<div class="card-title"><i class="fe fe-book-open me-2"></i> {% trans %}Number of planned lessons{% endtrans %}</div>
+									</div>
+									{# <div class="col-md-4 text-right">
+										<a href="{{ path('save_lesson_plain', {'slugTeacher': app.user.teacher.slug }) }}" class="btn btn-outline-primary">
+											<i class="fa fa-plus me-2"></i>
+											{% trans %}Add Number of lessons planned{% endtrans %}
+										</a>
+									</div> #}
+								</div>
+								<div class="card-body">
+									<div class="">
+										<div class="table-responsive">
+											<table border="1" class="table table-bordered text-nowrap table-striped" id="example2">
+												<thead>
+													<tr>
+														<th class="border-bottom-0">{% trans %}Classroom{% endtrans %}</th>
+														<th class="border-bottom-0">{% trans %}Subject{% endtrans %}</th>
+														<th class="border-bottom-0">Sequence 1 </th>
+														<th class="border-bottom-0">Sequence 2 </th>
+														<th class="border-bottom-0">Sequence 3 </th>
+														<th class="border-bottom-0">Sequence 4 </th>
+														<th class="border-bottom-0">Sequence 5 </th>
+														<th class="border-bottom-0">Sequence 6 </th>
+														<th class="border-bottom-0">{% trans %}Options{% endtrans %} </th>
+													</tr>
+												</thead>
+												<tfoot>
+													<tr>
+														<th class="border-bottom-0">{% trans %}Classroom{% endtrans %}</th>
+														<th class="border-bottom-0">{% trans %}Subject{% endtrans %}</th>
+														<th class="border-bottom-0">Sequence 1 </th>
+														<th class="border-bottom-0">Sequence 2 </th>
+														<th class="border-bottom-0">Sequence 3 </th>
+														<th class="border-bottom-0">Sequence 4 </th>
+														<th class="border-bottom-0">Sequence 5 </th>
+														<th class="border-bottom-0">Sequence 6 </th>
+														<th class="border-bottom-0">{% trans %}Options{% endtrans %} </th>
+													</tr>
+												</tfoot>
+												<tbody>
+													{% for lessonPrevu in lessonPrevus %}
+													<tr>
+														<td style="vertical-align: middle;">{{ lessonPrevu.classroom.classroom }}
+														</td>
+														<td style="vertical-align: middle;">{{ lessonPrevu.subject.subject }}</td>
+														<td style="text-align: center;">
+															<span class="badge badge-gradient-primary mt-2">{% trans %}Theo. :{% endtrans %} {{ lessonPrevu.nbreLessonTheoriquePrevueSeq1 }}</span>
+															<span class="badge badge-gradient-info mt-2">Pra. : {{ lessonPrevu.nbreLessonPratiquePrevueSeq1 }}</span>
+															<br>
+															<span class="badge badge-gradient-success mt-2">{% trans %}Theo. :{% endtrans %} {{ lessonPrevu.nbreLessonTheoriqueFaiteSeq1 + lessonPrevu.nbreLessonTheoriqueFaiteAvecRessourceSeq1 }}</span>
+															<span class="badge badge-gradient-success mt-2">Pra. : {{ lessonPrevu.nbreLessonPratiqueFaiteSeq1 + lessonPrevu.nbreLessonPratiqueFaiteAvecRessourceSeq1}}</span>
+														</td>
+														<td style="text-align: center;">
+															<span class="badge badge-gradient-primary mt-2">{% trans %}Theo. :{% endtrans %}{{ lessonPrevu.nbreLessonTheoriquePrevueSeq2 + lessonPrevu.nbreLessonTheoriqueFaiteAvecRessourceSeq2 }}</span>
+															<span class="badge badge-gradient-info mt-2">Pra. :{{ lessonPrevu.nbreLessonPratiquePrevueSeq2}}</span>
+															<br>
+															<span class="badge badge-gradient-success mt-2">{% trans %}Theo. :{% endtrans %} {{ lessonPrevu.nbreLessonTheoriqueFaiteSeq2  + lessonPrevu.nbreLessonTheoriqueFaiteAvecRessourceSeq2 }}</span>
+															<span class="badge badge-gradient-success mt-2">Pra. : {{ lessonPrevu.nbreLessonPratiqueFaiteSeq2  + lessonPrevu.nbreLessonPratiqueFaiteAvecRessourceSeq2 }}</span>
+														</td>
+														<td style="text-align: center;">
+															<span class="badge badge-gradient-primary mt-2">{% trans %}Theo. :{% endtrans %}{{ lessonPrevu.nbreLessonTheoriquePrevueSeq3 }}</span>
+															<span class="badge badge-gradient-info mt-2">Pra. :{{ lessonPrevu.nbreLessonPratiquePrevueSeq3 }}</span>
+															<br>
+															<span class="badge badge-gradient-success mt-2">{% trans %}Theo. :{% endtrans %} {{ lessonPrevu.nbreLessonTheoriqueFaiteSeq3  + lessonPrevu.nbreLessonTheoriqueFaiteAvecRessourceSeq3 }}</span>
+															<span class="badge badge-gradient-success mt-2">Pra. : {{ lessonPrevu.nbreLessonPratiqueFaiteSeq3  + lessonPrevu.nbreLessonPratiqueFaiteAvecRessourceSeq3 }}</span>
+														</td>
+														<td style="text-align: center;">
+															<span class="badge badge-gradient-primary mt-2">{% trans %}Theo. :{% endtrans %}{{ lessonPrevu.nbreLessonTheoriquePrevueSeq4 }}</span>
+															<span class="badge badge-gradient-info mt-2">Pra. :{{ lessonPrevu.nbreLessonPratiquePrevueSeq4 }}</span>
+															<br>
+															<span class="badge badge-gradient-success mt-2">{% trans %}Theo. :{% endtrans %} {{ lessonPrevu.nbreLessonTheoriqueFaiteSeq4  + lessonPrevu.nbreLessonTheoriqueFaiteAvecRessourceSeq4 }}</span>
+															<span class="badge badge-gradient-success mt-2">Pra. : {{ lessonPrevu.nbreLessonPratiqueFaiteSeq4  + lessonPrevu.nbreLessonPratiqueFaiteAvecRessourceSeq4 }}</span>
+														</td>
+														<td style="text-align: center;">
+															<span class="badge badge-gradient-primary mt-2">{% trans %}Theo. :{% endtrans %}{{ lessonPrevu.nbreLessonTheoriquePrevueSeq5 }}</span>
+															<span class="badge badge-gradient-info mt-2">Pra. :{{ lessonPrevu.nbreLessonPratiquePrevueSeq5 }}</span>
+															<br>
+															<span class="badge badge-gradient-success mt-2">{% trans %}Theo. :{% endtrans %} {{ lessonPrevu.nbreLessonTheoriqueFaiteSeq5 + lessonPrevu.nbreLessonTheoriqueFaiteAvecRessourceSeq5 }}</span>
+															<span class="badge badge-gradient-success mt-2">Pra. : {{ lessonPrevu.nbreLessonPratiqueFaiteSeq5 + lessonPrevu.nbreLessonPratiqueFaiteAvecRessourceSeq5 }}</span>
+														</td>
+														<td style="text-align: center;">
+															<span class="badge badge-gradient-primary mt-2">{% trans %}Theo. :{% endtrans %}{{ lessonPrevu.nbreLessonTheoriquePrevueSeq6 }}</span>
+															<span class="badge badge-gradient-info mt-2">Pra. :{{ lessonPrevu.nbreLessonPratiquePrevueSeq6 }}</span>
+															<br>
+															<span class="badge badge-gradient-success mt-2">{% trans %}Theo. :{% endtrans %} {{ lessonPrevu.nbreLessonTheoriqueFaiteSeq6 + lessonPrevu.nbreLessonTheoriqueFaiteAvecRessourceSeq6 }}</span>
+															<span class="badge badge-gradient-success mt-2">Pra. : {{ lessonPrevu.nbreLessonPratiqueFaiteSeq6 + lessonPrevu.nbreLessonPratiqueFaiteAvecRessourceSeq6 }}</span>
+														</td>
+														<td style="text-align: center; vertical-align:middle"> 
+															<a href="{{ path('edit_lesson_plain',{'slug': lessonPrevu.slug }) }}" type="button" class="btn btn-outline-primary"><i class="fe fe-edit"></i>
+														</td>
+													</tr>
+													{% endfor %}
+													
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!--/div-->
+						</div>
+					</div>
+					<!-- /Row -->
+
+				</div>
+			</div><!-- right app-content-->
+		</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

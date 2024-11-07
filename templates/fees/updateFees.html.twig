@@ -1,0 +1,153 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Update Fees{% endtrans %}{% endblock %}
+
+{% block subTitle %}
+        {% trans %}UPDATING FEES{% endtrans %}
+{% endblock %}
+{% block infoMessage %}
+    {% include "includes/_info_message.html.twig" %}
+{% endblock %}
+
+{% block body %}
+<!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+        
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary"><i class="fa fa-money"></i> {% trans %}Fees Management{% endtrans %}</h4>
+                </div>
+                <div class="page-rightheader">
+                    <div class="btn-list">
+                        
+                    </div>
+                </div>
+            </div>
+            <!--End Page header-->
+
+            <div class="card border-primary">
+                <div class="my-card-header">
+                </div>  
+                <div class="card-body ">
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{ form_start(formFees) }}
+                                <div class="row mb-4 mt-4">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            {{ form_row(formFees.schoolFees1, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            {{ form_row(formFees.apeeFees1, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            {{ form_row(formFees.computerFees1, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                        <div class="col-md-4">
+                                        <div class="form-group">
+                                            {{ form_row(formFees.schoolFees2, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            {{ form_row(formFees.apeeFees2, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            {{ form_row(formFees.computerFees2, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                        <div class="col-md-4">
+                                        <div class="form-group">
+                                            {{ form_row(formFees.medicalBookletFees, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            {{ form_row(formFees.cleanSchoolFees, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            {{ form_row(formFees.photoFees, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                        <div class="col-md-4">
+                                        <div class="form-group">
+                                            {{ form_row(formFees.stampFees3eme, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            {{ form_row(formFees.stampFees1ere, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            {{ form_row(formFees.stampFeesTle, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                        <div class="col-md-4">
+                                        <div class="form-group">
+                                            {{ form_row(formFees.examFees3eme, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            {{ form_row(formFees.examFees1ere, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            {{ form_row(formFees.examFeesTle, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-8">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label style="color: #fff;">
+                                                {% trans %}Save{% endtrans %}
+                                            </label>
+                                            <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="editFees">
+                                                <i class="fa fa-save"></i>
+                                            {% trans %}Save changes{% endtrans %}
+                                        </button>
+
+                                        </div>
+                                    </div> 
+                                </div>
+
+                            {{ form_end(formFees) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

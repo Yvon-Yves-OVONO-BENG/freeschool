@@ -1,0 +1,287 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if slug != 0 %}
+        {% trans %}Edit{% endtrans %}
+        {% else %}
+        {% trans %}Add{% endtrans %}
+    {% endif %}
+    teacher
+{% endblock %}
+
+{% block subTitle %}
+    {% if slug != 0 %}
+        {% trans %}UPDATING STAFF{% endtrans %}
+    {% else %}
+        {% trans %}ADDING NEW STAFF{% endtrans %}
+    {% endif %}
+{% endblock %}
+
+{# {% block infoMessage %}
+    {% include "includes/_info_message.html.twig" %}
+{% endblock %} #}
+
+{% block body %}
+<!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+        
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary">
+                        {% if slug != 0 %}
+                            <i class="fe fe-edit me-2"></i> {% trans %}UPDATING STAFF{% endtrans %}
+                        {% else %}
+                            <i class="fe fe-plus-circle me-2"></i>{% trans %}ADDING NEW STAFF{% endtrans %}
+                        {% endif %}
+                    </h4>
+                </div>
+                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                    <div class="page-rightheader">
+                        <div class="btn-list">
+                            <a href="{{ path('teacher_displayTeacher') }}" class="btn btn-outline-primary btn-medium w-100 br-7">
+                                <i class="fa fa-list"></i>
+                                {% trans %}Display registered staff{% endtrans %}
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if pe == 1 %}
+                    <div class="col-md-4">
+                        <a href="{{ path('teacher_printAssumedDuty', {'slug': slug, 'asd': 1, 'pe': 0}) }}" class="btn btn-outline-primary btn-medium w-100 br-7"  target="_blank">
+                            <i class="fa fa-print"></i>
+                        {% trans %}Print the service entry/resumption certificate{% endtrans %}
+                        </a>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <a href="{{ path('teacher_printAssumedDuty', {'slug': slug, 'asd': 0, 'pe': 1}) }}" class="btn btn-outline-primary btn-medium w-100 br-7"  target="_blank">
+                            <i class="fa fa-print"></i>
+                            {% trans %}Print the certificate of effective presence{% endtrans %}
+                        </a>
+                    </div>
+                {% endif %}
+                
+            </div>
+            <!--End Page header-->
+        
+                {% if slug == 0 %}
+                    <div class="card border-primary">
+                    {% else %}
+                    <div class="card border-danger">
+                {% endif %}
+                <div class="card-header">
+                    {# ligne afficher le personnel #}
+                            {% if pe == 0 %}
+                            <div class="col-md-4">
+                                <button type="button" class="btn btn-primary  mt-1 mb-1 me-3">
+                                    <span>{% trans %}Number of registered staff{% endtrans %}</span>
+                                    <span class="badge bg-white text-dark rounded-pill">{{ effectif }}</span>
+                                </button>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                
+                            </div>
+                            {% endif %}
+
+                        
+                    
+                    {# Fin ligne afficher les classes #}
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{ form_start(formTeacher) }}
+                                <div class="row mt-3">
+                                    <div class="col-md-1">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            {{ form_row(formTeacher.fullName, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            {{ form_row(formTeacher.administrativeNumber, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            {{ form_row(formTeacher.sex, {'attr': {'class': 'form-control select2 custom-select'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            {{ form_row(formTeacher.phoneNumber, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-1">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            {{ form_row(formTeacher.grade, {'attr': {'class': 'form-control select2 custom-select'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            {{ form_row(formTeacher.duty, {'attr': {'class': 'form-control select2-show-search'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            {{ form_row(formTeacher.department, {'attr': {'class': 'form-control select2-show-search'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1">
+                                    </div>
+                                </div>
+
+                                {% if pe == 1 %}
+                                
+                                    <div class="row mb-2">
+                                        <div class="col-md-1">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                {{ form_row(formTeacher.birthday, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                {{ form_row(formTeacher.birthplace, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                {{ form_row(formTeacher.integrationDate, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-2">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                {{ form_row(formTeacher.firstDateFunction, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                {{ form_row(formTeacher.affectationDate, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                {{ form_row(formTeacher.firstDateActualFunction, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-2">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                {{ form_row(formTeacher.takeFunctiondate, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                {{ form_row(formTeacher.affectationNote, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                {{ form_row(formTeacher.previousPost, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-2">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                {{ form_row(formTeacher.diploma, {'attr': {'class': 'form-control select2-show-search'}}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                {{ form_row(formTeacher.speciality, {'attr': {'class': 'form-control select2-show-search'}}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                {{ form_row(formTeacher.teachingSubject, {'attr': {'class': 'form-control select2-show-search'}}) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                
+                                    <div class="row mb-2">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                {{ form_row(formTeacher.status, {'attr': {'class': 'form-control select2 custom-select'}}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                {{ form_row(formTeacher.matrimonialStatus, {'attr': {'class': 'form-control select2 custom-select'}}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                {{ form_row(formTeacher.region, {'attr': {'class': 'form-control select2-show-search'}}) }}
+                                            </div>
+                                        </div>
+
+                                        
+                                    </div>
+
+                                    <div class="row mb-2">
+                                        
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                {{ form_row(formTeacher.division, {'attr': {'class': 'form-control select2-show-search'}}) }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                {{ form_row(formTeacher.subdivision, {'attr': {'class': 'form-control select2-show-search'}}) }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                {% endif %}
+
+                                <div class="row">
+                                    <div class="col-md-1"> </div>
+                                    <div class="col-md-6"></div>
+                                    <div class="col-md-4">
+                                        {% if slug == 0 %}
+                                            <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="addTeacher">
+                                                <i class="fa fa-save"></i>
+                                                {% trans %}Save{% endtrans %}
+                                            </button>
+                                        {% else %}
+                                            <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="editTeacher">
+                                                <i class="fa fa-save"></i>
+                                                {% trans %}Save changes{% endtrans %}
+                                            </button>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-1"></div>
+                                </div>
+                            {{ form_end(formTeacher) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

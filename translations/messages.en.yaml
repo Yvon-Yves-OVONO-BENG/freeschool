@@ -1,0 +1,11 @@
+alert_student:
+    'title': 'Warnning !'
+    'text': 'Do you want to delete the student '
+    'confirmButtonText': 'Yes' 
+    'cancelButtonText': 'No'
+
+alert_teacher:
+    'title': 'Warnning !'
+    'text': 'Do you want to delete the teacher '
+    'confirmButtonText': 'Yes' 
+    'cancelButtonText': 'No'

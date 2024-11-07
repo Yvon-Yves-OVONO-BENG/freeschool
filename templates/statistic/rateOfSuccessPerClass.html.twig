@@ -1,0 +1,124 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Statistics{% endtrans %}{% endblock %}
+
+{% block body %}
+<!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+        
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary"><i class="fa fa-percent me-2"></i> {% trans %}Statistics{% endtrans %}</h4>
+                </div>
+                <div class="page-rightheader">
+                    <div class="btn-list">
+                        
+                    </div>
+                </div>
+            </div>
+            <!--End Page header-->
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card border-primary">
+                        <div class="card-header">
+                            <span class="page-title mb-0 text-primary">
+                                <i class="fa fa-percent me-2"></i>{% trans %}Rate of success per classe{% endtrans %}
+                            </span>
+                        </div>
+                        <div class="card-body ">
+                            <form action="{{ path('statistic_printRateOfSuccessPerClass') }}" method="post" target="_blank">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <select name="period" id="period" class="form-control select2-show-search" data-placeholder="Choose a period" required>
+                                                <option label="Choose a period">{% trans %}Choose a period{% endtrans %}</option>
+                                                <optgroup label="Evaluations">
+                                                    {% for sequence in sequences %}
+                                                        <option value="s{{ sequence.id }}">{% trans %}Evaluation{% endtrans %} {{ sequence.sequence }}</option>
+                                                    {% endfor %}
+                                                </optgroup>
+                                                <optgroup label="Trimestres">
+                                                    {% for term in terms %}
+                                                        {% if term.term != annualTerm %}
+                                                            <option value="t{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </optgroup>
+                                                    {% for term in terms %}
+                                                        {% if term.term == annualTerm %}
+                                                            <option value="a{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printRateOfSuccessPerClass">
+                                                <i class="fa fa-print"></i>
+                                                {% trans %}Print{% endtrans %}</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card border-primary">
+                        <div class="card-header">
+                            <span class="page-title mb-0 text-primary">
+                                <i class="fa fa-percent me-2"></i>{% trans %}Student performance by class{% endtrans %}
+                            </span>
+                        </div>
+                        <div class="card-body ">
+                            <form action="{{ path('statistic_printFicheSyntheseDePerformanceDesElevesParClasse') }}" method="post" target="_blank">
+                                <div class="row">
+                                    
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <select name="period" id="period" class="form-control select2-show-search" data-placeholder="Choose a period" required>
+                                                <option label="Choose a period">{% trans %}Choose a period{% endtrans %}</option>
+                                                <optgroup label="Evaluations">
+                                                    {% for sequence in sequences %}
+                                                        <option value="s{{ sequence.id }}">{% trans %}Evaluation{% endtrans %} {{ sequence.sequence }}</option>
+                                                    {% endfor %}
+                                                </optgroup>
+                                                <optgroup label="Trimestres">
+                                                    {% for term in terms %}
+                                                        {% if term.term != annualTerm %}
+                                                            <option value="t{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </optgroup>
+                                                    {% for term in terms %}
+                                                        {% if term.term == annualTerm %}
+                                                            <option value="a{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printRateOfSuccessPerClass">
+                                                <i class="fa fa-print"></i>
+                                                {% trans %}Print{% endtrans %}</button>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Mark Report{% endtrans %}{% endblock %}
+
+{% block subTitle %}
+    {% trans %}MARKS RECORDS MANAGMENT{% endtrans %}
+{% endblock %}
+
+{% block body %}
+ <!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+        
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary"></h4>
+                </div>
+                <div class="page-rightheader">
+                    <div class="btn-list">
+                        
+                    </div>
+                </div>
+            </div>
+            <!--End Page header-->
+
+            <div class="card border-primary">
+                <div class="card-header">
+                    <span class="page-title mb-0 text-primary">
+                        <i class="fa fa-pencil me-2"></i>{% trans %}Teacher's grade transfer sheets{% endtrans %}
+                    </span>
+                </div>
+                <div class="card-body pt-5 ">
+                    <form action="{{ path('register_and_list_printMarkReport') }}" method="post" target="_blank">
+                        <div class="row">
+                            <div class="col-md-2">
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <select name="teacher" id="teacher" class="form-control select2-show-search" data-placeholder="Choose a teacher" autofocus  required>
+                                        <option label="Choose a teacher" value="">
+                                            {% trans %}Choose a teacher{% endtrans %}
+                                        </option>
+                                        <option value="0">{% trans %}All the Teachers{% endtrans %}</option>
+                                        {% for teacher in teachers %}
+                                            <option value="{{ teacher.id }}">{{ teacher.fullName }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printMarkReport">
+                                        <i class="fa fa-print"></i>
+                                        {% trans %}Print{% endtrans %}</button>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card border-primary">
+                <div class="card-header">
+                    <span class="page-title mb-0 text-primary">
+                        <i class="fa fa-pencil me-2"></i>{% trans %}Class grade transfer sheets{% endtrans %}
+                    </span>
+                </div>
+                <div class="card-body pt-5 ">
+                    <form action="{{ path('print_mark_report_classroom') }}" method="post" target="_blank">
+                        <div class="row">
+                            <div class="col-md-2">
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <select class="form-control select2-show-search" id="validationCustom04" data-placeholder="Choose a classroom" name="idClassroom" required style="border: 1px solid #0f0;">
+                                        <option label="Choose a classroom" value="">{% trans %}Choose a class{% endtrans %}</option>
+                                        {# <option value="0">{% trans %}All class{% endtrans %}</option> #}
+                                        
+                                        {% if subSystem == 'Francophone / French Speaker' %}
+                                            {% if school.education.education == 'Général' %}
+                                                {% include "includes/_selectClassrooms.html.twig" %}
+                                                {% else %}
+                                                    {% include "includes/_selectClassroomsTech.html.twig" %}
+                                            {% endif %}
+                                            {% else %}
+                                                {% include "includes/_selectClassroomsEn.html.twig" %}
+                                        {% endif %}
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printMarkReport">
+                                        <i class="fa fa-print"></i>
+                                        {% trans %}Print{% endtrans %}</button>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

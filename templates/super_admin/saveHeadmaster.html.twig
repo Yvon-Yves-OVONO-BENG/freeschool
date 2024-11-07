@@ -1,0 +1,90 @@
+{% extends 'base_super_admin.html.twig' %}
+
+{% block title %}{% trans %}Save Teacher{% endtrans %}{% endblock %}
+
+{% block subTitle %}
+    {% trans %}ADDING NEW STAFF{% endtrans %}
+{% endblock %}
+
+{% block body %}
+        {% for message in app.flashes('info') %}
+            <script>
+                alert("{{ message }}");
+            </script>
+        {% endfor %}
+        
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ form_start(formTeacher) }}
+                            <div class="row mb-4 mt-4">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label for="schoolYear">{% trans %}Year{% endtrans %}</label>
+                                        <select class="form-control" name="schoolYear" id="schoolYear" readonly>
+                                            <option value="{{ schoolYear.id }}">
+                                                {{ schoolYear.schoolYear }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form_row(formTeacher.fullName) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        {{ form_row(formTeacher.administrativeNumber) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        {{ form_row(formTeacher.sex) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-1">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        {{ form_row(formTeacher.grade) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        {{ form_row(formTeacher.duty) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label style="color: #fff;">
+                                            {% trans %}Save{% endtrans %}
+                                        </label>
+                                        <button type="submit" class="btn btn-outline-primary btn-block form-control" name="addTeacher">
+                                            <i class="fa fa-save"></i>
+                                            {% trans %}Save{% endtrans %}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        {{ form_end(formTeacher) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Editing an absence{% endtrans %}{% endblock %}
+
+{% block subTitle %}
+    {% trans %}MODIFICATION OF A HOUR OF ABSENCE BY THE ADMINISTRATOR{% endtrans %}
+{% endblock %}
+     
+{% block body %}
+<!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+        
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary"></h4>
+                </div>
+                <div class="page-rightheader">
+                    <div class="btn-list">
+                        
+                    </div>
+                </div>
+            </div>
+            <!--End Page header-->
+
+            <div class="card border-danger">
+                <div class="card-header">
+                    <span class="page-title mb-0 text-primary">
+                        <i class="fe fe-user-check me-2"></i>{% trans %}Modification of a hours of by the administrator{% endtrans %}
+                    </span>
+                </div>
+                <div class="card-body ">
+                     <form method="post" action="{{ path('absence_updateAbsenceByAdmin') }}">
+                        <div class="row mt-3 mb-3">
+                            <div class="col-md-2">
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <select name="teacher" id="teacher" class="form-control select2-show-search" data-placeholder="Veuillez choisir un surveillant" required autofocus>
+                                        <option label="Veuillez choisir un surveillant">
+                                            {% trans %}Choose a supervisor
+                                            {% endtrans %}
+                                        </option>
+                                        {% for teacher in teachers %}
+                                            <option value="{{ teacher.id }}">
+                                                {{ teacher.fullName }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="updateAbsenceExtra">
+                                        <i class="fe fe-log-in me-2"></i>
+                                        {% trans %}Enter{% endtrans %}
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

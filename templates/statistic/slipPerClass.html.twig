@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Slip Per Class{% endtrans %}{% endblock %}
+
+{% block subTitle %}
+    {% trans %}STATISTIC SHEETS PER CLASS MANAGMENT{% endtrans %}
+{% endblock %}
+
+{% block body %}
+    
+            <div class="container">
+                <div class="row mt-5 ">
+                    <div class="col-md-12">
+                        <div class="card mt-2 font-weight-bold font-italic">
+                            <div class="card-header text-center">
+                                {% trans %}Statistic sheet per class printing{% endtrans %}
+                            </div>
+                            <div class="card-body text-center pt-5">
+                                <form action="{{ path('statistic_printSlipPerClass') }}" method="post" target="_blank">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="classroom">{% trans %}Classroom{% endtrans %}</label>
+
+                                                <select name="classroom" id="classroom" class="form-control" required>
+                                                    <option value="">---</option>
+
+                                                    {% if subSystem == 'Francophone / French Speaker' %}
+                                                    {% if school.education.education == 'Général' %}
+                                                        {% include "includes/_selectClassrooms.html.twig" %}
+                                                        {% else %}
+                                                            {% include "includes/_selectClassroomsTech.html.twig" %}
+                                                    {% endif %}
+                                                    {% else %}
+                                                        {% include "includes/_selectClassroomsEn.html.twig" %}
+                                                {% endif %}
+                                                    
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="period">{% trans %}Period{% endtrans %}</label>
+                                                <select name="period" id="period" class="form-control" required>
+                                                    <option value="">---</option>
+                                                    <optgroup label="Evaluations">
+                                                        {% for sequence in sequences %}
+                                                            <option value="s{{ sequence.id }}">{% trans %}Evaluation{% endtrans %} {{ sequence.sequence }}</option>
+                                                        {% endfor %}
+                                                    </optgroup>
+                                                    <optgroup label="Trimestres">
+                                                        {% for term in terms %}
+                                                            {% if term.term != annualTerm %}
+                                                                <option value="t{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </optgroup>
+                                                        {% for term in terms %}
+                                                            {% if term.term == annualTerm %}
+                                                                <option value="a{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label style="color: #fff;">{% trans %}Print{% endtrans %}</label>
+                                                <button class="btn btn-outline-primary form-control" type="submit" name="printSlipPerClass">
+                                                    <i class="fa fa-print"></i>{% trans %}Print{% endtrans %}</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

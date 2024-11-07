@@ -1,0 +1,146 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Student ID card management{% endtrans %}{% endblock %}
+
+{% block subTitle %}
+    {% trans %}STUDENT ID CARD MANAGMENT{% endtrans %}
+{% endblock %}
+
+{% block body %}
+<!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+        
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary"><i class="fa fa-address-card-o"></i> {% trans %}Student's card management{% endtrans %}</h4>
+                </div>
+                <div class="page-rightheader">
+                    <div class="btn-list">
+                        
+                    </div>
+                </div>
+            </div>
+            <!--End Page header-->
+
+
+            <!-- Row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="expanel expanel-primary border-primary">
+                        <div class="expanel-heading">
+                            <h3 class="expanel-title">{% trans %}Choose a class{% endtrans %}</h3>
+                        </div>
+                        <div class="expanel-body">
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <form action="{{ path('report_studentCard') }}" method="post">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <select class="form-control select2-show-search" data-placeholder="Choose a classroom" name="classroom" id="classroom" required style="border: 1px solid #0f0;">
+                                                        <option label="Choose a classroom">
+                                                            {% trans %}Choose a classroom{% endtrans %}
+                                                        </option>
+                                                        {% if subSystem == 'Francophone / French Speaker' %}
+                                                    {% if school.education.education == 'Général' %}
+                                                        {% include "includes/_selectClassrooms.html.twig" %}
+                                                        {% else %}
+                                                            {% include "includes/_selectClassroomsTech.html.twig" %}
+                                                    {% endif %}
+                                                    {% else %}
+                                                        {% include "includes/_selectClassroomsEn.html.twig" %}
+                                                {% endif %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="displayStudents">
+                                                        <i class="fa fa-eye"></i>
+                                                        {% trans %}Display{% endtrans %}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-md-3">
+                                    {% if students|length > 0 %}
+                                        <form action="{{ path('report_printStudentCard', {'slugClassroom': selectedClassroom.slug}) }}" method="post" target="_blank">
+                                            <div class="form-group">
+                                                <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="printStudentCard">
+                                                    <i class="fa fa-print"></i>
+                                                    {% trans %}Print all students ID cards{% endtrans %}
+                                                </button>
+                                                
+                                            </div>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+			<!--End Row -->
+            {% if methodIsPost %}
+                <div class="card border-primary">
+                    <div class="card-header">
+                        {% if selectedClassroom.id is not null %}
+                            
+                                <div class="col-md-6 text-left">
+                                    <button type="button" class="btn btn-primary mt-1 mb-1 me-3">
+                                        <span>{% trans %}Classroom{% endtrans %}</span>
+                                        <span class="badge bg-white text-dark rounded-pill">{{ selectedClassroom.classroom }}</span>
+                                    </button>
+                                </div>
+                                <div class="col-md-6 text-right">  
+                                    <button type="button" class="btn btn-primary mt-1 mb-1 me-3">
+                                        <span>{% trans %}Number of students{% endtrans %}</span>
+                                        <span class="badge bg-white text-dark rounded-pill">{{ students|length }}</span>
+                                    </button>
+                                </div>
+                            
+                        {% endif %}
+                    </div>
+
+                    <div class="card-body ">
+                        <div class="table-responsive">
+                            
+                            <table border="1" class="table table-bordered text-nowrap" id="example2" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                    <th class="border-bottom-0 indigo-gradient">{% trans %}Full name{% endtrans %}</th>
+                                    <th class="border-bottom-0 green-gradient">{% trans %}Students ID cards{% endtrans %}</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                    <th class="border-bottom-0 indigo-gradient">{% trans %}Full name{% endtrans %}</th>
+                                    <th class="border-bottom-0 green-gradient">{% trans %}Students ID cards{% endtrans %}</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    {% for student in students %}
+                                        <tr class="table-row">
+                                            <td style="vertical-align:middle;">{{ student.fullName }}</td>
+                                            <td style="text-align: center; vertical-align:middle;"> 
+                                                <a href="{{ path('report_printStudentCard', {'slugClassroom': selectedClassroom.slug, 'slugStudent': student.slug}) }}" target="_blank" class="btn btn-outline-success" data-bs-toggle="tooltip" title="Télécharger la carte scolaire de {{ student.fullName }}">
+                                                    <i class="fa fa-download"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

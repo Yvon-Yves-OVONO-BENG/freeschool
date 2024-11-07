@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Grade{% endtrans %}{% endblock %}
+
+{% block subTitle %}
+    {% if slug != 0 %}
+        {% trans %}UPDATING RANK{% endtrans %}
+    {% else %}
+        {% trans %}ADDING NEW RANK{% endtrans %}
+    {% endif %}
+{% endblock %}
+{% block infoMessage %}
+    {% include "includes/_info_message.html.twig" %}
+{% endblock %}
+
+{% block body %}
+    <!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+        
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary"></h4>
+                </div>
+                <div class="page-rightheader">
+                    <div class="btn-list">
+                        
+                    </div>
+                </div>
+            </div>
+            <!--End Page header-->
+        
+                {% if slug == 0 %}
+                    <div class="card border-primary">
+                    {% else %}
+                    <div class="card border-danger">
+                {% endif %}
+                <div class="card-header">
+                    {# ligne afficher les grades #}
+                        <div class="col-md-4">
+                            <div class="card-title">    
+                                {% if slug != 0 %}
+                                    <i class="fa fa-edit  me-2"></i> {% trans %}UPDATING RANK{% endtrans %}
+                                {% else %}
+                                    <i class="fa fa-plus  me-2"></i> {% trans %}ADDING NEW RANK{% endtrans %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <button type="button" class="btn btn-primary  mt-1 mb-1 me-3 form-control-sm">
+                                <span>{% trans %}Number of registered ranks{% endtrans %}</span>
+                                <span class="badge bg-white text-dark rounded-pill">{{ grades|length }}</span>
+                            </button>
+                        </div>
+                        <div class="col-md-4 text-right">
+                            <a href="{{ path('grade_displayGrade', {'notification':0}) }}" class="btn btn-outline-primary">
+                                <i class="fa fa-list"></i>
+                                {% trans %}Display registered ranks{% endtrans %}
+                            </a>
+                        </div>
+                    
+                </div>
+                    {# Fin ligne afficher les grades #}
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{ form_start(formGrade) }}
+                                <div class="row mb-5">
+                                    <div class="col-md-2">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            {{ form_row(formGrade.grade, {'attr': {'class': 'form-control form-control-sm bg-info-transparent'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label style="color: #fff;">.</label>
+                                                {% if slug == 0 %}
+                                                    <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="addGrade">
+                                                        <i class="fa fa-save me-2"></i>
+                                                        {% trans %}Save{% endtrans %}
+                                                    </button>
+                                                {% else %}
+                                                        <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="editGrade">
+                                                            <i class="fa fa-save me-2"></i>
+                                                        {% trans %}Save changes{% endtrans %}
+                                                    </button>
+                                                {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                    </div>
+                                </div>
+
+                            {{ form_end(formGrade) }}
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+</div>
+
+{% endblock %}

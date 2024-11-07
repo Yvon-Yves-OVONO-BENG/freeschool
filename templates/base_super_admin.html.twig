@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<title>
+			{% block title %}{% endblock %}
+		</title>
+		<!-- Bootstrap core CSS-->
+		<link
+		href="{{asset('build/custom/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+		<!-- Custom fonts for this template-->
+		<link
+		href="{{asset('build/custom/vendor/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet" type="text/css">
+		<!-- Page level plugin CSS-->
+		<link
+		href="{{asset('build/custom/vendor/datatables/dataTables.bootstrap4.css')}}" rel="stylesheet">
+		<!-- Custom styles for this template-->
+		<link href="{{asset('build/custom/css/sb-admin.css')}}" rel="stylesheet">
+
+		<style>
+
+			.select-option:hover {
+				background-color: #00ffff !important;
+			}
+
+			#mainNav {
+				background-color: #007f7f !important;
+
+			}
+			#exampleAccordion {
+				background-color: #007f7f !important;
+			}
+			#exampleAccordion li {
+				border-bottom: 1px solid #ccc !important;
+			}
+			.nav-link {
+				color: #fff !important;
+			}
+			a:hover,
+			#menu:hover {
+				background-color: #00ffff !important;
+				color: #000 !important;
+			}
+			.sidenav-second-level a:hover {
+				color: #000 !important;
+			}
+
+			.sidenav-second-level a {
+				color: #007f7f !important;
+				font-weight: bold !important;
+			}
+
+			#mainNav.navbar-dark .navbar-collapse .navbar-sidenav .nav-link-collapse:after {
+				color: #fff !important;
+			}
+
+			#mainNav.navbar-dark .navbar-collapse .navbar-sidenav {
+				overflow: scroll;
+				border-top: 1px solid #ccc !important;
+				margin-top: 4.25rem !important;
+			}
+
+			{
+				# .bg-dark {
+					background-color: rgba(255, 255, 255, 0.1) !important;
+				} #
+			}
+
+			@media(min-width: 992px) {
+				.content-wrapper {
+					margin-left: 265px;
+					background-color: rgba(255, 255, 255, 1) !important;
+				}
+			}
+
+			#mainNav.fixed-top .sidenav-toggler > .nav-item {
+				width: 267px;
+				padding: 0;
+				background-color: #007f7f !important;
+			}
+
+			#school-name {
+				color: #fff !important;
+				width: 100% !important;
+			}
+			#logout {
+				display: inline !important;
+			}
+			.sidenav-second-level {
+				background-color: #fff !important;
+				border-right: 2px solid #007f7f !important;
+				border-left: 2px solid #007f7f !important;
+			}
+
+			#menu {
+				padding-top: 1rem !important;
+				padding-bottom: 1rem !important;
+			}
+			.sub-menu {
+				padding-top: 1rem !important;
+				padding-left: 1rem !important;
+			}
+
+			#footer {
+				background-color: #007f7f !important;
+				background-image: -webkit-linear-gradient(top, #007f7f 0%, #00ffff 100%) !important;
+				background-image: linear-gradient(to bottom, #007f7f 0%, #00ffff 100%) !important;
+				text-align: center !important;
+				color: #fff;
+			}
+
+			.sub-title {
+				background-color: #007f7f !important;
+				background-image: -webkit-linear-gradient(top, #007f7f 0%, #00ffff 100%) !important;
+				background-image: linear-gradient(to bottom, #007f7f 0%, #00ffff 100%);
+				text-align: center !important;
+				color: #fff !important;
+				font-weight: bold;
+				display: block !important;
+			}
+			.scroll-to-top {
+				background: rgba(0, 127, 127, 0.5);
+			}
+			#espace-admin1,
+			#espace-admin1 span {
+				background-color: #007f7f !important;
+				color: #fff;
+			}
+			.espace-admin2 {
+				background-color: #ccc !important;
+			}
+			.btn-perso {
+				background-color: #007f7f !important;
+				background-image: -webkit-linear-gradient(top, #007f7f 0%, #00ffff 100%) !important;
+				background-image: linear-gradient(to bottom, #007f7f 0%, #00ffff 100%) !important;
+				color: #fff;
+				font-weight: bold;
+			}
+
+			.btn-perso:hover {
+				color: #000;
+			}
+
+			.card-header {
+				background-color: #007f7f !important;
+				background-image: -webkit-linear-gradient(top, #007f7f 0%, #00ffff 100%) !important;
+				background-image: linear-gradient(to bottom, #007f7f 0%, #00ffff 100%) !important;
+				color: #fff;
+				font-weight: bold;
+
+			}
+			.card-body {
+				background-color: #fff !important;
+
+			}
+
+			.btn-delete:hover {
+				background-color: #910000;
+				color: #fff;
+			}
+
+			.btn-delete {
+				background-color: #ccc;
+				color: #fff;
+			}
+
+			.btn-update {
+				background-color: #ccc !important;
+				border: none !important;
+				color: #fff;
+			}
+			.btn-update:hover{
+				background-color: #00ffff !important;
+				color: #000;
+			}
+			.odd {
+				background-color: rgba(0, 255, 255, 0.1) !important;
+			}
+
+			.page-item.active .page-link {
+				background-color: #007f7f !important;
+				background-image: -webkit-linear-gradient(top, #007f7f 0%, #00ffff 100%) !important;
+				background-image: linear-gradient(to bottom, #007f7f 0%, #00ffff 100%) !important;
+				color: #fff;
+				font-weight: bold;
+				border-color: #007f7f !important;
+			}
+			.table-row:hover {
+				background-color: #00ffff !important;
+			}
+		</style>
+	</head>
+
+	<body class="fixed-nav sticky-footer bg-dark" id="page-top" style="font-family: Arial;">
+		
+		<!-- Navigation-->
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+			<img src="{{asset('build/custom/images/logo_white.png')}}" alt="logo">
+			<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarResponsive">
+				<ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+                    <li class="nav-item text-center" id="menu" data-toggle="tooltip" data-placement="right" title="Menu">
+                        <a class="nav-link">
+                            <i class="fa fa-fw fa-bars">
+                            </i>
+                            <span class="nav-link-text">
+                                MENU
+                            </span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Gestion des Données">
+                        <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseComponents" data-parent="#exampleAccordion">
+                            <i class="fa fa-fw fa-wrench">
+                            </i>
+                            <span class="nav-link-text">
+                                Super administration
+                            </span>
+                        </a>
+                        <ul class="sidenav-second-level collapse" id="collapseComponents">
+
+                            <li>
+                                <a href="{{ path('super_admin_addSchool') }}">
+                                    Add school
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path('super_admin_chooseSchoolYear') }}">
+                                    Add headmaster
+                                </a>
+                            </li>
+                            <li>
+                                {# <a href="{{ path('super_admin_addUser') }}">
+                                    Add user
+                                </a> #}
+                            </li>
+                        </ul>
+                    </li>
+
+				</ul>
+
+				<ul class="navbar-nav sidenav-toggler">
+					<li class="nav-item">
+						<a class="nav-link text-center" id="sidenavToggler">
+							<i class="fa fa-fw fa-angle-left">
+							</i>
+						</a>
+					</li>
+				</ul>
+
+				<div class="row" id="school-name">
+					<div class="col-md-3 text-right">
+							<b>The best</b> <i class="fa fa-fw fa-thumbs-up"></i>
+					</div>
+					<div class="col-md-6 text-center h5 font-weight-bold">
+								<b>Be free with Freeschool</b>
+					</div>
+					<div class="col-md-3">
+						<div class="row">
+							<div class="col-md-12 text-right">
+								<a title="Cliquez pour mettre à jour votre profil" href="" class="nav-link" id="logout" data-toggle="modal" data-target="#exampleModal">
+
+									<i class="fa fa-fw fa-user-circle"></i>
+
+								</a>
+							</div>
+							<div class="col-md-12 text-right">
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</nav>
+		<div class="content-wrapper">
+			<div class="container-fluid">
+				<!-- Breadcrumbs-->
+				<ol class="breadcrumb h4 sub-title" id="sub-title">
+
+					{% block subTitle %}
+					
+					{% endblock %}
+
+				</ol>
+
+					{% block body %}
+						
+					{% endblock %}
+			</div>
+				 {# /.container-fluid #}
+				 {# /.content-wrapper #}
+			<footer class="sticky-footer" id="footer">
+				<div class="container">
+					<div class="text-center">
+						<small>
+							Copyright © Freedom Software Enterprise 2019 All Rights Reserved
+						</small>
+					</div>
+				</div>
+			</footer>
+				 {# Scroll to Top Button #}
+			<a class="scroll-to-top rounded" href="#page-top">
+				<i class="fa fa-angle-up">
+				</i>
+			</a>
+				 {# Logout Modal #}
+			<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header" id="espace-admin1">
+							<h5 class="modal-title" id="exampleModalLabel">
+								Administrator's space
+							</h5>
+							<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">
+									×
+								</span>
+							</button>
+						</div>
+						<div class="modal-body espace-admin2">
+							Choose an action
+						</div>
+						<div class="modal-footer espace-admin2">
+							{# <a class="btn btn-perso" href="{{ path('home_adminProfile') }}">
+								Modifier le Profil
+							</a> #}
+							<button class="btn btn-secondary" type="button" data-dismiss="modal">
+								Cancel
+							</button>
+							{# <a class="btn btn-perso" href="{{ path('home_adminIdentification') }}">
+								Se Déconnecter
+							</a> #}
+						</div>
+					</div>
+				</div>
+			</div>
+				 {# Bootstrap core JavaScript #}
+			<script src="{{asset('build/custom/vendor/jquery/jquery.min.js')}}"></script>
+			<script src="{{asset('build/custom/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+				{# Core plugin JavaScript #}
+			<script src="{{asset('build/custom/vendor/jquery-easing/jquery.easing.min.js')}}"></script>
+				{# Page level plugin JavaScript #}
+			<script src="{{asset('build/custom/vendor/datatables/jquery.dataTables.js')}}"></script>
+			<script src="{{asset('build/custom/vendor/datatables/dataTables.bootstrap4.js')}}"></script>
+				{# Custom scripts for all pages #}
+			<script src="{{asset('build/custom/js/sb-admin.min.js')}}"></script>
+				{# Custom scripts for this page #}
+			<script src="{{asset('build/custom/js/sb-admin-datatables.min.js')}}"></script>
+
+			{% block javascripts %}{% endblock %}
+		</div>
+	</body>
+</html>

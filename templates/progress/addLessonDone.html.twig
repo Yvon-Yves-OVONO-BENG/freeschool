@@ -1,0 +1,220 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Add lesson done{% endtrans %}{% endblock %}
+
+{% block infoMessage %}
+    {% include "includes/_info_message.html.twig" %}
+{% endblock %}
+
+{% block currentUser %}
+    {{teacher.fullName }}
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        input{
+            background-color: rgba(62, 128, 235, 0.2) !important;
+            color: #3e80eb !important;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+
+<!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+        
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary">
+                        <i class="fa fa-book me-2"></i>  {% trans %}SAVE LESSON DONE{% endtrans %}
+                    </h4>
+                </div>
+				<div class="page-rightheader">
+                    <div class="btn-list">
+                        <a href="{{ path('lesson_done') }}" class="btn btn-outline-primary">
+                            <i class="fe fe-list me-2"></i>
+                            {% trans %}Validate of lessons learned{% endtrans %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+			<div class="row">
+				<div class="col-md-12 col-lg-12">
+					<div class="card font-weight-bold border-primary">
+						<div class="card-header">
+							
+								<div class="col-md-8">
+									<h3 class="card-title"><i class="fe fe-plus-circle me-2"></i> {% trans %}Addition of the number of done lessons{% endtrans %}</h3></div>
+								<div class="col-md-4">
+									
+								</div>
+							
+						</div>
+						<div class="card-body">
+							{{ form_start(formLessonDone, {'attr': {'class': 'row g-3 needs-validation'}}) }}
+								<div class="row mt-4">
+									<div class="col-lg-12">
+										<div class="expanel expanel-primary">
+											<div class="expanel-heading">
+												<h3 class="expanel-title">{% trans %}Number of lessons done{% endtrans %}</h3>
+											</div>
+											<div class="expanel-body">
+                                                <div class="row mt-4">
+                                                    <div class="col-lg-6">
+                                                        <div class="expanel expanel-default">
+                                                            <div class="expanel-heading">{% trans %}1st sequence{% endtrans %}</div>
+                                                            <div class="expanel-body">
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        {{form_row(formLessonDone.nbreLessonTheoriqueFaiteSeq1)}}
+                                                                        <div class="valid-feedback">
+                                                                            Veuillez remplir ce champ !
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        {{form_row(formLessonDone.nbreLessonPratiqueFaiteSeq1)}}
+                                                                        <div class="valid-feedback">
+                                                                            Veuillez remplir ce champ !
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div class="expanel expanel-default">
+                                                            <div class="expanel-heading">{% trans %}2nd sequence{% endtrans %}</div>
+                                                            <div class="expanel-body">
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        {{form_row(formLessonDone.nbreLessonTheoriqueFaiteSeq2)}}
+                                                                        <div class="valid-feedback">
+                                                                            Veuillez remplir ce champ !
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        {{form_row(formLessonDone.nbreLessonPratiqueFaiteSeq2)}}
+                                                                        <div class="valid-feedback">
+                                                                            Veuillez remplir ce champ !
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row mt-4">
+                                                    <div class="col-lg-6">
+                                                        <div class="expanel expanel-default">
+                                                            <div class="expanel-heading">{% trans %}3rd sequence{% endtrans %}</div>
+                                                            <div class="expanel-body">
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        {{form_row(formLessonDone.nbreLessonTheoriqueFaiteSeq3)}}
+                                                                        <div class="valid-feedback">
+                                                                            Veuillez remplir ce champ !
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        {{form_row(formLessonDone.nbreLessonPratiqueFaiteSeq3)}}
+                                                                        <div class="valid-feedback">
+                                                                            Veuillez remplir ce champ !
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div class="expanel expanel-default">
+                                                            <div class="expanel-heading">{% trans %}4th sequence{% endtrans %}</div>
+                                                            <div class="expanel-body">
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        {{form_row(formLessonDone.nbreLessonTheoriqueFaiteSeq4)}}
+                                                                        <div class="valid-feedback">
+                                                                            Veuillez remplir ce champ !
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        {{form_row(formLessonDone.nbreLessonPratiqueFaiteSeq4)}}
+                                                                        <div class="valid-feedback">
+                                                                            Veuillez remplir ce champ !
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row mt-4">
+                                                    <div class="col-lg-6">
+                                                        <div class="expanel expanel-default">
+                                                            <div class="expanel-heading">{% trans %}5th sequence{% endtrans %}</div>
+                                                            <div class="expanel-body">
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        {{form_row(formLessonDone.nbreLessonTheoriqueFaiteSeq5)}}
+                                                                        <div class="valid-feedback">
+                                                                            Veuillez remplir ce champ !
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        {{form_row(formLessonDone.nbreLessonPratiqueFaiteSeq5)}}
+                                                                        <div class="valid-feedback">
+                                                                            Veuillez remplir ce champ !
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div class="expanel expanel-default">
+                                                            <div class="expanel-heading">{% trans %}6th sequence{% endtrans %}</div>
+                                                            <div class="expanel-body">
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        {{form_row(formLessonDone.nbreLessonTheoriqueFaiteSeq6)}}
+                                                                        <div class="valid-feedback">
+                                                                            Veuillez remplir ce champ !
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        {{form_row(formLessonDone.nbreLessonPratiqueFaiteSeq6)}}
+                                                                        <div class="valid-feedback">
+                                                                            Veuillez remplir ce champ !
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+												
+											</div>
+										</div>
+									</div>
+								</div>
+							
+								<div class="row" style="margin-bottom: 25px ;">
+									<div class="col-md-4"></div>
+									<div class="col-md-4" style="text-align: center;">
+										<button class="btn btn-outline-primary btn-lg btn-block" type="submit"><i class="fa fa-save"></i> {% trans %}Save{% endtrans %}</button></div>
+									<div class="col-md-4"></div>
+								</div>
+							{{ form_end(formLessonDone) }}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

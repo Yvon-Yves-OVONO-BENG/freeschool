@@ -1,0 +1,188 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Student List{% endtrans %}{% endblock %}
+
+{% block subTitle %}
+    {% trans %}STUDENTS LISTS PER CLASS MANAGMENT{% endtrans %}
+{% endblock %}
+
+{% block body %}
+<!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+        
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary"></h4>
+                </div>
+                <div class="page-rightheader">
+                    <div class="btn-list">
+                        
+                    </div>
+                </div>
+            </div>
+            <!--End Page header-->
+
+            <div class="card border-primary">
+                <div class="card-header">
+                    <span class="page-title mb-0 text-primary">
+                        <i class="fa fa-users me-2"></i> {% trans %}Student list per class printing{% endtrans %}
+                    </span>
+                </div>
+                <div class="card-bodyp ">
+                    <form action="{{ path('register_and_list_printStudentList') }}" method="post" target="_blank">
+                        <div class="row" style="margin-top: 20px;">
+                            <div class="col-md-3">
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <select name="classroom" id="classroom" class="form-control select2-show-search" data-placeholder="Choose a classroom" required>
+                                        <option label="Choose a classroom">
+                                            {% trans %}Choose a classroom{% endtrans %}
+                                        </option>
+                                        <option value="0">{% trans %}All classrooms{% endtrans %}</option>
+                                        
+                                        {% if subSystem == 'Francophone / French Speaker' %}
+                                            {% if school.education.education == 'Général' %}
+                                                {% include "includes/_selectClassroomsWithoutSelected.html.twig" %}
+                                                {% else %}
+                                                    {% include "includes/_selectClassroomsWithoutSelectedTech.html.twig" %}
+                                            {% endif %}
+                                            {% else %}
+                                                {% include "includes/_selectClassroomsWithoutSelectedEn.html.twig" %}
+                                        {% endif %}
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printStudentList">
+                                        <i class="fa fa-print"></i>
+                                        {% trans %}Print{% endtrans %}</button>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+
+            <div class="card border-primary">
+                <div class="card-header">
+                    <span class="page-title mb-0 text-primary">
+                        <i class="fa fa-users me-2"></i>{% trans %}Print students lists by criteria{% endtrans %}
+                    </span>
+                </div>
+                <div class="card-body ">
+                    <form action="{{ path('register_and_list_printStudentListParticulary') }}" method="post" target="_blank">
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="classroom">{% trans %}Classroom{% endtrans %}</label>
+                                    <select name="classroom" id="classroom" class="form-control select2-show-search" data-placeholder="Choose a classroom" required>
+                                        <option label="Choose a classroom">
+                                            {% trans %}Choose classroom{% endtrans %}
+                                        </option>
+                                        <option value="0">{% trans %}All classrooms{% endtrans %}</option>
+                                        
+                                        {% if subSystem == 'Francophone / French Speaker' %}
+                                            {% include "includes/_selectClassroomsWithoutSelected.html.twig" %}
+                                            {% else %}
+                                                {% include "includes/_selectClassroomsWithoutSelectedEn.html.twig" %}
+                                        {% endif %}
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="country">{% trans %}Country of origin{% endtrans %}</label>
+                                    <select name="country" id="country" class="form-control select2-show-search" data-placeholder="Choose a country" required>
+                                        <option label="Choose a country">
+                                            {% trans %}Choose a country{% endtrans %}
+                                        </option>
+                                        <option value="0">{% trans %}All countries{% endtrans %}</option>
+                                        {% for country in countries %}
+                                            <option value="{{ country.id }}">{{ country.country }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="ethnicGroup">{% trans %}Ethnic group{% endtrans %}</label>
+                                    <select name="ethnicGroup" id="ethnicGroup" class="form-control select2-show-search" data-placeholder="Choose an ethnic" required>
+                                        <option label="Choose an ethnic">
+                                            {% trans %}Choose an ethnic{% endtrans %}
+                                        </option>
+                                        <option value="0">{% trans %}All ethnics groups{% endtrans %}</option>
+                                        {% for ethnicGroup in ethnicGroups %}
+                                            <option value="{{ ethnicGroup.id }}">{{ ethnicGroup.ethnicGroup }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="movement">{% trans %}Displaced or refugees{% endtrans %}</label>
+                                    <select name="movement" id="movement" class="form-control select2 custom-select" data-placeholder="Choose a movement"  required>
+                                        <option label="Choose a movement">
+                                            {% trans %}Choose a movement{% endtrans %}
+                                        </option>
+                                        <option value="0">{% trans %}All{% endtrans %}</option>
+                                        {% for movement in movements %}
+                                            <option value="{{ movement.id }}">{{ movement.movement }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="handicap">{% trans %}Disabled or not disabled{% endtrans %}</label>
+                                    <select name="handicap" id="handicap" class="form-control select2 custom-select" data-placeholder="Choose" required>
+                                        <option label="Choose">
+                                            {% trans %}Choose{% endtrans %}
+                                        </option>
+                                        <option value="0">{% trans %}All{% endtrans %}</option>
+                                        {% for handicap in handicaps %}
+                                            <option value="{{ handicap.id }}">{{ handicap.handicap }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="handicapType">{% trans %}Type of disability{% endtrans %}</label>
+                                    <select name="handicapType" id="handicapType" class="form-control select2 custom-select" data-placeholder="Choose a handicap type" required>
+                                        <option label="Choose a handicap type">
+                                            {% trans %}Choose a handicap type{% endtrans %}
+                                        </option>
+                                        <option value="0">{% trans %}All{% endtrans %}</option>
+                                        {% for handicapType in handicapTypes %}
+                                            <option value="{{ handicapType.id }}">{{ handicapType.handicapType }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printStudentListParticulary">
+                                        <i class="fa fa-print"></i>
+                                        {% trans %}Print{% endtrans %}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Pedagogical summary sheet{% endtrans %}{% endblock %}
+
+{% block subTitle %}
+    {% trans %}PEDAGOGICAL SUMMARY SHEET{% endtrans %}
+{% endblock %}
+{% block infoMessage %}
+    {% include "includes/_info_message.html.twig" %}
+{% endblock %}
+{% block body %}
+
+<!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+
+        <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary">
+                        {% trans %}Printing of the pedagogical summary sheet{% endtrans %}
+                    </h4>
+                </div>
+                <div class="page-rightheader">
+                    <div class="btn-list">
+                        <a href="{{ path('student_displayStudent') }}" class="btn btn-outline-primary">
+                            <i class="fa fa-list"></i>
+                            {% trans %}Display registered students{% endtrans %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!--End Page header-->
+            <div class="card border-primary">
+                <div class="card-body ">
+                    <form action="{{ path('print_fiche_synthese_pedagogique') }}" method="post" target="_blank">
+                        <div class="row">
+                            <div class="col-md-1">
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <select name="subject" id="subject" class="form-control select2-show-search" data-placeholder="Choose a subject" required>
+                                        <option label="Choose a subject">Choose a subject</option>
+                                        <option value="0">{% trans %}All Subjects{% endtrans %}</option>
+                                        {% for subject in subjects %}
+                                            <option value="{{ subject.id }}">{{ subject.subject }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    {# <select name="term" id="term" class="form-control select2 custom-select" data-placeholder="Choose a period" required> #}
+                                        <select name="period" id="period" class="form-control select2-show-search" data-placeholder="Choose a period" required>
+                                            <option label="Choose a period">{% trans %}Choose a period{% endtrans %}</option>
+                                            <optgroup label="Evaluations">
+                                                {% for sequence in sequences %}
+                                                    <option value="s{{ sequence.id }}">{% trans %}Evaluation{% endtrans %} {{ sequence.sequence }}</option>
+                                                {% endfor %}
+                                            </optgroup>
+                                            <optgroup label="Trimestres">
+                                                {% for term in terms %}
+                                                    {% if term.term != annualTerm %}
+                                                        <option value="t{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </optgroup>
+                                                {% for term in terms %}
+                                                    {% if term.term == annualTerm %}
+                                                        <option value="a{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
+                                                    {% endif %}
+                                                {% endfor %}
+                                        </select>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printSlipPerSubject">
+                                        <i class="fa fa-print"></i>
+                                        {% trans %}Print{% endtrans %}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

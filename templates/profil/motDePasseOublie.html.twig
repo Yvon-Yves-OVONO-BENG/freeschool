@@ -1,0 +1,120 @@
+{% extends 'baseLogin.html.twig' %}
+
+{% block title %}{% trans %}Password forgotten{% endtrans %} {% endblock %}
+
+{% block stylesheets %}
+	{# <link href="{{ asset ('build/custom2/iconfonts/feather/feather.css')}}" rel="stylesheet"/> #}
+	<link href="{{ asset ('build/custom2/plugins/notify/css/notifIt.css')}}" rel="stylesheet"/> 
+{% endblock %}
+
+{% block body %}
+
+<body class="bg-primary register-2" style="background-color: #7662C5 !important">
+	{% for message in app.flashes('info')  %}
+		{# <div class="alert alert-danger">{{ message }}</div> #}
+		<div class="alert alert-danger" role="alert"><button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true">×</button><i class="fa fa-frown-o me-2" aria-hidden="true"></i>{{ message }}</div>
+										
+		<!-- NOTIFICATIONS js-->
+		{# <script src="{{ asset ('build/custom2/js/notifications.js')}}"></script> #}
+
+		<!-- INTERNAL Notifications js -->
+		{# <script src="{{ asset ('build/custom2/plugins/notify/js/rainbow.js')}}"></script>
+		<script src="{{ asset ('build/custom2/plugins/notify/js/sample.js')}}"></script> #}
+		{# <script src="{{ asset ('build/custom2/plugins/notify/js/notifIt.js')}}"></script>
+
+		<script>
+			notif({
+					type: "error",
+					msg: "<b>{{ message }}</b>",
+					position: "center",
+					width: 500,
+					height: 60,
+					autohide: true
+				});
+		</script> #}
+
+	{% endfor %}
+		{# <div class="page"> #}
+			{# <div class="page-content">
+				<div class="container"> #}
+					<div class="row">
+						<div class="col mx-auto">
+							<div class="row justify-content-center">
+								<div class="col-md-5">
+									<div class="text-center mb-5">
+										<img src="{{ asset ('build/custom2/images/brand/logo_white.png')}}" class="header-brand-img desktop-lgo" alt="Freedom logo">
+										
+									</div>
+									<div class="card border-danger">
+										<div class="card-body">
+											<div class="text-center mb-4">
+												<h4 class="mb-2">{% trans %}Enter the answer to your secret question{% endtrans %}</h4>
+											</div>
+
+											<form class="row g-3 needs-validation" action="{{ path ('mot_de_passe_oublie') }}" method="POST" novalidate>
+												<div class="input-group">
+													<div class="input-group-text">
+														<i class="fe fe-help-circle"></i>
+													</div>
+													<select class="form-select border" name="questionSecreteId" id="validationCustom04" required>
+														<option selected disabled value="">{% trans %}What's your secret question ?{% endtrans %}</option>
+														{% for questionSecrete in questionSecretes %}
+															<option value="{{ questionSecrete.id }}">{{ questionSecrete.questionSecrete }}</option>
+														{% endfor %}
+													</select>
+													<div class="invalid-feedback">
+														{% trans %}Please select a secret question{% endtrans %}
+													</div>
+												</div>
+												<div class="input-group">
+													<select class="form-control select2-show-search" name="userId" id="validationCustom04" required>
+														<option selected disabled value="">{% trans %}Your are ?{% endtrans %}</option>
+														{% for user in users %}
+															{% if user.teacher %}
+																{% if user.teacher.schoolYear.schoolYear == schoolYear.schoolYear %}
+																	<option value="{{ user.id }}">{{ user.fullName }}</option>
+																{% endif %}
+															{% endif %}
+														{% endfor %}
+													</select>
+													<div class="invalid-feedback">
+														{% trans %}Please select a user{% endtrans %}
+													</div>
+												</div>
+
+												<div class="input-group mb-2">
+													<div class="input-group-text">
+														<i class="fe fe-edit-2"></i>
+													</div>
+													<input type="text" name="reponse" placeholder="{% trans %}Your answer{% endtrans %}" class="form-control border" required>
+													<div class="invalid-feedback">
+														{% trans %}Please enter your answer{% endtrans %}
+													</div>
+												</div>
+
+												<div class="form-group text-center mb-3">
+													<button type="submit" name="envoyer" class="btn btn-outline-primary btn-md w-100 br-7">
+													<i class="fe fe-send me-2"></i>
+													{% trans %}Send{% endtrans %}</button>
+												</div>
+												<div class="form-group fs-12 text-center">
+													<a href="{{ path ('home_mainMenu')}}" class="font-weight-bold fs-18">
+														<span class="badge badge-gradient-primary mt-2">
+															<i class="fa fa-th"></i>
+															{% trans %}Main menu{% endtrans %}
+														</span>
+													</a>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				{# </div>
+			</div> #}
+		{# </div> #}
+
+
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Dashboard{% endtrans %}{% endblock %}
+
+{% block body %}
+
+        <!-- App-Content -->
+        <div class="hor-content main-content">
+            <div class="container">
+
+                <!-- Row -->
+                <div class="row row-sm" style="margin-top: 40px;">
+                    <div class="col-md-12 col-lg-12">
+                        <div class="card border-primary">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                            
+                                        <div class="text-primary">
+                                            <div class="display-1 mb-5 font-weight-bold error-text" style="font-size: 60px; text-align:center;">{% trans %}Welcome{% endtrans %} <br>
+                                            {{app.user.fullName}} 
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6">
+                                        <div class="alert alert-info">
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true">×</button>
+                                            <strong><i class="fa fa-info-circle me-2" aria-hidden="true"></i> Info Message : {% trans %}Note entry{% endtrans %}</strong>
+                                            <hr class="message-inner-separator">
+                                            <p><strong>{% trans %}If a student has not composed, {% endtrans %}</strong></p>
+                                            <p>{% trans %}If he has justified the absence, enter : {% endtrans %} <strong>0.1</strong>, {% trans %}Else enter{% endtrans %} <strong>0</strong></p>
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-6">
+                                        <div class="alert alert-info">
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true">×</button>
+                                            <strong><i class="fa fa-info-circle me-2" aria-hidden="true"></i> Info Message : Evaluation</strong>
+                                            <hr class="message-inner-separator">
+                                            <p>{% trans %}If a subject is not avaluated as is the case in History-Geography, click on the button "Not assessed"{% endtrans %}
+                                            {% if app.request.locale == 'fr' %}
+                                            <img src="{{asset('build/custom/images/nonEvaluee.jpg')}}" alt="" height="38">
+                                            {% elseif app.request.locale == 'en' %}
+                                            <img src="{{asset('build/custom/images/notAssessed.jpg')}}" alt="" height="38">
+                                            {% endif %}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              
+                <!--End Row -->
+                
+            </div>
+        </div>
+    
+    </div>
+
+{% endblock %}

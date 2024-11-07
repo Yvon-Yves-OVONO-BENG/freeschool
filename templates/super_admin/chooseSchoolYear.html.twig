@@ -1,0 +1,40 @@
+{% extends 'base_super_admin.html.twig' %}
+
+{% block title %}{% trans %}Choose School Year{% endtrans %}{% endblock %}
+
+{% block body %}
+
+            <div class="container">
+                <div class="card card-register mx-auto mt-5">
+                    <div class="card-header text-center header-perso h3" >
+                        {% trans %}Welcome on Freeschool{% endtrans %}
+                    </div>
+                    <div class="card-body body-perso">
+                        <form method="post" action="{{ path('super_admin_addHeadmaster') }}">
+                            <div class="form-group">
+                                <label for="schoolYear">
+                                {% trans %}School Year{% endtrans %}
+                                </label>
+                                <select name="schoolYear" id="schoolYear" class="form-control" required>
+                                <option value="">---</option>
+                                {% for schoolYear in schoolYears %}
+                                        <option value="{{ schoolYear.id }}">
+                                            {{schoolYear.schoolYear}}
+                                    </option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <button class="btn btn-perso btn-block" type="submit">
+                                    {% trans %}Go in{% endtrans %}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

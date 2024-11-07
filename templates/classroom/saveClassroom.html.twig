@@ -1,0 +1,144 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if slug != 0 %}
+        {% trans %}Updating{% endtrans %}
+        {% else %}
+        {% trans %}Add{% endtrans %}
+    {% endif %}
+    {% trans %}Classroom{% endtrans %}
+{% endblock %}
+
+{% block subTitle %}
+    {% if slug != 0 %}
+        {% trans %}UPDATING CLASSROOM{% endtrans %}
+    {% else %}
+        {% trans %}ADDING NEW CLASSROOM{% endtrans %}
+    {% endif %}
+{% endblock %}
+{% block infoMessage %}
+    {% include "includes/_info_message.html.twig" %}
+{% endblock %}
+
+{% block body %}
+ <!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+        
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary">
+                        {% if slug != 0 %}
+                            <i class="fa fa-edit me-2"></i> {% trans %}UPDATING CLASSROOM{% endtrans %}
+                        {% else %}
+                            <i class="fa fa-plus me-2"></i> {% trans %}ADDING NEW CLASSROOM{% endtrans %}
+                        {% endif %}
+                    </h4>
+                </div>
+                <div class="page-rightheader">
+                    <div class="btn-list">
+                        <a href="{{  path('classroom_displayClassroom') }}" class="btn btn-outline-primary">
+                            <i class="fa fa-list"></i>
+                        {% trans %}Display registered classrooms{% endtrans %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!--End Page header-->
+            {% if slug != 0 %}
+                <div class="card border-danger">
+                {% else %}
+                <div class="card border-primary">
+            {% endif %}
+                <div class="card-header">
+                    {# ligne afficher les classes #}
+                        <div class="col-md-5 text-left">
+                            <button type="button" class="btn btn-primary  mt-1 mb-1 me-3 form-control-sm">
+                                <span><i class="fa fa-building me-2"></i> {% trans %}Number of registered classrooms{% endtrans %}</span>
+                                <span class="badge bg-white text-dark rounded-pill">{{ classrooms|length }}</span>
+                            </button>
+                        </div>
+                        <div class="col-md-4 text-right">
+                            
+                        </div>
+                    {# Fin ligne afficher les classes #}
+                </div>
+                <div class="card-body ">
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{ form_start(formClassroom, {'attr': {'class':'row g-4 needs-validation', 'novalidate':""}}) }}
+                                <div class="row mb-4 mt-4">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            {{ form_row(formClassroom.classroom, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            {{ form_row(formClassroom.level, {'attr': {'class': 'form-control select2 custom-select'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            {{ form_row(formClassroom.principalTeacher, {'attr': {'class': 'form-control select2-show-search'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            {{ form_row(formClassroom.censor, {'attr': {'class': 'form-control select2-show-search'}}) }}
+                                        </div>
+                                    </div>
+
+                                    
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            {{ form_row(formClassroom.supervisor, {'attr': {'class': 'form-control select2-show-search'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            {{ form_row(formClassroom.counsellor, {'attr': {'class': 'form-control select2-show-search'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            {{ form_row(formClassroom.actionSociale, {'attr': {'class': 'form-control select2-show-search'}}) }}
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label style="color: #fff;">
+                                                {% trans %}Save{% endtrans %}
+                                            </label>
+                                            {% if slug == 0 %}
+                                                <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="addClassroom">
+                                                    <i class="fa fa-save me-2"></i>
+                                                    {% trans %}Save{% endtrans %}
+                                                </button>
+                                            {% else %}
+                                                    <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="editClassroom">
+                                                        <i class="fa fa-save me-2"></i>
+                                                    {% trans %}Save changes{% endtrans %}
+                                                </button>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+
+                            {{ form_end(formClassroom) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

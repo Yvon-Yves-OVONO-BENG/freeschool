@@ -1,0 +1,93 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Class Council{% endtrans %}{% endblock %}
+
+{% block subTitle %}
+    {% trans %}MANAGEMENT OF CLASS COUNCIL SHEETS{% endtrans %}
+{% endblock %}
+
+{% block body %}
+ <!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+        
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary"></h4>
+                </div>
+                <div class="page-rightheader">
+                    <div class="btn-list">
+                        
+                    </div>
+                </div>
+            </div>
+            <!--End Page header-->
+
+            <div class="card border-primary">
+                <div class="card-header">
+                    <span class="page-title mb-0 text-primary">
+                        <i class="fa fa-file-pdf-o me-2"></i>{% trans %}Printing of class council reports{% endtrans %}
+                    </span>
+                </div>
+                <div class="card-body ">
+                    <form action="{{ path('statistic_printClassCouncil') }}" method="post" target="_blank">
+                        <div class="row">
+                            <div class="col-md-1">
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <select name="classroom" id="classroom" class="form-control select2-show-search" data-placeholder="Choose a classroom" required>
+                                        <option label="Choose a classroom">
+                                            {% trans %}Chosse a classroom{% endtrans %}
+                                        </option>
+                                        
+                                        {% if subSystem == 'Francophone / French Speaker' %}
+                                            {% if school.education.education == 'Général' %}
+                                                {% include "includes/_selectClassroomsWithoutSelected.html.twig" %}
+                                                {% else %}
+                                                    {% include "includes/_selectClassroomsWithoutSelectedTech.html.twig" %}
+                                            {% endif %}
+                                            {% else %}
+                                                {% include "includes/_selectClassroomsWithoutSelectedEn.html.twig" %}
+                                        {% endif %}
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <select name="term" id="term" class="form-control select2 custom-select" data-placeholder="Choose a period" required>
+                                        <option label="Choose a period">
+                                            {% trans %}Choose a period{% endtrans %}</option>
+                                            {% for term in terms %}
+                                                {% if term.term != annualTerm %}
+                                                    <option value="{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                            {% for term in terms %}
+                                                {% if term.term == annualTerm %}
+                                                    <option value="{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printClassConcil">
+                                        <i class="fa fa-print"></i>
+                                        {% trans %}Print{% endtrans %}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,322 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Enter hours of absence{% endtrans %}{% endblock %}
+
+{% block subTitle %}
+    {% trans %}MANAGEMENT OF HOURS OF ABSENCE{% endtrans %}
+    {% if is_granted ('ROLE_ADMIN') %}
+        {% trans %}DE{% endtrans %} [ {{teacher.fullName }} ]
+    {% endif %}
+{% endblock %}
+{% block infoMessage %}
+    {% include "includes/_info_message.html.twig" %}
+{% endblock %}
+
+{% block currentUser %}
+    {{teacher.fullName }}
+{% endblock %}
+
+{% block body %}
+<!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+        
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary"><i class="fe fe-watch"></i> {% trans %}Management of Student's Absence Hours {% endtrans %} 
+						<span class="badge bg-success">{{ teacher.fullName }}</span>
+                    </h4>
+                </div>
+                <div class="page-rightheader">
+                    <div class="btn-list">
+                        
+                    </div>
+                </div>
+            </div>
+            <!--End Page header-->
+
+
+            <!-- Row -->
+				<div class="row mt-4">
+                    <div class="col-lg-12">
+                        <div class="expanel expanel-primary border-primary">
+                            <div class="expanel-heading">
+                                <h3 class="expanel-title">{% trans %}Choose term and classroom{% endtrans %}</h3>
+                            </div>
+                            <div class="expanel-body">
+                                
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <form action="{{ path('absence_absenceRecorder', {'slug': teacher.slug}) }}" method="post">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <select name="term" id="term" class="form-control select2 custom-select" data-placeholder="Choisir une période" required="required">
+                                                                <option label="Choisir une période">
+                                                                    {% trans %}Choose a period{% endtrans %}
+                                                                </option>
+                                                                {% for term in terms %}
+                                                                    {% if term.term != annualTerm %}
+                                                                        <option value="{{ term.id }}" 
+                                                                        {% if selectedTerm is defined %}
+                                                                            {% if selectedTerm.id == term.id %} 
+                                                                                selected 
+                                                                            {% endif %}
+                                                                        {% endif %}>
+                                                                            {% trans %}Term{% endtrans %} {{ term.term }}
+                                                                        </option>
+                                                                    {% endif %}
+                                                                {% endfor %}
+
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group" >
+                                                            <select name="classroom" id="classroom" class="form-control select2-show-search" data-placeholder="Choisir une classe" required="required">
+                                                                <option label="Choisir une classe">
+                                                                    {% trans %}Choose a classroom{% endtrans %}
+                                                                </option>
+                                                                {% for classroom in classrooms %}
+                                                                    <option value="{{ classroom.id }}" 
+                                                                    {% if selectedClassroom is defined %}
+                                                                        {% if selectedClassroom.id == classroom.id %}
+                                                                            selected
+                                                                        {% endif %}
+                                                                    {% endif %}>
+                                                                        {{ classroom.classroom }}
+                                                                    </option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <button class="btn btn-outline-primary" type="submit" name="displayAbsenceRecorder">
+                                                                <i class="fa fa-eye"></i>
+                                                                {% trans %}Display{% endtrans %}
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            {% if selectedTerm is defined %}
+                                                {# Si les absences sont déjà enregistrées #}
+                                                {% if absences|length > 0 %}
+                                                    {# affichage ligne de delete all absences #}
+                                                    {% if not is_granted('ROLE_ADMIN') %}
+                                                        {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+                                                            <form action="{{ path('absence_absenceRecorder', {'slug': teacher.slug}) }}" method="post" onsubmit="return confirm('{% trans %}Do you want to delete the hours of absence from class{% endtrans %} --- {{ selectedClassroom.classroom }} --- {% trans %}term{% endtrans %} N°{{ selectedTerm.term }} ?');">
+                                                                <input type="hidden" name="term" value="{{ selectedTerm.id }}">
+                                                                <input type="hidden" name="classroom" value="{{ selectedClassroom.id }}">
+                                                                <div class="form-group">
+                                                                    <button class="btn btn-outline-danger btn-medium w-100 br-7" type="submit" name="removeAllAbsences">
+                                                                        <i class="fa fa-eraser"></i>
+                                                                        {% trans %}Delete all these hours of absence{% endtrans %}
+                                                                    </button>
+                                                                </div>
+                                                            </form>
+                                                        {% endif %}
+                                                    {% endif %}
+                                                    {# fin affichage ligne de delete all absences #}
+                                                {% endif %}
+                                            {% endif %}
+                                        </div>
+                                    
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>		
+			<!--End Row -->
+            {% if selectedTerm is defined %}
+                <div class="card border-primary">
+                    <div class="card-header">
+                        {# choix du trimestre et classe à saisir les absences #}
+                        
+                        {# choix du trimestre et classe à saisir les absences #}
+                        {% if selectedTerm is defined %}
+                            {# affichage du header contenant les information sur la saisie en cours #}
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <button type="button" class="btn btn-primary  mt-1 mb-1 me-3">
+                                        <span>{% trans %}Term{% endtrans %} N°</span>
+                                        <span class="badge bg-white text-dark rounded-pill">{{ selectedTerm.term  }}</span>
+                                    </button>
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="button" class="btn btn-primary  mt-1 mb-1 me-3">
+                                        <span>{% trans %}Class{% endtrans %}</span>
+                                        <span class="badge bg-white text-dark rounded-pill">{{ selectedClassroom.classroom }}</span>
+                                    </button>
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="button" class="btn btn-primary  mt-1 mb-1 me-3">
+                                        <span>{% trans %}Effective{% endtrans %}</span>
+                                        <span class="badge bg-white text-dark rounded-pill">{{ students|length }}</span>
+                                    </button>
+                                </div>
+                            </div>   
+                            {# fin affichage du header contenant les information sur la saisie en cours #}
+                        {% endif %}
+                    </div>
+                    <div class="card-body ">
+                        
+                        {# affichage de la liste des elèves #}
+                        {% if absenceToUpdate == null %}
+                            {% if absences|length > 0 %}
+                                {# affichage de la liste des elèves si les absences existent déjà #}
+                                <div class="row mb-5">
+                                    <div class="col-md-12">
+                                        <table border="1" class="table table-striped" border="1" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th class="border-bottom-0 indigo-gradient">{% trans %}N°{% endtrans %}</th>
+                                                <th class="border-bottom-0 green-gradient">{% trans %}Full name{% endtrans %}</th>
+                                                <th class="border-bottom-0 orange-gradient">{% trans %}Hours away{% endtrans %}</th>
+                                                <th class="border-bottom-0 blue-gradient">{% trans %}Actions{% endtrans %}</th>
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                        
+                                            <th class="border-bottom-0 indigo-gradient">{% trans %}N°{% endtrans %}</th>
+                                            <th class="border-bottom-0 green-gradient">{% trans %}Full name{% endtrans %}</th>
+                                            <th class="border-bottom-0 orange-gradient">{% trans %}Hours away{% endtrans %}</th>
+                                            <th class="border-bottom-0 blue-gradient">{% trans %}Actions{% endtrans %}</th>
+                                        </tfoot>
+                                        
+                                        {% set i = 1 %}
+                                        {% for absence in absences %}
+                                            <tr class="table-row">
+                                                <td>{{ i }}</td>
+                                                <td >
+                                                    {{ absence.student.fullName }}
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="absence{{i}}"   readonly="readonly" value="{{ absence.absence }}" class="form-control" >
+                                                </td>
+                                                    {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+                                                    <td>
+                                                        <form action="{{ path('absence_absenceRecorder', {'slug': teacher.slug}) }}" method="post">
+                                                            <input type="hidden" name="term" value="{{ selectedTerm.id }}">
+                                                            <input type="hidden" name="classroom" value="{{ selectedClassroom.id }}">
+                                                            <input type="hidden" name="absence" value="{{ absence.id }}">
+
+                                                            <button type="submit" class="btn btn-outline-success" data-bs-toggle="tooltip" title="Modifier les Hours away de {{ absence.student.fullName }}" name="absenceToUpdate">
+                                                                <i class="fa fa-pencil-square-o"></i>
+                                                            </button>
+                                                        </form>
+                                                    </td>
+                                                    {% endif %}
+                                            </tr>
+                                        {% set i = i + 1 %}
+                                        {% endfor %}
+                                        </table>
+                                    </div>
+                                </div>
+                                {# fin affichage de la liste des elèves si les absences existent déjà #}
+                            {% else %}
+                                {# affichage de la liste des elèves si les absences n'existent pas encore #}
+                                {% if not is_granted('ROLE_ADMIN') %}
+                                    <div class="row mb-5">
+                                        <div class="col-md-12">
+                                                {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+                                                <form action="{{ path('absence_absenceRecorder', {'slug': teacher.slug}) }}" method="POST" onreset="return confirm('Do you want to reset all typed absences ?')">   
+                                                    <input type="hidden" name="term" value="{{ selectedTerm.id }}">
+                                                    <input type="hidden" name="classroom" value="{{ selectedClassroom.id }}">
+                                                    <input type="hidden" name="numberOfStudents" value="{{ students|length }}">
+                                                    <div class="row mb-5">
+                                                        <div class="col-md-12">
+                                                            <table border="1" class="table table-striped text-left" >
+                                                                {% set i = 1 %}
+                                                                {% for student in students %}
+                                                                    <tr class="table-row">
+                                                                        <td>
+                                                                            <input type="hidden" name="student{{i}}" value="{{student.id}}">
+                                                                        </td>
+                                                                        <td >
+                                                                            {{ student.fullName }}
+                                                                        </td>
+                                                                        <td>
+                                                                            <input type="number" name="absence{{i}}" required="required" min="0" max="500" step="1" class="form-control" value="0"> 
+                                                                        </td>
+                                                                    </tr>
+                                                                {% set i = i+1 %}
+                                                                {% endfor %}
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            <input type="reset" class="btn btn-primary btn-medium w-100 br-7" value="Cancel">
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="saveAbsence">
+                                                                <i class="fa fa-save"></i>
+                                                                {% trans %}Save{% endtrans %}
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                                {% else %}
+                                                    {% trans %}Access denied. The entry of hours of absence for this quarter's account is locked.{% endtrans %}
+                                                {% endif %}
+                                        </div>
+                                    </div>
+                                    {% else %}
+                                    <div class="row">
+                                        <div class="col-md-12 text-center p-5">
+                                            {% trans %}These hours of absence are not yet entered by the supervisor{% endtrans %}
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                {# fin affichage de la liste des elèves si les absences n'existent pas encore #}
+                            {% endif %}
+                        {% else %}
+                                {# affichage du formulaire de modification d'une absence #}
+                                <div class="row mb-5">
+                                    <div class="col-md-12">
+                                        {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+                                        <form action="{{ path('absence_absenceRecorder', {'slug': teacher.slug}) }}" method="post"> 
+                                            <input type="hidden" name="term" value="{{ selectedTerm.id }}">
+                                            <input type="hidden" name="classroom" value="{{ selectedClassroom.id }}">
+                                            <input type="hidden" name="absenceToUpdateId" value="{{ absenceToUpdate.id }}">
+                                            <div class="row p-5">
+                                                <div class="col-md-6">
+                                                    {{ absenceToUpdate.student.fullName }}
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="number" name="updatedAbsence" required="required" min="0"  step="1" value="{{ absenceToUpdate.absence }}" class="form-control">
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="updateAbsence">
+                                                        {% trans %}Save Changes{% endtrans %}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {# fin affichage du formulaire de modification d'une absence #}
+                        {% endif %}
+                        {# fin affichage de la liste des elèves #}
+                        
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

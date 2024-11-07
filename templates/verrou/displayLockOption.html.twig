@@ -1,0 +1,146 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Lock option{% endtrans %}{% endblock %}
+
+{% block subTitle %}
+    {% trans %}LOCK OPTIONS{% endtrans %}
+{% endblock %}
+{% block infoMessage %}
+    {% include "includes/_info_message.html.twig" %}
+{% endblock %}
+
+{% block body %}
+<!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+        
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary"></h4>
+                </div>
+                <div class="page-rightheader">
+                    <div class="btn-list">
+                        
+                    </div>
+                </div>
+            </div>
+            <!--End Page header-->
+
+            <div class="card border-primary">
+                <div class="card-header">
+                    <div class="col-md-6">
+                        <h3 class="card-title" style="vertical-align: miidle;">
+                            <i class="fa fa-lock me-2"></i> {% trans %}Data lock{% endtrans %}
+                        </h3>
+                    </div>
+                    <div class="col-md-6">
+                        {% if verrou.verrou == 0 %}
+                            <a href="{{ path('verrou_lockSchoolYear') }}" type="button" class="btn btn-outline-primary btn-lg btn-block">
+                                <i class="fa fa-lock p-1"></i>{% trans %}Lock all additions and changes to data{% endtrans %}
+                            </a>
+                            {% else %}
+                            <a href="{{ path('verrou_unlockSchoolYear') }}" type="button" class="btn btn-outline-danger btn-lg btn-block">
+                                <i class="fa fa-unlock p-1"></i>  {% trans %}Unlock All{% endtrans %}
+                            </a>
+                        {% endif %}
+
+                    </div>
+                </div>
+                <div class="card-body text-center pt-5">
+                    <div class="row">
+                        <div class="col-md-6 col-xm-12">
+                            {% if verrouSequence1.verrouSequence == 0 %}
+                                <a href="{{ path('verrou_lockSequence', {'idS': 1, 'lock': 1}) }}" type="button" class="btn btn-outline-primary btn-lg btn-block"> <i class="fa fa-lock p-1"></i>{% trans %}Lock entry of 1st assessment grades{% endtrans %}</a>
+                                {% else %}
+
+                                <a href="{{ path('verrou_lockSequence', {'idS': 1, 'lock': 0}) }}" type="button" class="btn btn-outline-danger btn-lg btn-block"><i class="fa fa-unlock p-1"></i>{% trans %}Unlock entry of 1st assessment gradest{% endtrans %}</a>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 col-xm-12">
+                            {% if verrouSequence2.verrouSequence == 0 %}
+                                <a href="{{ path('verrou_lockSequence', {'idS': 2, 'lock': 1}) }}" type="button" class="btn btn-outline-primary btn-lg btn-block"> <i class="fa fa-lock p-1"></i>{% trans %}Lock entry of 2nd assessment grades{% endtrans %}</a>
+                                {% else %}
+
+                                <a href="{{ path('verrou_lockSequence', {'idS': 2, 'lock': 0}) }}" type="button" class="btn btn-outline-danger btn-lg btn-block"><i class="fa fa-unlock p-1"></i>{% trans %}Unlock entry of 2nd assessment gradest{% endtrans %}</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 15px;">
+                        <div class="col-md-6 col-xm-12">
+                            {% if verrouSequence3.verrouSequence == 0 %}
+                                <a href="{{ path('verrou_lockSequence', {'idS': 3, 'lock': 1}) }}" type="button" class="btn btn-outline-primary btn-lg btn-block"> <i class="fa fa-lock p-1"></i>{% trans %}Lock entry of 3rd assessment grades{% endtrans %}</a>
+                                {% else %}
+
+                                <a href="{{ path('verrou_lockSequence', {'idS': 3, 'lock': 0}) }}" type="button" class="btn btn-outline-danger btn-lg btn-block"><i class="fa fa-unlock p-1"></i>{% trans %}Unlock entry of 3rd assessment gradest{% endtrans %}</a>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 col-xm-12">
+                            {% if verrouSequence4.verrouSequence == 0 %}
+                                <a href="{{ path('verrou_lockSequence', {'idS': 4, 'lock': 1}) }}" type="button" class="btn btn-outline-primary btn-lg btn-block"> <i class="fa fa-lock p-1"></i>{% trans %}Lock entry of 4th assessment grades{% endtrans %}</a>
+                                {% else %}
+
+                                <a href="{{ path('verrou_lockSequence', {'idS': 4, 'lock': 0}) }}" type="button" class="btn btn-outline-danger btn-lg btn-block"><i class="fa fa-unlock p-1"></i>{% trans %}Unlock entry of 4th assessment gradest{% endtrans %}</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 15px;">
+                        <div class="col-md-6 col-xm-12">
+                            {% if verrouSequence5.verrouSequence == 0 %}
+                                <a href="{{ path('verrou_lockSequence', {'idS': 5, 'lock': 1}) }}" type="button" class="btn btn-outline-primary btn-lg btn-block"> <i class="fa fa-lock p-1"></i>{% trans %}Lock entry of 5th assessment grades{% endtrans %}</a>
+                                {% else %}
+
+                                <a href="{{ path('verrou_lockSequence', {'idS': 5, 'lock': 0}) }}" type="button" class="btn btn-outline-danger btn-lg btn-block"><i class="fa fa-unlock p-1"></i>{% trans %}Unlock entry of 5th assessment gradest{% endtrans %}</a>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 col-xm-12">
+                            {% if verrouSequence6.verrouSequence == 0 %}
+                                <a href="{{ path('verrou_lockSequence', {'idS': 6, 'lock': 1}) }}" type="button" class="btn btn-outline-primary btn-lg btn-block"> <i class="fa fa-lock p-1"></i>{% trans %}Lock entry of 6th assessment grades{% endtrans %}</a>
+                                {% else %}
+
+                                <a href="{{ path('verrou_lockSequence', {'idS':6, 'lock': 0}) }}" type="button" class="btn btn-outline-danger btn-lg btn-block"><i class="fa fa-unlock p-1"></i>{% trans %}Unlock entry of 6th assessment gradest{% endtrans %}</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 15px;">
+                        <div class=" col-md-6 col-xm-12">
+                            {% if verrouReportTerm1.verrouReport == 0 %}
+                                <a href="{{ path('verrou_lockReportPrinting', {'idT': term1.id, 'lock': 1}) }}" type="button" class="btn btn-outline-primary btn-lg btn-block"> <i class="fa fa-lock p-1"></i>{% trans %}Lock the printing of quarter 1 report cards{% endtrans %}</a>
+                                {% else %}
+
+                                <a href="{{ path('verrou_lockReportPrinting', {'idT': term1.id, 'lock': 0}) }}" type="button" class="btn btn-outline-danger btn-lg btn-block"><i class="fa fa-unlock p-1"></i>{% trans %}Unlock Quarter 1 Report Card Printing{% endtrans %}</a>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 col-xm-12">
+                            {% if verrouReportTerm2.verrouReport == 0 %}
+                                <a href="{{ path('verrou_lockReportPrinting', {'idT': term2.id, 'lock': 1}) }}" type="button" class="btn btn-outline-primary btn-lg btn-block"> <i class="fa fa-lock p-1"></i>{% trans %}Lock the printing of quarter 2 report cards{% endtrans %}</a>
+                                {% else %}
+
+                                <a href="{{ path('verrou_lockReportPrinting', {'idT': term2.id, 'lock': 0}) }}" type="button" class="btn btn-outline-danger btn-lg btn-block"><i class="fa fa-unlock p-1"></i>{% trans %}Unlock Quarter 2 Report Card Printing{% endtrans %}</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 15px;">
+                        <div class=" col-md-6 col-xm-12">
+                            {% if verrouReportTerm3.verrouReport == 0 %}
+                                <a href="{{ path('verrou_lockReportPrinting', {'idT': term3.id, 'lock': 1}) }}" type="button" class="btn btn-outline-primary btn-lg btn-block"> <i class="fa fa-lock p-1"></i>{% trans %}Lock the printing of quarter 3 report cards{% endtrans %}</a>
+                                {% else %}
+
+                                <a href="{{ path('verrou_lockReportPrinting', {'idT': term3.id, 'lock': 0}) }}" type="button" class="btn btn-outline-danger btn-lg btn-block"><i class="fa fa-unlock p-1"></i>{% trans %}Unlock Quarter 3 Report Card Printing{% endtrans %}</a>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 col-xm-12">
+
+                            {% if verrouReportTerm0.verrouReport == 0 %}
+                            <a href="{{ path('verrou_lockReportPrinting', {'idT': term0.id, 'lock': 1}) }}" type="button" class="btn btn-outline-primary btn-lg btn-block"> <i class="fa fa-lock p-1"></i>{% trans %}Lock the printing of annual report{% endtrans %}</a>
+                        {% else %}
+                            <a href="{{ path('verrou_lockReportPrinting', {'idT': term0.id, 'lock': 0}) }}" type="button" class="btn btn-outline-danger btn-lg btn-block"><i class="fa fa-unlock p-1"></i>{% trans %}Unlock the printing of annual report{% endtrans %}</a>
+                        {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

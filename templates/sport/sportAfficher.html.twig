@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{% trans %}Sheet sport{% endtrans %}
+{% endblock %}
+
+{% block body %}
+
+	<div class="page-content">
+    <div class="container">
+        <div class="row">
+            <div class="col mx-auto">
+                <div class="row justify-content-center">
+                    <div class="col-md-4 col-xl-4">
+                        
+                        <div class="card border-primary" style="margin-top:65px;">
+                           
+                            <div class="card-body">
+							 	<div class="row">
+                                <div class="text-center mb-3">
+                                    <h1 class="mb-2">{% trans %}Sheets sport{% endtrans %}</h1>
+                                  
+                                    
+                                   
+                                </div>
+                                </div>
+                                <div class="text-center mb-3">
+                                   
+                                </div>
+								<form action="{{path('fiche_sport')}}" method="post" class="row g-3 needs-validation" novalidate target="_blank">
+                             
+                                    <div class="row">
+                                        <div class="col-md-12 col-xl-12">
+                                            <div class="input-group mb-4">
+                                               <select name="classe" class="form-select" id="validationTooltip04" data-placeholder="Choisir une classe" required="required">
+													<option label="Classe"></option>
+													{% for classe in classes %}
+														<option value="{{classe.id}}" {% if selectedClasse is defined %} {% if selectedClasse.id == classe.id %} selected {% endif %} {% endif %}>
+															{{classe.classroom}}
+														</option>
+													{% endfor %}
+													<div class="invalid-tooltip">
+														{% trans %}Classroom{% endtrans %}
+													</div>
+												</select>
+                                               
+                                            </div>
+                                        </div>
+                                      
+                                    </div>
+                                    <div class="form-group text-center mb-3">
+                                        <button class="btn btn-primary btn-lg w-100 br-7" name="imprimer"><i class="fe fe-printer me-2"></i> {% trans %}Download{% endtrans %}</button>
+                                    </div>
+                              	</form>
+                          
+                            </div>
+                        </div>
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</div>{% endblock %}

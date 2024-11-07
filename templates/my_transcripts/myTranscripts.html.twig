@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}My Transcripts{% endtrans %}{% endblock %}
+
+{% block body %}
+{% set currentUser = app.user %}
+<!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+
+
+			<!--Page header-->
+		<div class="page-header">
+			<div class="page-leftheader">
+				<h4 class="page-title mb-0 text-primary">{% trans %}My Transcripts{% endtrans %}</h4>
+			</div>
+			{% set currentTeacherId = currentUser ? (currentUser.teacher ? currentUser.teacher.id : 0 ) : 0 %}
+			<div class="page-rightheader">
+				<div class="btn-list">
+					<a href="{{ path('evaluation_markRecorder', {'id': currentTeacherId}) }}" class="btn btn-outline-primary"><i class="fe fe-user me-2"></i>
+						{% trans %}Enter Notes{% endtrans %}
+					</a>
+				</div>
+
+				{# <div class="btn-list">
+					<a href="{{ path('call_recorder', {'slug': currentUser.teacher.slug}) }}" class="btn btn-outline-primary"><i class="fe fe-user me-2"></i>
+						{% trans %}Make the call{% endtrans %}
+					</a>
+				</div> #}
+			</div>
+		</div>
+		<!--End Page header-->
+			
+			<!-- Row -->
+			<div class="row">
+				<div class="col-md-12 col-lg-12">
+					<div class="card border-primary">
+						<div class="card-header">
+							<h3 class="card-title">{% trans %}Print transcripts{% endtrans %}</h3>
+						</div>
+						<div class="card-body">
+							<div class="row mt-4">
+								<div class="col-lg-6">
+									<div class="expanel expanel-primary">
+										<div class="expanel-heading">
+											<h3 class="expanel-title">{% trans %}For a class{% endtrans %}</h3>
+										</div>
+
+										{% set currentTeacherId = currentUser ? (currentUser.teacher ? currentUser.teacher.id : 0 ) : 0 %}
+											
+										<div class="expanel-body text-center">
+											<form action="{{ path ('printMarkReportLesson', {'slug': currentUser.teacher.slug })}}" method="post" target="_blank">
+												<div class="row">
+													<div class="col-md-6">
+														
+														<select name="lessonId" id="lesson" class="form-control select2 custom-select" data-placeholder="{% trans %}Choose classroom{% endtrans %}" required="required">
+															<option label="{% trans %}Choose classroom{% endtrans %}"></option>
+																{% for lesson in lessons %}
+																	<option value="{{lesson.id}}"
+																	{% if selectedLesson is defined %}
+																		{% if selectedLesson.id == lesson.id %}
+																			selected
+																		{% endif %}
+																	{% endif %}
+																	>
+																		{{lesson.subject.subject}} --- {{lesson.classroom.classroom}}
+																	</option>
+																{% endfor %}
+														</select>
+														
+													</div>
+													<div class="col-md-6">
+														<button type="submit" class="btn btn-outline-primary"><i class="fe fe-printer me-2"></i> {% trans %}Print{% endtrans %}</button>
+													</div>
+												</div>
+												
+											</form>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-6">
+									<div class="expanel expanel-secondary">
+										<div class="expanel-heading">
+											<h3 class="expanel-title">{% trans %}All{% endtrans %}</h3>
+										</div>
+										<div class="expanel-body text-center">
+											<a href="{{ path('register_and_list_printMarkReport', {'slug': currentUser.teacher.slug }) }}" class="btn btn-outline-primary" target="_blank"><i class="fe fe-printer me-2"></i> {% trans %}Print All{% endtrans %}</a>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--End Row -->
+
+		</div>
+	</div><!-- right app-content-->
+</div>
+{% endblock %}

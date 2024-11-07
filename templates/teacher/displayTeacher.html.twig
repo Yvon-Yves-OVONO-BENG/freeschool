@@ -1,0 +1,399 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Display Teacher{% endtrans %}{% endblock %}
+
+{% block subTitle %}
+    {% if displayLaters == true %}
+        {% trans %}TEACHERS LATE IN RECORDING MARKS{% endtrans %}
+    {% else %}
+        {% trans %}STAFF MANAGMENT{% endtrans %}
+    {% endif %}
+
+{% endblock %}
+{% block infoMessage %}
+    {% include "includes/_info_message.html.twig" %}
+{% endblock %}
+
+{% block stylesheets %}
+	<style>
+		th,
+		tfoot {
+			font-size: 15px !important;
+			text-align: center !important;
+			font-weight: bold !important;
+			background-color: #F1F1F1 !important;
+		}
+
+		tr:hover {
+			background-color: rgba(62, 128, 235, 0.2) !important;
+			color: #3e80eb !important;
+		}
+
+        td {
+            vertical-align: middle !important;
+            text-align: center !important;
+        }
+	</style>
+{% endblock %}
+
+{% block body %}
+<!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+        
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary">
+                        {% if displayLaters == true %}
+                            <h3  class="text-yellow"><span class="badge bg-danger"><i class="fa fa-users me-2"></i> {% trans %}TEACHERS LATE IN RECORDING MARKS{% endtrans %}</span></h3>
+                            {% else %}
+                                <i class="fa fa-users me-2"></i> {% trans %}STAFF MANAGMENT{% endtrans %}
+                        {% endif %}
+                    </h4>
+                </div>
+                <div class="page-rightheader">
+                    <div class="btn-list">
+                         
+                        {% if displayLaters == true %}
+                            <a href="{{ path('teacher_displayTeacher') }}" class="btn btn-outline-primary">
+                                <i class="fa fa-eye"></i>
+                            {% trans %}Display staff list{% endtrans %}</a>
+                            {% else %}
+                                <button type="button" class="btn btn-primary">
+                                    <i class="fa fa-users me-2"></i> <span>{% trans %}Number of registered staff{% endtrans %}</span>
+                                    <span class="badge bg-white text-dark rounded-pill">{{ teachers|length }}</span>
+                                </button>
+
+                                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                    {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+                                        <a href="{{ path('teacher_saveTeacher') }}" class="btn btn-outline-primary" name="addNewTeacher">
+                                            <i class="fa fa-plus"></i>
+                                            {% trans %}Add new staff{% endtrans %}
+                                        </a>
+                                    {% endif %}
+                                {% endif %}
+                        {% endif %}
+                        
+                    </div>
+                </div>
+            </div>
+            <!--End Page header-->
+
+            <!-- Row -->
+			<div class="row mt-4">
+                <div class="col-lg-12">
+                    <div class="expanel expanel-primary border-primary">
+                        <div class="expanel-heading">
+                            <h3 class="expanel-title">{% trans %}Teachers late in recording marks{% endtrans %}</h3>
+                        </div>
+                        <div class="expanel-body">
+                            <div class="col-md-12">
+                                <form action="{{ path('teacher_displayTeacher', {'displayLaters': true})}}" method="post" class="row g-3 needs-validation" novalidate>
+                                    <fieldset>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <select name="sequence" class="form-select border" required="required" id="validationServer04" aria-describedby="validationServer04Feedback">
+                                                    <option value="">
+                                                        {% trans %}Choose a evaluation{% endtrans %}
+                                                    </option>
+                                                    {% for sequence in sequences %}
+                                                        {% if sequence.sequence != 0 %}
+                                                            <option value="{{ sequence.id }}"
+                                                                {% if selectedSequence.id == sequence.id %}
+                                                                    selected
+                                                                {% endif %}
+                                                            >
+                                                                {% trans %}Evaluation{% endtrans %} {{ sequence.sequence }} 
+                                                            </option>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {# {% for term in terms %}
+                                                        {% if term.term != 0 %}
+                                                            <option value="{{ term.id }}"
+                                                                {% if selectedTerm.id == term.id %}
+                                                                    selected
+                                                                {% endif %}
+                                                            >
+                                                                {% trans %}Term{% endtrans %} {{ term.term }} 
+                                                            </option>
+                                                        {% endif %}
+                                                    {% endfor %} #}
+                                                </select>
+                                                <div id="validationServer04Feedback" class="invalid-feedback">
+                                                    {% trans %}Please select a valid term.{% endtrans %} 
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <select name="level" class="form-select border">
+                                                    <option value="0">
+                                                    {% trans %}All levels{% endtrans %}
+                                                    </option>
+                                                    {% for level in levels %}
+                                                        <option value="{{ level.id }}" 
+                                                            {% if selectedLevel is not null %}
+                                                                {% if selectedLevel.id == level.id %}
+                                                                    selected
+                                                                {% endif %}
+                                                            {% endif %}
+                                                        > 
+                                                            {% trans %}Level{% endtrans %} {{ level.level }}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                        
+
+                                            {% if evaluations|length > 0 %}
+                                                <div class="col-md-2">
+                                                    <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="notRecordedMark">
+                                                        <i class="fa fa-eye"></i>
+                                                        {% trans %}Display{% endtrans %}
+                                                    </button>
+                                                </div>
+                                                <div class="col-md-3 text-right">
+                                                    {% if selectedLevel is not null %}
+                                                        <a class="btn btn-outline-primary btn-medium w-100 br-7" target="_blank" href="{{ path('teacher_printLaters', {'idS': selectedSequence.id, 'idL': selectedLevel.id}) }}">
+                                                            <i class="fa fa-print"></i>
+                                                            {% trans %}Print{% endtrans %}
+                                                        </a>
+                                                    {% else %}
+                                                        <a class="btn btn-outline-primary btn-medium w-100 br-7" target="_blank" href="{{ path('teacher_printLaters', {'idS': selectedSequence.id}) }}">
+                                                            <i class="fa fa-print"></i>
+                                                            {% trans %}Print{% endtrans %}
+                                                        </a>
+                                                    {% endif %}
+                                                </div>
+                                            {% else %}
+                                                <div class="col-md-3">
+                                                    <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="notRecordedMark">
+                                                        <i class="fa fa-eye"></i>
+                                                        {% trans %}Display{% endtrans %}
+                                                    </button>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </fieldset>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>		
+			<!--End Row -->
+
+            <div class="card border-primary">
+                {% if displayLaters == true %}
+                    <div class="card-header">
+                            <div class="col-md-4 text-left">
+                                <button type="button" class="btn btn-primary  mt-1 mb-1 me-3">
+                                    <span>{% trans %}Number of courses without marks recorded{% endtrans %}</span>
+                                    <span class="badge bg-white text-dark rounded-pill">{{ evaluations|length }}</span>
+                                </button>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <button type="button" class="btn btn-primary  mt-1 mb-1 me-3">
+                                    <span>{% trans %}Term{% endtrans %}</span>
+                                    <span class="badge bg-white text-dark rounded-pill">{{ selectedTerm.term }}</span>
+                                </button>
+                            </div>
+                            <div class="col-md-4 text-right">
+                                <button type="button" class="btn btn-primary  mt-1 mb-1 me-3">
+                                    <span>{% trans %}Level{% endtrans %}</span>
+                                    <span class="badge bg-white text-dark rounded-pill">{{selectedLevel ?  selectedLevel.level : "ALL" }}</span>
+                                </button>
+                            </div>
+                            
+                    </div>
+                {% endif %}
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table border="1" class="table table-bordered table-striped text-nowrap" id="example-1" width="100%" cellspacing="0">
+                            {% if displayLaters == true %}
+                                <thead>
+                                    <tr>
+                                        <th class="border-bottom-0 indigo-gradient">{% trans %}Full name{% endtrans %}</th>
+                                        <th class="border-bottom-0 green-gradient">{% trans %}Evaluation{% endtrans %}</th>
+                                        <th class="border-bottom-0 orange-gradient">{% trans %}Classroom{% endtrans %}</th>
+                                        <th class="border-bottom-0 blue-gradient">{% trans %}Subject{% endtrans %}</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th class="border-bottom-0 indigo-gradient">{% trans %}Full name{% endtrans %}</th>
+                                        <th class="border-bottom-0 green-gradient">{% trans %}Evaluation{% endtrans %}</th>
+                                        <th class="border-bottom-0 orange-gradient">{% trans %}Classroom{% endtrans %}</th>
+                                        <th class="border-bottom-0 blue-gradient">{% trans %}Subject{% endtrans %}</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    {% for evaluation in evaluations %}
+                                        <tr>
+                                            <td>{{ evaluation.lesson.teacher.fullName }}</td>
+                                            <td>{{ evaluation.sequence.sequence }}</td>
+                                            <td>{{ evaluation.lesson.classroom.classroom }}</td>
+                                            <td>{{ evaluation.lesson.subject.subject }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            {% else %}
+                                <thead>
+                                    <tr>
+                                        <th class="border-bottom-0 green-gradient">{% trans %}Full name{% endtrans %}</th>
+                                        <th class="border-bottom-0 blue-gradient">{% trans %}Duty{% endtrans %}</th>
+                                        <th class="border-bottom-0 indigo-gradient">{% trans %}Rank{% endtrans %}</th>
+                                        <th class="border-bottom-0 green-gradient">{% trans %}department{% endtrans %}</th>
+                                        <th class="border-bottom-0 orange-gradient">{% trans %}Phone number{% endtrans %}</th>
+                                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                            {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+                                                <th class="border-bottom-0 blue-gradient">{% trans %}Actions{% endtrans %}</th>
+                                            {% endif %}
+                                        {% endif %}
+                                        
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th class="border-bottom-0 green-gradient">{% trans %}Full name{% endtrans %}</th>
+                                        <th class="border-bottom-0 blue-gradient">{% trans %}Duty{% endtrans %}</th>
+                                        <th class="border-bottom-0 indigo-gradient">{% trans %}Rank{% endtrans %}</th>
+                                        <th class="border-bottom-0 green-gradient">{% trans %}department{% endtrans %}</th>
+                                        <th class="border-bottom-0 orange-gradient">{% trans %}Phone number{% endtrans %}</th>
+                                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                            {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+                                                <th class="border-bottom-0 blue-gradient">{% trans %}Actions{% endtrans %}</th>
+                                            {% endif %}
+                                        {% endif %}
+                                        
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    {% for teacher in teachers %}
+                                    <tr>
+                                        <td style="text-align: center !important;">
+                                            {% if teacher.sex.sex == "F" %}
+                                                Mme
+                                                {% else %}
+                                                M.
+                                            {% endif %}
+                                            {{ teacher.fullname }}
+                                            <h6  class="text-secondary"><span class="badge bg-primary">{{ teacher.administrativeNumber }}</span></h6>
+                                            <div class="tags">
+                                                <span class="tag tag-dark">
+                                                    {% trans %}Number of courses assigned{% endtrans %}
+                                                    {% if teacher.lessons|length == 0 %}
+                                                        <span class="tag-addon tag-red">{{ teacher.lessons|length }}</span>
+                                                        {% else %}
+                                                        <span class="tag-addon tag-blue">{{ teacher.lessons|length }}</span>
+                                                    {% endif %}
+                                                    
+                                                    
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {% if teacher.duty.duty == "ENSEIGNANT" %}
+                                                <span class="badge badge-default mt-2">{{ teacher.duty.duty }}</span>
+                                                {% else %}
+                                                    {% if teacher.duty.duty == "CENSEUR" %}
+                                                        <span class="badge bg-info mt-2">{{ teacher.duty.duty }}</span>
+                                                        {% else %}
+                                                            {% if teacher.duty.duty == "SURVEILLANT" %}
+                                                                <span class="badge bg-warning mt-2">{{ teacher.duty.duty }}</span>
+                                                                {% else %}
+                                                                    {% if teacher.duty.duty == "INTENDANT" %}
+                                                                        <span class="badge bg-danger mt-2">{{ teacher.duty.duty }}</span>
+                                                                        {% else %}
+                                                                            {% if teacher.duty.duty ==  "PROVISEUR" %}
+                                                                                <span class="badge bg-success mt-2">{{ teacher.duty.duty }}</span>
+                                                                                {% else %}
+                                                                                    {% if teacher.duty.duty == "SECRETAIRE" or teacher.duty.duty == "ECONOME" or teacher.duty.duty == "COMPTABLE" or teacher.duty.duty == "ACTION SOCIALE" or teacher.duty.duty == "CHEF SERVICE ORIENTATION" or teacher.duty.duty == "RESPONSABLE APPS" or teacher.duty.duty == "CHEF SERVICE DES SPORTS" or teacher.duty.duty ==  "PERSONNEL D'APPUI" or teacher.duty.duty == "GARDIEN/ VIGIL" or teacher.duty.duty == "--AUTRE--" or teacher.duty.duty ==  "CONSEILLER" or teacher.duty.duty ==  "ANIMATEUR PEDAGOGIQUE" %}
+                                                                                        <span class="badge bg-primary mt-2">{{ teacher.duty.duty }}</span>
+                                                                                    {% endif %}
+                                                                            {% endif %}
+
+                                                                    {% endif %}
+                                                            {% endif %}
+                                                    {% endif %}
+                                            {% endif %}
+                                                
+                                        
+                                        </td>
+                                        <td>{{ teacher.grade.grade}}</td>
+                                        {% if not teacher.department is null %}
+                                        <td>{{ teacher.department.department}}</td>
+                                        {% else %}
+                                        <td>{% trans %}Unknow{% endtrans %}</td>
+                                        {% endif %}
+                                        <td>{{ teacher.phoneNumber }}</td>
+                                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                            {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+                                                <td>
+                                                    <div class="btn-group">
+                                                        <a href="javascript:void(0);" class="btn btn-light btn-sm" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options <i class="fa fa-angle-down"></i>
+                                                        </a>
+                                                        <div class="dropdown-menu">
+                                                            <a class="dropdown-item" href="{{ path('print_lesson_teacher', {'slug': teacher.slug}) }}" target="_blank"><i class="fe fe-printer me-2"></i>{% trans %}Print Lessons assigned{% endtrans %} </a>
+                                                            <a class="dropdown-item" href="{{ path('print_timetable_teacher', {'slug': teacher.slug}) }}" target="_blank"><i class="fe fe-printer me-2"></i>{% trans %}Print timetable{% endtrans %} </a>
+                                                            <a class="dropdown-item" href="{{ path('teacher_editTeacher', {'slug': teacher.slug}) }}"><i class="fe fe-edit me-2"></i>{% trans %}Edit{% endtrans %} </a>
+
+                                                            <a class="dropdown-item" href="{{ path('user_changePassword', {'slug': teacher.slug}) }}"><i class="fe fe-lock me-2"></i> {% trans %}Change password{% endtrans %}</a>
+                                                            <a class="dropdown-item" href="{{ path('reset_password', {'id': teacher.id}) }}"><i class="fe fe-lock me-2"></i> {% trans %}Generate a random password{% endtrans %}</a>
+
+                                                            {% if teacher.lessons|length > 0 %}
+                                                                <a class="dropdown-item" href="javascript:void(0);" 
+                                                                    onclick="swal({
+                                                                        'title': '{% trans %}Danger{% endtrans %}',
+                                                                        'text': '{% trans %}Delete denied. This teacher have the courses!{% endtrans %}',
+                                                                        'type': 'error',
+                                                                        'showCancelButton': true,
+                                                                        'showConfirmButton': false,
+                                                                        'confirmButtonText': false,
+                                                                        'cancelButtonText': 'OK',
+                                                                        'cancelButtonColor': '#088318', 
+                                                                    })">
+                                                                    <i class="fa fa-trash me-2"></i>{% trans %}Delete{% endtrans %}
+                                                                </a>
+                                                                {% else %}
+
+                                                                {# <form action="{{ path('teacher_deleteTeacher', {'slug': teacher.slug}) }}" 
+                                                                    method="post" style="display: inline-block;" 
+                                                                    onsubmit="return confirm('{% trans %}Do you want to delete teacher{% endtrans %} --- {{ teacher.fullName}} ?');">
+                                                                    <button type="submit" name="deleteStudent" class="dropdown-item">
+                                                                        <i class="fe fe-trash me-2"></i> {% trans %}Delete{% endtrans %}
+                                                                    </button>
+                                                                </form> #}
+                                                                <a class="dropdown-item" href="javascript:void(0);" 
+                                                                    onclick="swal({
+                                                                        'title': 'Danger', 
+                                                                        'type': 'error', 
+                                                                        'text': 'Do you want to delete the teacher ' + '  - {{ teacher.fullName }} ?', 
+                                                                        'showCancelButton': true, 
+                                                                        'confirmButtonText': 'Yes', 
+                                                                        'confirmButtonColor': '#f00', 
+                                                                        'cancelButtonText': 'No', 
+                                                                        'cancelButtonColor': '#186106', 
+                                                                        'confirmButtonPath': '{{ path('teacher_deleteTeacher', {'slug': teacher.slug}) }} '});">
+                                                                    <i class="fa fa-trash me-2"></i>{% trans %}Delete{% endtrans %}
+                                                                </a>
+                                                            {% endif %}
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            {% endif %}
+                                        {% endif %}
+                                        
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            {% endif %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

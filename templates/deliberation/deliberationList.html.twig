@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Deliberation List{% endtrans %}{% endblock %}
+
+{% block subTitle %}
+    {% trans %}MANAGEMENT OF LISTS AFTER DELIBERATION{% endtrans %}
+{% endblock %}
+
+{% block body %}
+    <!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+        
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary"></h4>
+                </div>
+                <div class="page-rightheader">
+                    <div class="btn-list">
+                        
+                    </div>
+                </div>
+            </div>
+            <!--End Page header-->
+
+            <div class="card border-primary">
+                <div class="card-header">
+                    <span class="page-title mb-0 text-primary"><i class="fa fa-file-pdf-o me-2"></i> {% trans %}List of deliberations{% endtrans %}</span>
+                
+                </div>
+                <div class="card-body pt-5 ">
+                    <form action="{{ path('deliberation_printDeliberationList') }}" method="post" target="_blank" >
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <select name="classroom" id="classroom" class="form-control select2-show-search"  data-placeholder="Choose a classroom" required style="border: 1px solid #0f0;">
+                                        <option value="" label="Choose a classroom">
+                                            {% trans %}Choose a classroom{% endtrans %}
+                                        </option>
+
+                                        {% if is_granted('ROLE_PROVISEUR') or is_granted('ROLE_ADMIN') %}
+                                        <option value="0">{% trans %}All Classes{% endtrans %}</option>
+                                        {% endif %}
+
+                                        {% if subSystem == 'Francophone / French Speaker' %}
+                                            {% if school.education.education == 'Général' %}
+                                                {% include "includes/_selectClassroomsWithoutSelected.html.twig" %}
+                                                {% else %}
+                                                    {% include "includes/_selectClassroomsWithoutSelectedTech.html.twig" %}
+                                            {% endif %}
+                                            {% else %}
+                                                {% include "includes/_selectClassroomsWithoutSelectedEn.html.twig" %}
+                                        {% endif %}
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                    <div class="form-group">
+                                    <select name="decision" id="decision" class="form-control select2 custom-select" required>
+                                        <option value="" label="Choose a type">{% trans %}-- Choose decision --{% endtrans %}</option>
+                                        {# <option>{% trans %}-- Choose decision --{% endtrans %}</option> #}
+                                        {% for decision in decisions %}
+                                            <option value="{{ decision.id }}">{{ decision.decision }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printDeliberationList">
+                                        <i class="fa fa-print"></i>
+                                        {% trans %}Print{% endtrans %}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

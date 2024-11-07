@@ -3,3 +3,8 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+delete_student_trash_selected:
+    path: /delete-student-trash-selected
+    controller: App\Controller\DeleteStudentTrashSelectedController::deleteStudentTrashSelected
+    methods: [POST]

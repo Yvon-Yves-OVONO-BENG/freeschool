@@ -1,0 +1,11 @@
+{% for subject in subjects %}
+    <option value="{{ subject.id }}" 
+        {% if selectedSubject.id == subject.id %}
+            selected
+        {% endif %}>
+            {{ subject.subject }}
+    </option>
+{% endfor %}
+    
+
+

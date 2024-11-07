@@ -1,0 +1,90 @@
+{% if classrooms.level1|length > 0 %}
+    <optgroup label="6ème">
+        {% for classroom in classrooms.level1 %}
+        <option value="{{ classroom.id }}" 
+            {% if selectedClassroom.id == classroom.id %}
+                selected
+            {% endif %}>
+                {{ classroom.classroom }}
+        </option>
+        {% endfor %}
+    </optgroup>
+{% endif %}
+
+{% if classrooms.level2|length > 0 %}
+    <optgroup label="5ème">
+        {% for classroom in classrooms.level2 %}
+        <option value="{{ classroom.id }}" 
+            {% if selectedClassroom.id == classroom.id %}
+                selected
+            {% endif %}>
+                {{ classroom.classroom }}
+        </option>
+        {% endfor %}
+    </optgroup>
+{% endif %}
+
+{% if classrooms.level3|length > 0 %}
+    <optgroup label="4ème">
+        {% for classroom in classrooms.level3 %}
+        <option value="{{ classroom.id }}" 
+            {% if selectedClassroom.id == classroom.id %}
+                selected
+            {% endif %}>
+                {{ classroom.classroom }}
+        </option>
+        {% endfor %}
+    </optgroup>
+{% endif %}
+
+{% if classrooms.level4|length > 0 %}
+    <optgroup label="3ème">
+        {% for classroom in classrooms.level4 %}
+        <option value="{{ classroom.id }}" 
+            {% if selectedClassroom.id == classroom.id %}
+                selected
+            {% endif %}>
+                {{ classroom.classroom }}
+        </option>
+        {% endfor %}
+    </optgroup>
+{% endif %}
+
+{% if classrooms.level5|length > 0 %}
+    <optgroup label="Seconde">
+        {% for classroom in classrooms.level5 %}
+        <option value="{{ classroom.id }}" 
+            {% if selectedClassroom.id == classroom.id %}
+                selected
+            {% endif %}>
+                {{ classroom.classroom }}
+        </option>
+        {% endfor %}
+    </optgroup>
+{% endif %}
+
+{% if classrooms.level6|length > 0 %}
+    <optgroup label="Première">
+        {% for classroom in classrooms.level6 %}
+        <option value="{{ classroom.id }}" 
+            {% if selectedClassroom.id == classroom.id %}
+                selected
+            {% endif %}>
+                {{ classroom.classroom }}
+        </option>
+        {% endfor %}
+    </optgroup>
+{% endif %}
+
+{% if classrooms.level7|length > 0 %}
+    <optgroup label="Terminale">
+        {% for classroom in classrooms.level7 %}
+        <option value="{{ classroom.id }}" 
+            {% if selectedClassroom.id == classroom.id %}
+                selected
+            {% endif %}>
+                {{ classroom.classroom }}
+        </option>
+        {% endfor %}
+    </optgroup>
+{% endif %}

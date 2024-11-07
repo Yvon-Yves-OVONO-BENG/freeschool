@@ -1,0 +1,247 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Display Lesson{% endtrans %}{% endblock %}
+
+{% block subTitle %}
+    {% trans %}LESSONS MANAGMENT{% endtrans %}
+{% endblock %}
+{% block infoMessage %}
+    {% include "includes/_info_message.html.twig" %}
+{% endblock %}
+
+{% block stylesheets %}
+	<style>
+		th,
+		tfoot {
+			font-size: 15px !important;
+			text-align: center !important;
+			font-weight: bold !important;
+			background-color: #F1F1F1 !important;
+		}
+
+		tr:hover {
+			background-color: rgba(62, 128, 235, 0.2) !important;
+			color: #3e80eb !important;
+		}
+        td {
+			
+            vertical-align: middle !important;
+			text-align: center !important;
+
+		}
+	</style>
+{% endblock %}
+
+{% block body %}
+ <!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+        
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary">
+                        <i class="fa fa-briefcase me-2"></i>{% trans %}LESSONS MANAGMENT{% endtrans %}
+                    </h4>
+                </div>
+                <div class="page-rightheader">
+                    <div class="btn-list">
+                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_CENSEUR') %}
+                            {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+                                <form action="{{ path('lesson_saveLesson') }}" method="post">
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-outline-primary" name="addLesson">
+                                            <i class="fa fa-plus"></i>
+                                        {% trans %}Add new lesson{% endtrans %}
+                                        </button>
+                                    </div>
+                                </form>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <!--End Page header-->
+
+            <div class="card border-primary">
+                <div class="card-header">
+                    <div class="col-md-6 mt-2">
+                        <form action="{{ path('lesson_displayLesson') }}" method="post">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <select class="form-control select2-show-search" data-placeholder="Choose a classroom" name="classroom" id="classroom" required style="border: 1px solid #0f0;">
+                                            <option label="Choose a classroom">
+                                                {% trans %}Choose classroom{% endtrans %}
+                                            </option>
+                                            {% if subSystem == 'Francophone / French Speaker' %}
+                                                {% if school.education.education == 'Général' %}
+                                                    {% include "includes/_selectClassrooms.html.twig" %}
+                                                    {% else %}
+                                                        {% include "includes/_selectClassroomsTech.html.twig" %}
+                                                {% endif %}
+                                                {% else %}
+                                                    {% include "includes/_selectClassroomsEn.html.twig" %}
+                                            {% endif %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <button class="btn btn-outline-primary" type="submit" name="displayStudents">
+                                            <i class="fa fa-eye"></i>
+                                            {% trans %}Display{% endtrans %}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    {% if methodIsPost %}
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-primary">
+                                <span>{% trans %}Classroom{% endtrans %}</span>
+                                <span class="badge bg-white text-dark rounded-pill">{{ selectedClassroom.classroom }}</span>
+                            </button>
+
+                            <button type="button" class="btn btn-primary">
+                                <span>{% trans %}Number of students{% endtrans %}</span>
+                                <span class="badge bg-white text-dark rounded-pill">{{ selectedClassroom.students|length }}</span>
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if methodIsPost %}
+                <div class="card border-primary">
+                    <div class="card-header">          
+                        <div class="col-md-8 text-left">
+                            <button type="button" class="btn btn-primary">
+                                <span> {% trans %}Number of lessons{% endtrans %}</span>
+                                <span class="badge bg-white text-dark rounded-pill">{{ lessons|length }}</span>
+                            </button>
+                        </div> 
+                        <div class="col-md-4 text-right"> 
+                            <a href="{{ path('print_lesson_classroom', {'slug': selectedClassroom.slug }) }}" class="btn btn-outline-primary" target="_blank">
+                                <i class="fe fe-printer me-2"></i> {% trans %}Print{% endtrans %}
+                            </a>
+                        </div> 
+                    </div>
+                    <div class="card-body ">
+                        <div class="table-responsive">
+                            {% if methodIsPost %}
+                            <table border="1" class="table table-bordered text-nowrap" id="example2" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th class="wd-15p border-bottom-0">{% trans %}Subject{% endtrans %}</th>
+                                        <th class="border-bottom-0 green-gradient">{% trans %}Coefficient{% endtrans %}</th>
+                                        <th class="border-bottom-0 orange-gradient">{% trans %}Group{% endtrans %}</th>
+                                        <th class="border-bottom-0 blue-gradient">{% trans %}Teacher{% endtrans %}</th>
+                                        <th class="border-bottom-0 indigo-gradient">{% trans %}Hours per week{% endtrans %}</th>
+                                            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                            {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+                                                <th class="border-bottom-0 green-gradient">{% trans %}Actions{% endtrans %}</th>
+                                            {% endif %}
+                                            {% endif %}
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th class="border-bottom-0 indigo-gradient">{% trans %}Subject{% endtrans %}</th>
+                                        <th class="border-bottom-0 green-gradient">{% trans %}Coefficient{% endtrans %}</th>
+                                        <th class="border-bottom-0 orange-gradient">{% trans %}Group{% endtrans %}</th>
+                                        <th class="border-bottom-0 blue-gradient">{% trans %}Teacher{% endtrans %}</th>
+                                        <th class="border-bottom-0 indigo-gradient">{% trans %}Hours per week{% endtrans %}</th>
+                                            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                            {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+                                                <th class="border-bottom-0 green-gradient">{% trans %}Actions{% endtrans %}</th>
+                                            {% endif %}
+                                            {% endif %}
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    {% for lesson in lessons %}
+                                    
+                                    <tr>
+                                        <td >
+                                            <h6><span class="badge badge-default">{{ lesson.subject.subject }}</span></h6>
+                                        </td>
+                                        <td style="vertical-align: middle; ">  
+                                        <h6><span class="badge badge-default">{{ lesson.coefficient }}</span></h6>  
+                                            
+                                            
+                                        </td>
+                                        <td style="vertical-align: middle;">
+                                            <h6  class="text-secondary"><span class="badge bg-info"> <i class="fa fa-book me-2"></i> {{ lesson.subject.category.category }}</span></h6>
+                                        </td>
+                                        <td style="vertical-align: middle;">
+                                            <h6  class="text-secondary"><span class="badge bg-primary"> <i class="fa fa-user me-2"></i> {{ lesson.teacher.fullName }}</span></h6>
+                                        </td>
+                                        <td style="vertical-align: middle;">
+                                            <h6  class="text-secondary"><span class="badge bg-danger">{{ lesson.weekHours }}</span></h6>
+                                        </td>
+                                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                            {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+                                                <td>
+                                                    <div class="row" style="margin-top: 10px;">
+                                                        <div class="col-md-6">
+                                                            <form action="{{ path('lesson_editLesson', {'slug': lesson.slug}) }}" method="post" style="display: inline-block;">
+                                                                <div class="form-group">
+                                                                    <button type="submit" class="btn btn-outline-primary" name="updateLesson" data-bs-toggle="tooltip" title="Modifier le cours de {{ lesson.subject.subject }} en {{ selectedClassroom.classroom }}">
+                                                                        <i class="fa fa-pencil me-2"></i>{% trans %}Edit{% endtrans %}
+                                                                    </button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        <div class="col-md-6">
+
+                                                             {% if lesson.evaluations|length > 0 %}
+                                                                <a class="btn btn-outline-danger" href="javascript:void(0);" 
+                                                                    onclick="swal({
+                                                                        'title': '{% trans %}Danger{% endtrans %}',
+                                                                        'text': '{% trans %}Delete denied. This lesson have evaluations !{% endtrans %}',
+                                                                        'type': 'error',
+                                                                        'showCancelButton': true,
+                                                                        'showConfirmButton': false,
+                                                                        'confirmButtonText': false,
+                                                                        'cancelButtonText': 'OK',
+                                                                        'cancelButtonColor': '#088318', 
+                                                                    })">
+                                                                    <i class="fa fa-trash me-2"></i>{% trans %}Delete{% endtrans %}
+                                                                </a>
+                                                                {% else %}
+                                                                <a class="btn btn-outline-danger" href="javascript:void(0);" 
+                                                                    onclick="swal({
+                                                                        'title': '{% trans %}Warning !{% endtrans %}', 
+                                                                        'type': 'warning', 
+                                                                        'text': '{% trans %}Do you want to delete this lesson ?{% endtrans %}', 
+                                                                        'showCancelButton': true, 
+                                                                        'confirmButtonText': 'Oui', 
+                                                                        'confirmButtonColor': '#f00', 
+                                                                        'cancelButtonText': 'Non', 
+                                                                        'cancelButtonColor': '#186106', 
+                                                                        'confirmButtonPath': '{{ path('lesson_deleteLesson', {'slug': lesson.slug}) }} '});">
+                                                                    <i class="fa fa-trash me-2"></i>{% trans %}Delete{% endtrans %}
+                                                                </a>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    
+                                                </td>
+                                            {% endif %}
+                                        {% endif %}
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

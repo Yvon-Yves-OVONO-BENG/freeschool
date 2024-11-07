@@ -1,0 +1,115 @@
+{% extends 'baseLoggin.html.twig' %}
+
+{% block title %}FreeSchool{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        .error {
+            color: red;
+            font-size: 12px;
+            }
+
+            .valid {
+            color: green;
+            font-size: 12px;
+            }
+        {# input[type="radio"].error {
+            outline: 2px solid red;
+        } #}
+
+        {# input[type="radio"].valid {
+            outline: 2px solid green;
+        } #}
+    </style>
+{% endblock %}
+
+{% block body %}
+
+    <div class="row" style="margin-top: 100px;">
+        <div class="col mx-auto">
+            <div class="row justify-content-center">
+                <div class="col-xl-7 col-lg-12">
+                    <div class="row p-0 m-0">
+                        <div class="col-md-4 col-lg-4 p-0 mx-auto">
+                            <div class="text-justified text-white p-5 register-1 overflow-hidden" >
+                                <div class="custom-content">
+                                    <div class="mb-5 br-7 text-center">
+                                        <img src="{{asset('build/custom2/images/brand/logo_white.png')}}" class="header-brand-img desktop-lgo" alt="Freedom logo">
+                                    </div>
+                                    <div class="ms-5" style="text-align: center;">
+                                        <div class="fs-18 mb-6 text-white">{% trans %}Welcome to Freeschool!{% endtrans %}
+                                        </div>
+                                        <div class="fs-11 mb-6 text-white">
+                                        {% trans %}The best school management software since 2019{% endtrans %} 
+                                        </div>
+                                        <h6 class="text-white">
+                                            <a href="javascript:void(0);" class="btn btn-white text-primary text-transparent font-weight-bold ">{% trans %}The Best{% endtrans %} <i class="fa fa-thumbs-up"></i></a>
+                                        </h6>     
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8 col-lg-8 p-0 mx-auto" style="margin-left: auto !important; margin-right: auto !important; text-align:center !important;">
+                            <div class="bg-white text-dark br-7 br-tl-0 br-bl-0 border-primary">
+                                
+                                <div class="card-body">
+                                    <div class="text-center mb-3">
+                                        <h4 class="mb-2">{% trans %}SUB SYSTEM & SCHOOL YEAR{% endtrans %}</h4>
+                                        <a href="javascript:void(0);" class="">SOUS-SYSTEME & ANNE SCOLAIRE</a>
+                                    </div>
+                                    <form id="login-form" class="row g-3 needs-validation" novalidate action="{{ path('home_mainMenu') }}" method="post">
+                                        
+                                        <div class="form-group ">
+                                            <label for="validationCustom01" class="form-label" style="font-weight: bold !important;">{% trans %}Sub System / Sous Système{% endtrans %}
+                                            </label>
+                                                    
+                                            <div class="selectgroup selectgroup-pills ">
+                                                <label class="selectgroup-item">
+                                                    <input type="radio" name="subSystem" value="1" required class="selectgroup-input">
+                                                    <span class="selectgroup-button">
+                                                        <img src="{{asset('build/custom/images/en.png')}}" alt="img" class="me-2 country">
+                                                        {% trans %}English Speaker{% endtrans %}
+                                                    </span>
+                                                </label>
+                                                <label class="selectgroup-item">
+                                                    <input type="radio" name="subSystem" value="2" required class="selectgroup-input">
+                                                    <span class="selectgroup-button">
+                                                        <img src="{{asset('build/custom/images/fr.png')}}" alt="img" class="me-2 country">
+                                                        {% trans %}French Speaker{% endtrans %} 
+                                                    </span>
+                                                </label>
+                                            </div>
+                                            <div id="subSystem-error" class="error"></div>
+
+                                            {# <div id="valid-message" style="color: green; display: none;">{% trans %}Good.{% endtrans %}</div> #}
+                                            
+                                            <div class="invalid-feedback">
+                                                {% trans %}Please choose a sub system{% endtrans %}
+                                            </div>
+                                            <label class="form-label" style="font-weight: bold !important;">{% trans %}School Year{% endtrans %}</label>
+                                            <select class="form-select border" data-placeholder="Choisir" name="schoolYear" id="schoolYear" required>
+                                                <option value="" label={% trans %}"School Year / Année Scolaire"{% endtrans %}></option>
+                                                    {% for schoolYear in schoolYears %}
+                                                        <option value="{{ schoolYear.id }}">
+                                                            {{ schoolYear.schoolYear }}
+                                                        </option>
+                                                    {% endfor %}
+                                            </select>
+                                            <div class="invalid-feedback">
+                                                {% trans %}Please choose school year{% endtrans %}
+                                            </div>
+                                        </div>
+                                        <div class="form-group text-center m">
+                                            <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" id="soumission" ><i class="fe fe-unlock me-2"></i> {% trans %}Enter{% endtrans %}</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+	<script src="{{ asset ('build/custom/js/verificationChampRadio.js')}}"></script>
+{% endblock %}

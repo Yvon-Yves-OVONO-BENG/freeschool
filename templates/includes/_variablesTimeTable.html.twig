@@ -1,0 +1,308 @@
+
+    {% set lundi7H30 = "" %}
+    {% set mardi7H30 = "" %}
+    {% set mercredi7H30 = "" %}
+    {% set jeudi7H30 = "" %}
+    {% set vendredi7H30 = "" %}
+
+    {#///////////////////////////////////////////#}
+    {% set lundi8H25 = "" %}
+    {% set mardi8H25 = "" %}
+    {% set mercredi8H25 = "" %}
+    {% set jeudi8H25 = "" %}
+    {% set vendredi8H25 = "" %}
+
+    {#///////////////////////////////////////////#}
+    {% set lundi9H20 = "" %}
+    {% set mardi9H20 = "" %}
+    {% set mercredi9H20 = "" %}
+    {% set jeudi9H20 = "" %}
+    {% set vendredi9H20 = "" %}
+
+    {#///////////////////////////////////////////#}
+    {% set lundi10H30 = "" %}
+    {% set mardi10H30 = "" %}
+    {% set mercredi10H30 = "" %}
+    {% set jeudi10H30 = "" %}
+    {% set vendredi10H30 = "" %}
+
+    {#///////////////////////////////////////////#}
+    {% set lundi11H25 = "" %}
+    {% set mardi11H25 = "" %}
+    {% set mercredi11H25 = "" %}
+    {% set jeudi11H25 = "" %}
+    {% set vendredi11H25 = "" %}
+
+    {#///////////////////////////////////////////#}
+    {% set lundi12H20 = "" %}
+    {% set mardi12H20 = "" %}
+    {% set mercredi12H20 = "" %}
+    {% set jeudi12H20 = "" %}
+    {% set vendredi12H20 = "" %}
+
+    {#///////////////////////////////////////////#}
+    {% set lundi13H40 = "" %}
+    {% set mardi13H40 = "" %}
+    {% set mercredi13H40 = "" %}
+    {% set jeudi13H40 = "" %}
+    {% set vendredi13H40 = "" %}
+
+
+    {#///////////////////////////////////////////#}
+    {% set lundi14H35 = "" %}
+    {% set mardi14H35 = "" %}
+    {% set mercredi14H35 = "" %}
+    {% set jeudi14H35 = "" %}
+    {% set vendredi14H35 = "" %}
+
+    {#///////////////////////////////////////////#}
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Lundi/Monday' and timeTable.startTime == '07:30:00' %}
+            {% set lundi7H30 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Mardi/Tuesday' and timeTable.startTime == '07:30:00' %}
+            {% set mardi7H30 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Mercredi/Wednesday' and timeTable.startTime == '07:30:00' %}
+            {% set mercredi7H30 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Jeudi/Thursday' and timeTable.startTime == '07:30:00' %}
+            {% set jeudi7H30 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Vendredi/Friday' and timeTable.startTime == '07:30:00' %}
+            {% set vendredi7H30 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+
+    {#///////////////////////////////////////////#}
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Lundi/Monday' and timeTable.startTime == '08:25:00' %}
+            {% set lundi8H25 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Mardi/Tuesday' and timeTable.startTime == '08:25:00' %}
+            {% set mardi8H25 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Mercredi/Wednesday' and timeTable.startTime == '08:25:00' %}
+            {% set mercredi8H25 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Jeudi/Thursday' and timeTable.startTime == '08:25:00' %}
+            {% set jeudi8H25 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Vendredi/Friday' and timeTable.startTime == '08:25:00' %}
+            {% set vendredi8H25 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+
+    {#///////////////////////////////////////////#}
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Lundi/Monday' and timeTable.startTime == '09:20:00' %}
+            {% set lundi9H20 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Mardi/Tuesday' and timeTable.startTime == '09:20:00' %}
+            {% set mardi9H20 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Mercredi/Wednesday' and timeTable.startTime == '09:20:00' %}
+            {% set mercredi9H20 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Jeudi/Thursday' and timeTable.startTime == '09:20:00' %}
+            {% set jeudi9H20 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Vendredi/Friday' and timeTable.startTime == '09:20:00' %}
+            {% set vendredi9H20 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {#///////////////////////////////////////////#}
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Lundi/Monday' and timeTable.startTime == '10:30:00' %}
+            {% set lundi10H30 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Mardi/Tuesday' and timeTable.startTime == '10:30:00' %}
+            {% set mardi10H30 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Mercredi/Wednesday' and timeTable.startTime == '10:30:00' %}
+            {% set mercredi10H30 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Jeudi/Thursday' and timeTable.startTime == '10:30:00' %}
+            {% set jeudi10H30 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Vendredi/Friday' and timeTable.startTime == '10:30:00' %}
+            {% set vendredi10H30 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {#///////////////////////////////////////////#}
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Lundi/Monday' and timeTable.startTime == '11:25:00' %}
+            {% set lundi11H25 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Mardi/Tuesday' and timeTable.startTime == '11:25:00' %}
+            {% set mardi11H25 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Mercredi/Wednesday' and timeTable.startTime == '11:25:00' %}
+            {% set mercredi11H25 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Jeudi/Thursday' and timeTable.startTime == '11:25:00' %}
+            {% set jeudi11H25 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Vendredi/Friday' and timeTable.startTime == '11:25:00' %}
+            {% set vendredi11H25 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+
+     {#///////////////////////////////////////////#}
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Lundi/Monday' and timeTable.startTime == '12:20:00' %}
+            {% set lundi12H20 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Mardi/Tuesday' and timeTable.startTime == '12:20:00' %}
+            {% set mardi12H20 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Mercredi/Wednesday' and timeTable.startTime == '12:20:00' %}
+            {% set mercredi12H20 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Jeudi/Thursday' and timeTable.startTime == '12:20:00' %}
+            {% set jeudi12H20 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Vendredi/Friday' and timeTable.startTime == '12:20:00' %}
+            {% set vendredi12H20 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {#///////////////////////////////////////////#}
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Lundi/Monday' and timeTable.startTime == '13:40:00' %}
+            {% set lundi13H40 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Mardi/Tuesday' and timeTable.startTime == '13:40:00' %}
+            {% set mardi13H40 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Mercredi/Wednesday' and timeTable.startTime == '13:40:00' %}
+            {% set mercredi13H40 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Jeudi/Thursday' and timeTable.startTime == '13:40:00' %}
+            {% set jeudi13H40 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Vendredi/Friday' and timeTable.startTime == '13:40:00' %}
+            {% set vendredi13H40 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {#///////////////////////////////////////////#}
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Lundi/Monday' and timeTable.startTime == '14:35:00' %}
+            {% set lundi14H35 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Mardi/Tuesday' and timeTable.startTime == '14:35:00' %}
+            {% set mardi14H35 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Mercredi/Wednesday' and timeTable.startTime == '14:35:00' %}
+            {% set mercredi14H35 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Jeudi/Thursday' and timeTable.startTime == '14:35:00' %}
+            {% set jeudi14H35 = timeTable %}
+        {% endif %}
+    {% endfor %}
+
+    {% for timeTable in timeTables %}
+        {% if timeTable.day.day == 'Vendredi/Friday' and timeTable.startTime == '14:35:00' %}
+            {% set vendredi14H35 = timeTable %}
+        {% endif %}
+    {% endfor %}
+

@@ -1,0 +1,111 @@
+{% extends 'baseLoggin.html.twig' %}
+
+{% block title %}{% trans %}Log in{% endtrans %}{% endblock %}
+
+{% block subTitle %}
+    {% if error %}
+        <span style="color: #910000;">
+            {{ error.messageKey|trans(error.messageData, 'security') }}
+        </span>
+    {% else %}
+        {% trans %}IDENTIFICATION{% endtrans %}
+    {% endif %}
+
+{% endblock %}
+
+{% block infoMessage %}
+    <a class="btn btn-outline-primary btn-medium w-100 br-7" href="{{ path('home_mainMenu') }}" style="font-size: 1rem;">
+        <i class="fa fa-th"></i>
+        {% trans %}Main menu{% endtrans %}</a>
+{% endblock %}
+     
+{% block body %}
+
+            <div class="row" style="margin-top: 90px;">
+                <div class="col mx-auto">
+                    <div class="row justify-content-center">
+                        <div class="col-xl-7 col-lg-12">
+                            <div class="row p-0 m-0">
+                                    <div class="col-lg-6 p-0">
+                                        <div class="text-justified text-white p-5 register-1 overflow-hidden" >
+                                            <div class="custom-content">
+                                                <div class="mb-5 br-7 text-center">
+                                                    <img src="{{asset('build/custom2/images/brand/logo_white.png')}}" class="header-brand-img desktop-lgo" alt="Freedom logo">
+                                                </div>
+                                                <div class="ms-5">
+                                                    <div class="fs-18 mb-6 font-weight-bold text-white">{% trans %}You are using Freeschool{% endtrans %}</div>
+                                                    <div class="mb-6 text-white" style="text-align: center;">
+                                                    {% trans %}The best school management software since 2019{% endtrans %}
+                                                    </div>
+                                                    <h6 class="text-white">
+                                                        {% trans %}Freedom Software{% endtrans %} <a href="#" class="btn btn-white text-primary text-transparent font-weight-bold ">{% trans %}The best{% endtrans %} <i class="fa fa-thumbs-up"></i></a>
+                                                    </h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <div class="col-md-8 col-lg-6 p-0 mx-auto">
+                                <div class="bg-white text-dark br-7 br-tl-0 br-bl-0 border-primary">
+                                    <div class="card-body">
+                                        <div class="text-center mb-3">
+                                            <h1 class="mb-2">Identification</h1>
+                                            <a href="javascript:void(0);" class="">{% trans %}Choose your name and enter the password{% endtrans %}</a>
+                                        </div>
+                                        <form class="mt-5" method="post" action="">
+                                            <div class="input-group mb-4">
+                                                {# <div class="input-group-text">
+                                                    <i class="fe fe-user"></i>
+                                                </div> #}
+                                                <select class="form-control select2-show-search" data-placeholder="Nom utilisateur" name="username" id="inputUsername" autocomplete="username" required autofocus >
+                                                    
+                                                    <option label="Nom utilisateur">
+                                                    </option>
+                                                    {% for user in users %}
+                                                        <option value="{{ user.username }}" 
+                                                            {% if user.username == last_username %}
+                                                                selected
+                                                            {% endif %}
+                                                        >
+                                                            {{ user.fullName }}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+
+                                            <div class="input-group mb-4">
+                                                <div class="input-group" id="Password-toggle">
+                                                    <a href="" class="input-group-text">
+                                                        <i class="fe fe-eye" aria-hidden="true"></i>
+                                                    </a>
+                                                    <input class="form-control" type="password" placeholder="Password" name="password" id="inputPassword" autocomplete="current-password" required autofocus>
+                                                    
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group">
+                                            </div>
+                                            <div class="form-group text-center mb-3">
+                                                <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7"><i class="fe fe-unlock me-2"></i> {% trans %}Login{% endtrans %}</button>
+                                            </div>
+                                            <div class="form-group fs-13 text-center">
+                                                <a href="#">{% trans %}Forgot your password ?{% endtrans %}</a>
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

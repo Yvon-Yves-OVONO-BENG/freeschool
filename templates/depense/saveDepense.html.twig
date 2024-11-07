@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Save depense{% endtrans %}{% endblock %}
+{% block infoMessage %}
+    {% include "includes/_info_message.html.twig" %}
+{% endblock %}
+{% block body %}
+
+<!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary"></h4>
+                </div>
+                <div class="page-rightheader">
+                    <div class="btn-list">
+                        
+                    </div>
+                </div>
+            </div>
+            <!--End Page header-->
+            <div class="card border-primary">
+                <div class="card-header">
+                    <div class="col-md-8">
+                        <button type="button" class="btn btn-info  mt-1 mb-1 me-3 form-control-sm">
+                            <span>{% trans %}Total expenses{% endtrans %}</span>
+                            <span class="badge bg-white text-dark rounded-pill">{{ numberOfDepenses }}</span>
+                        </button>
+                    </div>
+                    
+                    <div class="col-md-4 text-right">
+                        <a href="{{ path('display_depense') }}" class="btn btn-outline-primary">
+                            <i class="fa fa-eye"></i>
+                            {% trans %}Dislay expenses{% endtrans %}
+                        </a>
+                    </div>
+                    
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{ form_start(formDepense)}}
+                                <div class="row mb-1">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            {{ form_row(formDepense.createdAt, {'attr': {'class': 'form-control form-control-sm '}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            {{ form_row(formDepense.montant, {'attr': {'class': 'form-control form-control-sm '}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            {{ form_row(formDepense.motif, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            {{ form_row(formDepense.rubrique, {'attr': {'class': 'form-control select2-show-search'}}) }}
+                                        </div>
+                                    </div> 
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-4"></div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="addStudent">
+                                                <i class="fa fa-save"></i>
+                                                {% trans %}Save{% endtrans %}
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4"></div>
+                                </div>
+                            {{ form_end(formDepense) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

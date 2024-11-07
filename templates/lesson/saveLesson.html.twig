@@ -1,0 +1,127 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if slugClassroom != 0 %}
+        {% trans %}Edit Lesson{% endtrans %}
+        {% else %}
+            {% trans %}Save Lesson{% endtrans %}
+    {% endif %}
+    
+        
+{% endblock %}
+
+{% block subTitle %}
+     {% if slugClassroom != 0 %}
+        {% trans %}UPDATING LESSON{% endtrans %}
+        {% else %}
+        {% trans %}ADDING NEW LESSON{% endtrans %}
+    {% endif %}
+{% endblock %}
+
+{% block infoMessage %}
+    {% include "includes/_info_message.html.twig" %}
+{% endblock %}
+
+{% block body %}
+<!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+        
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary"></h4>
+                </div>
+                <div class="page-rightheader">
+                    <div class="btn-list">
+                        
+                    </div>
+                </div>
+            </div>
+            <!--End Page header-->
+
+            <div class="card border-primary">
+                <div class="card-header">
+                        <div class="col-md-8">
+                            <div class="card-title">
+                            <i class="fa fa-briefcase me-2"></i>
+                                {% if slugClassroom != 0 %}
+                                    {% trans %}UPDATING LESSON{% endtrans %}
+                                {% else %}
+                                {% trans %}ADDING NEW LESSON{% endtrans %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-right">
+                            <a href="{{ path('lesson_displayLesson', {'slug': slugClassroom }) }}" class="btn btn-outline-primary">
+                                <i class="fa fa-list"></i>
+                                {% trans %}Display registered lessons{% endtrans %}
+                            </a>
+                        </div>
+                    
+                </div>
+                <div class="card-body ">
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{ form_start(formLesson)}}
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            {{ form_row(formLesson.subject, {'attr': {'class': 'form-control select2-show-search'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            {{ form_row(formLesson.classroom, {'attr': {'class': 'form-control select2-show-search'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            {{ form_row(formLesson.teacher, {'attr': {'class': 'form-control select2-show-search'}}) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            {{ form_row(formLesson.subjectGroup, {'attr': {'class': 'form-control select2 custom-select'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            {{ form_row(formLesson.coefficient, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            {{ form_row(formLesson.weekHours, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label style="color: #fff;">
+                                                {% trans %}Save{% endtrans %}
+                                            </label>
+                                            <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="addLesson">
+                                                {% if slugClassroom == 0 %}
+                                                <i class="fa fa-save"></i>
+                                                    {% trans %}Save{% endtrans %}
+                                                {% else %}
+                                                <i class="fa fa-save"></i>
+                                                    {% trans %}Save changes{% endtrans %}
+                                                {% endif %}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>   
+                        {{ form_end(formLesson) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+{% endblock %}

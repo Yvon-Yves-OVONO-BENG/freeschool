@@ -1,0 +1,179 @@
+{% extends 'base_super_admin.html.twig' %}
+
+{% block title %}{% trans %}Add School{% endtrans %}{% endblock %}
+
+
+{% block subTitle %}
+    {% trans %}ADDING SCHOOL{% endtrans %}
+{% endblock %}
+
+{% block body %}
+ {% for message in app.flashes('info') %}
+            <script>
+                alert("{{ message }}");
+            </script>
+        {% endfor %}
+        
+            <div class="container">
+                <div class="row mt-2">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            {{ form_row(formSchool.headmaster) }}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            {{ form_row(formSchool.logoFile) }}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            {{ form_row(formSchool.filigreeFile) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-12">
+                        {{ form_start(formSchool) }}
+                            <div class="row mt-2">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                    {{ form_row(formSchool.frenchName) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        {{ form_row(formSchool.frenchMotto) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        {{ form_row(formSchool.englishName) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        {{ form_row(formSchool.englishMotto) }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                    {{ form_row(formSchool.frenchCountry) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        
+                                        {{ form_row(formSchool.frenchCountryMotto) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        {{ form_row(formSchool.englishCountry) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        {{ form_row(formSchool.englishCountryMotto) }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                    {{ form_row(formSchool.frenchMinister) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        {{ form_row(formSchool.frenchRegion) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        {{ form_row(formSchool.englishMinister) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        {{ form_row(formSchool.englishRegion) }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                    {{ form_row(formSchool.frenchDivision) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        {{ form_row(formSchool.frenchSubDivision) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        {{ form_row(formSchool.englishDivision) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        {{ form_row(formSchool.englishSubDivision) }}
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row mt-2">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                    {{ form_row(formSchool.pobox) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        {{ form_row(formSchool.telephone) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        {{ form_row(formSchool.place) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        {{ form_row(formSchool.email) }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mt-2">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        {{ form_row(formSchool.serviceNote) }}
+                                    </div>
+                                    <div class="col-md-1"></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label style="color: #fff;">
+                                            {% trans %}Save{% endtrans %}
+                                        </label>
+                                        <button type="submit" class="btn btn-outline-primary btn-block form-control" name="addgrade">
+                                            {% trans %}Save{% endtrans %}
+                                        </button>
+                                    </div>
+                                </div> 
+                            <div class="col-md-2"></div>
+                            </div>
+
+                        {{ form_end(formSchool) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,67 @@
+{% extends 'baseConnexion.html.twig' %}
+
+{% block title %}{% trans %}Reset my password{% endtrans %} {% endblock %}
+
+
+{% block body %}
+ 
+<!-- App-Content -->
+<div class="hor-content main-content">
+    <div class="container">
+    
+        <!--Page header-->
+        <div class="page-header">
+            <div class="page-leftheader">
+                <h4 class="page-title mb-0 text-primary">
+                <i class="fa fa-key me-2"></i> {% trans %}Reset my password{% endtrans %}</h4>
+            </div>
+            <div class="page-rightheader">
+                <div class="btn-list">
+                    
+                </div>
+            </div>
+        </div>
+        <!--End Page header-->
+        
+        <div class="card border-primary">
+            <div class="card-header text-center header-perso h3" >
+                <i class="fa fa-key me-2"></i> 
+                {% trans %}Reset password{% endtrans %}
+                  
+            </div>
+            <div class="card-body body-perso">
+                {{ form_start(userForm) }}
+                    <div class="row">
+                        <div class="col-md-2">
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="input-group" id="Password-toggle">
+                                <a href="" class="input-group-text">
+                                    <i class="fe fe-eye" aria-hidden="true"></i>
+                                </a>                    
+                                {{ form_widget(userForm.password, {'attr': {'id':'inputPassword'}}) }}
+                            </div>
+                        </div>
+                        {# <div class="col-md-4">
+                            <div class="form-group">
+                                {{ form_row(userForm.confirmPassword) }}
+                            </div>
+                        </div> #}
+                        <div class="col-md-4">
+                            <div class="">
+                                <button type="submit" class="btn btn-outline-primary btn-block form-control" name="modifierMotDePasse">
+                                    <i class="fa fa-save me-2"></i> {% trans %}Save{% endtrans %}
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                    </div>
+                {{ form_end(userForm) }}
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

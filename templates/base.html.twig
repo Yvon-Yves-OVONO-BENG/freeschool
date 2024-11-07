@@ -1,19 +1,482 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
-        {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
-        {% endblock %}
+<html lang="en" dir="ltr">
+	<head>
+		<!-- Meta data -->
+		<meta charset="UTF-8">
+		<meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=0'>
+		<meta content="Freeschool - Application complète de gestions scolaire" name="description">
+		<meta content="Spruko Private Limited" name="author">
+		<meta name="keywords" content="admin, admin template, dashboard, admin dashboard, responsive, bootstrap, bootstrap 5, admin theme, admin themes, bootstrap admin template, scss, ui, crm, modern, flat">
+		<title>
+			{% block title %}Bienvenue
+			{% endblock %}
+		</title>
 
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+		<meta name="description" content=""/>
+
+		<!--Favicon -->
+		<link rel="icon" href="{{ asset ('build/custom2/images/brand/favicon.png')}}" type="image/x-icon"/>
+
+		<!--Bootstrap css -->
+		<link href="{{ asset ('build/custom2/plugins/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+
+		<!-- Style css -->
+		<link href="{{ asset ('build/custom2/css/style.css')}}" rel="stylesheet"/>
+		<link href="{{ asset ('build/custom2/css/dark.css')}}" rel="stylesheet"/>
+		<link href="{{ asset ('build/custom2/css/skin-modes.css')}}" rel="stylesheet"/>
+
+		<!-- Animate css -->
+		<link href="{{ asset ('build/custom2/css/animated.css')}}" rel="stylesheet"/>
+
+		<!-- P-scroll bar css-->
+		<link href="{{ asset ('build/custom2/plugins/p-scrollbar/p-scrollbar.css')}}" rel="stylesheet"/>
+
+		<!---Icons css-->
+		<link href="{{ asset ('build/custom2/css/icons.css')}}" rel="stylesheet"/>
+
+		<!-- Simplebar css -->
+		<link rel="stylesheet" href="{{ asset ('build/custom2/plugins/simplebar/css/simplebar.css')}}">
+
+		<!-- INTERNAL Morris Charts css -->
+		<link href="{{ asset ('build/custom2/plugins/morris/morris.css')}}" rel="stylesheet"/>
+
+		<!-- INTERNAL Select2 css -->
+		<link href="{{ asset ('build/custom2/plugins/select2/select2.min.css')}}" rel="stylesheet"/>
+
+		<!-- Data table css -->
+		<link href="{{ asset ('build/custom2/plugins/datatables/DataTables/css/dataTables.bootstrap4.min.css')}}" rel="stylesheet"/>
+		<link href="{{ asset ('build/custom2/plugins/datatables/Responsive/css/responsive.bootstrap4.min.css')}}" rel="stylesheet"/>
+
+		<!-- INTERNAl Forn-wizard css-->
+		<link href="{{ asset ('build/custom2/plugins/forn-wizard/css/forn-wizard.css')}}" rel="stylesheet" />
+		<link href="{{ asset ('build/custom2/plugins/formwizard/smart_wizard.css')}}" rel="stylesheet">
+		<link href="{{ asset ('build/custom2/plugins/formwizard/smart_wizard_theme_dots.css')}}" rel="stylesheet">
+
+		<!--Date Picker-->
+		<link href="{{ asset ('build/custom2/plugins/bootstrap-datepicker/bootstrap-datepicker.css')}}" rel="stylesheet" />
+
+		<!-- Color Skin css -->
+		<link id="theme" href="{{ asset ('build/custom2/colors/color1.css')}}" rel="stylesheet" type="text/css"/>
+
+		<!-- INTERNAL Switcher css -->
+		<link href="{{ asset ('build/custom2/switcher/css/switcher.css')}}" rel="stylesheet"/>
+		<link href="{{ asset ('build/custom2/switcher/demo.css')}}" rel="stylesheet"/>
+
+		<link href="{{ asset ('build/custom2/plugins/datatables/DataTables/css/dataTables.bootstrap5.css')}}" rel="stylesheet" />
+		<link href="{{ asset ('build/custom2/plugins/datatables/Buttons/css/buttons.bootstrap5.min.css')}}"  rel="stylesheet">
+		<link href="{{ asset ('build/custom2/plugins/datatables/Responsive/css/responsive.bootstrap5.min.css')}}" rel="stylesheet" />
+
+		<!-- INTERNAL File Uploads css -->
+		<link href="{{ asset ('build/custom2/plugins/fancyuploder/fancy_fileupload.css')}}" rel="stylesheet" />
+		
+		<!-- INTERNAL File Uploads css-->
+        <link href="{{ asset ('build/custom2/plugins/fileupload/css/fileupload.css')}}" rel="stylesheet" type="text/css" />
+
+		<!--- INTERNAL Sweetalert css-->
+		<link href="{{ asset ('build/custom2/plugins/sweet-alert/jquery.sweet-modal.min.css')}}" rel="stylesheet" />
+		<link href="{{ asset ('build/custom2/plugins/sweet-alert/sweetalert.css')}}" rel="stylesheet" />
+
+		<!-- INTERNAL Prism Css -->
+		<link href="{{ asset ('build/custom2/plugins/prism/prism.css')}}" rel="stylesheet">
+
+		{% set mySession = app.session %}
+		
+		{% if mySession.get('ajout') is defined 
+			or mySession.get('miseAjour') is defined 
+			or mySession.get('suppression') is defined  
+			or mySession.get('saisiNotes') is defined   
+			or mySession.get('resetPwd') is defined   
+			%}
+			<link href="{{ asset ('build/custom2/plugins/notify/css/notifIt.css')}}" rel="stylesheet"/> 
+		{% endif %}
+	</head>
+
+	<body class="app">
+		{# On recupère la session #}
+		
+		{% set currentSchoolYear = "Since 2019" %}
+		{% set schoolName = "FREESCHOOL" %}
+
+		{% set currentUser = app.user %}
+
+		{% if mySession is not null %}
+			{# On recupère l'année en cours dans la session #}
+			{% if mySession.get('schoolYear') is not null %}
+				{% set currentSchoolYear = mySession.get('schoolYear').schoolYear %}
+			{% endif %}
+
+			{% if mySession.get('subSystem') is not null %}
+				{% set subSystem = mySession.get('subSystem').subSystem %}
+			{% endif %}
+			{# On recupère le nom de l'établissement francophone ou anglophone #}
+			{# {% if  mySession.school is not null %} #}
+				{% if app.request.locale == 'fr' %}
+					{% set schoolName = school ? school.frenchName :  "FreeSchool" %}
+					{% elseif app.request.locale == 'en' %}
+					{% set schoolName = school ? school.englishName : "FreeSchool" %}
+				{% endif %}
+				
+			{# {% endif %} #}
+		{% endif %}
+
+		<!---Global-loader-->
+		<div id="global-loader" >
+			<img src="{{ asset ('build/custom2/images/svgs/loader3.svg')}}" alt="loader" style="width: 74px; height: 74px;">
+		</div>
+
+		<!--- End Global-loader-->
+		<!-- Page -->
+		<div class="page">
+			<div class="page-main">
+				
+				{% include "includes/_menu.html.twig" %}
+				
+				{# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+				{% block stylesheets %}
+					{# {{ encore_entry_link_tags('app') }} #}
+				{% endblock %}
+
+				{% block javascripts %}
+					{# {{ encore_entry_script_tags('app') }} #}
+				{% endblock %}
+
+				{% block body %}{% endblock %}
+						
+				{% include "includes/_footer.html.twig" %}
+							
+				<!-- End Footer-->
+			</div>
+		</div>
+				<!-- End Footer-->
+		<!-- End Page -->
+
+		<!--/ Layout wrapper -->
+
+		<!-- Back to top -->
+		<a href="#top" id="back-to-top"> <i class="fe fe-chevron-up"></i></a>
+
+		<!-- INTERNAL Clipboard js -->
+		<script src="{{ asset ('build/custom2/plugins/clipboard/clipboard.min.js')}}"></script>
+		<script src="{{ asset ('build/custom2/plugins/clipboard/clipboard.js')}}"></script>
+
+		<!-- INTERNAl Timeline js -->
+		<script src="{{ asset ('build/custom2/plugins/timeline/js/jquery.timelify.js')}}"></script>
+		<script src="{{ asset ('build/custom2/js/timeline.js')}}"></script>
+
+		<!-- Vertical Scroll-->
+		<script src="{{ asset ('build/custom2/js/jquery.bootstrap.newsbox.js')}}"></script>
+		<script src="{{ asset ('build/custom2/js/vertical-scroll.js')}}"></script>
+
+		<!-- INTERNAL Prism js -->
+		<script src="{{ asset ('build/custom2/plugins/prism/prism.js')}}"></script>
+
+		<!-- Jquery js-->
+		<script src="{{ asset ('build/custom2/js/jquery.min.js')}}"></script>
+
+		<!-- Bootstrap5 js-->
+		<script src="{{ asset ('build/custom2/plugins/bootstrap/popper.min.js')}}"></script>
+		<script src="{{ asset ('build/custom2/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
+
+		<!--Othercharts js-->
+		<script src="{{ asset ('build/custom2/plugins/othercharts/jquery.sparkline.min.js')}}"></script>
+
+		<!-- Circle-progress js-->
+		<script src="{{ asset ('build/custom2/js/circle-progress.min.js')}}"></script>
+
+		<!-- Jquery-rating js-->
+		<script src="{{ asset ('build/custom2/plugins/rating/jquery.rating-stars.js')}}"></script>
+
+		<!--Horizontal-menu js-->
+		<script src="{{ asset ('build/custom2/plugins/horizontal-menu/horizontal-menu.js')}}"></script>
+
+		<!-- Sticky js-->
+		<script src="{{ asset ('build/custom2/js/stiky.js')}}"></script>
+
+		<!-- P-scroll js-->
+		<script src="{{ asset ('build/custom2/plugins/p-scrollbar/p-scrollbar.js')}}"></script>
+		<script src="{{ asset ('build/custom2/plugins/p-scrollbar/p-scroll.js')}}"></script>
+
+		<!--INTERNAL Flot Charts js-->
+		<script src="{{ asset ('build/custom2/plugins/flot/jquery.flot.js')}}"></script>
+		<script src="{{ asset ('build/custom2/plugins/flot/jquery.flot.fillbetween.js')}}"></script>
+		<script src="{{ asset ('build/custom2/plugins/flot/jquery.flot.pie.js')}}"></script>
+		<script src="{{ asset ('build/custom2/js/dashboard.sampledata.js')}}"></script>
+		<script src="{{ asset ('build/custom2/js/chart.flot.sampledata.js')}}"></script>
+
+		<!-- INTERNAL Chart js -->
+		<script src="{{ asset ('build/custom2/plugins/chart/chart.bundle.js')}}"></script>
+		<script src="{{ asset ('build/custom2/plugins/chart/utils.js')}}"></script>
+
+		<!-- INTERNAL Apexchart js -->
+		<script src="{{ asset ('build/custom2/js/apexcharts.js')}}"></script>
+
+		<!--INTERNAL Moment js-->
+		<script src="{{ asset ('build/custom2/plugins/moment/moment.js')}}"></script>
+
+		<!--INTERNAL Index js-->
+		<script src="{{ asset ('build/custom2/js/index1.js')}}"></script>
+
+		<!-- INTERNAL Data tables -->
+		<script src="{{ asset ('build/custom2/plugins/datatables/DataTables/js/jquery.dataTables.js')}}"></script>
+		<script src="{{ asset ('build/custom2/plugins/datatables/DataTables/js/dataTables.bootstrap5.js')}}"></script>
+		<script src="{{ asset ('build/custom2/plugins/datatables/Responsive/js/dataTables.responsive.min.js')}}"></script>
+		<script src="{{ asset ('build/custom2/plugins/datatables/Responsive/js/responsive.bootstrap5.min.js')}}"></script>
+
+		<!-- INTERNAL Data tables -->
+		<script src="{{ asset ('build/custom2/plugins/datatables/Buttons/js/dataTables.buttons.min.js')}}"></script>
+		<script src="{{ asset ('build/custom2/plugins/datatables/Buttons/js/buttons.bootstrap4.min.js')}}"></script>
+		<script src="{{ asset ('build/custom2/plugins/datatables/JSZip/jszip.min.js')}}"></script>
+		<script src="{{ asset ('build/custom2/plugins/datatables/pdfmake/pdfmake.min.js')}}"></script>
+		<script src="{{ asset ('build/custom2/plugins/datatables/pdfmake/vfs_fonts.js')}}"></script>
+		<script src="{{ asset ('build/custom2/plugins/datatables/Buttons/js/buttons.html5.min.js')}}"></script>
+		<script src="{{ asset ('build/custom2/plugins/datatables/Buttons/js/buttons.print.min.js')}}"></script>
+		<script src="{{ asset ('build/custom2/plugins/datatables/Buttons/js/buttons.colVis.min.js')}}"></script>
+		<script src="{{ asset ('build/custom2/plugins/datatables/Responsive/js/dataTables.responsive.min.js')}}"></script>
+		<script src="{{ asset ('build/custom2/plugins/datatables/Responsive/js/responsive.bootstrap5.min.js')}}"></script>
+		<script src="{{ asset ('build/custom2/js/datatables.js')}}"></script>
+
+		<!-- INTERNAL Select2 js -->
+		<script src="{{ asset ('build/custom2/plugins/select2/select2.full.min.js')}}"></script>
+		<script src="{{ asset ('build/custom2/js/select2.js')}}"></script>
+
+		<!-- Simplebar JS -->
+		<script src="{{ asset ('build/custom2/plugins/simplebar/js/simplebar.min.js')}}"></script>
+
+		<!-- Rounded bar chart js-->
+		<script src="{{ asset ('build/custom2/js/rounded-barchart.js')}}"></script>
+
+		<!-- Custom js-->
+		<script src="{{ asset ('build/custom2/js/custom.js')}}"></script>
+
+		<!-- Switcher js -->
+		<script src="{{ asset ('build/custom2/switcher/js/switcher.js')}}"></script>
+
+		<!--Form Validations js-->
+		<script src="{{ asset ('build/custom2/js/form-vallidations.js')}}"></script>
+
+		<!-- INTERNAl Jquery.steps js -->
+		<script src="{{ asset ('build/custom2/plugins/jquery-steps/jquery.steps.min.js')}}"></script>
+		<script src="{{ asset ('build/custom2/plugins/parsleyjs/parsley.min.js')}}"></script>
+
+		<!-- INTERNAl Forn-wizard js-->
+		<script src="{{ asset ('build/custom2/plugins/formwizard/jquery.smartWizard.js')}}"></script>
+		<script src="{{ asset ('build/custom2/plugins/formwizard/fromwizard.js')}}"></script>
+
+		<!-- INTERNAl Accordion-Wizard-Form js-->
+		<script src="{{ asset ('build/custom2/plugins/accordion-Wizard-Form/jquery.accordion-wizard.min.js')}}"></script>
+		<script src="{{ asset ('build/custom2/js/form-wizard.js')}}"></script>
+		<script src="{{ asset ('build/custom2/js/form-wizard2.js')}}"></script>
+
+		<!-- INTERNAL File uploads js -->
+        <script src="{{ asset ('build/custom2/plugins/fileupload/js/dropify.js')}}"></script>
+		<script src="{{ asset ('build/custom2/js/filupload.js')}}"></script>
+
+		<!-- INTERNAL Datepicker js -->
+		<script src="{{ asset ('build/custom2/plugins/date-picker/date-picker.js')}}"></script>
+		<script src="{{ asset ('build/custom2/plugins/date-picker/jquery-ui.js')}}"></script>
+		<script src="{{ asset ('build/custom2/plugins/input-mask/jquery.maskedinput.js')}}"></script>
+
+		<!-- INTERNAL File-Uploads Js-->
+		<script src="{{ asset ('build/custom2/plugins/fancyuploder/jquery.ui.widget.js')}}"></script>
+        <script src="{{ asset ('build/custom2/plugins/fancyuploder/jquery.fileupload.js')}}"></script>
+        <script src="{{ asset ('build/custom2/plugins/fancyuploder/jquery.iframe-transport.js')}}"></script>
+        <script src="{{ asset ('build/custom2/plugins/fancyuploder/jquery.fancy-fileupload.js')}}"></script>
+        <script src="{{ asset ('build/custom2/plugins/fancyuploder/fancy-uploader.js')}}"></script>
+
+		<!-- INTERNAL File uploads js -->
+        <script src="{{ asset ('build/custom2/plugins/fileupload/js/dropify.js')}}"></script>
+		<script src="{{ asset ('build/custom2/js/filupload.js')}}"></script>
+
+        <!-- Jquery-steps js -->
+		<script src="{{ asset ('build/custom2/plugins/jquery-steps/jquery.steps.min.js')}}"></script>
+		<script src="{{ asset ('build/custom2/js/checkout-jquery-steps.js')}}"></script>
+
+		<!-- INTERNAL popover js -->
+        <script src="{{ asset ('build/custom2/js/popover.js')}}"></script>
+
+		<!-- INTERNAL Sweet alert js -->
+		<script src="{{ asset ('build/custom2/plugins/sweet-alert/jquery.sweet-modal.min.js')}}"></script>
+		<script src="{{ asset ('build/custom2/plugins/sweet-alert/sweetalert.min.js')}}"></script>
+		<script src="{{ asset ('build/custom2/js/sweet-alert.js')}}"></script>
+		
+
+		{% set mySession = app.session %}
+
+		{% if mySession.get('ajout') is defined %}
+			<!-- NOTIFICATIONS js-->
+			<script src="{{ asset ('build/custom2/js/notifications.js')}}"></script>
+
+			<!-- INTERNAL Notifications js -->
+			<script src="{{ asset ('build/custom2/plugins/notify/js/rainbow.js')}}"></script>
+			<script src="{{ asset ('build/custom2/plugins/notify/js/sample.js')}}"></script>
+			{# <script src="{{asset('build/custom2/plugins/notify/js/jquery.growl.js')}}"></script> #}
+			<script src="{{ asset ('build/custom2/plugins/notify/js/notifIt.js')}}"></script>
+			
+			{% if mySession.get('ajout') == 1 %}
+				{% set notificationSuccess = "" %}
+
+				{% for message in app.flashes('info') %}
+					{% set notificationSuccess = message %}
+				{% endfor %}
+
+				<script>
+
+					{# swal('Success !', '{{ notificationSuccess }}', 'success'); #}
+					window.onload = () => {
+						notif({
+						msg: "<b>   {{ notificationSuccess }}</b>",
+						type: "success",
+						position: "right",
+						width: 500,
+						height: 60,
+						autohide: true
+						});
+						}
+				</script>
+			{% endif %}
+		{% endif %}
+
+		{% if mySession.get('saisiNotes') is defined %}
+			<!-- NOTIFICATIONS js-->
+			<script src="{{ asset ('build/custom2/js/notifications.js')}}"></script>
+
+			<!-- INTERNAL Notifications js -->
+			<script src="{{ asset ('build/custom2/plugins/notify/js/rainbow.js')}}"></script>
+			<script src="{{ asset ('build/custom2/plugins/notify/js/sample.js')}}"></script>
+			{# <script src="{{asset('build/custom2/plugins/notify/js/jquery.growl.js')}}"></script> #}
+			<script src="{{ asset ('build/custom2/plugins/notify/js/notifIt.js')}}"></script>
+			
+			{% if mySession.get('saisiNotes') == 1 %}
+				{% set notificationSuccess = "" %}
+
+				{% for message in app.flashes('info') %}
+					{% set notificationSuccess = message %}
+				{% endfor %}
+
+				<script>
+					swal({
+						title: "{% trans %}Congratulations{% endtrans %}",
+						text: "{{ notificationSuccess }}",
+						type: "success",
+						showCancelButton: true,
+						showConfirmButton: false,
+						confirmButtonText: 'Ok',
+						cancelButtonText: false
+					});
+					{# swal('Success !', '{{ notificationSuccess }}', 'success'); #}
+					{# window.onload = () => {
+						notif({
+						msg: "<b>   {{ notificationSuccess }}</b>",
+						type: "success",
+						position: "right",
+						width: 500,
+						height: 60,
+						autohide: true
+						});
+						} #}
+				</script>
+			{% endif %}
+		{% endif %}
+
+		{% if mySession.get('miseAjour') is defined %}
+			<!-- NOTIFICATIONS js-->
+			<script src="{{ asset ('build/custom2/js/notifications.js')}}"></script>
+
+			<!-- INTERNAL Notifications js -->
+			<script src="{{ asset ('build/custom2/plugins/notify/js/rainbow.js')}}"></script>
+			<script src="{{ asset ('build/custom2/plugins/notify/js/sample.js')}}"></script>
+			{# <script src="{{asset('build/custom2/plugins/notify/js/jquery.growl.js')}}"></script> #}
+			<script src="{{ asset ('build/custom2/plugins/notify/js/notifIt.js')}}"></script>
+			
+			{% if mySession.get('miseAjour') == 1 %}
+				{% set notificationSuccess = "" %}
+
+				{% for message in app.flashes('info') %}
+					{% set notificationSuccess = message %}
+				{% endfor %}
+
+				<script>
+
+					{# swal('Success !', '{{ notificationSuccess }}', 'success'); #}
+					window.onload = () => {
+						notif({
+						msg: "<b>   {{ notificationSuccess }}</b>",
+						type: "info",
+						position: "left",
+						width: 500,
+						height: 60,
+						autohide: true
+						});
+						}
+				</script>
+			{% endif %}
+		{% endif %}
+
+		{% if mySession.get('suppression') is defined %}
+			<!-- NOTIFICATIONS js-->
+			<script src="{{ asset ('build/custom2/js/notifications.js')}}"></script>
+
+			<!-- INTERNAL Notifications js -->
+			<script src="{{ asset ('build/custom2/plugins/notify/js/rainbow.js')}}"></script>
+			<script src="{{ asset ('build/custom2/plugins/notify/js/sample.js')}}"></script>
+			{# <script src="{{asset('build/custom2/plugins/notify/js/jquery.growl.js')}}"></script> #}
+			<script src="{{ asset ('build/custom2/plugins/notify/js/notifIt.js')}}"></script>
+			{% if mySession.get('suppression') == 1 %}
+				{% set notificationSuppression = "" %}
+
+				{% for message in app.flashes('info') %}
+					{% set notificationSuppression = message %}
+				{% endfor %}
+
+				<script>
+					{# swal({
+						title: "{% trans %}Suppression{% endtrans %}",
+						text: "{{ notificationSuccess }}",
+						type: "error",
+						showCancelButton: false,
+						confirmButtonText: 'OK',
+						cancelButtonText: 'Stay on the page'
+					}); #}
+
+					notif({
+						msg: "<b>{{ notificationSuppression }}</b>",
+						type: "error",
+						position: "center"
+					});
+				</script>
+			{% endif %}
+		{% endif %}
+		
+		{% if mySession.get('resetPwd') is defined %}
+			<!-- NOTIFICATIONS js-->
+			<script src="{{ asset ('build/custom2/js/notifications.js')}}"></script>
+
+			<!-- INTERNAL Notifications js -->
+			<script src="{{ asset ('build/custom2/plugins/notify/js/rainbow.js')}}"></script>
+			<script src="{{ asset ('build/custom2/plugins/notify/js/sample.js')}}"></script>
+			{# <script src="{{asset('build/custom2/plugins/notify/js/jquery.growl.js')}}"></script> #}
+			<script src="{{ asset ('build/custom2/plugins/notify/js/notifIt.js')}}"></script>
+			{% if mySession.get('resetPwd') == 1 %}
+				{% set notificationResetPwd = "" %}
+
+				{% for message in app.flashes('info') %}
+					{% set notificationResetPwd = message %}
+				{% endfor %}
+
+				<script>
+					window.onload = () => {
+						notif({
+							type: "success",
+							msg: "<b>{{ notificationResetPwd }}</b> Click on me !",
+							position: "center",
+							width: 500,
+							height: 60,
+							autohide: false
+						});
+					}
+				</script>
+			{% endif %}
+		{% endif %}
+
+	</body>
 </html>

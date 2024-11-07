@@ -1,0 +1,320 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Update School{% endtrans %}{% endblock %}
+
+
+{% block subTitle %}
+    {% trans %}FACILITY DATA MANAGEMENT{% endtrans %}
+{% endblock %}
+{% block infoMessage %}
+    {% include "includes/_info_message.html.twig" %}
+{% endblock %}
+
+{% block body %}
+<!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+        
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary"><i class="fe fe-home me-2"></i> {% trans %}Edit School{% endtrans %}</h4>
+                </div>
+                <div class="page-rightheader">
+                    <div class="btn-list">
+                        
+                    </div>
+                </div>
+            </div>
+            <!--End Page header-->
+
+            <div class="card border-primary">
+                <div class="card-header">
+                    <div class="col-md-4 text-left">
+                        <button type="button" class="btn btn-primary mt-1 mb-1 me-3 form-control-sm">
+                            <span>{% trans %}Number of registered staff{% endtrans %}</span>
+                            <span class="badge bg-white text-dark rounded-pill">{{ numberOfTeachers }}</span>
+                        </button>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <button type="button" class="btn btn-primary mt-1 mb-1 me-3 form-control-sm">
+                            <span>{% trans %}Number of registered students{% endtrans %}</span>
+                            <span class="badge bg-white text-dark rounded-pill">{{ numberOfStudentInSchool }}</span>
+                        </button>
+                    </div>
+                    <div class="col-md-4 text-right">
+                        <button type="button" class="btn btn-primary mt-1 mb-1 me-3 form-control-sm">
+                            <span>{% trans %}Number of registered classrooms {% endtrans %}</span>
+                            <span class="badge bg-white text-dark rounded-pill">{{ numberOfClassrooms }}</span>
+                        </button>
+                    </div>
+                    
+                </div>
+                <div class="card-body ">
+                    {{ form_start(formSchool) }}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form_row(formSchool.logoFile, {'attr': {'class': 'dropify', 'data-height': "180"}}) }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    {{ form_row(formSchool.filigreeFile, {'attr': {'class': 'dropify', 'data-height': "180"}}) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    {{ form_row(formSchool.headmaster, {'attr': {'class': 'form-control select2-show-search'}}) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-5">
+                            <div class="col-md-6">
+                                <fieldset class="my-fieldset">
+                                    <legend>{% trans %}Information in French{% endtrans %}</legend>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            {{ form_row(formSchool.frenchName, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            {{ form_row(formSchool.frenchMotto, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            {{ form_row(formSchool.frenchCountry, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            {{ form_row(formSchool.frenchCountryMotto, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            {{ form_row(formSchool.frenchMinister, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            {{ form_row(formSchool.frenchRegion, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            {{ form_row(formSchool.frenchDivision, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            {{ form_row(formSchool.frenchSubDivision, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                </fieldset>
+                            </div>
+                            <div class="col-md-6">
+                                <fieldset class="my-fieldset">
+                                    <legend>{% trans %}Information in English{% endtrans %}</legend>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            {{ form_row(formSchool.englishName, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            {{ form_row(formSchool.englishMotto, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            {{ form_row(formSchool.englishCountry, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            {{ form_row(formSchool.englishCountryMotto, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            {{ form_row(formSchool.englishMinister, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            {{ form_row(formSchool.englishRegion, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            {{ form_row(formSchool.englishDivision, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            {{ form_row(formSchool.englishSubDivision, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    {{ form_row(formSchool.pobox, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    {{ form_row(formSchool.telephone, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    {{ form_row(formSchool.place, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                        {{ form_row(formSchool.email, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    {{ form_row(formSchool.serviceNote, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                </div>
+                            </div>
+
+                            <div class="col-md-3" >
+                                <label for="validationCustom01" class="form-label">{% trans %}Education{% endtrans %}</label>
+                                <div class="form-group">
+                                    <div class="selectgroup selectgroup-pills">
+                                        <label class="selectgroup-item">
+                                        
+                                            {% if school.education.education == "Général" %}
+                                                <input type="radio" name="education" value="1" class="selectgroup-input" checked="">
+                                                {% else %}
+                                                <input type="radio" name="education" value="1" class="selectgroup-input">
+                                            {% endif %}
+                                            
+                                            <span class="selectgroup-button">{% trans %}General{% endtrans %}</span>
+                                        </label>
+                                        <label class="selectgroup-item">
+                                            {% if school.education.education == "Technique" %}
+                                                <input type="radio" name="education" value="2" class="selectgroup-input"  checked="">
+                                                {% else %}
+                                                <input type="radio" name="education" value="2" class="selectgroup-input">
+                                            {% endif %}
+                                            <span class="selectgroup-button">{% trans %}Technical{% endtrans %}</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3" id="schoolType">
+                                <label for="validationCustom01" class="form-label">{% trans %}School type{% endtrans %}</label>
+                                <div class="form-group">
+                                    <div class="selectgroup selectgroup-pills">
+                                        <label class="selectgroup-item" id="public">
+                                            {% if school.public %}
+                                                <input type="radio" name="public" value="1" class="selectgroup-input" checked="">
+                                                {% else %}
+                                                <input type="radio" name="public" value="1" class="selectgroup-input">
+                                            {% endif %}
+                                            
+                                            <span class="selectgroup-button">{% trans %}Public{% endtrans %}</span>
+                                        </label>
+                                        <label class="selectgroup-item" id="private">
+                                            {% if school.public %}
+                                                <input type="radio" name="public" value="0" class="selectgroup-input">
+                                                {% else %}
+                                                <input type="radio" name="public" value="0" class="selectgroup-input" checked="">
+                                            {% endif %}
+                                            <span class="selectgroup-button">{% trans %}Private{% endtrans %}</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3" id="lycee" style="display: none !important;">
+                                <label for="validationCustom01" class="form-label">{% trans %}G.H.S or College{% endtrans %}</label>
+                                <div class="form-group">
+                                    <div class="selectgroup selectgroup-pills">
+                                        <label class="selectgroup-item" id="enseignant">
+                                            {% if school.lycee %}
+                                                <input type="radio" name="lycee" value="1" class="selectgroup-input" checked="">
+                                                {% else %}
+                                                    <input type="radio" name="lycee" value="1" class="selectgroup-input">
+                                            {% endif %}
+                                            
+
+                                            <span class="selectgroup-button">{% trans %}G.H.S{% endtrans %}</span>
+                                        </label>
+                                        <label class="selectgroup-item" id="eleve">
+                                            {% if school.lycee %}
+                                                <input type="radio" name="lycee" value="0" class="selectgroup-input">
+                                                {% else %}
+                                                    <input type="radio" name="lycee" value="0" class="selectgroup-input" checked="">
+                                            {% endif %}
+                                            <span class="selectgroup-button">{% trans %}College{% endtrans %}</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                        <div class="col-md-9"></div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label style="color: #fff;">
+                                        {% trans %}Save{% endtrans %}
+                                    </label>
+                                    <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="addgrade">
+                                        <i class="fa fa-save"></i>
+                                        {% trans %}Save Changes{% endtrans %}
+                                    </button>
+                                </div>
+                            </div> 
+                        </div>
+                        <script src="{{asset('build/custom/js/school.js')}}"></script>
+                    {{ form_end(formSchool) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

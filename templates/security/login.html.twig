@@ -1,0 +1,91 @@
+{% extends 'baseLogin.html.twig' %}
+
+{% block title %}{% trans %}Log in{% endtrans %}{% endblock %}
+     
+{% block body %}
+
+    <div class="row">
+        <div class="col mx-auto">
+            <div class="row justify-content-center">
+                <div class="col-md-4">
+                    <div class="text-center mb-5">
+                        <img src="{{asset('custom2/images/brand/logo_white.png')}}" class="header-brand-img desktop-lgo" alt="Freedom logo">
+                        
+                    </div>
+                    <div class="card border-danger">
+                        <div class="card-body">
+                            <div class="text-center mb-3">
+                                <h1 class="mb-2">{% trans %}LogIn{% endtrans %}</h1>
+                                {# <a href="javascript:void(0);" class="">Welcome Back !</a> #}
+                            </div>
+                            <form class="mt-5" method="post" action="" >
+                                {% if error %}
+                                    <span style="color: #910000;">
+                                        {{ error.messageKey|trans(error.messageData, 'security') }}
+                                    </span>
+                                {% endif %}
+                                <div class="input-group mb-4">
+                                    {# <div class="input-group-text">
+                                        <i class="fe fe-user"></i>
+                                    </div> #}
+                                    <select class="form-control select2-show-search" data-placeholder="{% trans %}Username{% endtrans %}" name="username" id="inputUsername" autocomplete="username" required autofocus >
+                                        
+                                        <option label={% trans %}"Username"{% endtrans %} >
+                                        </option>
+                                        {% for user in users %}
+                                            <option value="{{ user.username }}" 
+                                                {% if user.username == last_username %}
+                                                    selected
+                                                {% endif %}>
+                                                {{ user.fullName }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="input-group mb-4">
+                                    <div class="input-group" id="Password-toggle">
+                                        <a href="" class="input-group-text">
+                                            <i class="fe fe-eye" aria-hidden="true"></i>
+                                        </a>
+                                        <input class="form-control" type="password" placeholder="{% trans %}Password{% endtrans %}" name="password" id="inputPassword" autocomplete="current-password" required autofocus>
+                                        
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                </div>
+                                <div class="form-group text-center mb-3">
+                                    <button type="submit" id="soumission" class="btn btn-outline-primary btn-medium w-100 br-7"><i class="fe fe-unlock me-2"></i> {% trans %}Login{% endtrans %}</button>
+                                </div>
+                                <div class="form-group fs-13 text-center">
+                                    {# <a href="#">{% trans %}Forgot your password ?{% endtrans %}</a> #}
+                                </div>
+                                <div class="form-group">
+                                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                                </div>
+                                <div class="form-group fs-14 text-center font-weight-bold">
+                                    <a href="{{ path('home_mainMenu') }}">
+                                        <i class="fa fa-th"></i>
+                                        {% trans %}Main menu{% endtrans %}
+                                    </a>
+                                </div>
+                                <div class="form-group fs-13 text-center">
+                                    <a href="{{ path ('mot_de_passe_oublie') }}">
+                                        <span class="badge badge-gradient-danger mt-2">
+                                            {% trans %}Password forgotten ?{% endtrans %}
+                                        </span>
+                                    </a> 
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+		
+
+{% endblock %}

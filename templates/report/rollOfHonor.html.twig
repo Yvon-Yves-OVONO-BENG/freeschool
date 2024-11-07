@@ -1,0 +1,220 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Roll of Honor management{% endtrans %}{% endblock %}
+
+{% block subTitle %}
+    {% trans %}ROLLS OF HONOR MANAGMENT{% endtrans %}
+{% endblock %}
+
+{% block stylesheets %}
+	<style>
+		th,
+		tfoot {
+			font-size: 15px !important;
+			text-align: center !important;
+			font-weight: bold !important;
+			background-color: #F1F1F1 !important;
+		}
+
+		tr:hover {
+			background-color: rgba(62, 128, 235, 0.2) !important;
+			color: #3e80eb !important;
+		}
+	</style>
+{% endblock %}
+
+{% block body %}
+<!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+        
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary"><i class="fe fe-award"></i> {% trans %}Roll Honor's Students management{% endtrans %}</h4>
+                </div>
+                <div class="page-rightheader">
+                    <div class="btn-list">
+                        
+                    </div>
+                </div>
+            </div>
+            <!--End Page header-->
+
+
+            <!-- Row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="expanel expanel-primary border-primary">
+                        <div class="expanel-heading">
+                            <h3 class="expanel-title">{% trans %}Choose a class and term{% endtrans %}</h3>
+                        </div>
+                        <div class="expanel-body">
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <form action="{{ path('report_rollOfHonor') }}" method="post">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <select class="form-control select2-show-search" data-placeholder="Choose a classroom" name="classroom" id="classroom" required style="border: 1px solid #0f0;">
+                                                        <option label="Choose a classroom">{% trans %}Choose a classroom{% endtrans %}
+                                                        </option>
+                                                        {% if subSystem == 'Francophone / French Speaker' %}
+                                                    {% if school.education.education == 'Général' %}
+                                                        {% include "includes/_selectClassrooms.html.twig" %}
+                                                        {% else %}
+                                                            {% include "includes/_selectClassroomsTech.html.twig" %}
+                                                    {% endif %}
+                                                    {% else %}
+                                                        {% include "includes/_selectClassroomsEn.html.twig" %}
+                                                {% endif %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <select name="term" id="term" class="form-control select2 custom-select" required>
+                                                        <option value="">{% trans %}Choose a period{% endtrans %}</option>
+                                                        {% for term in terms %}
+                                                            {% if term.term != annualTerm %}
+                                                                <option value="{{ term.id }}" 
+                                                                {% if selectedTerm.id == term.id %}
+                                                                    selected
+                                                                {% endif %}>
+                                                                    {% trans %}Term{% endtrans %} {{ term.term }}
+                                                                </option>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        {% for term in terms %}
+                                                            {% if term.term == annualTerm %}
+                                                                <option value="{{ term.id }}" 
+                                                                {% if selectedTerm.id == term.id %}
+                                                                    selected
+                                                                {% endif %}>
+                                                                    {% trans %}Annual{% endtrans %}
+                                                                </option>
+                                                            {% endif %}
+                                                        {% endfor %}
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="displayStudents">
+                                                        <i class="fa fa-eye"></i>
+                                                        {% trans %}Display{% endtrans %}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-md-3">
+                                    {% if numberOfRollOfHonors > 0 %}
+                                        <form action="{{ path('report_printRollOfHonor', {'slug': selectedClassroom.slug, 'slugTerm': selectedTerm.slug}) }}" method="post" target="_blank">
+                                            <div class="form-group">
+                                                <button type="submit" class="btn btn-outline-primary" name="printAllRollsOfHonor">
+                                                    <i class="fa fa-print"></i>
+                                                    {% trans %}Print all rolls of honor{% endtrans %}
+                                                </button>
+                                            </div>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+			<!--End Row -->
+
+            {% if methodIsPost %}
+                <div class="card border-primary">
+                    <div class="card-header">
+                        
+                        {% if selectedClassroom.id is not null %}
+{#                             
+                                <div class="col-md-3">
+                                    <button type="button" class="btn btn-info  mt-1 mb-1 me-3 form-control-sm">
+                                        <span>{% trans %}Classroom{% endtrans %}</span>
+                                        <span class="badge bg-white text-dark rounded-pill">{{ selectedClassroom.classroom }}</span>
+                                    </button>
+                                </div> #}
+                                <div class="col-md-4 text-left">  
+                                    <button type="button" class="btn btn-primary  mt-1 mb-1 me-3 form-control-sm">
+                                        <span>{% trans %}Number of students{% endtrans %}</span>
+                                        <span class="badge bg-white text-dark rounded-pill">{{ numberOfStudents }}</span>
+                                    </button>
+                                </div>
+                                {# <div class="col-md-3">
+                                    {% if selectedTerm.term != annualTerm %}
+                                    <button type="button" class="btn btn-info  mt-1 mb-1 me-3 form-control-sm">
+                                        <span>{% trans %}Rolls of honor term{% endtrans %} N° </span>
+                                        <span class="badge bg-white text-dark rounded-pill">0{{ selectedTerm.term }}</span>
+                                    </button>
+                                    {% else %}
+                                    <button type="button" class="btn btn-info  mt-1 mb-1 me-3 form-control-sm">
+                                        <span>{% trans %}Annuals reports{% endtrans %}</span>
+                                        <span class="badge bg-white text-dark rounded-pill"></span>
+                                    </button>
+                                    {% endif %}
+                                </div> #}
+                                <div class="col-md-8 text-right"> 
+                                    <button type="button" class="btn btn-primary  mt-1 mb-1 me-3 form-control-sm">
+                                        <span>{% trans %}Number of Rolls of honor {% endtrans %}</span>
+                                        <span class="badge bg-white text-dark rounded-pill">{{ numberOfRollOfHonors }}</span>
+                                    </button>
+                                </div>
+                            
+                        {% endif %}
+                    </div>
+
+                        <div class="card-body ">
+                            <div class="table-responsive">
+                                {% if reports|length > 0 %}
+                                    <table border="1" class="table table-bordered text-nowrap" id="example2" width="100%" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                            <th class="border-bottom-0 indigo-gradient">{% trans %}Full name{% endtrans %}</th>
+                                            <th class="border-bottom-0 green-gradient">{% trans %}Roll of honor{% endtrans %}</th>
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                            <th class="border-bottom-0 indigo-gradient">{% trans %}Full name{% endtrans %}</th>
+                                            <th class="border-bottom-0 green-gradient">{% trans %}Roll of honor{% endtrans %}</th>
+                                            </tr>
+                                        </tfoot>
+                                        <tbody>
+                                            {% for report in reports %}
+                                                <tr class="table-row">
+                                                    <td style="vertical-align:middle;">{{ report.student.fullName }}</td>
+                                                    <td style="text-align: center; vertical-align:middle;">
+                                                        {% if report.moyenne >= 12 %}
+                                                            <a href="{{ path('report_printRollOfHonor', {'slug': selectedClassroom.slug, 'slugTerm': selectedTerm.slug, 'slugStudent': report.student.slug}) }}" target="_blank" class="btn btn-outline-success" data-bs-toggle="tooltip" title="Télécharger le tableau d'honneur de {{ report.student.fullName }}">
+                                                                <i class="fa fa-download"></i>
+                                                            </a>
+                                                        {% else %}
+                                                            <i class="fa fa-close btn-outline-danger" disabled></i>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                {% else %}
+                                    <div class="text-center h3">{% trans %}Printing rolls of honor failed{% endtrans %}</div><br>
+                                    
+                                    <div class="text-center h3">{% trans %}You must first print reports to allow the printing of the honor rolls to the meritorious{% endtrans %} </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

@@ -1,0 +1,40 @@
+{% extends 'base_super_admin.html.twig' %}
+
+{% block title %}
+   Welcome
+{% endblock %}
+
+{% block subTitle %}
+     Freeschool ! The best way to fill free in school management 
+{% endblock %}
+
+{% block body %}
+
+            <div class="container" >
+                <div class="card card-register mx-auto mt-5">
+                    <div class="card-header text-center header-perso h3" >
+                        {% trans %}Welcome to FreeSchool{% endtrans %} 
+                    </div>
+                    <div class="card-body body-perso">
+                        <div class="row mb-5 mt-5">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-8 text-center">
+                                <a class="btn btn-perso form-control" href="{{ path('home_basicAdministration')}}" title="Cliquez pour saisir les données de base">{% trans %}Basic Administration{% endtrans %}</a>
+                            </div>
+                            <div class="col-md-2"></div>
+                        </div>
+                        <div class="row  mb-5 mt-5">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-8 text-center">
+                                <a class="btn btn-perso form-control" href="{{ path('home_chooseSchoolYear')}}" title="Cliquez pour commencer">{% trans %}Start with freeschool{% endtrans %}</a>
+                            </div>
+                            <div class="col-md-2"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

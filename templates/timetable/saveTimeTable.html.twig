@@ -1,0 +1,170 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if slug != 0 %}
+        {% trans %}Updating Time Table{% endtrans %}
+        {% else %}
+        {% trans %}Save Time Table{% endtrans %}
+    {% endif %}
+{% endblock %}
+
+{% block subTitle %}
+    {% if slug != 0 %}
+        {% trans %}UPDATING TIME TABLE{% endtrans %}
+    {% else %}
+        {% trans %}ADDING NEW TIME TABLE{% endtrans %}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+<!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+        
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary">{% trans %}Time Table{% endtrans %} </h4>
+                </div>
+                <div class="page-rightheader">
+                    <div class="btn-list">
+                        <a href="{{ path('display_time_table') }}" class="btn btn-outline-primary">
+                            <i class="fa fa-bars"></i> {% trans %}Display registered time table{% endtrans %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!--End Page header-->
+            <div class="card border-primary">
+                <div class="card-header">
+                    <div class="col-md-4">
+                        <div class="card-title"> 
+                            {% if slug != 0 %}
+                                {% trans %}UPDATING TIME TABLE{% endtrans %}
+                            {% else %}
+                                {% trans %}ADDING NEW TIME TABLE{% endtrans %}
+                            {% endif %}
+
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                        {{ form_start(timeTableForm) }}
+                    <div class="row">
+                        <div class="col-md-2">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="row mb-4 mt-4">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        {{ form_row(timeTableForm.classroom) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        {{ form_row(timeTableForm.teacher) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        {{ form_row(timeTableForm.subject) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="row mb-4 mt-4">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        {{ form_row(timeTableForm.day) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    {# <div class="form-group">
+                                        {{ form_row(timeTableForm.startTime) }}
+                                    </div> #}
+                                    <div class="form-group">
+                                        <label class="form-label"> {% trans %}Start time{% endtrans %}</label>
+                                        <select class="form-control select2-show-search" data-placeholder="---" name="startTime" required>
+                                            
+                                            <option value="">---</option>
+                                            <option value="07:30:00">07:30:00</option>
+                                            <option value="08:25:00">08:25:00</option>
+                                            <option value="09:20:00">09:20:00</option>
+                                            <option value="10:30:00">10:30:00</option>
+                                            <option value="11:25:00">11:25:00</option>
+                                            <option value="12:20:00">12:20:00</option>
+                                            <option value="13:15:00">13:15:00</option>
+                                            <option value="13:40:00">13:40:00</option>
+                                            <option value="14:35:00">14:35:00</option>
+                                            
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    {# <div class="form-group">
+                                        {{ form_row(timeTableForm.endTime) }}
+                                    </div> #}
+                                    <div class="form-group">
+                                        <label class="form-label"> {% trans %}End time{% endtrans %}</label>
+                                        <select class="form-control select2-show-search" data-placeholder="---" name="endTime" required>
+                                            
+                                            <option value="">---</option>
+                                            <option value="08:25:00">08:25:00</option>
+                                            <option value="09:20:00">09:20:00</option>
+                                            <option value="10:15:00">10:15:00</option>
+                                            <option value="11:25:00">11:25:00</option>
+                                            <option value="12:20:00">12:20:00</option>
+                                            <option value="13:15:00">13:15:00</option>
+                                            <option value="14:35:00">14:35:00</option>
+                                            <option value="15:30:00">15:30:00</option>
+                                            
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label style="color: #fff;">
+                                    {% trans %}Save{% endtrans %}
+                                </label>
+                                {% if slug == 0 %}
+                                    <button type="submit" class="btn btn-outline-primary btn-block form-control" name="addTimeDivision">
+                                        <i class="fa fa-save"></i>
+                                        {% trans %}Save{% endtrans %}
+                                    </button>
+                                {% else %}
+                                    <button type="submit" class="btn btn-outline-primary btn-block form-control" name="editTimeDivision">
+                                        <i class="fa fa-save"></i>
+                                        {% trans %}Save changes{% endtrans %}
+                                    </button>
+                                {% endif %}
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                        </div>
+                    </div>
+                {{ form_end(timeTableForm) }}
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,768 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+{% if slug != 0 %}
+    {% trans %}Updating Student{% endtrans %}
+    {% else %}
+    {% trans %}Save Student{% endtrans %}
+{% endif %}
+
+{% endblock %}
+
+{% block subTitle %}
+     {% if slug != 0 %}
+        {% trans %}UPDATING STUDENT{% endtrans %}
+    {% else %}
+        {% trans %}ADDING NEW STUDENT{% endtrans %}
+    {% endif %}
+{% endblock %}
+{% block infoMessage %}
+    {% include "includes/_info_message.html.twig" %}
+{% endblock %}
+
+{% block body %}
+<!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+        
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary">
+                        {% if slug != 0 %}
+                            <i class="fe fe-edit me-2"></i> {% trans %}UPDATING STUDENT{% endtrans %}
+                        {% else %}
+                            <i class="fa fa-plus me-2"></i> {% trans %}ADDING NEW STUDENT{% endtrans %}
+                        {% endif %}
+                    </h4>
+                </div>
+                <div class="page-rightheader">
+                    <div class="btn-list">
+                        <button type="button" class="btn btn-primary">
+                            <span>{% trans %}Total Effective{% endtrans %}</span>
+                            <span class="badge bg-white text-dark rounded-pill">{{ numberOfStudentInSchool }}</span>
+                        </button>
+                        <a href="{{ path('student_displayStudent') }}" class="btn btn-outline-primary">
+                            <i class="fa fa-list"></i>
+                            {% trans %}Display registered students{% endtrans %}
+                        </a>
+
+                        {# {% if etatVerrouExclu %}
+                            <a href="{{ path('desactive_save_expelled') }}" class="btn btn-outline-primary">
+                                <i class="fe fe-check-circle"></i>
+                                {% trans %}Enable registration of exclusions{% endtrans %}
+                            </a>
+                            {% else %}
+                                <a href="{{ path('activate_save_expelled') }}" class="btn btn-outline-danger">
+                                    <i class="fe fe-x-circle"></i>
+                                    {% trans %}Disable recording of exclusions{% endtrans %}
+                                </a>
+                        {% endif %} #}
+                        
+
+                    </div>
+                </div>
+            </div>
+            <!--End Page header-->
+            {% if slug != 0 %}  
+                <div class="card border-danger">
+                {% else %}
+                <div class="card border-primary">
+            {% endif %}
+                <div class="card-header">
+                    <div class="card-title">
+                        {% if slug != 0 %} 
+                            <div class="col-md-12">
+                                {% if student.sex.sex == 'F' %}
+                                    <img src="{{ student.photo ? asset('images/students/' ~ student.photo) : asset('images/students/fille.jpg')}}" alt="photo" width="70" height="80"> 
+                                    {% else %} 
+                                    <img src="{{ student.photo ? asset('images/students/' ~ student.photo) : asset('images/students/garcon.jpg')}}" alt="photo" width="70" height="80"> 
+                                {% endif %}
+                                    <button type="button" class="btn btn-primary mt-1 mb-1 me-3">
+                                        <span>{% trans %}Updating student information of : {% endtrans %} </span>
+                                        <span class="badge bg-white text-dark">{{ student.fullName }}</span>
+                                    </button>
+                                {# <h2 class="text-blue">{% trans %}Update of{% endtrans %}<span class="badge bg-primary">{{ student.fullName }}</span></h2> #}
+                            </div>
+                            
+                        {% endif %}
+                        
+                        <div class="col-md-2"> 
+                            {% if storedClassroom.classroom is not null %}
+                            <button type="button" class="btn btn-info  mt-1 mb-1 me-3 form-control-sm">
+                                <span>{% trans %}Effective{% endtrans %} {{ storedClassroom.classroom }}</span>
+                                <span class="badge bg-white text-dark rounded-pill">{{registeredStudents|length}}</span>
+                            </button>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-3">
+                            {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+                                {% if is_granted('ROLE_INTENDANT') %}
+
+                                    <a href="{{ path('registration_feesStatement') }}" class="btn btn-outline-secondary">
+                                    <i class="fa fa-money"></i> {% trans %}Validate a receipt{% endtrans %}</a>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-body ">
+                    <div aria-multiselectable="true" class="accordion" id="accordion" role="tablist">
+                        {{ form_start(formStudent, {'attr': {'class':'row g-4 needs-validation', 'novalidate':""}})}}
+                            <div class="acc-card mb-2">
+                                <div class="acc-header" id="headingOne" role="tab">
+                                    <h5 class="mb-0">
+                                        <a aria-controls="collapseOne" aria-expanded="true" data-bs-toggle="collapse" href="#identification"><i class="fe fe-user me-2"></i> <b> {% trans %}IDENTIFICATION{% endtrans %}</b></a>
+                                    </h5>
+                                </div>
+                                <div aria-labelledby="headingOne" class="collapse show" data-parent="#accordion" id="identification" role="tabpanel">
+                                    <div class="acc-body">
+                                        <div class="row mb-1">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.classroom, {'attr': {'class': 'form-control select2-show-search'}}) }}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.fullName, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.birthday, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                                </div>
+                                            </div> 
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.birthplace, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-1">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.sex, {'attr': {'class': 'form-control select2 custom-select'}}) }}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.repeater, {'attr': {'class': 'form-control select2 custom-select'}}) }}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.registrationNumber, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <label for="validationCustom01" class="form-label">{% trans %} Native ?{% endtrans %}</label>
+                                                
+                                                <div class="form-group" id="">
+                                                    <div class="selectgroup selectgroup-pills">
+                                                        <label class="selectgroup-item" id="">
+                                                            <input type="radio" name="autochtone" value="1" class="selectgroup-input" >
+                                                            <span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span>
+                                                        </label>
+                                                        <label class="selectgroup-item" id="">
+                                                            <input type="radio" name="autochtone" value="0" class="selectgroup-input">
+                                                            <span class="selectgroup-button">{% trans %}No{% endtrans %}</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            
+                                        </div>
+
+                                        <div class="row mb-1">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.country, {'attr': {'class': 'form-control select2-show-search'}}) }}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.ethnicGroup, {'attr': {'class': 'form-control select2-show-search'}}) }}
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.movement, {'attr': {'class': 'form-control select2 custom-select'}}) }}
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.numeroHcr, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                        
+                                        <div class="row mb-1">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.responsability, {'attr': {'class': 'form-control select2 custom-select'}}) }}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.numeroWhatsapp, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.handicap, {'attr': {'class': 'form-control select2 custom-select'}}) }}
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.handicapType, {'attr': {'class': 'form-control select2 custom-select'}}) }}
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row mb-1">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.fatherName, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.professionPere, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.telephonePere, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-1">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.motherName, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.professionMere, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.telephoneMere, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-1">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.tuteur, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.telephoneTuteur, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-1">
+
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.personneAContacterEnCasUergence, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.telephonePersonneEnCasUrgence, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row mb-1">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="validationCustom03" class="form-label">Photo</label>
+                                                    {{ form_row(formStudent.imageFile) }}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="acc-card mb-2">
+                                <div class="acc-header" id="headingTwo" role="tab">
+                                    <h5 class="mb-0">
+                                        <a aria-controls="collapseTwo" aria-expanded="false" class="collapsed" data-bs-toggle="collapse" href="#scolarite"><i class="fa fa-leanpub me-2"></i> <b>{% trans %}SCHOOLING{% endtrans %}</b> </a>
+                                    </h5>
+                                </div>
+                                <div aria-labelledby="headingTwo" class="collapse" data-parent="#accordion" id="scolarite" role="tabpanel">
+                                    <div class="acc-body">
+                                        <div class="row mb-1">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.datePremiereEntreeEtablissementAt, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.classeEntree, {'attr': {'class': 'form-control select2-show-search'}}) }}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-1">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.etablisementFrequenteAnDernier, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.operateur, {'attr': {'class': 'form-control select2-show-search'}}) }}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.modeAdmission, {'attr': {'class': 'form-control select2-show-search'}}) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="acc-card mb-2">
+                                <div class="acc-header" id="headingThree" role="tab">
+                                    <h5 class="mb-0">
+                                        <a aria-controls="collapseThree" aria-expanded="false" class="collapsed" data-bs-toggle="collapse" href="#dossierMedical">
+                                        <i class="fa fa-user-md me-2"></i> <b>{% trans %}MEDICAL FILE{% endtrans %}<b></a>
+                                    </h5>
+                                </div>
+                                <div aria-labelledby="headingThree" class="collapse" data-parent="#accordion" id="dossierMedical" role="tabpanel">
+                                    <div class="acc-body">
+                                        <div class="row mb-1">
+                                            <div class="col-md-3">
+                                                <label for="validationCustom01" class="form-label">{% trans %}Sickle cell disease ?{% endtrans %}</label>
+                                                
+                                                <div class="form-group" id="">
+                                                    <div class="selectgroup selectgroup-pills">
+                                                        <label class="selectgroup-item" id="">
+                                                            <input type="radio" name="drepanocytose" value="1" class="selectgroup-input" >
+                                                            <span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span>
+                                                        </label>
+                                                        <label class="selectgroup-item" id="">
+                                                            <input type="radio" name="drepanocytose" value="0" class="selectgroup-input">
+                                                            <span class="selectgroup-button">{% trans %}No{% endtrans %}</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <label for="validationCustom01" class="form-label">{% trans %}SPORTS FITNESS{% endtrans %}</label>
+                                                
+                                                <div class="form-group" id="">
+                                                    <div class="selectgroup selectgroup-pills">
+                                                        <label class="selectgroup-item" id="">
+                                                            <input type="radio" name="apte" value="1" class="selectgroup-input" >
+                                                            <span class="selectgroup-button">{% trans %}Apt{% endtrans %}</span>
+                                                        </label>
+                                                        <label class="selectgroup-item" id="">
+                                                            <input type="radio" name="apte" value="0" class="selectgroup-input">
+                                                            <span class="selectgroup-button">{% trans %}Unfit{% endtrans %}</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <label for="validationCustom01" class="form-label">{% trans %}Asthma ?{% endtrans %}</label>
+                                                
+                                                <div class="form-group" id="">
+                                                    <div class="selectgroup selectgroup-pills">
+                                                        <label class="selectgroup-item" id="">
+                                                            <input type="radio" name="asthme" value="1" class="selectgroup-input" >
+                                                            <span class="selectgroup-button">{% trans %}Apt{% endtrans %}</span>
+                                                        </label>
+                                                        <label class="selectgroup-item" id="">
+                                                            <input type="radio" name="asthme" value="0" class="selectgroup-input">
+                                                            <span class="selectgroup-button">{% trans %}Unfit{% endtrans %}</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <label for="validationCustom01" class="form-label">{% trans %}COVID-19 TEST{% endtrans %}</label>
+                                                
+                                                <div class="form-group" id="">
+                                                    <div class="selectgroup selectgroup-pills">
+                                                        <label class="selectgroup-item" id="">
+                                                            <input type="radio" name="covid" value="1" class="selectgroup-input" >
+                                                            <span class="selectgroup-button">{% trans %}Positive{% endtrans %}</span>
+                                                        </label>
+                                                        <label class="selectgroup-item" id="">
+                                                            <input type="radio" name="covid" value="0" class="selectgroup-input">
+                                                            <span class="selectgroup-button">{% trans %}Negative{% endtrans %}</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-1">
+                                            <div class="col-md-3">
+                                                <label for="validationCustom01" class="form-label">{% trans %}Allergy ?{% endtrans %}</label>
+                                                
+                                                <div class="form-group" id="">
+                                                    <div class="selectgroup selectgroup-pills">
+                                                        <label class="selectgroup-item" id="">
+                                                            <input type="radio" name="allergie" value="1" class="selectgroup-input" >
+                                                            <span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span>
+                                                        </label>
+                                                        <label class="selectgroup-item" id="">
+                                                            <input type="radio" name="allergie" value="0" class="selectgroup-input">
+                                                            <span class="selectgroup-button">{% trans %}No{% endtrans %}</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.siOuiAllergie, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.groupeSanguin, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.rhesus, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-1">
+
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.autresMaladies, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><!-- collapse -->
+                            </div>
+                            <div class="acc-card mb-2">
+                                <div class="acc-header" id="headingThree" role="tab">
+                                    <h5 class="mb-0">
+                                        <a aria-controls="collapseThree" aria-expanded="false" class="collapsed" data-bs-toggle="collapse" href="#activites">
+                                        <i class="fa fa-ravelry me-2"></i> <b>{% trans %}MANDATORY CHOICE / POST AND EXTRA-CURRICULAR ACTIVITIES{% endtrans %}<b></a>
+                                    </h5>
+                                </div>
+                                <div aria-labelledby="headingThree" class="collapse" data-parent="#accordion" id="activites" role="tabpanel">
+                                    <div class="acc-body">
+                                        <div class="row mb-1">
+                                            <div class="col-md-3 text-center">
+                                                <label for="validationCustom01" class="form-label">{% trans %}Part of the bilingual club ?{% endtrans %}</label>
+                                                <div class="form-group" id="">
+                                                    <div class="selectgroup selectgroup-pills">
+                                                        <label class="selectgroup-item" id="">
+                                                            <input type="radio" name="clubBilingue" value="1" class="selectgroup-input" >
+                                                            <span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span>
+                                                        </label>
+                                                        <label class="selectgroup-item" id="">
+                                                            <input type="radio" name="clubBilingue" value="0" class="selectgroup-input">
+                                                            <span class="selectgroup-button">{% trans %}No{% endtrans %}</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-3 text-center">
+                                                <label for="validationCustom01" class="form-label">{% trans %}Part of the multicultural club ?{% endtrans %}</label>
+                                                <div class="form-group" id="">
+                                                    <div class="selectgroup selectgroup-pills">
+                                                        <label class="selectgroup-item" id="">
+                                                            <input type="radio" name="clubMulticulturel" value="1" class="selectgroup-input" >
+                                                            <span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span>
+                                                        </label>
+                                                        <label class="selectgroup-item" id="">
+                                                            <input type="radio" name="clubMulticulturel" value="0" class="selectgroup-input">
+                                                            <span class="selectgroup-button">{% trans %}No{% endtrans %}</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-3 text-center">
+                                                <label for="validationCustom01" class="form-label">{% trans %}Been part of the science club ?{% endtrans %}</label>
+                                                <div class="form-group" id="">
+                                                    <div class="selectgroup selectgroup-pills">
+                                                        <label class="selectgroup-item" id="">
+                                                            <input type="radio" name="clubScience" value="1" class="selectgroup-input" >
+                                                            <span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span>
+                                                        </label>
+                                                        <label class="selectgroup-item" id="">
+                                                            <input type="radio" name="clubScience" value="0" class="selectgroup-input">
+                                                            <span class="selectgroup-button">{% trans %}No{% endtrans %}</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-3 text-center">
+                                                <label for="validationCustom01" class="form-label">{% trans %}Be part of the newspaper club ?{% endtrans %}</label>
+                                                <div class="form-group" id="">
+                                                    <div class="selectgroup selectgroup-pills">
+                                                        <label class="selectgroup-item" id="">
+                                                            <input type="radio" name="clubJournal" value="1" class="selectgroup-input" >
+                                                            <span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span>
+                                                        </label>
+                                                        <label class="selectgroup-item" id="">
+                                                            <input type="radio" name="clubJournal" value="0" class="selectgroup-input">
+                                                            <span class="selectgroup-button">{% trans %}No{% endtrans %}</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-1">
+                                            <div class="col-md-3 text-center">
+                                                <label for="validationCustom01" class="form-label">{% trans %}Be part of the environment club ?{% endtrans %}</label>
+                                                <div class="form-group" id="">
+                                                    <div class="selectgroup selectgroup-pills">
+                                                        <label class="selectgroup-item" id="">
+                                                            <input type="radio" name="clubEnvironnement" value="1" class="selectgroup-input" >
+                                                            <span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span>
+                                                        </label>
+                                                        <label class="selectgroup-item" id="">
+                                                            <input type="radio" name="clubEnvironnement" value="0" class="selectgroup-input">
+                                                            <span class="selectgroup-button">{% trans %}No{% endtrans %}</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-3 text-center">
+                                                <label for="validationCustom01" class="form-label">{% trans %}Be part of the health club ?{% endtrans %}</label>
+                                                <div class="form-group" id="">
+                                                    <div class="selectgroup selectgroup-pills">
+                                                        <label class="selectgroup-item" id="">
+                                                            <input type="radio" name="clubSante" value="1" class="selectgroup-input" >
+                                                            <span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span>
+                                                        </label>
+                                                        <label class="selectgroup-item" id="">
+                                                            <input type="radio" name="clubSante" value="0" class="selectgroup-input">
+                                                            <span class="selectgroup-button">{% trans %}No{% endtrans %}</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-3 text-center">
+                                                <label for="validationCustom01" class="form-label">{% trans %}Be part of the rethoric club ?{% endtrans %}</label>
+                                                <div class="form-group" id="">
+                                                    <div class="selectgroup selectgroup-pills">
+                                                        <label class="selectgroup-item" id="">
+                                                            <input type="radio" name="clubRethorique" value="1" class="selectgroup-input" >
+                                                            <span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span>
+                                                        </label>
+                                                        <label class="selectgroup-item" id="">
+                                                            <input type="radio" name="clubRethorique" value="0" class="selectgroup-input">
+                                                            <span class="selectgroup-button">{% trans %}No{% endtrans %}</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-3 text-center">
+                                                <label for="validationCustom01" class="form-label">{% trans %}Be part of the LV II club ?{% endtrans %}</label>
+                                                <div class="form-group" id="">
+                                                    <div class="selectgroup selectgroup-pills">
+                                                        <label class="selectgroup-item" id="">
+                                                            <input type="radio" name="clubLv2" value="1" class="selectgroup-input" >
+                                                            <span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span>
+                                                        </label>
+                                                        <label class="selectgroup-item" id="">
+                                                            <input type="radio" name="clubLv2" value="0" class="selectgroup-input">
+                                                            <span class="selectgroup-button">{% trans %}No{% endtrans %}</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="row mb-1">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.autreClub, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><!-- collapse -->
+                            </div>
+                            <div class="acc-card mb-2">
+                                <div class="acc-header" id="headingThree" role="tab">
+                                    <h5 class="mb-0">
+                                        <a aria-controls="collapseThree" aria-expanded="false" class="collapsed" data-bs-toggle="collapse" href="#personne">
+                                        <i class="fa fa-user-o me-2"></i> <b>{% trans %}IDENTIFICATION OF AN ACQUAINTANCE IN THE ESTABLISHMENT{% endtrans %}<b></a>
+                                    </h5>
+                                </div>
+                                <div aria-labelledby="headingThree" class="collapse" data-parent="#accordion" id="personne" role="tabpanel">
+                                    <div class="acc-body">
+                                        
+                                        <div class="row mb-1">
+                                            <div class="col-md-3 text-center">
+                                                <label for="validationCustom01" class="form-label">{% trans %}Brother ?{% endtrans %}</label>
+                                                <div class="form-group" id="">
+                                                    <div class="selectgroup selectgroup-pills">
+                                                        <label class="selectgroup-item" id="">
+                                                            <input type="radio" name="frere" value="1" class="selectgroup-input" >
+                                                            <span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span>
+                                                        </label>
+                                                        <label class="selectgroup-item" id="">
+                                                            <input type="radio" name="frere" value="0" class="selectgroup-input">
+                                                            <span class="selectgroup-button">{% trans %}No{% endtrans %}</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-3 text-center">
+                                                <label for="validationCustom01" class="form-label">{% trans %}Sister ?{% endtrans %}</label>
+                                                <div class="form-group" id="">
+                                                    <div class="selectgroup selectgroup-pills">
+                                                        <label class="selectgroup-item" id="">
+                                                            <input type="radio" name="soeur" value="1" class="selectgroup-input" >
+                                                            <span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span>
+                                                        </label>
+                                                        <label class="selectgroup-item" id="">
+                                                            <input type="radio" name="soeur" value="0" class="selectgroup-input">
+                                                            <span class="selectgroup-button">{% trans %}No{% endtrans %}</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-3 text-center">
+                                                <label for="validationCustom01" class="form-label">{% trans %}Teacher ?{% endtrans %}</label>
+                                                <div class="form-group" id="">
+                                                    <div class="selectgroup selectgroup-pills">
+                                                        <label class="selectgroup-item" id="">
+                                                            <input type="radio" name="enseignant" value="1" class="selectgroup-input" >
+                                                            <span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span>
+                                                        </label>
+                                                        <label class="selectgroup-item" id="">
+                                                            <input type="radio" name="enseignant" value="0" class="selectgroup-input">
+                                                            <span class="selectgroup-button">{% trans %}No{% endtrans %}</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-3 text-center">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.classeFrereSoeur, {'attr': {'class': 'form-control select2-show-search'}}) }}
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-1">
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.autreConnaisanceEtablissement, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.nomPersonneEtablissement, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.telephonePersonneEtablissement, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+
+                                    </div>
+                                </div><!-- collapse -->
+                            </div>
+                            <div class="row mb-1">
+                                <div class="col-md-3">
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label style="color: #fff;">
+                                            {% trans %}Save{% endtrans %}
+                                        </label>
+                                            {% if slug == 0 %}
+                                                <button type="submit" class="btn btn-outline-primary btn-lg w-100 br-7" name="addStudent">
+                                                    <i class="fa fa-save"></i>
+                                                    {% trans %}Save{% endtrans %}
+                                            {% else %}
+                                                <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="editStudent">
+                                                    <i class="fa fa-save"></i>
+                                                    {% trans %}Save changes{% endtrans %}
+                                                </button>
+                                            {% endif %}
+                                    </div>
+                                </div>
+                                 <div class="col-md-3">
+                                </div>
+                            </div>
+                        {{ form_end(formStudent) }}
+                    </div><!-- accordion -->
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

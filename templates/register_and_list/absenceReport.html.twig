@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Absence Report{% endtrans %}{% endblock %}
+
+{% block subTitle %}
+    {% trans %}ABSENCE HOURS MANAGMENT{% endtrans %}
+{% endblock %}
+
+{% block body %}
+<!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+        
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary"></h4>
+                </div>
+                <div class="page-rightheader">
+                    <div class="btn-list">
+                        
+                    </div>
+                </div>
+            </div>
+            <!--End Page header-->
+
+            <div class="card border-primary">
+                <div class="card-header">
+                    <span class="page-title mb-0 text-primary">
+                        <i class="fa fa-pencil me-2"></i>{% trans %}Absence hours printing{% endtrans %}
+                    </span>
+                </div>
+                <div class="card-body pt-5 ">
+                    <form action="{{ path('register_and_list_printAbsenceReport') }}" method="post" target="_blank">
+                        <div class="row">
+                            <div class="col-md-2">
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <select name="teacher" id="teacher" class="form-control select2-show-search" data-placeholder="Choose a supervisor" required>
+                                        <option label="Choose a supervisor"></option>
+                                        <option value="0">{% trans %}All supervisors{% endtrans %}</option>
+                                        {% for teacher in teachers %}
+                                            <option value="{{ teacher.id }}">{{ teacher.fullName }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printAbsenceReport">
+                                        <i class="fa fa-print"></i>
+                                        {% trans %}Print{% endtrans %}</button>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

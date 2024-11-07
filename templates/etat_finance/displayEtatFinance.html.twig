@@ -1,0 +1,145 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}State finance{% endtrans %}{% endblock %}
+
+{% block subTitle %}
+     {% if is_granted('ROLE_INTENDANT') %}
+        {% trans %}STATE FINANCE{% endtrans %}
+     {% else %}
+        {% trans %}STATE FINANCE{% endtrans %}
+     {% endif %}
+{% endblock %}
+{% block infoMessage %}
+    {% include "includes/_info_message.html.twig" %}
+{% endblock %}
+
+{% block stylesheets %}
+	<style>
+		th,
+		tfoot {
+			font-size: 15px !important;
+			text-align: center !important;
+			font-weight: bold !important;
+			background-color: #F1F1F1 !important;
+		}
+
+		tr:hover {
+			background-color: rgba(62, 128, 235, 0.2) !important;
+			color: #3e80eb !important;
+		}
+	</style>
+{% endblock %}
+
+{% block body %}
+<!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+        
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary"></h4>
+                </div>
+                <div class="page-rightheader">
+                    <div class="btn-list">
+                        
+                    </div>
+                </div>
+            </div>
+            <!--End Page header-->
+
+            <div class="card border-primary">
+                <div class="card-header">
+                    
+                            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_SECRETAIRE') %}
+                                <div class="col-md-9">
+                                    <button type="button" class="btn btn-primary  mt-1 mb-1 me-3 form-control-sm">
+                                        <span>{% trans %}Financial statement{% endtrans %}</span>
+                                        
+                                    </button>
+                                </div>
+                                <div class="col-md-3">
+                                    <form action="{{ path('print_etat_finance') }}" method="post"  target="_blank">
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="printSchoolFeesStatement">
+                                            <i class="fa fa-print"> </i>
+                                        {% trans %}Print Financial Statement{% endtrans %}
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            {% endif %}
+                        
+                    
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table border="1" class="table table-striped" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th class="border-bottom-0 indigo-gradient">{% trans %}State{% endtrans %}</th>
+                                    <th class="border-bottom-0 indigo-gradient">{% trans %}PTA{% endtrans %}</th>
+                                    <th class="border-bottom-0 blue-gradient">{% trans %}Frais d'Informatique{% endtrans %}</th>
+                                    <th class="border-bottom-0 orange-gradient">{% trans %}Clean school{% endtrans %}</th>
+                                    <th class="border-bottom-0 indigo-gradient">{% trans %}Medical booklet{% endtrans %}</th>
+                                    <th class="border-bottom-0 orange-gradient">{% trans %}Photo{% endtrans %}</th>
+                                    <th class="border-bottom-0 green-gradient">{% trans %}Total{% endtrans %}</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th class="border-bottom-0 indigo-gradient">{% trans %}State{% endtrans %}</th>
+                                    <th class="border-bottom-0 indigo-gradient">{% trans %}PTA{% endtrans %}</th>
+                                    <th class="border-bottom-0 blue-gradient">{% trans %}Frais d'Informatique{% endtrans %}</th>
+                                    <th class="border-bottom-0 orange-gradient">{% trans %}Clean school{% endtrans %}</th>
+                                    <th class="border-bottom-0 indigo-gradient">{% trans %}Medical booklet{% endtrans %}</th>
+                                    <th class="border-bottom-0 orange-gradient">{% trans %}Photo{% endtrans %}</th>
+                                    <th class="border-bottom-0 green-gradient">{% trans %}Total{% endtrans %}</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                
+                                <tr>
+                                    <td>1 - {% trans %}Cashed{% endtrans %}</td>
+                                    <td>{{ etatFinance['APEE'] }}</td>
+                                    <td>{{ etatFinance['INFORMATIQUE'] }}</td>
+                                    <td>{{ etatFinance['CLEAN_SCHOOL'] }}</td>
+                                    <td>{{ etatFinance['LIVRET_MEDICAL'] }}</td>
+                                    <td>{{ etatFinance['PHOTO'] }}</td>
+                                    <td>{{ etatFinance['APEE'] + etatFinance['INFORMATIQUE'] + etatFinance['CLEAN_SCHOOL'] + etatFinance['LIVRET_MEDICAL'] + etatFinance['PHOTO'] + etatFinance['TIMBRE'] }}</td>
+                                </tr>
+
+                                <tr>
+                                    
+                                    <td>2 - {% trans %}Expenses{% endtrans %}</td>
+                                    
+                                    <td>{{ apee }}</td>
+                                    <td>{{ computer }}</td>
+                                    <td>{{ cleanSchool }}</td>
+                                    <td>{{ medicalBooklet }}</td>
+                                    <td>{{ photo }}</td>
+                                    <td>{{ apee + computer + cleanSchool + medicalBooklet + photo }}</td> 
+                                </tr>
+
+
+                                <tr>
+                                    <td>3 - {% trans %}Cash balance{% endtrans %}</td>
+                                    <td>{{ etatFinance['APEE'] - apee }}</td>
+                                    <td>{{ etatFinance['INFORMATIQUE'] - computer }}</td>
+                                    <td>{{ etatFinance['CLEAN_SCHOOL'] - cleanSchool }}</td>
+                                    <td>{{ etatFinance['LIVRET_MEDICAL'] - medicalBooklet }}</td>
+                                    <td>{{ etatFinance['PHOTO'] - photo }}</td>
+                                    <td>{{ etatFinance['APEE'] + etatFinance['INFORMATIQUE'] + etatFinance['CLEAN_SCHOOL'] + etatFinance['LIVRET_MEDICAL'] + etatFinance['PHOTO'] - apee - computer - cleanSchool - medicalBooklet - photo }}</td>
+                                </tr>
+                                
+                            </tbody>
+                        </table>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

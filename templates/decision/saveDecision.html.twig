@@ -1,0 +1,107 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if slug != 0 %}
+        {% trans %}Edit Diplome{% endtrans %}
+    {% else %}
+        {% trans %}Save Decision{% endtrans %}
+    {% endif %}
+{% endblock %}
+
+{% block subTitle %}
+    {% if slug != 0 %}
+        {% trans %}UPDATING DIPLOMA{% endtrans %}
+    {% else %}
+        {% trans %}ADDING NEW DIPLOMA{% endtrans %}
+    {% endif %}
+{% endblock %}
+{% block infoMessage %}
+    {% include "includes/_info_message.html.twig" %}
+{% endblock %}
+
+{% block body %}
+<!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+        
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary"></h4>
+                </div>
+                <div class="page-rightheader">
+                    <div class="btn-list">
+                        
+                    </div>
+                </div>
+            </div>
+            <!--End Page header-->
+        
+                {% if slug == 0 %}
+                    <div class="card border-primary">
+                    {% else %}
+                    <div class="card border-danger">
+                {% endif %}
+                <div class="card-header">
+                        <div class="col-md-4">
+                            <div class="card-title">
+                                {% if slug != 0 %}
+                                    <i class="fa fa-edit me-2"></i> {% trans %}UPDATING DIPLOMA{% endtrans %}
+                                {% else %}
+                                    <i class="fa fa-plus  me-2"></i> {% trans %}ADDING NEW DIPLOMA{% endtrans %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <button type="button" class="btn btn-primary  mt-1 mb-1 me-3 form-control-sm">
+                                <span>{% trans %}Number of registered decisions{% endtrans %}</span>
+                                <span class="badge bg-white text-dark rounded-pill">{{ decisions|length }}</span>
+                            </button>
+                        </div>
+                        <div class="col-md-4 text-right">
+                            <a href="{{ path('decision_displayDecision') }}" class="btn btn-outline-primary">
+                                <i class="fa fa-eye me-2"></i>
+                                {% trans %}Display registered decisions{% endtrans %}
+                            </a>
+                        </div>
+                    {# Fin ligne afficher les decisions #}
+                </div>
+                <div class="card-body">
+                    <div class="col-md-12">
+                        {{ form_start(formDecision) }}
+                            <div class="row mb-5">
+                                <div class="col-md-2">
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        {{ form_row(formDecision.decision, {'attr': {'class': 'form-control form-control-sm bg-info-transparent'}}) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label style="color: #fff;">.</label>
+                                            {% if slug == 0 %}
+                                                <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="addDecision">
+                                                    <i class="fa fa-save me-2"></i> {% trans %}Save{% endtrans %}
+                                                </button>
+                                            {% else %}
+                                                <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="editDecision">
+                                                    <i class="fa fa-save me-2"></i>
+                                                    {% trans %}Save changes{% endtrans %}
+                                                </button>
+                                            {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                </div>
+                            </div>
+
+                        {{ form_end(formDecision) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

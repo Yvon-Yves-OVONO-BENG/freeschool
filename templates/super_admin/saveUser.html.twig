@@ -1,0 +1,72 @@
+{% extends 'base_super_admin.html.twig' %}
+
+{% block title %}{% trans %}Add User{% endtrans %}{% endblock %}
+
+
+{% block subTitle %}
+    {% trans %}ADDING A USER{% endtrans %}
+{% endblock %}
+
+{% block body %}
+ {% for message in app.flashes('info') %}
+            <script>
+                alert("{{ message }}");
+            </script>
+        {% endfor %}
+        
+            <div class="container">
+                <div class="row mt-5">
+                    <div class="col-md-12">
+                        {{ form_start(formUser) }}
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        {{ form_row(formUser.username) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        {{ form_row(formUser.password) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        {{ form_row(formUser.confirmPassword) }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        {{ form_row(formUser.fullName) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                    <label>Rôle</label>
+                                    <select class="form-control" name="role" id="role">
+                                        <option value="ROLE_SUPER_ADMIN">{% trans %}Super administrator{% endtrans %}</option>
+                                        <option value="ROLE_ADMIN">{% trans %}Administrator{% endtrans %}</option>
+                                    </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label style="color: #fff;">
+                                            {% trans %}Save{% endtrans %}
+                                        </label>
+                                        <button type="submit" class="btn btn-outline-primary btn-block form-control" name="addTeacher">
+                                            <i class="fa fa-save"></i>
+                                            {% trans %}Save{% endtrans %}
+                                        </button>
+                                    </div>
+                                </div> 
+                            </div>
+                        {{ form_end(formUser) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

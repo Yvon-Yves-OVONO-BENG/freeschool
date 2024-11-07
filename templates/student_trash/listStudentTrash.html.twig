@@ -1,0 +1,269 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Display Students deleted{% endtrans %}{% endblock %}
+
+{% block subTitle %}
+    {% trans %}LIST STUDENTS DELETED{% endtrans %}
+    
+{% endblock %}
+
+
+{% block infoMessage %}
+    {% include "includes/_info_message.html.twig" %}
+{% endblock %}
+
+{% block stylesheets %}
+	<style>
+		th,
+		tfoot {
+			font-size: 15px !important;
+			text-align: center !important;
+			font-weight: bold !important;
+			background-color: #F1F1F1 !important;
+		}
+
+		tr:hover {
+			background-color: rgba(62, 128, 235, 0.2) !important;
+			color: #3e80eb !important;
+		}
+	</style>
+{% endblock %}
+
+{% block body %}
+<!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+        
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary"> 
+                        <i class="fa fa-user-times me-2"></i> {% trans %}STUDENTS DELETED{% endtrans %}
+                        
+                </div>
+                <div class="page-rightheader">
+                    <div class="btn-list">
+                        {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+                            <a href="{{ path('student_saveStudent') }}" class="btn btn-outline-primary" name="addNewStudent">
+                                <i class="fa fa-user-plus me-2"></i> {% trans %}Add new student{% endtrans %}
+                            </a>  
+
+                            {% if studentTrashs|length > 0 %}
+
+                                <a class="btn btn-outline-success" href="javascript:void(0);" 
+                                    onclick="swal({
+                                        'title': '{% trans %}Warnning !{% endtrans %}', 
+                                        'type': 'warning', 
+                                        'text': '{% trans %}Do you want to restore all students ?{% endtrans %}', 
+                                        'showCancelButton': true, 
+                                        'confirmButtonText': 'Oui', 
+                                        'confirmButtonColor': '#f00', 
+                                        'cancelButtonText': 'Non', 
+                                        'cancelButtonColor': '#186106', 
+                                        'confirmButtonPath': '{{ path('restore_all_student_trash') }} '});">
+                                    <i class="fe fe-rotate-ccw me-2"></i> {% trans %}Restore All{% endtrans %}
+                                </a>
+
+                                <a class="btn btn-outline-danger" href="javascript:void(0);" 
+                                    onclick="swal({
+                                        'title': '{% trans %}Warnning !{% endtrans %}', 
+                                        'type': 'warning', 
+                                        'text': '{% trans %}Do you want to delete all students ?{% endtrans %}', 
+                                        'showCancelButton': true, 
+                                        'confirmButtonText': 'Oui', 
+                                        'confirmButtonColor': '#f00', 
+                                        'cancelButtonText': 'Non', 
+                                        'cancelButtonColor': '#186106', 
+                                        'confirmButtonPath': '{{ path('delete_all_student_trash') }} '});">
+                                    <i class="fa fa-trash me-2"></i> {% trans %}Delete All{% endtrans %}
+                                </a>
+                                {% else %}
+
+                                <a class="btn btn-outline-success disabled" href="javascript:void(0);"
+                                    onclick="swal({
+                                        'title': '{% trans %}Warnning !{% endtrans %}', 
+                                        'type': 'warning', 
+                                        'text': '{% trans %}Do you want to restore all students ?{% endtrans %}', 
+                                        'showCancelButton': true, 
+                                        'confirmButtonText': 'Oui', 
+                                        'confirmButtonColor': '#f00', 
+                                        'cancelButtonText': 'Non', 
+                                        'cancelButtonColor': '#186106';">
+                                    <i class="fe fe-rotate-ccw  me-2"></i> {% trans %}Restore All{% endtrans %}
+                                </a>
+
+                                <a class="btn btn-outline-danger disabled" href="javascript:void(0);"
+                                    onclick="swal({
+                                        'title': '{% trans %}Warnning !{% endtrans %}', 
+                                        'type': 'warning', 
+                                        'text': '{% trans %}Do you want to restore all students ?{% endtrans %}', 
+                                        'showCancelButton': true, 
+                                        'confirmButtonText': 'Oui', 
+                                        'confirmButtonColor': '#f00', 
+                                        'cancelButtonText': 'Non', 
+                                        'cancelButtonColor': '#186106';">
+                                    <i class="fe fe-corner-up-left  me-2"></i> {% trans %}Delete All{% endtrans %}
+                                </a>
+                            {% endif %}
+                            
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <!--End Page header-->
+            <div class="expanel expanel-danger border-danger">
+                <div class="expanel-heading">
+                    <div class="row">
+                        <div class="col-8">
+                            <h3 class="expanel-title">{% trans %}Students deleted{% endtrans %}</h3>
+                        </div>
+                        <div class="col-4 text-right">
+                            <div class="btn-list">
+                                <button type="button" class="btn btn-primary form-control-sm">
+                                    <span>{% trans %}Total effective{% endtrans %}</span>
+                                    <span class="badge bg-white text-dark rounded-pill">{{ studentTrashs|length }}</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                        
+                </div>
+
+                <div class="expanel-body">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <form id="delete-students-form" action="{{ path ('delete_student_trash_selected') }}" method="post">
+                                <table border="1" class="table table-striped table-bordered text-nowrap" id="example-1" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th class="border-bottom-0 green-gradient">{% trans %}Photo{% endtrans %}</th>
+                                            <th class="border-bottom-0 indigo-gradient">{% trans %}Full name{% endtrans %}</th>
+                                            <th class="border-bottom-0 green-gradient">{% trans %}Birth{% endtrans %}</th>
+                                            <th class="border-bottom-0 orange-gradient">{% trans %}Sex{% endtrans %}</th>
+                                            <th class="border-bottom-0 indigo-gradient">{% trans %}Classroom{% endtrans %}</th>
+                                            <th class="border-bottom-0 orange-gradient">{% trans %}Phone{% endtrans %}</th>
+                                            {# si c'est l'admin qui est connecté #}
+                                                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_INTENDANT') and headmasterFees == 0 %}
+                                                {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+                                                    <th class="border-bottom-0 blue-gradient">{% trans %}Actions{% endtrans %}</th>
+                                                {% endif %}
+                                            {% endif %}
+                                                
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th class="border-bottom-0 green-gradient">{% trans %}Photo{% endtrans %}</th>
+                                            <th class="border-bottom-0 indigo-gradient">{% trans %}Full name{% endtrans %}</th>
+                                            <th class="border-bottom-0 green-gradient">{% trans %}Birth{% endtrans %}</th>
+                                            <th class="border-bottom-0 orange-gradient">{% trans %}Sex{% endtrans %}</th>
+                                            <th class="border-bottom-0 indigo-gradient">{% trans %}Classroom{% endtrans %}</th>
+                                            <th class="border-bottom-0 orange-gradient">{% trans %}Phone{% endtrans %}</th>
+                                            {# si c'est l'admin qui est connecté #}
+                                                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_INTENDANT') and headmasterFees == 0 %}
+                                                {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+                                                    <th class="border-bottom-0 blue-gradient">{% trans %}Actions{% endtrans %}</th>
+                                                {% endif %}
+                                            {% endif %}
+                                        </tr>
+                                    </tfoot>
+                                    <tbody>
+                                        {% for studentTrash in studentTrashs %}
+                                            {# {% set registration = student.registration %} #}
+                                        <tr>
+                                           <td style="vertical-align: middle; text-align:center;">
+                                                <img src="{{ studentTrash.photo ? asset('images/students/' ~ studentTrash.photo) : asset('images/students/defaultPhoto.jpg')}}" alt="photo" width="50" height="60">
+                                                <br><span class="badge badge-gradient-secondary mt-2">{{ studentTrash.registrationNumber }}</span> 
+                                                
+                                            </td>
+                                            <td style="vertical-align: middle;">{{ studentTrash.fullName }} 
+                                                
+                                                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                                    <br> <span class="badge badge-gradient-primary mt-2">{% trans %}Delete by : {% endtrans %}</span>
+                                                    <span class="badge badge-gradient-danger mt-2">{{ studentTrash.deletedBy.fullName }}</span>
+                                                    <span class="badge badge-gradient-primary mt-2">{% trans %}at {% endtrans %}</span>
+                                                    <span class="badge badge-gradient-danger mt-2">{{ studentTrash.deletedAt ? studentTrash.deletedAt|date('d-m-Y H:i:s'): "//" }}</span>
+                                                {% endif %}
+                                                
+                                            </td>
+                                            <td style="vertical-align: middle;">{{ studentTrash.birthday|date('d-m-Y') }} à {{ studentTrash.birthplace }}</td>
+                                            <td style="vertical-align: middle;">{{ studentTrash.sex.sex }}</td>
+                                            <td style="vertical-align: middle;">{{ studentTrash.classroom.classroom }}</td>
+                                            <td style="vertical-align: middle;">{{ studentTrash.telephonePere }}</td>
+                                                {# si c'est l'admin qui est conncté #}
+                                                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_INTENDANT') and headmasterFees == 0 %}
+                                                {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+                                                    <td style="text-align: center !important; vertical-align: middle !important;">
+
+                                                        <div class="btn-group">
+                                                            <a href="javascript:void(0);" class="btn btn-light btn-sm" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options <i class="fa fa-angle-down"></i></a>
+                                                            <div class="dropdown-menu" style="margin-top: auto !important; margin-bottom: auto !important; margin-left: auto !important; margin-right: auto !important;">
+                                                                
+
+                                                                <a class="dropdown-item" href="javascript:void(0);" 
+                                                                    onclick="swal({
+                                                                        'title': '{% trans %}Warnning !{% endtrans %}', 
+                                                                        'type': 'warning', 
+                                                                        'text': '{% trans %}You really want to retore the student{% endtrans %} --- {{ studentTrash.fullName }}', 
+                                                                        'showCancelButton': true, 
+                                                                        'confirmButtonText': 'Oui', 
+                                                                        'confirmButtonColor': '#f00', 
+                                                                        'cancelButtonText': 'Non', 
+                                                                        'cancelButtonColor': '#186106', 
+                                                                        'confirmButtonPath': '{{ path('restore_student_trash', {'slug': studentTrash.slug}) }} '});">
+                                                                    <i class="fe fe-rotate-ccw me-2"></i>  {% trans %}Restore{% endtrans %}
+                                                                </a>
+
+                                                                <a class="dropdown-item" href="javascript:void(0);" 
+                                                                    onclick="swal({
+                                                                        'title': '{% trans %}Warnning !{% endtrans %}', 
+                                                                        'type': 'warning', 
+                                                                        'text': '{% trans %}You really want to remove the student{% endtrans %} --- {{ studentTrash.fullName }}', 
+                                                                        'showCancelButton': true, 
+                                                                        'confirmButtonText': 'Oui', 
+                                                                        'confirmButtonColor': '#f00', 
+                                                                        'cancelButtonText': 'Non', 
+                                                                        'cancelButtonColor': '#186106', 
+                                                                        'confirmButtonPath': '{{ path('delete_student_trash', {'slug': studentTrash.slug, 'trash': 1}) }} '});">
+                                                                    <i class="fa fa-trash me-2"></i> {% trans %}Delete definitely{% endtrans %}
+                                                                </a>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        
+                                                    </td>
+                                                {% endif %}
+                                            {% endif %}
+                                            
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                
+                                </table>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                
+
+        </div>
+    </div>
+</div>
+
+{# <script>
+    ///pour sélectionner /déselectionner les élèves à cocher
+    document.getElementById('select-all').addEventListener('change', function(e) {
+        let checkboxes = document.querySelectorAll('input[type="checkbox"][name="students[]"]');
+        checkboxes.forEach(checkbox => checkbox.checked = e.target.checked );
+    });
+
+    document.getElementById('select-al').addEventListener('change', function(e) {
+        let checkboxes = document.querySelectorAll('input[type="checkbox"][name="students[]"]');
+        checkboxes.forEach(checkbox => checkbox.checked = e.target.checked );
+    });
+</script> #}
+    <script src="{{ asset ('build/custom2/js/suppressionMultiple.js')}}"></script>
+
+{% endblock %}

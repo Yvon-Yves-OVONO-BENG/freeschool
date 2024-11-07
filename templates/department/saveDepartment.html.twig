@@ -1,0 +1,108 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if slug == 0 %}
+        {% trans %}Add{% endtrans %}
+        {% else %}
+        {% trans %}Edit{% endtrans %}
+    {% endif %}
+    {% trans %}department{% endtrans %}
+{% endblock %}
+
+{% block subTitle %}
+    {% if slug != 0 %}
+        {% trans %}UPDATING DEPARTMENT{% endtrans %}
+    {% else %}
+        {% trans %}ADDING NEW DEPARTMENT{% endtrans %}
+    {% endif %}
+{% endblock %}
+{% block infoMessage %}
+    {% include "includes/_info_message.html.twig" %}
+{% endblock %}
+
+{% block body %}
+<!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+        
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary">
+                        {% if slug != 0 %}
+                            <i class="fa fa-edit me-2"></i>{% trans %}UPDATING DEPARTMENT{% endtrans %}
+                        {% else %}
+                            <i class="fa fa-plus me-2"></i>{% trans %}ADDING NEW DEPARTMENT{% endtrans %}
+                        {% endif %}
+                    </h4>
+                </div>
+                <div class="page-rightheader">
+                    <div class="btn-list">
+                        <a href="{{ path('department_displayDepartment') }}" class="btn btn-outline-primary">
+                            <i class="fa fa-list"></i>
+                            {% trans %}Display registered departments{% endtrans %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!--End Page header-->
+
+            <div class="card border-primary">
+                <div class="card-header">
+                    {# ligne afficher les departments #}
+                        <div class="col-md-5 text-left">
+                            <button type="button" class="btn btn-primary  mt-1 mb-1 me-3 form-control-sm">
+                                <span>{% trans %}Number of registered departments{% endtrans %}</span>
+                                <span class="badge bg-white text-dark rounded-pill">{{ departments|length }}</span>
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            
+                        </div>
+                    
+                    {# Fin ligne afficher les departments #}
+                </div>
+                <div class="card-body ">
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{ form_start(formDepartment, {'attr': {'class':'row g-4 needs-validation', 'novalidate':""}}) }}
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            {{ form_row(formDepartment.department, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            {{ form_row(formDepartment.educationalFacilitator, {'attr': {'class': 'form-control select2-show-search'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label style="color: #fff;">
+                                                {% trans %}Save{% endtrans %}
+                                            </label>
+                                            {% if slug == 0 %}
+                                            <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="addDepartment">
+                                                <i class="fa fa-save"></i>
+                                                {% trans %}Save{% endtrans %}
+                                            </button>
+                                            {% else %}
+                                            <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="editDepartment">
+                                                <i class="fa fa-save"></i>
+                                                {% trans %}Save changes{% endtrans %}
+                                            </button>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                            {{ form_end(formDepartment) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

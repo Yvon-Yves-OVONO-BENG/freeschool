@@ -1,0 +1,33 @@
+<tr class="table-row">
+    <td>{{ levelsName }}</td>
+        {% if unrankedCoefficientCycle is not null %}
+            <form action="{{ path('report_editUnrankedCoefficient', {'level': level}) }}" method="post">
+                <td> 
+                    <input type="text" name="{{inputName}}"  class="form-control form-control-sm" readonly value="{{ unrankedCoefficientCycle.unrankedCoefficient }}">
+                </td>
+                <td>
+                    {% if unrankedCoefficientCycle.forMark == true %}
+                    <h5  class="text-info"><span class="badge bg-info">{% trans %}Mark{% endtrans %} </span></h5>
+                         
+                    {% else %}
+                        <h5  class="text-info"><span class="badge bg-primary">{% trans %}Coefficient{% endtrans %} </span></h5>
+                         
+                    {% endif %}
+                </td>
+                <td>
+                    {% if unrankedCoefficientCycle.forFirstGroup == true %}
+                        <h5  class="text-info"><span class="badge bg-success">{% trans %}Vocational subjects{% endtrans %}   </span></h5>
+                         
+                    {% else %}
+                        <h5  class="text-info"><span class="badge bg-danger">{% trans %}All subjects{% endtrans %}    </span></h5>
+                         
+                    {% endif %}
+                </td> 
+                <td style="text-align: center;">
+                    <button type="submit" class="btn btn-outline-primary" name="unrankedCoefficientToUpdate" data-bs-toggle="tooltip" title="Modifier les critères des {{ levelsName }}">
+                        <i class="fa fa-pencil"></i>
+                    </button>
+                </td>
+            </form>
+        {% endif %}
+</tr>

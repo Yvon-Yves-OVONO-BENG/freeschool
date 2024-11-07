@@ -1,0 +1,145 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Historique Teacher{% endtrans %}{% endblock %}
+
+{% block subTitle %}
+    {% if slug != 0 %}
+        {% trans %}UPDATING HOURS TEACHER{% endtrans %}
+    {% else %}
+        {% trans %}ADDING NEW HOURS TEACHER{% endtrans %}
+    {% endif %}
+{% endblock %}
+{% block infoMessage %}
+    {% include "includes/_info_message.html.twig" %}
+{% endblock %}
+
+{% block body %}
+    <!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+        
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary"></h4>
+                </div>
+                <div class="page-rightheader">
+                    <div class="btn-list">
+                        
+                    </div>
+                </div>
+            </div>
+            <!--End Page header-->
+        
+                {% if slug == 0 %}
+                    <div class="card border-primary">
+                    {% else %}
+                    <div class="card border-danger">
+                {% endif %}
+                <div class="card-header">
+                    {# ligne afficher les historiqueTeachers #}
+                        <div class="col-md-4">
+                            <div class="card-title">    
+                                {% if slug != 0 %}
+                                    <i class="fa fa-edit  me-2"></i> {% trans %}UPDATING HOURS TEACHER{% endtrans %}
+                                {% else %}
+                                    <i class="fa fa-plus  me-2"></i> {% trans %}ADDING NEW HOURS TEACHER{% endtrans %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <button type="button" class="btn btn-primary  mt-1 mb-1 me-3 form-control-sm">
+                                <span class="badge bg-white text-dark rounded-pill">{{ historiqueTeachers|length }}</span>
+                                <span> {% trans %}hours of teachers{% endtrans %}</span>
+                            </button>
+                        </div>
+                        <div class="col-md-4 text-right">
+                            <a href="{{ path('afficher_historique_teacher', {'a': 1}) }}" class="btn btn-outline-primary">
+                                <i class="fa fa-list"></i>
+                                {% trans %}Display registered hours teachers{% endtrans %}
+                            </a>
+                        </div>
+                    
+                </div>
+                    {# Fin ligne afficher les historiqueTeachers #}
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{ form_start(formHistoriqueTeacher) }}
+                                <div class="row mb-5">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            {{ form_row(formHistoriqueTeacher.teacher, {'attr': {'class': 'form-control select2-show-search'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            {{ form_row(formHistoriqueTeacher.classroom, {'attr': {'class': 'form-control select2-show-search'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            {{ form_row(formHistoriqueTeacher.day, {'attr': {'class': 'form-control select2-show-search'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            {{ form_row(formHistoriqueTeacher.sequence, {'attr': {'class': 'form-control select2-show-search'}}) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-5">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            {{ form_row(formHistoriqueTeacher.heureDebut, {'attr': {'class': 'form-control'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            {{ form_row(formHistoriqueTeacher.heureFin, {'attr': {'class': 'form-control'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            {{ form_row(formHistoriqueTeacher.nombreHeure, {'attr': {'class': 'form-control'}}) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            {{ form_row(formHistoriqueTeacher.subject, {'attr': {'class': 'form-control select2-show-search'}}) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-5">
+                                    <div class="col-md-4">
+                                    </div>
+                                    <div class="col-md-4 text-center">
+                                        <div class="form-group">
+                                            <label style="color: #fff;">.</label>
+                                                {% if slug == 0 %}
+                                                    <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="addHistoriqueTeacher">
+                                                        <i class="fa fa-save me-2"></i>
+                                                        {% trans %}Save{% endtrans %}
+                                                    </button>
+                                                {% else %}
+                                                        <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="editHistoriqueTeacher">
+                                                            <i class="fa fa-save me-2"></i>
+                                                        {% trans %}Save changes{% endtrans %}
+                                                    </button>
+                                                {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                    </div>
+                                </div>
+
+                            {{ form_end(formHistoriqueTeacher) }}
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+</div>
+
+{% endblock %}

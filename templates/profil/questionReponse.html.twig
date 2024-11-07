@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Secret question{% endtrans %}{% endblock %}
+
+{% block body %}
+<!-- App-Content -->
+    <div class="hor-content main-content">
+		<div class="container">
+
+			<!--Page header-->
+			<div class="page-header">
+				<div class="page-leftheader">
+					<h4 class="page-title mb-0 text-primary"><i class="fe fe-help-circle me-2"></i>{% trans %}Edit secret question{% endtrans %}</h4>
+				</div>
+				<div class="page-rightheader">
+					<div class="btn-list">
+							
+					</div>
+				</div>
+			</div>
+			<!--End Page header-->
+
+			<!-- Row -->
+			<div class="row">
+				<div class="col-xl-12 col-lg-12">
+					<div class="card border-primary">
+						<div class="card-header ">
+							<div class="card-title"><i class="fe fe-help-circle me-2"></i> {% trans %}Edit secret question{% endtrans %}</div>
+						</div>
+						{{ form_start(formQuestionSecrete, {'attr': {'class':'row g-3 needs-validation', 'novalidate':""}})}}
+							<div class="card-body">
+								<div class="row mt-5 ml-5 mr-5">
+									<div class="col-sm-4 col-md-4">
+										<div class="form-group">
+											<label class="form-label">{% trans %}Secret question{% endtrans %}</label>
+											{{ form_widget(formQuestionSecrete.questionSecrete, {'attr': {'id':'validationCustom03'}}) }}
+										</div>
+										<div class="invalid-feedback">
+											{% trans %}Please select a secret question !{% endtrans %}
+										</div>
+									</div>
+									<div class="col-sm-4 col-md-4">
+										<div class="form-group">
+											<label class="form-label">{% trans %}Your answer{% endtrans %}</label>
+											{{ form_widget(formQuestionSecrete.reponse, {'attr': {'id':'validationCustom03'}}) }}
+										</div>
+										<div class="invalid-feedback">
+											{% trans %}Please enter your answer{% endtrans %}
+										</div>
+									</div>
+									<div class="col-sm-4 col-md-4 mt-6 text-center">
+										<div class="form-group">
+											<button type="submit" class="btn btn-outline-primary"><i class="fe fe-save me-2"></i>{% trans %}Save{% endtrans %}</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						{{ form_end(formQuestionSecrete)}}
+						
+					</div>
+				</div>
+			</div>
+			<!-- End Row-->
+		</div>
+	</div><!-- right app-content-->
+</div>
+{% endblock %}

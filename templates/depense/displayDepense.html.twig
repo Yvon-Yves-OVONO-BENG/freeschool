@@ -1,0 +1,182 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Expenses{% endtrans %}{% endblock %}
+
+{% block subTitle %}
+    {% if is_granted('ROLE_INTENDANT') %}
+        {% trans %}SPENDING REGISTRATION MANAGMENT{% endtrans %}
+        {% else %}
+        {% trans %}SPENDINGS MANAGMENT{% endtrans %}
+    {% endif %}
+{% endblock %}
+{% block infoMessage %}
+    {% include "includes/_info_message.html.twig" %}
+{% endblock %}
+
+{% block stylesheets %}
+	<style>
+		th,
+		tfoot {
+			font-size: 15px !important;
+			text-align: center !important;
+			font-weight: bold !important;
+			background-color: #F1F1F1 !important;
+		}
+
+		tr:hover {
+			background-color: rgba(62, 128, 235, 0.2) !important;
+			color: #3e80eb !important;
+		}
+        td {
+            text-align: center !important;
+        }
+	</style>
+{% endblock %}
+
+{% block body %}
+        <!-- App-Content -->
+        <div class="hor-content main-content">
+            <div class="container">
+            
+                <!--Page header-->
+                <div class="page-header">
+                    <div class="page-leftheader">
+                        <h4 class="page-title mb-0 text-primary"></h4>
+                    </div>
+                    <div class="page-rightheader">
+                        <div class="btn-list">
+                            
+                        </div>
+                    </div>
+                </div>
+                <!--End Page header-->
+
+                <div class="card border-primary">
+                    <div class="card-header">
+                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_SECRETAIRE') %}
+                            <div class="col-md-4">
+                                <button type="button" class="btn btn-primary  mt-1 mb-1 me-3 form-control-sm">
+                                    <span>{% trans %}Total Expenses{% endtrans %}</span>
+                                    <span class="badge bg-white text-dark rounded-pill">{{ numberOfDepenses }}</span>
+                                </button>
+                            </div>
+                            <div class="col-md-4">
+                                {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+                                    <form action="{{ path('save_depense') }}" method="post">
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-outline-primary" name="addNewDepense">
+                                            <i class="fa fa-plus"></i> {% trans %}Add a new expense{% endtrans %}
+                                            </button>
+                                        </div>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    
+                        <div class="col-md-4">
+                            <form action="{{ path('print_etat_depense') }}" method="post"  target="_blank">
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="printSchoolFeesStatement">
+                                        <i class="fa fa-print"></i>
+                                    {% trans %} Print Financial Statements of Expenditures{% endtrans %}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                        
+                            <table border="1" class="table table-bordered text-nowrap" id="example2" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th class="border-bottom-0 indigo-gradient">{% trans %}Date{% endtrans %}</th>
+                                        <th class="border-bottom-0 green-gradient">{% trans %}Amount{% endtrans %}</th>
+                                        <th class="border-bottom-0 orange-gradient">{% trans %}Reason{% endtrans %}</th>
+                                        <th class="border-bottom-0 blue-gradient">{% trans %}Rubric{% endtrans %}</th>
+                                        {# si c'est l'admin qui est connecté #}
+                                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                            {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+                                                <th class="border-bottom-0 blue-gradient">{% trans %}Actions{% endtrans %}</th>
+                                            {% endif %}
+                                        {% endif %}
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th class="border-bottom-0 indigo-gradient">{% trans %}Date{% endtrans %}</th>
+                                        <th class="border-bottom-0 green-gradient">{% trans %}Amount{% endtrans %}</th>
+                                        <th class="border-bottom-0 orange-gradient">{% trans %}Reason{% endtrans %}</th>
+                                        <th class="border-bottom-0 blue-gradient">{% trans %}Rubric{% endtrans %}</th>
+                                        {# si c'est l'admin qui est connecté #}
+                                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                            {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+                                                <th class="border-bottom-0 blue-gradient">{% trans %}Actions{% endtrans %}</th>
+                                            {% endif %}
+                                        {% endif %}
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    {% for depense in depenses %}
+                                        <tr>
+                                            <td>{{ depense.createdAt|date('d-m-Y') }}</td>
+                                            <td>{{ depense.montant}}</td>
+                                            <td>{{ depense.motif }}</td>
+                                            <td>{{ depense.rubrique.rubrique }}</td>
+                                            
+                                            {# si c'est l'admin qui est conncté #}
+                                            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                                {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <a href="javascript:void(0);" class="btn btn-light btn-sm" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options <i class="fa fa-angle-down"></i></a>
+                                                            <div class="dropdown-menu" style="margin-top: auto !important; margin-bottom: auto !important; margin-left: auto !important; margin-right: auto !important;">
+                                                                
+                                                                {# <form action="{{ path('dedit_depense', {'id': depense.id}) }}" method="post" style="display: inline-block;">
+                                                                    <div class="form-group">
+                                                                        <button type="submit" class="btn btn-outline-success" name="updateDepense" data-bs-toggle="tooltip" title="Modifier {{ depense.motif }}">
+                                                                            <i class="fa fa-pencil-square-o"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </form> #}
+                                                                <a class="dropdown-item" href="{{ path('dedit_depense', {'id': depense.id}) }}"> 
+                                                                    <i class="fe fe-edit me-2"></i> {% trans %}Edit{% endtrans %}
+                                                                </a>
+                                                                {# <form action="{{ path('delete_depense', {'id': depense.id}) }}" method="post" style="display: inline-block;" onsubmit="return confirm('{% trans %}Do you want to delete {% trans %} --- {{ depense.motif }} ?');">
+                                                                    <button type="submit" class="btn btn-outline-danger" name="deleteDepense" data-bs-toggle="tooltip" title="{% trans %}Delete{% endtrans %} {{ depense.motif }}">
+                                                                        <i class="fa fa-trash"></i>
+                                                                    </button>
+                                                                </form> #}
+
+                                                                <a class="dropdown-item" href="javascript:void(0);" 
+                                                                    onclick="swal({
+                                                                        'title': 'Danger', 
+                                                                        'type': 'error', 
+                                                                        'text': 'Do you want to delete this expenses ?', 
+                                                                        'showCancelButton': true, 
+                                                                        'confirmButtonText': 'Yes', 
+                                                                        'confirmButtonColor': '#f00', 
+                                                                        'cancelButtonText': 'No', 
+                                                                        'cancelButtonColor': '#186106', 
+                                                                        'confirmButtonPath': '{{ path('delete_depense', {'id': depense.id}) }} '});">
+                                                                    <i class="fa fa-trash me-2"></i> {% trans %}Delete{% endtrans %}
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                {% endif %}
+                                            {% endif %}
+
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

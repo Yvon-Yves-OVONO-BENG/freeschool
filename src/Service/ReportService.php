@@ -1065,8 +1065,8 @@ class ReportService
                     // }
                     // else
                     // {
-                        $reportRow->setMinNote($this->generalService->formatMark($minMoyenne))
-                        ->setMaxNote($this->generalService->formatMark($maxMoyenne));
+                        $reportRow->setMinNote((int)$this->generalService->formatMark($minMoyenne))
+                        ->setMaxNote((int)$this->generalService->formatMark($maxMoyenne));
                     // }
                     
 

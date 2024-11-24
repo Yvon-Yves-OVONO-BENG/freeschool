@@ -14,7 +14,7 @@ class PDF extends Fpdf
 		$this->AliasNbPages('{totalPages}');
 		$this->SetFont('Arial','BI',5);
 		// Page number
-		$this->Cell(0, 5, utf8_decode("Lycée Bilingue d'ODZA / G.B.H.S ODZA"), 0, 0, 'R');
+		$this->Cell(0, 5, utf8_decode("Lycée de BOULI / G.H.S BOULI"), 0, 0, 'R');
 		// $this->Cell(0, 5, utf8_decode("Lycée Technique d'Akonolinga / G.T.H.S Akonolinga"), 0, 0, 'R');
     }
 

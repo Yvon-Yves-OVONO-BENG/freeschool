@@ -112,11 +112,11 @@ class PrintReportController extends AbstractController
             $sequences = $this->sequenceRepository->findBy(['term' => $selectedTerm ], ['sequence' => 'ASC']);
             $sequence1 = $sequences[0];
             $sequence2 = $sequences[1];
-    
+            
             // les notes des élèves sequence 1 & 2 dans toutes les matières
             $studentMarkSequence1 = $this->evaluationRepository->findEvaluationForReport($sequence1, $selectedClassroom);
             $studentMarkSequence2 = $this->evaluationRepository->findEvaluationForReport($sequence2, $selectedClassroom);
-    
+            
             // Notes trimestrielles des élèves
             $studentMarkTerm = $this->generalService->getStudentMarkTerm($studentMarkSequence1, $studentMarkSequence2);
             
@@ -177,6 +177,7 @@ class PrintReportController extends AbstractController
 
         // On contruit les bulletins des élèves de la classe
         $allStudentReports = [];
+        
         if(!empty($studentMarkTerm))
         {
             // On construit le bulletin de chaque élève
@@ -189,6 +190,7 @@ class PrintReportController extends AbstractController
                     
                     $index = $studentIndex['index'];
                     $student = $studentIndex['student'];
+        
                 }else
                 {
                     $student = $rankedStudents[$index]['student'];
@@ -290,7 +292,7 @@ class PrintReportController extends AbstractController
             }
              
         }
-    
+        
         if($subSystem->getId() == 1)
         {
             if ($slugStudent) 
@@ -305,7 +307,7 @@ class PrintReportController extends AbstractController
         }
         else
         {
-            if ($slug) 
+            if ($slugStudent) 
             {
                 return new Response($pdf->Output('Bulletin de notes de '.$student->getFullName().' - '.$selectedClassroom->getClassroom()." - ".$trimestre ,'I'), 200, ['Content-Type' => 'application/pdf']) ;
             } else 

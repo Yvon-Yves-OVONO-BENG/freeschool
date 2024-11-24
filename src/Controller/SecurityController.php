@@ -39,14 +39,17 @@ class SecurityController extends AbstractController
             $school = $this->schoolRepository->findBy([
                 "schoolYear" => $schoolYear
             ]);
-
-
         }else 
         {
             return $this->redirectToRoute('app_logout');
         }
 
         if ($this->getUser()) 
+        {
+            return $this->redirectToRoute('app_logout');
+        }
+
+        if (!$schoolYear) 
         {
             return $this->redirectToRoute('app_logout');
         }

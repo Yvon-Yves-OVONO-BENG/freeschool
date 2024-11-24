@@ -494,7 +494,7 @@
 																				{% trans %}Deliberations{% endtrans %}</h3>
 																			</li>
 																			{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_CENSEUR') %}
-																			<li aria-haspopup="true"><a  href="{{ path('deliberation_displayDeliberation') }}">
+																				<li aria-haspopup="true"><a  href="{{ path('deliberation_displayDeliberation') }}">
 																				<i class="fa fa-check"></i>{% trans %}Deliberate{% endtrans %}</a></li>
 																			{% endif %}
 																			<li aria-haspopup="true"><a href="{{ path('deliberation_deliberationList') }}">

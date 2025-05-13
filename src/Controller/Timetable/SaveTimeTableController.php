@@ -148,7 +148,7 @@ class SaveTimeTableController extends AbstractController
                 $this->em->persist($timeTable);
                 $this->em->flush();
 
-                $this->addFlash('info', $this->translator->trans("Time table saved successfully !"));
+                $this->addFlash('info', $this->translator->trans("Time table saved with success ! !"));
                 $mySession->set('ajout', 1);
 
                 // on initialise le formulaire

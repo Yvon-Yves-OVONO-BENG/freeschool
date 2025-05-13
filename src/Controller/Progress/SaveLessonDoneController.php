@@ -82,7 +82,7 @@ class SaveLessonDoneController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) 
         {
             $this->em->flush();
-            $this->addFlash('info', $this->translator->trans('Lesson done saved successfully !'));
+            $this->addFlash('info', $this->translator->trans('Lesson done saved with success ! !'));
             $mySession->set('ajout', 1);
 
             return $this->redirectToRoute('lesson_done');

@@ -106,7 +106,7 @@ class UserController extends AbstractController
 
             $this->em->flush();
 
-            $this->addFlash('info', $this->translator->trans('Password updated successfully'));
+            $this->addFlash('info', $this->translator->trans('Password updated with success !'));
             
             return $this->redirectToRoute('teacher_displayTeacher', ['displayLaters' => 0, 'm' => 1]);
         }

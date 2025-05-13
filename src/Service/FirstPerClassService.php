@@ -68,12 +68,13 @@ class FirstPerClassService
             // Entête de la fiche
             $pdf->SetFont('Times', 'B', $fontSize+4);
             $pdf->Cell(190, 7, utf8_decode('LISTE DES PREMIERS PAR CLASSE'), 0, 1, 'C');
+            
             $pdf->Cell(0, 7, utf8_decode($termTitle), 0, 1, 'C');
             // $pdf->Cell(150, 7, utf8_decode($school->getFrenchName()), 0, 1, 'C');
             $pdf->Ln(3);
 
            // Entête du tableau
-           $pdf = $this->generalService->getTableHeaderPagination($pdf, $fontSize, $cellTableClassroom, $cellTableHeight, $cellTablePresence, $cellTableObservation, $cellTablePresence3, $subSystem);
+           $pdf = $this->generalService->getTableHeaderPaginationFirstPerClass($pdf, $fontSize, $cellTableClassroom, $cellTableHeight, $cellTablePresence, $cellTableObservation, $cellTablePresence3, $subSystem);
         
             $mySession = $this->request->getSession();
             
@@ -174,7 +175,7 @@ class FirstPerClassService
             $pdf->Ln(3);
 
             // Entête du tableau
-            $pdf = $this->generalService->getTableHeaderPagination($pdf, $fontSize, $cellTableClassroom, $cellTableHeight, $cellTablePresence, $cellTableObservation, $cellTablePresence3, $subSystem);
+            $pdf = $this->generalService->getTableHeaderPaginationFirstPerClass($pdf, $fontSize, $cellTableClassroom, $cellTableHeight, $cellTablePresence, $cellTableObservation, $cellTablePresence3, $subSystem);
         
             $mySession = $this->request->getSession();
             

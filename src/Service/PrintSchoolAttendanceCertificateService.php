@@ -2,9 +2,7 @@
 
 namespace App\Service;
 
-use App\Entity\EtatDepense;
 use App\Entity\School;
-use App\Entity\EtatFinance;
 use App\Entity\SchoolYear;
 use App\Service\GeneralService;
 use App\Entity\ReportElements\PDF;

@@ -79,7 +79,7 @@ class DeleteClassroomController extends AbstractController
             $this->em->remove($classroom);
             $this->em->flush();
 
-            $this->addFlash('info', $this->translator->trans('Classroom deleted successfully'));
+            $this->addFlash('info', $this->translator->trans('Classroom deleted with success !'));
             $mySession->set('suppression', 1);
 
             return $this->redirectToRoute('classroom_displayClassroom', [ 's' => 1]);

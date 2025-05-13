@@ -12,6 +12,7 @@ use App\Entity\Cycle;
 use App\Entity\SubSystem;
 use App\Entity\Evaluation;
 use App\Entity\Level;
+use App\Entity\School;
 use App\Entity\SchoolYear;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -73,6 +74,7 @@ class EvaluationRepository extends ServiceEntityRepository
                 ->andWhere('sb.id = l.subject')
                 ->innerJoin(Classroom::class, 'cl')
                 ->andWhere('cl.id = st.classroom')
+                ->andWhere('st.supprime = 0')
                 ->andWhere('l.subject = :subject')
                 ->andWhere('st.schoolYear = :schoolYear')
                 ->andWhere('st.subSystem = :subSystem')
@@ -90,6 +92,210 @@ class EvaluationRepository extends ServiceEntityRepository
 
         return $query->execute();
     }
+
+    /**
+     * les 5 meilleurs élèves par matière et par trimestre
+     *
+     * @param [type] $subjectId
+     * @param [type] $term
+     * @return void
+     */
+    public function getTop5StudentsBySubjectAndTerm(SchoolYear $schoolYear, SubSystem $subSystem, int $subjectId, string $term): array
+    {
+        $qb = $this->createQueryBuilder('e')
+            ->select('s.id AS student_id, s.fullName AS fullName, subj.id AS subject_id, subj.subject AS subject, (AVG(e.mark)) AS moyenne, cl.classroom AS classroom, sexe.sex AS sex, s.birthday AS dateNaissance')
+            ->join('e.student', 's')
+            ->join('e.lesson', 'l')
+            ->join('l.subject', 'subj')
+            ->join('e.sequence', 'seq')
+            ->join('s.classroom', 'cl')
+            ->join('s.sex', 'sexe')
+            ->where('subj.id = :subjectId')
+            ->andWhere('s.supprime = 0')
+            ->andWhere('s.schoolYear = :schoolYear')
+            ->andWhere('s.subSystem = :subSystem')
+            ->setParameters([
+                'schoolYear' => $schoolYear,
+                'subSystem' => $subSystem,
+            ])
+            ->groupBy('s.id, subj.id')
+            ->orderBy('moyenne', 'DESC')
+            ->setMaxResults(5);
+
+        if ($term === '1') 
+        {
+            $qb->andWhere('seq.id IN (:sequences)')
+                ->setParameter('sequences', [1, 2]); // Séquences 1 et 2 pour Trimestre 1
+        } 
+        elseif ($term === '2') 
+        {
+            $qb->andWhere('seq.id IN (:sequences)')
+                ->setParameter('sequences', [3, 4]); // Séquences 3 et 4 pour Trimestre 2
+        } 
+        elseif ($term === '3') 
+        {
+            $qb->andWhere('seq.id IN (:sequences)')
+                ->setParameter('sequences', [5, 6]); // Séquences 5 et 6 pour Trimestre 3
+        } 
+        elseif ($term === '0') 
+        {
+            $qb->andWhere('seq.id IN (:sequences)')
+                ->setParameter('sequences', [1, 2, 3, 4, 5, 6]); // Toutes les séquences pour l'annuel
+        }
+
+        $qb->setParameter('subjectId', $subjectId);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * 5 meilleurs élèves par matière et par cycle
+     *
+     * @param SchoolYear $schoolYear
+     * @param SubSystem $subSystem
+     * @param Cycle $cycle
+     * @param integer $subjectId
+     * @param string $term
+     * @return array
+     */
+    public function findTopStudentsByCycleAndSubjectAndTrimester(SchoolYear $schoolYear, SubSystem $subSystem, int $cycle, int $subjectId, int $trimester): array
+    {
+        // Déterminer les évaluations du trimestre
+        $evaluationIds = [];
+        if ($trimester === 1) {
+            $evaluationIds = [1, 2];
+        } elseif ($trimester === 2) {
+            $evaluationIds = [3, 4];
+        } elseif ($trimester === 3) {
+            $evaluationIds = [5, 6];
+        }
+
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT s.id AS studentId, AVG(e.mark) AS moyenne, s.fullName AS fullName, s.birthday AS dateNaissance, sex.sex AS sexe, c.classroom AS classroom
+            FROM App\Entity\Evaluation e
+            JOIN e.student s
+            JOIN s.classroom c
+            JOIN c.level l
+            JOIN e.lesson lsn
+            JOIN lsn.subject sub
+            JOIN s.schoolYear sc
+            JOIN s.subSystem sb
+            JOIN s.sex sex
+            WHERE l.id BETWEEN :levelStart AND :levelEnd
+            AND sub.id = :subjectId
+            AND e.sequence IN (:evaluationIds)
+            AND sc = :schoolYear
+            AND sb = :subSystem
+            AND s.supprime = 0
+            GROUP BY s.id
+            ORDER BY moyenne DESC'
+        );
+
+        // Définir les paramètres en fonction du cycle
+        $query->setParameter('levelStart', $cycle === 1 ? 1 : 5);
+        $query->setParameter('levelEnd', $cycle === 1 ? 4 : 7);
+        $query->setParameter('subjectId', $subjectId);
+        $query->setParameter('evaluationIds', $evaluationIds);
+        $query->setParameter('schoolYear', $schoolYear);
+        $query->setParameter('subSystem', $subSystem);
+
+        // Limiter les résultats aux 5 meilleurs élèves
+        $query->setMaxResults(5);
+
+        return $query->getResult();
+    }
+
+    /**
+     * 5 meilleurs elèves par niveau par matière et par trimestre function
+     *
+     * @param SchoolYear $schoolYear
+     * @param SubSystem $subSystem
+     * @param [type] $levelId
+     * @param [type] $subjectId
+     * @param [type] $term
+     * @return void
+     */
+    public function findTop5StudentsByLevelSubjectAndTrimester(SchoolYear $schoolYear, SubSystem $subSystem, $levelId, $subjectId, $term)
+    {
+        // Map des trimestres et des séquences correspondantes
+        $sequences = match ($term) {
+            1 => [1, 2],
+            2 => [3, 4],
+            3 => [5, 6],
+            default => throw new \InvalidArgumentException('Trimestre invalide.'),
+        };
+
+        // Construction de la requête DQL
+        return $this->createQueryBuilder('e')
+            ->select('s.id AS studentId, AVG(e.mark) AS moyenne, s.fullName AS fullName, sex.sex AS sexe, s.birthday AS dateNaissance, c.classroom')
+            ->join('e.student', 's')
+            ->join('s.sex', 'sex')
+            ->join('s.classroom', 'c')
+            ->join('c.level', 'l')
+            ->join('e.lesson', 'le')
+            ->join('le.subject', 'sub')
+            ->where('l.id = :levelId')
+            ->andWhere('sub.id = :subjectId')
+            ->andWhere('e.sequence IN (:sequences)')
+            ->andWhere('s.schoolYear = :schoolYear')
+            ->andWhere('s.subSystem = :subSystem')
+            ->andWhere('s.supprime = 0')
+            ->setParameter('levelId', $levelId)
+            ->setParameter('subjectId', $subjectId)
+            ->setParameter('sequences', $sequences)
+            ->setParameter('schoolYear', $schoolYear)
+            ->setParameter('subSystem', $subSystem)
+            ->groupBy('s.id')
+            ->orderBy('moyenne', 'DESC')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * les 5 meilleurs élèves par classe par matière et par trimestre
+     *
+     * @param [type] $classId
+     * @param [type] $subjectId
+     * @param [type] $trimester
+     * @return void
+     */
+    public function findTop5StudentsBySubjectClassAndTrimester(SchoolYear $schoolYear, SubSystem $subSystem, $subjectId, $classId, $term)
+    {
+        // Mapping des séquences correspondant au trimestre
+        $sequences = match ($term) {
+            1 => [1, 2],
+            2 => [3, 4],
+            3 => [5, 6],
+            default => throw new \InvalidArgumentException('Trimestre invalide.'),
+        };
+
+        // Requête DQL
+        return $this->createQueryBuilder('e')
+            ->select('s.id AS studentId, AVG(e.mark) AS moyenne, s.fullName AS fullName, sex.sex AS sexe, s.birthday AS dateNaissance, c.classroom')
+            ->join('e.student', 's')
+            ->join('s.sex', 'sex')
+            ->join('s.classroom', 'c')
+            ->join('e.lesson', 'le')
+            ->join('le.subject', 'sub')
+            ->where('c.id = :classId')
+            ->andWhere('s.schoolYear = :schoolYear')
+            ->andWhere('s.subSystem = :subSystem')
+            ->andWhere('s.supprime = 0')
+            ->andWhere('sub.id = :subjectId')
+            ->andWhere('e.sequence IN (:sequences)')
+            ->setParameter('classId', $classId)
+            ->setParameter('subjectId', $subjectId)
+            ->setParameter('sequences', $sequences)
+            ->setParameter('schoolYear', $schoolYear)
+            ->setParameter('subSystem', $subSystem)
+            ->groupBy('s.id')
+            ->orderBy('moyenne', 'DESC')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult();
+    }
+
 
     /**
      * fonction qui retourne les 5 meilleurs élèves du niveau par matière
@@ -120,6 +326,7 @@ class EvaluationRepository extends ServiceEntityRepository
                 ->andWhere('l.subject = :subject')
                 ->andWhere('st.schoolYear = :schoolYear')
                 ->andWhere('st.subSystem = :subSystem')
+                ->andWhere('st.supprime = 0')
                 ->setParameters([
                     'schoolYear' => $schoolYear,
                     'subSystem' => $subSystem,
@@ -137,6 +344,15 @@ class EvaluationRepository extends ServiceEntityRepository
     }
 
 
+    /**
+     * Fonction qui retourne les 5 meileurs élèves par matièreet par classe
+     *
+     * @param SchoolYear $schoolYear
+     * @param SubSystem $subSystem
+     * @param Subject $subject
+     * @param Classroom $classroom
+     * @return array
+     */
     public function findTopFiveStudentsSubjectAndClassroom(SchoolYear $schoolYear, SubSystem $subSystem, 
     Subject $subject, Classroom $classroom): array 
     {
@@ -155,6 +371,7 @@ class EvaluationRepository extends ServiceEntityRepository
                 ->andWhere('l.subject = :subject')
                 ->andWhere('st.schoolYear = :schoolYear')
                 ->andWhere('st.subSystem = :subSystem')
+                ->andWhere('st.supprime = 0')
                 ->setParameters([
                     'schoolYear' => $schoolYear,
                     'subSystem' => $subSystem,
@@ -203,6 +420,7 @@ class EvaluationRepository extends ServiceEntityRepository
                 ->andWhere('l.subject = :subject')
                 ->andWhere('st.schoolYear = :schoolYear')
                 ->andWhere('st.subSystem = :subSystem')
+                ->andWhere('st.supprime = 0')
                 ->setParameters([
                     'schoolYear' => $schoolYear,
                     'subSystem' => $subSystem,
@@ -237,6 +455,7 @@ class EvaluationRepository extends ServiceEntityRepository
                 ])
             ->innerJoin('e.student', 's')
             ->addSelect('s')
+            ->andWhere('s.supprime = 0')
             ->orderBy('s.fullName', 'ASC')
             ->getQuery()
             ->getResult()
@@ -269,6 +488,7 @@ class EvaluationRepository extends ServiceEntityRepository
             ->addSelect('tc')
             ->innerJoin('sb.category', 'ct')
             ->addSelect('ct')
+            ->andWhere('st.supprime = 0')
             ->setParameters([
                 'sequence' => $sequence,
                 'classroom' => $classroom
@@ -299,6 +519,7 @@ class EvaluationRepository extends ServiceEntityRepository
             ->innerJoin('e.student', 'st')
             ->addSelect('st')
             ->andWhere('st.classroom = :classroom')
+            ->andWhere('st.supprime = 0')
             ->setParameters([
                 'sequence' => $sequence,
                 'subject' => $subject,
@@ -323,9 +544,11 @@ class EvaluationRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('e')
             ->andWhere('e.sequence = :sequence')
             ->innerJoin('e.lesson', 'ls')
+            ->innerJoin('e.student', 's')
             ->addSelect('ls')
             ->andWhere('ls.subject = :subject')
             ->andWhere('e.student = :student')
+            ->andWhere('s.supprime = 0')
             ->setParameters([
                 'sequence' => $sequence,
                 'subject' => $subject,
@@ -336,7 +559,12 @@ class EvaluationRepository extends ServiceEntityRepository
         ;
     }
 
-
+    /**
+     * Fonction qui retourne les évaluations d'une leçon
+     *
+     * @param Lesson $lesson
+     * @return array
+     */
     public function findLessonEvaluations(Lesson $lesson): array
     {
         return $this->createQueryBuilder('e')
@@ -345,12 +573,165 @@ class EvaluationRepository extends ServiceEntityRepository
             ->addSelect('sq')
             ->innerJoin('e.student', 'st')
             ->addSelect('st')
+            ->andWhere('st.supprime = 0')
             ->setParameter('lesson', $lesson)
             ->orderBy('st.fullName')
             ->getQuery()
             ->getResult()
         ;
     }
+
+    /**
+     * Fonction qui retourne les statistique d'une évaluation
+     *
+     * @param integer $sequence
+     * @param integer $lesson
+     * @return array
+     */
+    public function getEvaluationStatistics(int $sequence, int $lesson): array
+    {
+        $qb = $this->createQueryBuilder('e')
+            ->select(
+                'MIN(CASE WHEN sex.sex = :female THEN e.mark ELSE 0 END) AS minMarkGirls',
+                'MAX(CASE WHEN sex.sex = :female THEN e.mark ELSE 0 END) AS maxMarkGirls',
+                'MIN(CASE WHEN sex.sex = :male THEN e.mark ELSE 0 END) AS minMarkBoys',
+                'MAX(CASE WHEN sex.sex = :male THEN e.mark ELSE 0 END) AS maxMarkBoys',
+                'MIN(e.mark) AS minMarkClass',
+                'MAX(e.mark) AS maxMarkClass'
+            )
+            ->join('e.student', 's')
+            ->join('s.sex', 'sex')
+            ->where('e.sequence = :sequence')
+            ->andWhere('e.lesson = :lesson')
+            ->andWhere('s.supprime = 0')
+            ->setParameters([
+                'sequence' => $sequence,
+                'lesson' => $lesson,
+                'female' => 'F',
+                'male' => 'M',
+                ]);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * fonction qui retourne le nombre d'évaluation par élève d'une classe
+     *
+     * @param [type] $schoolYear
+     * @param [type] $sequence
+     * @param [type] $classroom
+     * @return void
+     */
+    public function getEvaluationsBySequenceAndClasse($schoolYear, $sequence, $classroom)
+    {
+        $qb = $this->createQueryBuilder('e')
+            ->select('s.fullName as fullName', 's.id as id', 'COUNT(sb.id) as nbEvaluations', 's.slug as slugStudent', 'c.id as classeId', 'c.slug as slugClassroom', 'IDENTITY(e.sequence) as sequenceId')
+            ->innerJoin('e.student', 's')
+            ->innerJoin('s.classroom', 'c')
+            ->innerJoin('e.lesson', 'l')
+            ->innerJoin('l.subject', 'sb')
+            ->where('s.classroom = :classroom')
+            ->andWhere('e.sequence = :sequence')
+            ->andWhere('c.schoolYear = :schoolYear')
+            ->setParameter('classroom', $classroom)
+            ->setParameter('sequence', $sequence)
+            ->setParameter('schoolYear', $schoolYear)
+            ->orderBy('s.fullName')
+            ->groupBy('s.id');
+
+        return $qb->getQuery()->getResult();
+    }
+
+
+    public function getEvaluationsByTrimestreAndClasse(SchoolYear $schoolYear, int $trimestre, int $classeId)
+    {
+        $sequenceMapping = [
+            1 => [1, 2], // Trimestre 1 -> Séquences 1 et 2
+            2 => [3, 4], // Trimestre 2 -> Séquences 3 et 4
+            3 => [5, 6], // Trimestre 3 -> Séquences 5 et 6
+        ];
+
+        if (!array_key_exists($trimestre, $sequenceMapping)) {
+            throw new \InvalidArgumentException('Trimestre invalide.');
+        }
+
+        $sequences = $sequenceMapping[$trimestre];
+
+        return $this->createQueryBuilder('e')
+            ->select('st.fullName as fullName', 'st.id as id', 'st.slug as slugStudent', 'c.id as classeId', 'c.slug as slugClassroom',  'IDENTITY(e.sequence) as sequenceId', 'COUNT(e.id) as nbEvaluations')
+            ->innerJoin('e.student', 'st')
+            ->innerJoin('e.lesson', 'l')
+            ->innerJoin('l.classroom', 'c')
+            ->where('c.id = :classeId')
+            ->andWhere('e.sequence IN (:sequences)')
+            ->andWhere('c.schoolYear = :schoolYear')
+            ->setParameter('classeId', $classeId)
+            ->setParameter('sequences', $sequences)
+            ->setParameter('schoolYear', $schoolYear)
+            ->groupBy('st.id, e.sequence')
+            ->orderBy('st.fullName, e.sequence')
+            ->getQuery()
+            ->getResult();
+    }
+
+
+    /**
+     * fonction retourne les évaluations d'un élève un trimestre
+     *
+     * @param [type] $student
+     * @param [type] $trimestre
+     * @return void
+     */
+    public function getEvaluationsByEleveAndTrimestre($student, $trimestre)
+    {
+        $sequenceMapping = [
+            1 => [1, 2],
+            2 => [3, 4],
+            3 => [5, 6],
+        ];
+
+        if (!isset($sequenceMapping[$trimestre])) {
+            throw new \InvalidArgumentException('Trimestre invalide.');
+        }
+
+        return $this->createQueryBuilder('e')
+            ->select('IDENTITY(e.lesson) as lessonId', 'IDENTITY(e.sequence) as sequenceId', 'e.mark', 'sb.id as subjectId', 'sb.subject as subject')
+            ->innerJoin('e.lesson','l')
+            ->innerJoin('l.subject','sb')
+            ->where('e.student = :student')
+            ->andWhere('l.id = e.lesson')
+            ->andWhere('sb.id = l.subject')
+            ->andWhere('e.sequence IN (:sequences)')
+            ->setParameter('student', $student)
+            ->setParameter('sequences', $sequenceMapping[$trimestre])
+            ->getQuery()
+            ->getResult();
+    }
+
+
+    /**
+     * fonction retourne les évaluations d'un élève d'une séquence donnée
+     *
+     * @param [type] $student
+     * @param [type] $sequence
+     * @return void
+     */
+    public function getEvaluationsByEleveAndSequence($student, $sequence)
+    {
+        return $this->createQueryBuilder('e')
+            ->select('e.id as evaluationId, IDENTITY(e.lesson) as lessonId', 'IDENTITY(e.sequence) as sequenceId', 'e.mark', 'sb.id as subjectId', 'sb.subject as subject')
+            ->innerJoin('e.lesson','l')
+            ->innerJoin('l.subject','sb')
+            ->where('e.student = :student')
+            ->andWhere('l.id = e.lesson')
+            ->andWhere('sb.id = l.subject')
+            ->andWhere('e.sequence = :sequences')
+            ->setParameter('student', $student)
+            ->setParameter('sequences', $sequence)
+            ->getQuery()
+            ->getResult();
+    }
+
 
 //    /**
 //     * @return Evaluation[] Returns an array of Evaluation objects

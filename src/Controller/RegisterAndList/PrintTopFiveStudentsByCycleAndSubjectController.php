@@ -10,6 +10,7 @@ use App\Repository\SubjectRepository;
 use App\Service\FirstPerClassService;
 use App\Repository\ClassroomRepository;
 use App\Repository\EvaluationRepository;
+use App\Repository\TermRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -26,13 +27,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class PrintTopFiveStudentsByCycleAndSubjectController extends AbstractController
 {
     public function __construct(
+        protected TermRepository $termRepository,
         protected CycleRepository $cycleRepository, 
-        protected SubjectRepository $subjectRepository, 
         protected ReportRepository $reportRepository, 
         protected SchoolRepository $schoolRepository,
-        protected EvaluationRepository $evaluationRepository, 
+        protected SubjectRepository $subjectRepository, 
         protected StudentRepository $studentRepository, 
         protected ClassroomRepository $classroomRepository, 
+        protected EvaluationRepository $evaluationRepository, 
         protected FirstPerClassService $firstPerClassService,
         protected PrintTopFiveStudentsByCycleAndSubjectService $printTopFiveStudentsByCycleAndSubjectService
         )
@@ -62,10 +64,11 @@ class PrintTopFiveStudentsByCycleAndSubjectController extends AbstractController
 
         $cycle = $this->cycleRepository->find($request->request->get('cycle'));
         $subject = $this->subjectRepository->find($request->request->get('subject'));
+        $term = $this->termRepository->find($request->request->get('term'));
         
-        $topFiveStudents = $this->evaluationRepository->findTopFiveStudentsByCycleAndSubject($schoolYear, $subSystem, $cycle, $subject);
+        $topFiveStudents = $this->evaluationRepository->findTopStudentsByCycleAndSubjectAndTrimester($schoolYear, $subSystem, $cycle->getId(), $subject->getId(), $term->getTerm());
         
-        $pdf = $this->printTopFiveStudentsByCycleAndSubjectService->printTopFiveStudentsByCycleAndSubjectService($topFiveStudents, $schoolYear, $school, $subSystem, $cycle, $subject);
+        $pdf = $this->printTopFiveStudentsByCycleAndSubjectService->printTopFiveStudentsByCycleAndSubjectService($topFiveStudents, $schoolYear, $school, $subSystem, $cycle, $subject, $term);
         
         if ($subSystem->getId() == 1 ) 
         {

@@ -101,21 +101,21 @@ class ConseilRecorderController extends AbstractController
                 ]);
 
                 $this->conseilManagerService->saveConseils($selectedTerm, $request);
-                $this->addFlash('info', $this->translator->trans('Decision council saved successfully'));
+                $this->addFlash('info', $this->translator->trans('Decisions council saved with success !'));
 
                 $notification = true;
             }elseif($request->request->has('updateConseil'))
             { 
                $this->conseilManagerService->updateConseil($request->request->get('conseilToUpdateId'), $request->request->get('updatedDecision'), $request->request->get('updatedMotif'), $request);
                
-               $this->addFlash('info', $this->translator->trans('Decision council updated successfully'));
+               $this->addFlash('info', $this->translator->trans('Decision council updated with success !'));
 
                $notification = true;
 
             }elseif ($request->request->has('removeAllConseils')) 
             {
                $this->conseilManagerService->removeConseils($request->request->get('term'), $request->request->get('classroom'), $request);
-               $this->addFlash('info', $this->translator->trans('Decision council deleted successfully'));
+               $this->addFlash('info', $this->translator->trans('Decision council deleted with success !'));
 
                $notification = true;
             }

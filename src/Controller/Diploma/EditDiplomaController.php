@@ -75,7 +75,7 @@ class EditDiplomaController extends AbstractController
             $diploma->setDiploma(strtoupper($diploma->getDiploma()));
 
             $this->em->flush(); // On modifie
-            $this->addFlash('info', $this->translator->trans('Diploma updated successfully'));
+            $this->addFlash('info', $this->translator->trans('Diploma updated with success !'));
 
             $mySession->set('miseAjour', 1);
 

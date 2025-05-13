@@ -38,7 +38,7 @@ class ActivateSaveExpelledController extends AbstractController
         $this->em->persist($verrouInsolvable);
         $this->em->flush();
 
-        $this->addFlash('info', $this->translator->trans('Registration of excluded successfully activate !'));
+        $this->addFlash('info', $this->translator->trans('Registration of excluded activate with success !'));
 
         $mySession->set('ajout', 1);
 

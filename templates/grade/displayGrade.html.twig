@@ -38,7 +38,7 @@
                 </div>
                 <div class="page-rightheader">
                     <div class="btn-list">
-                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                        {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
                             {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                 <form action="{{ path('grade_saveGrade') }}" method="post">
                                     <div class="form-group">
@@ -78,7 +78,7 @@
                                 <tr>
                                     <th class="wd-15p border-bottom-0">{% trans %}Rank{% endtrans %}</th>
                                     <th class="wd-15p border-bottom-0">{% trans %}Effective{% endtrans %}</th>
-                                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                    {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
                                         {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                             <th class="wd-15p border-bottom-0">{% trans %}Actions{% endtrans %}</th>
                                         {% endif %}
@@ -89,7 +89,7 @@
                                 <tr>
                                     <th class="wd-15p border-bottom-0">{% trans %}Rank{% endtrans %}</th>
                                     <th class="wd-15p border-bottom-0">{% trans %}Effective{% endtrans %}</th>
-                                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                    {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
                                         {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                             <th class="wd-15p border-bottom-0">{% trans %}Actions{% endtrans %}</th>
                                         {% endif %}
@@ -101,7 +101,7 @@
                                 <tr>
                                     <td>{{ grade.grade }}</td>
                                     <td class="text-center">{{ grade.teachers|length }}</td>
-                                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                    {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
                                         {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                             <td style="text-align: center; vertical-align:middle">
                                                 

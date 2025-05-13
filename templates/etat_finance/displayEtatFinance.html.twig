@@ -51,7 +51,7 @@
             <div class="card border-primary">
                 <div class="card-header">
                     
-                            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_SECRETAIRE') %}
+                            {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_SECRETAIRE') %}
                                 <div class="col-md-9">
                                     <button type="button" class="btn btn-primary  mt-1 mb-1 me-3 form-control-sm">
                                         <span>{% trans %}Financial statement{% endtrans %}</span>

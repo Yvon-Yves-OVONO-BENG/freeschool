@@ -54,7 +54,7 @@ class DeleteTimeTableController extends AbstractController
         $this->em->remove($timeTable);
         $this->em->flush();
         
-        $this->addFlash('info', $this->translator->trans('Time table deleted successfully'));
+        $this->addFlash('info', $this->translator->trans('Time table deleted with success !'));
         $mySession->set('suppression', 1);
 
         return $this->redirectToRoute('display_time_table', [ 's' => 1]);

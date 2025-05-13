@@ -15,6 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\RegistrationHistoryRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
@@ -28,6 +29,7 @@ class DisplayStudentController extends AbstractController
         protected FeesRepository $feesRepository, 
         protected ClassroomService $classroomService, 
         protected SchoolRepository $schoolRepository,
+        protected TranslatorInterface $translator,
         protected StudentRepository $studentRepository, 
         protected ClassroomRepository $classroomRepository, 
         protected RegistrationHistoryRepository $registrationHistoryRepository, 
@@ -103,7 +105,8 @@ class DisplayStudentController extends AbstractController
                 $schoolFees = $fees->getSchoolFees1();
                 $apeeFees = $fees->getApeeFees1();
                 $computerFees = $fees->getComputerFees1();
-            }else
+            }
+            else
             {
                 $schoolFees = $fees->getSchoolFees2();
                 $apeeFees = $fees->getApeeFees2();
@@ -119,6 +122,14 @@ class DisplayStudentController extends AbstractController
             }
         }
         
+        
+        if (!$fees) 
+        {
+            $this->addFlash('info', $this->translator->trans('The fees is empty. Please save fees'));
+            return $this->redirectToRoute('fees_updateFees');
+
+        }
+
         $medicalBookletFees = $fees->getMedicalBookletFees();
         if ($medicalBookletFees == null) 
         {

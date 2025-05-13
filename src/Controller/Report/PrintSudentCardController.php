@@ -53,11 +53,15 @@ class PrintSudentCardController extends AbstractController
 
         if ($slugStudent != null) 
         {
-            $students[] = $this->studentRepository->findOneBySlug(['slug' => $slugStudent]);
+            $students[] = $this->studentRepository->findBy([
+                'slug' => $slugStudent,
+                'supprime' => 0,
+            ]);
         } 
         else 
         {
             $students = $this->studentRepository->findBy([
+                'supprime' => 0,
                 'classroom' => $selectedClassroom
             ], [
                 'fullName' => 'ASC'

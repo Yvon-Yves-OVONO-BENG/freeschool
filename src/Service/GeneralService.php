@@ -136,6 +136,43 @@ class GeneralService
         return $pdf;
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param Pagination $pdf
+     * @param integer $fontSize
+     * @param integer $cellTableClassroom
+     * @param integer $cellTableHeight
+     * @param integer $cellTablePresence
+     * @param integer $cellTableObservation
+     * @param integer $cellTablePresence3
+     * @param SubSystem $subSystem
+     * @return Pagination
+     */
+    public function getTableHeaderPaginationFirstPerClass(Pagination $pdf, int $fontSize, int $cellTableClassroom, int $cellTableHeight, int $cellTablePresence, int $cellTableObservation, int $cellTablePresence3, SubSystem $subSystem): Pagination
+    {
+        if ($subSystem->getSubSystem() == ConstantsClass::FRANCOPHONE) 
+        {
+            $pdf->SetFont('Times', 'B', $fontSize+1);
+            $pdf->Cell($cellTableClassroom-15 , $cellTableHeight*1.5, utf8_decode('N°'), 1, 0, 'C', true);
+            $pdf->Cell($cellTableClassroom, $cellTableHeight*1.5, 'Classes', 1, 0, 'C', true);
+            $pdf->Cell($cellTablePresence+80 , $cellTableHeight*1.5, utf8_decode('Noms et prénoms'), 1, 0, 'C', true);
+            $pdf->Cell($cellTablePresence-20 , $cellTableHeight*1.5, 'Sexe', 1, 0, 'C', true);
+            $pdf->Cell($cellTablePresence-10 , $cellTableHeight*1.5, 'Moyenne', 1, 1, 'C', true);
+        } 
+        else 
+        {
+            $pdf->SetFont('Times', 'B', $fontSize+2);
+            $pdf->Cell($cellTableClassroom-15 , $cellTableHeight*1.5, utf8_decode('N°'), 1, 0, 'C', true);
+            $pdf->Cell($cellTableClassroom, $cellTableHeight*1.5, 'Class', 1, 0, 'C', true);
+            $pdf->Cell($cellTablePresence+80 , $cellTableHeight*1.5, utf8_decode('Lastnames and firstnames'), 1, 0, 'C', true);
+            $pdf->Cell($cellTablePresence-20 , $cellTableHeight*1.5, 'Sex', 1, 0, 'C', true);
+            $pdf->Cell($cellTablePresence-10 , $cellTableHeight*1.5, 'Average', 1, 1, 'C', true);
+        }
+        
+        return $pdf;
+    }
+
 
     /**
      * fonction qui me retourne les lignes de mes tableaux

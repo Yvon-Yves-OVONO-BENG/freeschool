@@ -155,9 +155,9 @@ class PaymentReceiptService
         if($subSystem->getSubSystem() == ConstantsClass::FRANCOPHONE)
         {
             $pdf->Cell(30, 8, utf8_decode('En chiffre :'), 'L', 0, 'L');
-            $pdf->Cell(105, 8, utf8_decode($avance.' FCFA'), 0, 0, 'C');
+            $pdf->Cell(105, 8, utf8_decode(number_format($avance, 0, '', ' ').' FCFA'), 0, 0, 'C');
             $pdf->Cell(30, 8, utf8_decode('En chiffre :'), 'L', 0, 'L');
-            $pdf->Cell(105, 8, utf8_decode($reste.' FCFA'), 'R', 1, 'C');
+            $pdf->Cell(105, 8, utf8_decode(number_format($reste, 0, '', ' ').' FCFA'), 'R', 1, 'C');
 
             $pdf->Cell(30, 8, utf8_decode('En lettre :'), 'LB', 0, 'L');
             $pdf->Cell(105, 8, utf8_decode($this->strService->strtoupper((new ChiffreEnLettreService($avance, 'Francs CFA'))->convert('fr-FR'))), 'RB', 0, 'C');
@@ -166,7 +166,7 @@ class PaymentReceiptService
             $pdf->Cell(105, 8, utf8_decode($this->strService->strtoupper((new ChiffreEnLettreService($reste, 'Francs CFA'))->convert('fr-FR'))), 'RB', 1, 'C');
             $pdf->Ln(3);
             $pdf->Cell(135, 8, utf8_decode('SOMME A PAYER'), 'LT', 0, 'C', true);
-            $pdf->Cell(135, 8, utf8_decode('25 000 FCFA'), 1, 1, 'C', true);
+            $pdf->Cell(135, 8, utf8_decode(number_format($avance, 0, '', ' ').' FCFA'), 1, 1, 'C', true);
             $pdf->Cell(135, 10, utf8_decode('OBSERVATION'), 'LBT', 0, 'C', true);
         
             if($feess - $avance == 0)
@@ -191,9 +191,9 @@ class PaymentReceiptService
         }else
         {
             $pdf->Cell(30, 8, utf8_decode('In numbers :'), 'L', 0, 'L');
-            $pdf->Cell(105, 8, utf8_decode($avance.' FCFA'), 0, 0, 'C');
+            $pdf->Cell(105, 8, utf8_decode(number_format($avance, 0, '', ' ').' FCFA'), 0, 0, 'C');
             $pdf->Cell(30, 8, utf8_decode('In numbers :'), 'L', 0, 'L');
-            $pdf->Cell(105, 8, utf8_decode($reste.' FCFA'), 'R', 1, 'C');
+            $pdf->Cell(105, 8, utf8_decode(number_format($reste, 0, '', ' ').' FCFA'), 'R', 1, 'C');
 
             $pdf->Cell(30, 8, utf8_decode('In letters :'), 'LB', 0, 'L');
             $pdf->Cell(105, 8, utf8_decode($this->strService->strtoupper((new ChiffreEnLettreService($avance, 'Francs CFA'))->convert('fr-FR'))), 'RB', 0, 'C');
@@ -202,7 +202,7 @@ class PaymentReceiptService
             $pdf->Cell(105, 8, utf8_decode($this->strService->strtoupper((new ChiffreEnLettreService($reste, 'Francs CFA'))->convert('fr-FR'))), 'RB', 1, 'C');
             $pdf->Ln(3);
             $pdf->Cell(135, 8, utf8_decode('AMOUNT TO BE PAID'), 'LT', 0, 'C', true);
-            $pdf->Cell(135, 8, utf8_decode('25 000 FCFA'), 1, 1, 'C', true);
+            $pdf->Cell(135, 8, utf8_decode(number_format($avance, 0, '', ' ').' FCFA'), 1, 1, 'C', true);
             $pdf->Cell(135, 10, utf8_decode('OBSERVATION'), 'LBT', 0, 'C', true);
         
             if($feess - $avance == 0)

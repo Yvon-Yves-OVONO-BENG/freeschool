@@ -75,7 +75,7 @@ class EditDutyController extends AbstractController
             $duty->setDuty(strtoupper($duty->getDuty()));
 
             $this->em->flush(); // On modifie
-            $this->addFlash('info', $this->translator->trans('Duty updated successfully'));
+            $this->addFlash('info', $this->translator->trans('Duty updated with success !'));
 
             $mySession->set('miseAjour', 1);
 

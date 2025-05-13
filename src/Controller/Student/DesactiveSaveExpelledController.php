@@ -47,7 +47,7 @@ class DesactiveSaveExpelledController extends AbstractController
         $this->em->persist($verrouInsolvable);
         $this->em->flush();
 
-        $this->addFlash('info', $this->translator->trans('Exclusion registration successfully disabled!'));
+        $this->addFlash('info', $this->translator->trans('Exclusion registration disabled with success !'));
         $mySession->set('miseAjour', 1);
 
         return $this->redirectToRoute('student_saveStudent', [

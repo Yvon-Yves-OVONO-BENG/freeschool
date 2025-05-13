@@ -107,7 +107,7 @@ class SaveDepartmentController extends AbstractController
             $this->em->persist($department);
             $this->em->flush(); 
 
-            $this->addFlash('info',  $this->translator->trans('Department saved successfully'));
+            $this->addFlash('info',  $this->translator->trans('Department saved with success !'));
 
             $mySession->set('ajout', 1);
 

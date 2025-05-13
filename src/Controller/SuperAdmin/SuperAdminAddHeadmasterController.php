@@ -95,7 +95,7 @@ class SuperAdminAddHeadmasterController extends AbstractController
             $this->em->persist($user);
             $this->em->flush(); 
 
-            $this->addFlash('info', $this->translator->trans('Staff saved successfully'));
+            $this->addFlash('info', $this->translator->trans('Staff saved with success !'));
             $teacher = new Teacher();
             $form = $this->createForm(TeacherType::class, $teacher);
             

@@ -2,7 +2,6 @@
 
 namespace App\Service;
 use App\Entity\School;
-use App\Entity\Classroom;
 use App\Entity\SchoolYear;
 use App\Entity\ConstantsClass;
 use App\Service\GeneralService;
@@ -174,7 +173,7 @@ class HistoriqueAbsenceTeacherService
                 }
             }
         }
-        if(count($historiques) == 0)
+        elseif(count($historiques) == 0)
         {
             // On insère une page
             $pdf = $this->generalService->newPage($pdf, 'P', 15, $fontSize-3);
@@ -185,9 +184,9 @@ class HistoriqueAbsenceTeacherService
             $pdf->Ln(5);
             
             $pdf->SetFont('Times', 'B', 10);
-            $pdf->Cell(0, $cellHeaderHeight2, "PAS D'ASSIDUITE DANS LA PERIODE DU ".date_format($dateDebut, 'd-m-Y')." AU ".date_format($dateFin, 'd-m-Y'), 0, 2, 'C', true);
+            $pdf->Cell(0, $cellHeaderHeight2, "PAS D'ASSIDUITE", 0, 2, 'C', true);
             $pdf->SetFont('Times', 'BI', 10);
-            $pdf->Cell(0, $cellHeaderHeight2, "NO ATTENDANCE DURING THE", 0, 2, 'C', true);
+            $pdf->Cell(0, $cellHeaderHeight2, "NO ATTENDANCE", 0, 2, 'C', true);
         }
         
         

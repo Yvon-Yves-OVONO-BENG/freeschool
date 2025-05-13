@@ -50,7 +50,7 @@
                                         <option label="Choose a classroom">
                                             {% trans %}Choose a classroom{% endtrans %}
                                         </option>
-                                        {% if is_granted('ROLE_PROVISEUR') or is_granted('ROLE_ADMIN') %}
+                                        {% if is_granted('ROLE_PROVISEUR') or is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') %}
                                         <option value="0">{% trans %}All the classrooms{% endtrans %}</option>
                                         {% endif %}
 

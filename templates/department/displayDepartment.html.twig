@@ -40,7 +40,7 @@
                 </div>
                 <div class="page-rightheader">
                     <div class="btn-list">
-                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                        {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
                             {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                 <a href="{{ path('department_saveDepartment') }}" class="btn btn-outline-primary" name="addNewDepartment">
                                     <i class="fa fa-plus"></i>
@@ -77,7 +77,8 @@
                                     <th class="border-bottom-0 indigo-gradient">{% trans %}Department{% endtrans %}</th>
                                     <th class="border-bottom-0 green-gradient">{% trans %}Educational facilitator{% endtrans %}</th>
                                     <th class="border-bottom-0 green-gradient">{% trans %}Effective{% endtrans %}</th>
-                                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                    <th class="border-bottom-0 green-gradient">{% trans %}Print subjects{% endtrans %}</th>
+                                        {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
                                         {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                             <th class="border-bottom-0 orange-gradient">{% trans %}Actions{% endtrans %}</th>
                                         {% endif %}
@@ -89,7 +90,8 @@
                                     <th class="border-bottom-0 indigo-gradient">{% trans %}Department{% endtrans %}</th>
                                     <th class="border-bottom-0 green-gradient">{% trans %}Educational facilitator{% endtrans %}</th>
                                     <th class="border-bottom-0 green-gradient">{% trans %}Effective{% endtrans %}</th>
-                                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                    <th class="border-bottom-0 green-gradient">{% trans %}Print subjects{% endtrans %}</th>
+                                        {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
                                         {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                             <th class="border-bottom-0 orange-gradient">{% trans %}Actions{% endtrans %}</th>
                                         {% endif %}
@@ -106,8 +108,12 @@
                                     <td style="vertical-align: middle; text-align: center !important;">
                                         <span class="badge  bg-primary rounded-pill">{{ department.teachers|length }} {% trans %}teachers{% endtrans %}</span>
                                     </td>
+
+                                    <td style="vertical-align: middle; text-align: center !important;">
+                                        <a href="{{ path ('print_subject_by_department', {'slug': department.slug }) }}" class="btn btn-outline-primary" target="_blank"><i class="fa fa-print me-2"></i> {% trans %}Print subjects{% endtrans %}</a>
+                                    </td>
                                     
-                                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                    {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
                                         {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                             <td style="text-align: center !important; vertical-align: middle !important;">
                                                 

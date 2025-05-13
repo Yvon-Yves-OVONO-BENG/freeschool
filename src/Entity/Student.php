@@ -272,6 +272,12 @@ class Student
     #[ORM\Column(length: 255)]
     private ?string $qrCodeRollOfHonor = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $professionTuteur = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $emailParent = null;
+
     public function __construct()
     {
         $this->reports = new ArrayCollection();
@@ -1403,6 +1409,30 @@ class Student
     public function setQrCodeRollOfHonor(string $qrCodeRollOfHonor): self
     {
         $this->qrCodeRollOfHonor = $qrCodeRollOfHonor;
+
+        return $this;
+    }
+
+    public function getProfessionTuteur(): ?string
+    {
+        return $this->professionTuteur;
+    }
+
+    public function setProfessionTuteur(?string $professionTuteur): self
+    {
+        $this->professionTuteur = $professionTuteur;
+
+        return $this;
+    }
+
+    public function getEmailParent(): ?string
+    {
+        return $this->emailParent;
+    }
+
+    public function setEmailParent(?string $emailParent): self
+    {
+        $this->emailParent = $emailParent;
 
         return $this;
     }

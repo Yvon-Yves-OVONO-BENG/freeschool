@@ -98,20 +98,20 @@ class AbsenceRecorderController extends AbstractController
 
                 $this->absenceManagerService->saveAbsences($selectedTerm, $request);
 
-                $this->addFlash('info', $this->translator->trans('Hour absenses saved successfully'));
+                $this->addFlash('info', $this->translator->trans('Hour absences saved with success !'));
 
                 $mySession->set('ajout', 1);
             }
             elseif($request->request->has('updateAbsence'))
             { 
                 $this->absenceManagerService->updateAbsence($request->request->get('absenceToUpdateId'), $request->request->get('updatedAbsence'), $request);
-                $this->addFlash('info', $this->translator->trans('Hour absense updated successfully'));
+                $this->addFlash('info', $this->translator->trans('Hour absense updated with success !'));
                 $mySession->set('miseAjour', 1);
             }
             elseif ($request->request->has('removeAllAbsences')) 
             {
                 $this->absenceManagerService->removeAbsences($request->request->get('term'), $request->request->get('classroom'), $request);
-                $this->addFlash('info', $this->translator->trans('Hour absenses deleted successfully'));
+                $this->addFlash('info', $this->translator->trans('Hour absences deleted with success !'));
                 $mySession->set('suppression', 1);
             }
 

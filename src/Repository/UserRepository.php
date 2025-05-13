@@ -36,6 +36,8 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         }
     }
 
+
+
     public function remove(User $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
@@ -60,7 +62,14 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
    
-
+    /**
+     * cherche des utilisateur selon le duty
+     *
+     * @param string $duty
+     * @param SchoolYear $schoolYear
+     * @param SubSystem $subSystem
+     * @return array
+     */
     public function findUserByUserType(string $duty, SchoolYear $schoolYear, SubSystem $subSystem): array 
     {
         if ($duty) 
@@ -110,6 +119,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
 
     }
+
 //    /**
 //     * @return User[] Returns an array of User objects
 //     */

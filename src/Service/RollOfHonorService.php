@@ -212,21 +212,24 @@ class RollOfHonorService
 
             $pdf->Image('images/school/'.$school->getLogo(), $x0Logo+35, $y0Logo+10, -110); 
             // $pdf->Image('images/school/logofiligrane.jpg', $x0Logo-5, $y0Logo+55, -90); 
-            $pdf->Image('images/school/'.$school->getFiligree(), $x0Logo-5, $y0Logo+55, -90); 
+            $pdf->Image('images/school/'.$school->getFiligree(), $x0Logo+3, $y0Logo+55, -120); 
 
             // contenu du tableau d'honneur
             $pdf->SetXY($x, $y);
             
             $pdf->Ln(60);
             $pdf->SetTextColor(170,0,0);
-            $pdf->SetFont('Times', 'B', 25);
+            $pdf->SetFont('Times', 'BI', 25);
 
             if($subSystem->getSubSystem() == constantsClass::FRANCOPHONE)
             {
-                $pdf->Cell(0, 5, "TABLEAU D'HONNEUR", 0, 0, 'C');
-            }else
+                $pdf->Cell(0, 5, "", 0, 0, 'C');
+                $pdf->Image('images/th-fr.png', $x0Logo-13, $y0Logo+45, -1100); 
+            }
+            else
             {
-                $pdf->Cell(0, 5, "ROLL OF HONNOR", 0, 0, 'C');
+                $pdf->Cell(0, 5, "", 0, 0, 'C');
+                $pdf->Image('images/th-en.png', $x0Logo-13, $y0Logo+45, -1100); 
             }
             
 
@@ -280,7 +283,12 @@ class RollOfHonorService
             }
             
             $pdf->SetFont('Times', 'BI', 16);
-            $pdf->Cell(100, 5, utf8_decode($classroom->getClassroom()), 0, 0, 'C');
+            $pdf->Cell(50, 5, utf8_decode($classroom->getClassroom()), 0, 0, 'C');
+
+            $pdf->SetFont('Times', 'B', 16);
+            $pdf->Cell(50, 5, utf8_decode("NIU : "), 0, 0, 'C');
+            $pdf->SetFont('Times', 'BI', 16);
+            $pdf->Cell(50, 5, utf8_decode($student->getRegistrationNumber()), 0, 0, 'C');
 
             $pdf->Ln();
             $pdf->Cell(0, 3, '', 0, 0, 'C');
@@ -373,8 +381,6 @@ class RollOfHonorService
             {
                 $pdf->Cell(42, 4, 'With Encouragement', 0, 0, 'L');
             }
-            
-
             
             $pdf->Ln();
             $pdf->Cell(115, 3, '', 0, 0, 'C');
@@ -478,7 +484,7 @@ class RollOfHonorService
             #qrCode du tableau d'honneur
             if($student->getQrCodeRollOfHonor())
             {
-                $pdf->Image('images/qrCode/'.$student->getQrCodeRollOfHonor(), 55, 165, 30, 30);
+                $pdf->Image('images/qrcode/'.$student->getQrCodeRollOfHonor(), 55, 165, 30, 30);
             }
 
             /*Avec encouragements*/

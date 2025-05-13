@@ -94,7 +94,7 @@ class DeleteTeacherController extends AbstractController
             $this->em->remove($teacher);
             $this->em->flush();
             
-            $this->addFlash('info',  $this->translator->trans('Staff deleted successfully'));
+            $this->addFlash('info',  $this->translator->trans('Staff deleted with success !'));
 
             $mySession->set('supression', 1);
 

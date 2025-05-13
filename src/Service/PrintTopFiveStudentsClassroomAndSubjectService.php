@@ -45,7 +45,7 @@ class PrintTopFiveStudentsClassroomAndSubjectService
      * @param Subject $subject
      * @return Pagination
      */
-    public function printTopFiveStudentsClassroomAndSubjectService(array $topFiveStudents, SchoolYear $schoolYear, School $school, SubSystem $subSystem, Subject $subject, Classroom  $classroom): Pagination
+    public function printTopFiveStudentsClassroomAndSubjectService(array $topFiveStudents, SchoolYear $schoolYear, School $school, SubSystem $subSystem, Subject $subject, Classroom  $classroom, Term $term): Pagination
     {
         if($subSystem->getSubSystem() == ConstantsClass::FRANCOPHONE)
         {
@@ -71,7 +71,17 @@ class PrintTopFiveStudentsClassroomAndSubjectService
             $pdf->SetFont('Times', 'B', $fontSize+4);
             $pdf->Cell(190, 7, utf8_decode("LISTE DES CINQS PREMIERS ELEVES EN ".$subject->getSubject()), 0, 1, 'C');
             $pdf->Cell(190, 7, utf8_decode("CLASSE : ".$classroom->getClassroom()), 0, 1, 'C');
-            $pdf->Ln(3);
+
+            if ($term->getTerm() == 0) 
+            {
+                $pdf->Cell(0, 7, utf8_decode("ANNUEL"), 0, 1, 'C');
+            } 
+            else 
+            {
+                $pdf->Cell(0, 7, utf8_decode("TRIMESTRE ".$term->getTerm()), 0, 1, 'C');
+            }
+            
+            $pdf->Ln(7);
 
             // Entête du tableau
             $pdf = $this->generalService->getTableHeaderPagination($pdf, $fontSize, $cellTableClassroom, $cellTableHeight, $cellTablePresence, $cellTableObservation, $cellTablePresence3, $subSystem);
@@ -87,7 +97,30 @@ class PrintTopFiveStudentsClassroomAndSubjectService
             $pdf->SetFillColor(255,255,255);
             
             ///////APPEL DE LE LIGNE DU TABLEAU
-            $pdf = $this->generalService->ligneDeMesTableauxMeilleursEleves($pdf, $fontSize, $cellTableClassroom, $cellTableHeight, $cellTablePresence, $schoolYear, $topFiveStudents);
+            $numero = 1;
+            foreach ($topFiveStudents as $topFiveStudent) 
+            {   
+                if ($numero % 2 == 1) 
+                {
+                    $pdf->SetFillColor(255,255,255);
+                }else
+                {
+                    $pdf->SetFillColor(224,235,255);
+                }
+
+                $pdf->SetFont('Times', '', $fontSize-1);
+                $pdf->Cell($cellTableClassroom-15 , $cellTableHeight*1.5, utf8_decode($numero), 1, 0, 'C', true);
+                $pdf->Cell($cellTablePresence+45 , $cellTableHeight*1.5, utf8_decode($topFiveStudent['fullName']), 1, 0, 'L', true);
+                $pdf->Cell($cellTablePresence-20 , $cellTableHeight*1.5, utf8_decode($topFiveStudent['sexe']), 1, 0, 'C', true);
+                $pdf->Cell($cellTablePresence-10 , $cellTableHeight*1.5, utf8_decode(number_format($topFiveStudent['moyenne'], 2)), 1, 0, 'C', true);
+                $pdf->Cell($cellTableClassroom , $cellTableHeight*1.5, utf8_decode($topFiveStudent['classroom']), 1, 0, 'C', true);
+                $pdf->Cell($cellTablePresence , $cellTableHeight*1.5, utf8_decode(date_format($topFiveStudent['dateNaissance'],'d/m/Y')), 1, 1, 'C', true);
+                
+                
+                $numero ++;
+                
+            
+            }
         
             
             $pdf->Ln($cellTableHeight*6);
@@ -140,7 +173,18 @@ class PrintTopFiveStudentsClassroomAndSubjectService
             // Entête de la fiche
             $pdf->SetFont('Times', 'B', $fontSize+4);
             $pdf->Cell(190, 7, utf8_decode("SCHOOL TOP FIVE STUDENTS IN ".$subject->getSubject()), 0, 1, 'C');
-            $pdf->Ln(3);
+            
+            $pdf->Cell(190, 7, utf8_decode("CLASS : ".$classroom->getClassroom()), 0, 1, 'C');
+
+            if ($term->getTerm() == 0) 
+            {
+                $pdf->Cell(0, 7, utf8_decode("ANNUAL"), 0, 1, 'C');
+            } 
+            else 
+            {
+                $pdf->Cell(0, 7, utf8_decode("TERM ".$term->getTerm()), 0, 1, 'C');
+            }
+            $pdf->Ln(7);
 
             // Entête du tableau
             $pdf = $this->generalService->getTableHeaderPagination($pdf, $fontSize, $cellTableClassroom, $cellTableHeight, $cellTablePresence, $cellTableObservation, $cellTablePresence3, $subSystem);
@@ -157,7 +201,30 @@ class PrintTopFiveStudentsClassroomAndSubjectService
             $pdf->SetFillColor(255,255,255);
             
             ///////APPEL DE LE LIGNE DU TABLEAU
-            $pdf = $this->generalService->ligneDeMesTableauxMeilleursEleves($pdf, $fontSize, $cellTableClassroom, $cellTableHeight, $cellTablePresence, $schoolYear, $topFiveStudents);
+            $numero = 1;
+            foreach ($topFiveStudents as $topFiveStudent) 
+            {   
+                if ($numero % 2 == 1) 
+                {
+                    $pdf->SetFillColor(255,255,255);
+                }else
+                {
+                    $pdf->SetFillColor(224,235,255);
+                }
+
+                $pdf->SetFont('Times', '', $fontSize-1);
+                $pdf->Cell($cellTableClassroom-15 , $cellTableHeight*1.5, utf8_decode($numero), 1, 0, 'C', true);
+                $pdf->Cell($cellTablePresence+45 , $cellTableHeight*1.5, utf8_decode($topFiveStudent['fullName']), 1, 0, 'L', true);
+                $pdf->Cell($cellTablePresence-20 , $cellTableHeight*1.5, utf8_decode($topFiveStudent['sexe']), 1, 0, 'C', true);
+                $pdf->Cell($cellTablePresence-10 , $cellTableHeight*1.5, utf8_decode(number_format($topFiveStudent['moyenne'], 2)), 1, 0, 'C', true);
+                $pdf->Cell($cellTableClassroom , $cellTableHeight*1.5, utf8_decode($topFiveStudent['classroom']), 1, 0, 'C', true);
+                $pdf->Cell($cellTablePresence , $cellTableHeight*1.5, utf8_decode(date_format($topFiveStudent['dateNaissance'],'d/m/Y')), 1, 1, 'C', true);
+                
+                
+                $numero ++;
+                
+            
+            }
         
             
             $pdf->Ln($cellTableHeight*6);

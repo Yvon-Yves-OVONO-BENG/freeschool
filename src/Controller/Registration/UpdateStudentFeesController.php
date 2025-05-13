@@ -88,7 +88,7 @@ class UpdateStudentFeesController extends AbstractController
            $this->em->persist($registration);
            $this->em->flush();
 
-           $this->addFlash("info", $this->translator->trans("Receipt changed successfully"));
+           $this->addFlash("info", $this->translator->trans("Receipt changed with success !"));
 
            return $this->redirectToRoute("registration_schoolFees", [
                 'headmasterFees' => $headmasterFees,

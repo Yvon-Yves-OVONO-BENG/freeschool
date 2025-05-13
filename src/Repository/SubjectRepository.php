@@ -25,6 +25,13 @@ class SubjectRepository extends ServiceEntityRepository
     }
 
     // Liste des matières à afficher dans un formulaire
+    /**
+     * Undocumented function
+     *
+     * @param SchoolYear $schoolYear
+     * @param SubSystem $subSystem
+     * @return void
+     */
     public function findForForm(SchoolYear $schoolYear, SubSystem $subSystem)
     {
         return $this->createQueryBuilder('s')
@@ -35,6 +42,13 @@ class SubjectRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param SchoolYear $schoolYear
+     * @param SubSystem $subSystem
+     * @return void
+     */
     public function findToDisplay(SchoolYear $schoolYear, SubSystem $subSystem)
     {
         return $this->createQueryBuilder('s')
@@ -50,7 +64,10 @@ class SubjectRepository extends ServiceEntityRepository
     }
 
     /**
-     * je sélectionne les matières qu'un enseignant dispense
+     * Undocumented function
+     *
+     * @param Teacher $teacher
+     * @return void
      */
     public function findSubjectPerTeacher(Teacher $teacher)
     {

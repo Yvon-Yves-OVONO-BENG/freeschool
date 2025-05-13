@@ -63,7 +63,7 @@ class DeleteStudentTrashController extends AbstractController
         // $this->em->persist($studentTrash);
         // $this->em->flush();
 
-        $this->addFlash('info', $this->translator->trans('Student delete successfully'));
+        $this->addFlash('info', $this->translator->trans('Student delete with success !'));
         
         $mySession->set('suppression', 1);
 

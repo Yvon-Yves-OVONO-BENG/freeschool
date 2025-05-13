@@ -95,7 +95,7 @@ class ConstantsClass
     public const ROLE_MEDICAL = 'ROLE_MEDICAL';
     public const ROLE_ADMIN = 'ROLE_ADMIN';
     public const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
-    public const ROLE_CHEF_TRAVAUX = 'ROLE_CHEF_TRAVAUX';
+    public const ROLE_CHEF_DES_TRAVAUX = 'ROLE_CHEF_DES_TRAVAUX';
     public const ROLE_CHEF_SS = 'ROLE_CHEF_SS';
     public const ROLE_CHEF_SERVICE_DES_SPORTS_SCOLAIRE = 'ROLE_CHEF_SERVICE_DES_SPORTS_SCOLAIRE';
 

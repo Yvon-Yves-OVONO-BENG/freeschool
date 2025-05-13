@@ -25,6 +25,7 @@ use App\Entity\ReportElements\Remember;
 use App\Repository\EvaluationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\ReportElements\Discipline;
+use App\Entity\ReportElements\Pagination;
 use App\Entity\ReportElements\ParentVisa;
 use App\Entity\ReportElements\ReportBody;
 use App\Entity\ReportElements\StudentWork;
@@ -451,14 +452,15 @@ class ReportService
                 $lessonMarkAndSkill = [];
                 $lesson = $studentMarkTerm[$i]->getLesson();
                 $lessonMArk = [];
+
                 for($j = $i; $j < $numberOfEvaluations; $j += $numberOfLessons)
                 {
                     //On construit le tableau des notes par lesson
                     $lessonMArk[] =  $studentMarkTerm[$j]->getMark();
                 }
-
+                
                 // On classe par ordre de mérite, c-à-d par ordre décroissant des notes
-                rsort( $lessonMArk, SORT_NUMERIC);
+                rsort($lessonMArk, SORT_NUMERIC);
 
                 $skillEvaluation1 = "";
                 $skillEvaluation2 = "";
@@ -515,7 +517,7 @@ class ReportService
                     $skill = (new Skill())->setSkill("//");
                 }
     
-                $lessonMarkAndSkill['skill'] = $skill->getSkill();
+                //$lessonMarkAndSkill['skill'] = $skill->getSkill();
 
                 if($skillEvaluation1)
                 {
@@ -667,34 +669,69 @@ class ReportService
      * @param array $unrecordedEvalauations
      * @return PDF
      */
-    public function printUnrecordedMark(array $unrecordedEvalauations): PDF
+    public function printUnrecordedMark(array $unrecordedEvalauations, School $school, Schoolyear $schoolYear, SubSystem $subSystem): Pagination
     {
+        $fontSize = 10;
+        $cellHeaderHeight1 = 4;
+        $cellHeaderHeight = 6;
 
-        $pdf = new PDF();
+        $numberWith = 10;
+        $fullNameWith = 70;
+        $classroomWith = 25;
+        $subjectWith = 60;
 
-        $pdf->AddPage();
-        $pdf->SetFont('Times','B',14);
-        $pdf->SetFillColor(200, 200, 200);
+        $pdf = new Pagination();
 
-        $pdf->Cell(0,10,"Imposssible d'imprimer les bulletiins, Car il manque les notes suivantes : ", 0, 1, 'C');
-        $pdf->Ln();
-        $pdf->SetFont('Times','B',11);
-        // entête du tableau
-        $pdf->Cell(80,10,  "Noms de l'enseignant", 1, 0, 'C',  true);
-            $pdf->Cell(20,10,  'Evaluation', 1, 0, 'C',  true);
-            $pdf->Cell(30,10,  'Classe', 1, 0, 'C', true);
-            $pdf->Cell(60,10,  utf8_decode('Matière'), 1, 0, 'C',  true);
+        // On insère une page
+        $pdf = $this->generalService->newPagePagination($pdf, 'P', 10, $fontSize-3);
+
+        // Administrative Header
+        $pdf = $this->generalService->getAdministrativeHeaderPagination($school, $pdf, $cellHeaderHeight1, $fontSize, $schoolYear);
+        
+        
+        if ($subSystem->getSubSystem() == constantsClass::FRANCOPHONE) 
+        {
+            $pdf->Ln();
+            $pdf->SetFont('Times','B',15);
+            $pdf->Cell(0,7,"Imposssible d'imprimer les bulletins de la classe de : ".$unrecordedEvalauations[0]['lesson']->getClassroom()->getClassroom(), 0, 1, 'C');
+            $pdf->Cell(0,7,"Il manque les notes suivantes", 0, 1, 'C');
+            $pdf->Ln();
+            
+            // entête du tableau
+            $pdf->SetFont('Times','B',11);
+            $pdf->Cell(90,7,  "Noms de l'enseignant", 1, 0, 'C',  true);
+            $pdf->Cell(30,7,  'Evaluation', 1, 0, 'C',  true);
+            // $pdf->Cell(30,10,  'Classe', 1, 0, 'C', true);
+            $pdf->Cell(70,7,  utf8_decode('Matière'), 1, 0, 'C',  true);
+            $pdf->Ln();
+        }
+        else
+        {
+            $pdf->Ln();
+            $pdf->SetFont('Times','B',15);
+            $pdf->Cell(0,10,"Unable to print report's class : ".$unrecordedEvalauations[0]['lesson']->getClassroom()->getClassroom(), 0, 1, 'C');
+            $pdf->Cell(0,10,"As the following notes are missing ", 0, 1, 'C');
             $pdf->Ln();
 
-            // Contenu du tableau
+            // entête du tableau
+            $pdf->SetFont('Times','B',11);
+            $pdf->Cell(90,7,  "Teacher's name", 1, 0, 'C',  true);
+            $pdf->Cell(30,7,  'Evaluation', 1, 0, 'C',  true);
+            // $pdf->Cell(30,10,  'Class', 1, 0, 'C', true);
+            $pdf->Cell(70,7,  utf8_decode('Subject'), 1, 0, 'C',  true);
+            $pdf->Ln();
+        }
+
+        // Contenu du tableau
+        $pdf->SetFont('Times','',11);
         foreach ($unrecordedEvalauations as $evaluation) 
         {
             $lesson = $evaluation['lesson'];
             $sequence = $evaluation['sequence'];
-            $pdf->Cell(80,7,  utf8_decode($lesson->getTeacher()->getFullName()), 1, 0, 'L');
-            $pdf->Cell(20,7,  utf8_decode($sequence->getSequence()), 1, 0, 'C');
-            $pdf->Cell(30,7,  utf8_decode($lesson->getClassroom()->getClassroom()), 1, 0, 'C');
-            $pdf->Cell(60,7,  utf8_decode($lesson->getSubject()->getSubject()), 1,  0, 'C');
+            $pdf->Cell(90,7,  utf8_decode($lesson->getTeacher()->getFullName()), 1, 0, 'L');
+            $pdf->Cell(30,7,  utf8_decode($sequence->getSequence()), 1, 0, 'C');
+            // $pdf->Cell(30,7,  utf8_decode($lesson->getClassroom()->getClassroom()), 1, 0, 'C');
+            $pdf->Cell(70,7,  utf8_decode($lesson->getSubject()->getSubject()), 1,  0, 'C');
             $pdf->Ln();
             
         }
@@ -815,10 +852,10 @@ class ReportService
                                         array $rankedStudentsCategory1, 
                                         array $rankedStudentsCategory2,
                                         array $rankedStudentsCategory3,  
-                                        array $studentMarkSequence3 = [], 
-                                        array $rankPerLesson = [], 
                                         SubSystem $subSystem, 
-                                        Term $term): ReportBody
+                                        ?Term $term = null,  
+                                        array $rankPerLesson = [],
+                                        array $studentMarkSequence3 = []): ReportBody
     {
         if(count($studentMarkTerm) == ($numberOfLessons*$numberOfStudents))
         {
@@ -845,7 +882,7 @@ class ReportService
                             ->setTotalMark($rankedStudents[$index]['totalMarkCategory2'])
                             ->setMoyenne($rankedStudents[$index]['averageCategory2'])
                             ->setRang($this->getIndex($rankedStudents[$index]['averageCategory2'], $rankedStudentsCategory2));
-
+                            
                 // Resumé des notes du groupe 3
                 $reportSummaryGroup3 = new StudentResult();
                 $reportSummaryGroup3->setName('Formation Humaine')
@@ -854,6 +891,7 @@ class ReportService
                             ->setTotalMark($rankedStudents[$index]['totalMarkCategory3'])
                             ->setMoyenne($rankedStudents[$index]['averageCategory3'])
                             ->setRang($this->getIndex($rankedStudents[$index]['averageCategory3'], $rankedStudentsCategory3));
+                            
             }else
             {
                 // Resumé des notes du groupe 1
@@ -901,13 +939,13 @@ class ReportService
 
                 if(!empty($rankPerLesson))
                 {
-                    $skill = $rankPerLesson[$lessonId]['skill'];
+                    //$skill = $rankPerLesson[$lessonId]['skill'];
                     $skillEvaluation1 = $rankPerLesson[$lessonId]['skillEvaluation1'];
                     $skillEvaluation2 = $rankPerLesson[$lessonId]['skillEvaluation2'];
                     $rang = $this->getIndex($mark, $rankPerLesson[$lessonId]['lessonMark']);
                 }else
                 {
-                    $skill = '/';
+                    //$skill = '/';
                     $skillEvaluation1 = '/';
                     $skillEvaluation2 = '/';
                     $rang = ConstantsClass::UNRANKED_RANK_DB;
@@ -1045,7 +1083,7 @@ class ReportService
                 $reportRow = new Row();
                 $reportRow->setSubject($studentMarkSequence1[$j]->getLesson()->getSubject()->getSubject())
                     ->setTeacher($studentMarkSequence1[$j]->getLesson()->getTeacher()->getFullName())
-                    ->setSkill($skill)
+                    //->setSkill($skill)
                     ->setSkillEvaluation1($skillEvaluation1)
                     ->setSkillEvaluation2($skillEvaluation2)
                     ->setEvaluation1($studentMarkSequence1[$j]->getMark())
@@ -1070,11 +1108,13 @@ class ReportService
                     // }
                     
 
-                            
-                if(!empty($studentMarkSequence3))
+                if($term->getTerm() == 0)
                 {
-                    $reportRow->setEvaluation3($studentMarkSequence3[$j]->getMark());
+                    if(!empty($studentMarkSequence3))
+                    {
+                        $reportRow->setEvaluation3($studentMarkSequence3[$j]->getMark());
 
+                    }
                 }
                 
                 switch ($studentMarkSequence1[$j]->getLesson()->getSubject()->getCategory()->getCategory()) 
@@ -1094,7 +1134,6 @@ class ReportService
             }
 
             $reportBody = new ReportBody();
-
             return $reportBody->setRowsGroup1($reportRowGroup1)
                         ->setRowsGroup2($reportRowGroup2)
                         ->setRowsGroup3($reportRowGroup3)
@@ -1258,7 +1297,7 @@ class ReportService
     
     
     /**
-     * Retourne l'index d'une valeur dana un tableau
+     * Retourne l'index d'une valeur dans un tableau
      *
      * @param [type] $value
      * @param array $elements
@@ -1331,7 +1370,7 @@ class ReportService
      * @param integer $absence
      * @return integer
      */
-    public function getExclusion(int $absence): int
+    public function getExclusion(int $absence)
     {
         if($absence < ConstantsClass::EXCLUSION_3_DAYS)
             return 0;
@@ -1587,7 +1626,7 @@ class ReportService
 
                     $pdf->SetFont('Times', 'B', $fontSize);
 
-                    $pdf->Cell(15, $cellHeaderStudentHeight, utf8_decode($classroom->getClassroom()), 0, 0, 'L');
+                    $pdf->Cell(30, $cellHeaderStudentHeight, utf8_decode($classroom->getClassroom()), 0, 0, 'L');
                     
                     $pdf->SetFont('Times', '', $fontSize-1);
 
@@ -1668,7 +1707,7 @@ class ReportService
 
                     $pdf->SetFont('Times', 'B', $fontSize);
 
-                    $pdf->Cell(15, $cellHeaderStudentHeight, utf8_decode($classroom->getClassroom()), 0, 0, 'L');
+                    $pdf->Cell(30, $cellHeaderStudentHeight, utf8_decode($classroom->getClassroom()), 0, 0, 'L');
                     
                     $pdf->SetFont('Times', '', $fontSize-1);
 
@@ -1721,8 +1760,10 @@ class ReportService
                 // Chemin complet du fichier
                 $qrFilePath = $qrDirectory . $qrFileName;
 
-                if (!file_exists($qrFilePath)) {
-                    if ($subSystem->getSubSystem() == ConstantsClass::FRANCOPHONE) {
+                if (!file_exists($qrFilePath)) 
+                {
+                    if ($subSystem->getSubSystem() == ConstantsClass::FRANCOPHONE) 
+                    {
                         $qrCode = $this->qrCodeService->qrcode($school->getFrenchName()." : Ce bulletin appartient à l'élève : ".$student->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber()).", Année Scolaire : ".$schoolYear->getSchoolYear().", Classe : ".$student->getClassroom()->getClassroom());
         
                         $qrCodeFiche = $this->qrCodeService->qrcode($school->getFrenchName()." : Cette fiche appartient à l'élève : ".$student->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber())." Année Scolaire : ".$schoolYear->getSchoolYear().", Classe : ".$student->getClassroom()->getClassroom());
@@ -2063,7 +2104,7 @@ class ReportService
                         'term' => $term,
                         ]
                     );
-
+                    
                     $rang = $this->generalService->formatRank($eleve[0]->getRang(), $student->getSex()->getSex());
                     
                     $pdf->Cell($w21, $cellTableBodyHeight, utf8_decode($rang) , 'R', 1, 'C');
@@ -2943,7 +2984,7 @@ class ReportService
 
             if($term->getTerm() != ConstantsClass::ANNUEL_TERM)
             {
-                $skill = strtolower(utf8_decode($reportRow->getSkill()));
+                //$skill = strtolower(utf8_decode($reportRow->getSkill()));
                 $skillEvaluation1 = strtolower(utf8_decode($reportRow->getSkillEvaluation1()));
                 $skillEvaluation2 = strtolower(utf8_decode($reportRow->getSkillEvaluation2()));
                 // dd($reportRow);
@@ -2962,15 +3003,15 @@ class ReportService
                 // else
                 // {
                     $skill1 = substr($skillEvaluation1, 0, 53);
-                    $skill2 = substr($skill, 53, 53);
+                    //$skill2 = substr($skill, 53, 53);
 
                     if($skillEvaluation1)
                     {
-                        $pdf->Cell($cellSkillWidth-7, $cellTableBodyHeight/2, $skillEvaluation1, 'LTR', 0, 'L');
+                        $pdf->Cell($cellSkillWidth-7, $cellTableBodyHeight/2, substr($skillEvaluation1, 0, 47), 'LTR', 0, 'L');
                     }
                     else
                     {
-                        $pdf->Cell($cellSkillWidth-7, $cellTableBodyHeight/2, $skill, 'LTR', 0, 'L');
+                        //$pdf->Cell($cellSkillWidth-7, $cellTableBodyHeight/2, $skill, 'LTR', 0, 'L');
                     }
                     
 
@@ -2981,11 +3022,11 @@ class ReportService
 
                     if($skillEvaluation2)
                     {
-                        $pdf->Cell($cellSkillWidth-7, $cellTableBodyHeight/2, $skillEvaluation2, 'LTR', 0, 'L');
+                        $pdf->Cell($cellSkillWidth-7, $cellTableBodyHeight/2, substr($skillEvaluation2, 0, 47), 'LTR', 0, 'L');
                     }
                     else
                     {
-                        $pdf->Cell($cellSkillWidth-7, $cellTableBodyHeight/2, $skill, 'LTR', 0, 'L');
+                        //$pdf->Cell($cellSkillWidth-7, $cellTableBodyHeight/2, $skill, 'LTR', 0, 'L');
                     }
 
                     $pdf->SetXY($x, $y);
@@ -3054,8 +3095,6 @@ class ReportService
 
             if($reportRow->getMoyenne() != ConstantsClass::UNRANKED_MARK)
             {
-                
-
                 $pdf->SetFont('Times', '', $fontSize);
 
                 if($term->getTerm() != ConstantsClass::ANNUEL_TERM)
@@ -3066,13 +3105,10 @@ class ReportService
                 }
                 else
                 {
-                    
                     $pdf->Cell($cellTotalWidth-5, $cellTableBodyHeight, $this->generalService->formatMark($reportRow->getTotal()), 1, 0, 'C');
                     $pdf->Cell($cellRankWidth-5, $cellTableBodyHeight, utf8_decode($reportRow->getCote()), 1, 0, 'C');
                 }
                 
-                
-
                 if($term->getTerm() != 0)
                 {
                     $pdf->SetFont('Times', '', $fontSize-4);
@@ -3082,9 +3118,11 @@ class ReportService
                     $pdf->SetFont('Times', '', $fontSize-1);
                 }
 
+                
                 $pdf->Cell($cellRankWidth, $cellTableBodyHeight, utf8_decode($reportRow->getMinNote()." - ".$reportRow->getMaxNote()), 1, 0, 'C');
-
+                
                 $pdf->SetFont('Times', '', $fontSize);
+                
                 $pdf->Cell($cellRankWidth, $cellTableBodyHeight, utf8_decode($this->generalService->formatRank($reportRow->getRang(), $student->getSex()->getSex())), 1, 0, 'C');
                 
                 if($subSystem->getSubSystem() == constantsClass::FRANCOPHONE)
@@ -3102,6 +3140,8 @@ class ReportService
                 $pdf->Cell($cellTotalWidth, $cellTableBodyHeight, '/', 1, 0, 'C');
 
                 $pdf->SetFont('Times', '', $fontSize);
+                $pdf->Cell($cellRankWidth, $cellTableBodyHeight, '/', 1, 0, 'C');
+                $pdf->Cell($cellRankWidth, $cellTableBodyHeight, '/', 1, 0, 'C');
                 $pdf->Cell($cellRankWidth, $cellTableBodyHeight, '/', 1, 0, 'C');
                 $pdf->Cell($cellAppreciationWidth, $cellTableBodyHeight, '/', 1, 1, 'L');
 
@@ -3121,15 +3161,16 @@ class ReportService
         if($reportResult->getMoyenne() != ConstantsClass::UNRANKED_AVERAGE)
         {
             $pdf->Cell($cellRecapTotalMarkWidth, $cellTableBodyHeight, 'Total Points : '.$this->generalService->formatMark($reportResult->getTotalMark()), 'TB', 0, 'C', true);
-            $pdf->Cell($cellRecapAverageWidth, $cellTableBodyHeight, 'Moyenne  : ' .$this->generalService->formatMark($reportResult->getMoyenne()), 'TB', 0, 'C', true);
-            $pdf->Cell($cellRecapRankWidth, $cellTableBodyHeight, 'Rang  : '.utf8_decode($this->generalService->formatRank($reportResult->getRang(), $student->getSex()->getSex())), 'RTB', 1, 'C', true);
-        }else
+            $pdf->Cell($cellRecapAverageWidth, $cellTableBodyHeight, 'Moyenne : ' .$this->generalService->formatMark($reportResult->getMoyenne()), 'TB', 0, 'C', true);
+            $pdf->Cell($cellRecapRankWidth, $cellTableBodyHeight, 'Rang : '.utf8_decode($this->generalService->formatRank($reportResult->getRang(), $student->getSex()->getSex())), 'RTB', 1, 'C', true);
+        }
+        else
         {
         //  $pdf->Cell($cellRecapTotalCoefficientWidth, $cellTableBodyHeight, 'Total Coef : //', 'TB', 0, 'C', true);
         $pdf->Cell($cellRecapTotalMarkWidth, $cellTableBodyHeight, 'Total Points : //', 'TB', 0, 'C', true);
         
         $pdf->Cell($cellRecapAverageWidth, $cellTableBodyHeight, 'Moyenne : //', 'TB', 0, 'C', true);
-        $pdf->Cell($cellRecapRankWidth, $cellTableBodyHeight, 'Rang  : N.C', 'RTB', 1, 'C', true);
+        $pdf->Cell($cellRecapRankWidth, $cellTableBodyHeight, 'Rang : N.C', 'RTB', 1, 'C', true);
         
         }
         

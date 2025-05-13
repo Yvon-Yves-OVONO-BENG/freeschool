@@ -71,7 +71,7 @@ class EditGradeController extends AbstractController
 
             $this->em->flush(); // On modifie
 
-            $this->addFlash('info', $this->translator->trans('Rank updated successfully'));
+            $this->addFlash('info', $this->translator->trans('Rank updated with success !'));
 
             $mySession->set('miseAjour', 1);
 

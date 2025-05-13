@@ -32,7 +32,7 @@
 	<div class="hor-content main-content">
 		<div class="container">
 
-    {% if is_granted('ROLE_PROVISEUR') or is_granted('ROLE_INTENDANT') or is_granted('ROLE_ADMIN') or headmasterFees == 1 %}
+    {% if is_granted('ROLE_PROVISEUR') or is_granted('ROLE_INTENDANT') or is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or headmasterFees == 1 %}
         <!--Page header-->
         <div class="page-header">
             <div class="page-leftheader">
@@ -216,6 +216,7 @@
                     <table border="1" class="table table-striped table-bordered text-nowrap key-buttons" id="example" >
                         <thead>
                             <tr class="text-center">
+                                <th class="border-bottom-0 green-gradient" style="vertical-align: middle;">{% trans %}N°{% endtrans %}</th>
                                 <th class="border-bottom-0 green-gradient" style="vertical-align: middle;">{% trans %}Photo{% endtrans %}</th>
                                 <th class="border-bottom-0 indigo-gradient" style="vertical-align: middle;">{% trans %}Full name{% endtrans %}</th>
 
@@ -235,6 +236,7 @@
                         </thead>
                         <tfoot>
                             <tr class="text-center">
+                                <th class="border-bottom-0 green-gradient" style="vertical-align: middle;">{% trans %}N°{% endtrans %}</th>
                                 <th class="border-bottom-0 green-gradient" style="vertical-align: middle;">{% trans %}Photo{% endtrans %}</th>
                                 <th class="border-bottom-0 indigo-gradient" style="vertical-align: middle;">{% trans %}Full name{% endtrans %}</th>
 
@@ -253,6 +255,7 @@
                             </tr>
                         </tfoot>
                         <tbody>
+                            {% set i = 1 %}
                             {% for registrationHistory in registrationHistories %}
                                 {% set student = registrationHistory.student %}
                                 {% set registrations = registrationHistory.registration %}
@@ -275,9 +278,20 @@
 
                                     {% set totalPhotoFees = totalPhotoFees + registration.photoFees %}
                                 {% endfor %}
-
+                                
                                 <tr class="table-subheader">
-                                    <td><img src="{{ student.photo ? asset('images/students/' ~ student.photo) : asset('images/students/defaultPhoto.jpg')}}" alt="photo" width="50" height="60"></td>
+                                    <td style="text-align: center !important; vertical-align: middle !important;">{{ i }}</td>
+                                    <td>
+                                        {% if student.photo %}
+                                            <img alt="Photo eleve" class="rounded-circle" src="{{ asset ('images/students/' ~ student.photo) }}" width="200" height="110">
+                                            {% else %}
+                                            {% if student.sex.sex == "F" %}
+                                                <img alt="Photo eleve" class="rounded-circle" src="{{ asset ('images/students/fille.jpg')}}" width="200" height="110">
+                                                {% else %}
+                                                <img alt="Photo eleve" class="rounded-circle" src="{{ asset ('images/students/garcon.jpg')}}" width="200" height="110">
+                                            {% endif %}
+                                        {% endif %}    
+                                    </td>
                                     
                                     <td style="vertical-align: middle;">
                                         {{ student.fullName }}
@@ -323,7 +337,7 @@
                                     </td>
                                     
                                 </tr>
-                                
+                                {% set i = i + 1 %}
                             {% endfor %}
                         </tbody>
                     </table>

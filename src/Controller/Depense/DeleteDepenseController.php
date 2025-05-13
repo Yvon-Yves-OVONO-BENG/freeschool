@@ -112,7 +112,7 @@ class DeleteDepenseController extends AbstractController
         $this->em->persist($etatDepense);
         $this->em->flush();
             
-        $this->addFlash('info', $this->translator->trans('Spent deleted successfully'));
+        $this->addFlash('info', $this->translator->trans('Spent deleted with success !'));
         
         return $this->redirectToRoute('display_depense',
         [ 'notification' => 2]);

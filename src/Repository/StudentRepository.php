@@ -32,6 +32,13 @@ class StudentRepository extends ServiceEntityRepository
         parent::__construct($registry, Student::class);
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param Student $entity
+     * @param boolean $flush
+     * @return void
+     */
     public function save(Student $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
@@ -41,6 +48,13 @@ class StudentRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param Student $entity
+     * @param boolean $flush
+     * @return void
+     */
     public function remove(Student $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
@@ -50,6 +64,13 @@ class StudentRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param Classroom $classroom
+     * @param SchoolYear $schoolYear
+     * @return array
+     */
     public function findAllToDisplay(Classroom $classroom, SchoolYear $schoolYear): array 
     {
         return $this->createQueryBuilder('s')
@@ -72,6 +93,13 @@ class StudentRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param SchoolYear $schoolYear
+     * @param SubSystem $subSystem
+     * @return array
+     */
     public function findToDisplayAllStudentCycle1(SchoolYear $schoolYear, SubSystem $subSystem): array 
     {
         return $this->createQueryBuilder('s')
@@ -97,6 +125,13 @@ class StudentRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param SchoolYear $schoolYear
+     * @param SubSystem $subSystem
+     * @return array
+     */
     public function findToDisplayAllStudentCycle2(SchoolYear $schoolYear, SubSystem $subSystem): array 
     {
         return $this->createQueryBuilder('s')
@@ -122,6 +157,11 @@ class StudentRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+     * Undocumented function
+     *
+     * @return array
+     */
     public function findMaxId(): array 
     {
         return $this->createQueryBuilder('s')
@@ -133,6 +173,13 @@ class StudentRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param Classroom $classroom
+     * @param SchoolYear $schoolYear
+     * @return array
+     */
     public function findResponsableStudents(Classroom $classroom, SchoolYear $schoolYear): array
     {
         return $this->createQueryBuilder('s')
@@ -154,6 +201,18 @@ class StudentRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param SchoolYear $schoolYear
+     * @param Classroom|null $classroom
+     * @param EthnicGroup|null $ethnicGroup
+     * @param Movement|null $movement
+     * @param Handicap|null $handicap
+     * @param HandicapType|null $handicapType
+     * @param Country|null $country
+     * @return array
+     */
     public function findParticularStudent(SchoolYear $schoolYear, Classroom $classroom = null, EthnicGroup $ethnicGroup = null, Movement $movement = null, Handicap $handicap = null, HandicapType $handicapType = null, Country $country = null): array
     {
         $qb = $this->createQueryBuilder('s')
@@ -195,6 +254,12 @@ class StudentRepository extends ServiceEntityRepository
     }
 
     //////////SOMME DES HISTORIQUES DES PAIEMENTS ///////////////////
+    /**
+     * Undocumented function
+     *
+     * @param Classroom $classroom
+     * @return void
+     */
     public function getSumFeesPerRubrique(Classroom $classroom)
     {
         $queryBuilder = $this->em->createQueryBuilder();
@@ -242,6 +307,7 @@ class StudentRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+    
     /**
      * Retourne les élèves admis
      *

@@ -62,7 +62,7 @@ class SuperAdminEditUserController extends AbstractController
             $user->setFullName($this->strService->strToUpper($user->getFullName()));
 
             $this->em->flush(); // On modifie
-            $this->addFlash('info',  $this->translator->trans('User updated successfully'));
+            $this->addFlash('info',  $this->translator->trans('User updated with success !'));
 
             $mySession->set('miseAjour', 1);
             // On se redirige sur la page d'affichage des classes

@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\RegistrationHistoryRepository;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -28,6 +29,7 @@ class FeesStatementController extends AbstractController
 {
     public function __construct(
         protected FeesService $feesService, 
+        protected TranslatorInterface $translator,
         protected FeesRepository $feesRepository, 
         protected ClassroomService $classroomService, 
         protected SchoolRepository $schoolRepository,
@@ -78,7 +80,14 @@ class FeesStatementController extends AbstractController
 
         // On recupère les differents frais de l'année en cours
         $fees = $this->feesRepository->findOneBySchoolYear($schoolYear);
-        
+
+        if (!$fees) 
+        {
+            $this->addFlash('info', $this->translator->trans('The fees is empty. Please save fees'));
+            return $this->redirectToRoute('fees_updateFees');
+
+        }
+
         $selectedClassroom = new Classroom();
         $classrooms = [];
         $students = [];

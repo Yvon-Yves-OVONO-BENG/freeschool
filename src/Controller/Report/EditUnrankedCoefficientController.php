@@ -193,7 +193,7 @@ class EditUnrankedCoefficientController extends AbstractController
                         break;
                 }
                 $this->em->flush();
-                $this->addFlash('info', $this->translator->trans('Limit coefficient/mark updated successfully'));
+                $this->addFlash('info', $this->translator->trans('Limit coefficient/mark updated with success !'));
                 
             }
 
@@ -203,7 +203,7 @@ class EditUnrankedCoefficientController extends AbstractController
                 $unrankedCoefficient->setUnrankedCoefficient($coefficient)
                     ->setForFirstGroup($application);
                 $this->em->flush();
-                $this->addFlash('info', $this->translator->trans('Limit coefficient updated successfully'));
+                $this->addFlash('info', $this->translator->trans('Limit coefficient updated with success !'));
             }
 
             return $this->redirectToRoute('report_defineUnrankedCoefficient', [

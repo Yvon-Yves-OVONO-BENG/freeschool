@@ -42,7 +42,7 @@
                             <span><i class="fa fa-building me-2"></i> {% trans %}Number of registered classrooms{% endtrans %}</span>
                             <span class="badge bg-white text-dark rounded-pill">{{ classrooms|length }}</span>
                         </button>
-                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                        {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
                             {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                 <a href="{{ path('classroom_saveClassroom') }}" class="btn btn-outline-primary mt-1 mb-1 me-3" name="addNewClassroom">
                                     <i class="fa fa-plus"></i>
@@ -93,7 +93,7 @@
                                     <th class="border-bottom-0 green-gradient">{% trans %}Att. Sup.{% endtrans %} / {% trans %}Pr. Teach{% endtrans %}</th>
                                     <th class="border-bottom-0 indigo-gradient">{% trans %}Att. Coun.{% endtrans %} / {% trans %}Social action{% endtrans %}</th>
                                     <th class="border-bottom-0 orange-gradient">{% trans %}Att. censor{% endtrans %}</th>
-                                     {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                     {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
                                         {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                             <th class="border-bottom-0 indigo-gradient">{% trans %}Actions{% endtrans %}</th>
                                         {% endif %}
@@ -106,7 +106,7 @@
                                     <th class="border-bottom-0 green-gradient">{% trans %}Att. Sup.{% endtrans %} / {% trans %}Pr. Teach{% endtrans %}</th>
                                     <th class="border-bottom-0 indigo-gradient">{% trans %}Att. Coun.{% endtrans %} / {% trans %}Social action{% endtrans %}</th>
                                     <th class="border-bottom-0 orange-gradient">{% trans %}Att. censor{% endtrans %}</th>
-                                     {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                     {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
                                         {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                             <th class="border-bottom-0 indigo-gradient">{% trans %}Actions{% endtrans %}</th>
                                         {% endif %}
@@ -176,7 +176,7 @@
 										</div>
                                        
                                     </td>
-                                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                    {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
                                         {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                     <td style="vertical-align: middle; text-align:center !important;">
                                         

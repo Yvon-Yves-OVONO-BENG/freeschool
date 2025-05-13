@@ -127,14 +127,16 @@ class EditStudentController extends AbstractController
             $qrCode = null;
             $data =  $form->getData();
 
-            if ($subSystem->getSubSystem() == ConstantsClass::FRANCOPHONE) {
+            if ($subSystem->getSubSystem() == ConstantsClass::FRANCOPHONE) 
+            {
                 $qrCode = $this->qrcodeService->qrcode($schoolName." : Ce bulletin appartient à l'élève : ".$data->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber())." Année Scolaire : ".$schoolYear->getSchoolYear()." Classe : ".$student->getClassroom()->getClassroom());
 
                 $qrCodeFiche = $this->qrcodeService->qrcode($schoolName." : Cette fiche appartient à l'élève : ".$data->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber())." Année Scolaire : ".$schoolYear->getSchoolYear()." Classe : ".$student->getClassroom()->getClassroom());
                 
                 $qrCodeRollOfHonor = $this->qrcodeService->qrcode($schoolName." : Ce TABLEAU D'HONNEUR appartient à l'élève : ".$data->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber())." Année Scolaire : ".$schoolYear->getSchoolYear()." Classe : ".$student->getClassroom()->getClassroom());
 
-            } else 
+            } 
+            else 
             {
                 $qrCode = $this->qrcodeService->qrcode($schoolName." : This report belongs to the student : ".$data->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber())." School Year : ".$schoolYear->getSchoolYear()." Classroom : ".$student->getClassroom()->getClassroom());
 
@@ -225,10 +227,28 @@ class EditStudentController extends AbstractController
                     $qrCode = null;
                     $data =  $form->getData();
 
-                    $qrCode = $this->qrcodeService->qrcode($schoolName." : Ce bulletin appartient à l'élève : ".$data->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber())." année scolaire : ".$schoolYear->getSchoolYear());
+                    if ($subSystem->getSubSystem() == ConstantsClass::FRANCOPHONE) 
+                    {
+                        $qrCode = $this->qrcodeService->qrcode($schoolName." : Ce bulletin appartient à l'élève : ".$data->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber())." Année Scolaire : ".$schoolYear->getSchoolYear()." Classe : ".$student->getClassroom()->getClassroom());
+
+                        $qrCodeFiche = $this->qrcodeService->qrcode($schoolName." : Cette fiche appartient à l'élève : ".$data->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber())." Année Scolaire : ".$schoolYear->getSchoolYear()." Classe : ".$student->getClassroom()->getClassroom());
+                        
+                        $qrCodeRollOfHonor = $this->qrcodeService->qrcode($schoolName." : Ce TABLEAU D'HONNEUR appartient à l'élève : ".$data->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber())." Année Scolaire : ".$schoolYear->getSchoolYear()." Classe : ".$student->getClassroom()->getClassroom());
+
+                    } 
+                    else 
+                    {
+                        $qrCode = $this->qrcodeService->qrcode($schoolName." : This report belongs to the student : ".$data->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber())." School Year : ".$schoolYear->getSchoolYear()." Classroom : ".$student->getClassroom()->getClassroom());
+
+                        $qrCodeFiche = $this->qrcodeService->qrcode($schoolName." : This sheet belongs to the student : ".$data->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber())." School Year  : ".$schoolYear->getSchoolYear()." Classroom : ".$student->getClassroom()->getClassroom());
                     
+                        $qrCodeRollOfHonor = $this->qrcodeService->qrcode($schoolName." : This roll of honor belongs to the student: ".$data->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber())." School Year  : ".$schoolYear->getSchoolYear()." Classroom : ".$student->getClassroom()->getClassroom());
+                    }
+
                     $student->setUpdatedBy($this->getUser())
-                            ->setQrCode($qrCode);
+                            ->setQrCode($qrCode)
+                            ->setQrCodeFiche($qrCodeFiche)
+                            ->setQrCodeRollOfHonor($qrCodeRollOfHonor);
 
                     $this->em->flush();
 
@@ -360,7 +380,7 @@ class EditStudentController extends AbstractController
                 
                 }
 
-                $this->addFlash('info', $this->translator->trans('Student updated successfully'));
+                $this->addFlash('info', $this->translator->trans('Student updated with success !'));
                 
                 $mySession->set('miseAjour', 1);
                 // On redimensionne la photo au cas où elle a été modifiée

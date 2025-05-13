@@ -4,7 +4,7 @@
 
 {% block subTitle %}
     {% trans %}MANAGEMENT OF HOURS OF ABSENCE{% endtrans %}
-    {% if is_granted ('ROLE_ADMIN') %}
+    {% if is_granted ('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') %}
         {% trans %}DE{% endtrans %} [ {{teacher.fullName }} ]
     {% endif %}
 {% endblock %}
@@ -14,6 +14,43 @@
 
 {% block currentUser %}
     {{teacher.fullName }}
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        input{
+            background-color: rgba(62, 128, 235, 0.2) !important;
+            color: #3e80eb !important;
+        }
+        th{
+            text-align: center !important;
+            font-weight : bold !important;
+            background-color: rgba(200,200, 200, 0.2) !important;
+        }
+
+        th,
+		tfoot {
+			font-size: 15px !important;
+			text-align: center !important;
+			font-weight: bold !important;
+			background-color: #F1F1F1 !important;
+		}
+
+		tr:hover {
+			background-color: rgba(62, 128, 235, 0.2) !important;
+			color: #3e80eb !important;
+		}
+
+        td {
+			font-size: 12px !important;
+			text-align: center !important;
+		}
+
+        .intitule {
+            font-weight: bold !important;
+            background-color: rgba(200, 200, 200) !important;
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
@@ -35,7 +72,6 @@
                 </div>
             </div>
             <!--End Page header-->
-
 
             <!-- Row -->
 				<div class="row mt-4">
@@ -109,7 +145,7 @@
                                                 {# Si les absences sont déjà enregistrées #}
                                                 {% if absences|length > 0 %}
                                                     {# affichage ligne de delete all absences #}
-                                                    {% if not is_granted('ROLE_ADMIN') %}
+                                                    {% if not is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') %}
                                                         {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                                             <form action="{{ path('absence_absenceRecorder', {'slug': teacher.slug}) }}" method="post" onsubmit="return confirm('{% trans %}Do you want to delete the hours of absence from class{% endtrans %} --- {{ selectedClassroom.classroom }} --- {% trans %}term{% endtrans %} N°{{ selectedTerm.term }} ?');">
                                                                 <input type="hidden" name="term" value="{{ selectedTerm.id }}">
@@ -181,6 +217,10 @@
                                                 <th class="border-bottom-0 indigo-gradient">{% trans %}N°{% endtrans %}</th>
                                                 <th class="border-bottom-0 green-gradient">{% trans %}Full name{% endtrans %}</th>
                                                 <th class="border-bottom-0 orange-gradient">{% trans %}Hours away{% endtrans %}</th>
+                                                {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') %}
+                                                    <th class="border-bottom-0 blue-gradient">{% trans %}Entered by{% endtrans %}</th>
+                                                    <th class="border-bottom-0 blue-gradient">{% trans %}Update by{% endtrans %}</th>
+                                                {% endif %}
                                                 <th class="border-bottom-0 blue-gradient">{% trans %}Actions{% endtrans %}</th>
                                             </tr>
                                         </thead>
@@ -189,6 +229,10 @@
                                             <th class="border-bottom-0 indigo-gradient">{% trans %}N°{% endtrans %}</th>
                                             <th class="border-bottom-0 green-gradient">{% trans %}Full name{% endtrans %}</th>
                                             <th class="border-bottom-0 orange-gradient">{% trans %}Hours away{% endtrans %}</th>
+                                            {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') %}
+                                                <th class="border-bottom-0 blue-gradient">{% trans %}Entered by{% endtrans %}</th>
+                                                <th class="border-bottom-0 blue-gradient">{% trans %}Update by{% endtrans %}</th>
+                                            {% endif %}
                                             <th class="border-bottom-0 blue-gradient">{% trans %}Actions{% endtrans %}</th>
                                         </tfoot>
                                         
@@ -202,19 +246,30 @@
                                                 <td>
                                                     <input type="text" name="absence{{i}}"   readonly="readonly" value="{{ absence.absence }}" class="form-control" >
                                                 </td>
-                                                    {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
-                                                    <td>
-                                                        <form action="{{ path('absence_absenceRecorder', {'slug': teacher.slug}) }}" method="post">
-                                                            <input type="hidden" name="term" value="{{ selectedTerm.id }}">
-                                                            <input type="hidden" name="classroom" value="{{ selectedClassroom.id }}">
-                                                            <input type="hidden" name="absence" value="{{ absence.id }}">
-
-                                                            <button type="submit" class="btn btn-outline-success" data-bs-toggle="tooltip" title="Modifier les Hours away de {{ absence.student.fullName }}" name="absenceToUpdate">
-                                                                <i class="fa fa-pencil-square-o"></i>
-                                                            </button>
-                                                        </form>
+                                                
+                                                {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') %}
+                                                    <td class="border-bottom-0 blue-gradient">{{ absence.createdBy.fullName }} <br>
+                                                        {% trans %}At{% endtrans %} : {{ absence.createdAt|date('d/m/Y') }} - {{ absence.createdAt|date('H:i:s') }}
                                                     </td>
-                                                    {% endif %}
+                                                    <td class="border-bottom-0 blue-gradient">{{ absence.updatedBy ? absence.updatedBy.fullName : "//" }} <br>
+                                                        {% trans %}At{% endtrans %} : {{ absence.updatedBy ? absence.updatedAt|date('d/m/Y') : "//"}} - {{ absence.updatedBy ? absence.updatedAt|date('H:i:s'): "//"}}
+                                                    </td>
+                                                {% endif %}
+
+
+                                                {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+                                                <td>
+                                                    <form action="{{ path('absence_absenceRecorder', {'slug': teacher.slug}) }}" method="post">
+                                                        <input type="hidden" name="term" value="{{ selectedTerm.id }}">
+                                                        <input type="hidden" name="classroom" value="{{ selectedClassroom.id }}">
+                                                        <input type="hidden" name="absence" value="{{ absence.id }}">
+
+                                                        <button type="submit" class="btn btn-outline-primary" data-bs-toggle="tooltip" title="Modifier les Hours away de {{ absence.student.fullName }}" name="absenceToUpdate">
+                                                            <i class="fa fa-pencil-square-o"></i>
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                                {% endif %}
                                             </tr>
                                         {% set i = i + 1 %}
                                         {% endfor %}
@@ -224,7 +279,7 @@
                                 {# fin affichage de la liste des elèves si les absences existent déjà #}
                             {% else %}
                                 {# affichage de la liste des elèves si les absences n'existent pas encore #}
-                                {% if not is_granted('ROLE_ADMIN') %}
+                                {% if not is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') %}
                                     <div class="row mb-5">
                                         <div class="col-md-12">
                                                 {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
@@ -248,7 +303,7 @@
                                                                             <input type="number" name="absence{{i}}" required="required" min="0" max="500" step="1" class="form-control" value="0"> 
                                                                         </td>
                                                                     </tr>
-                                                                {% set i = i+1 %}
+                                                                    {% set i = i+1 %}
                                                                 {% endfor %}
                                                             </table>
                                                         </div>

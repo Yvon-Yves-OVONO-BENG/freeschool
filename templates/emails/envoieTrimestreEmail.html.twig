@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <title>{% trans %}Transcript{% endtrans %}</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                            line-height: 1.6;
+                color: #333;
+            }
+            .header {
+                background-color: #f4f4f4;
+                padding: 20px;
+                text-align: center;
+            }
+            .content {
+                margin: 20px;
+            }
+            .footer {
+                margin-top: 30px;
+                font-size: 0.9em;
+                text-align: center;
+                color: #888;
+            }
+        </style>
+    </head>     
+    <body>
+        <div class="header">
+            <h1>Merci pour la confiance que vous faites au Lycée Bilingue d'ODZA / Thank you for your confidence in G.B.H.S ODZA</h1>
+        </div>
+        <div class="content">
+            <p>Bonjour Chèr Parent / Hello dear parent</p>
+            <p>
+                Tout en espérant que vous allez bien, vous trouverez en pièce jointe le relevé de notes de votre enfant {{ student ? student.fullName : studentName }} en classe de {{ student ? student.classroom.classroom : classroom.classroom }} pour le compte du
+                {{ term.term }} 
+                {% if term.term == 1 %}
+                    er 
+                    {% else %}
+                    ème
+                {% endif %} trimestre.
+                <br>
+                <br>
+                Hoping tha you are well, you will find attached the transcript of you child marks {{ student ? student.fullName : studentName }} in class {{ student ? student.classroom.classroom : classroom.classroom }} for the 
+                {{ term.term }} 
+                {% if term.term == 1 %}
+                    st 
+                    {% else %}
+                    {% if term.term == 2 %}
+                        nd
+                        {% else %}
+                        {% if term.term == 3 %}
+                            rd 
+                        {% endif %}
+                    {% endif %}
+                {% endif %} term.
+                    
+            </p>
+            
+            <p>
+                L'administration du Lycée / School administration
+                <a href="mailto:ovonobeng5@gmail.com">Lycée Bilingue d'ODZA / G.B.H.S ODZA</a>.
+            </p>
+            <p>Merci de votre confiance. / Thank you for your confidence.</p>
+        </div>
+        <div class="footer">
+            <p>&copy; {{ "now"|date("Y") }} | Freeschool | Tous droits réservés / All rights reserved.</p>
+        </div>
+    </body>
+</html>

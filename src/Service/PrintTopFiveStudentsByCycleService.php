@@ -45,7 +45,7 @@ class PrintTopFiveStudentsByCycleService
      * @param Cycle $cycle
      * @return Pagination
      */
-    public function printTopFiveStudentsByCycleService(array $topFiveStudents, SchoolYear $schoolYear, School $school, SubSystem $subSystem, Cycle $cycle): Pagination
+    public function printTopFiveStudentsByCycleService(array $topFiveStudents, SchoolYear $schoolYear, School $school, SubSystem $subSystem, Cycle $cycle, Term $term): Pagination
     {
         if($subSystem->getSubSystem() == ConstantsClass::FRANCOPHONE)
         {
@@ -69,7 +69,17 @@ class PrintTopFiveStudentsByCycleService
 
             // Entête de la fiche
             $pdf->SetFont('Times', 'B', $fontSize+4);
-            $pdf->Cell(190, 7, utf8_decode("LISTE DES CINQS PREMIERS ELEVES DU CYCLE ".$cycle->getCycle()), 0, 1, 'C');
+            $pdf->Cell(0, 7, utf8_decode("LISTE DES CINQS PREMIERS ELEVES DU CYCLE ".$cycle->getCycle()), 0, 1, 'C');
+
+            if ($term->getTerm() == 0) 
+            {
+                $pdf->Cell(0, 7, utf8_decode("ANNUEL"), 0, 1, 'C');
+            } 
+            else 
+            {
+                $pdf->Cell(0, 7, utf8_decode("TRIMESTRE ".$term->getTerm()), 0, 1, 'C');
+            }
+            
             $pdf->Ln(3);
 
             // Entête du tableau
@@ -139,6 +149,15 @@ class PrintTopFiveStudentsByCycleService
             // Entête de la fiche
             $pdf->SetFont('Times', 'B', $fontSize+4);
             $pdf->Cell(190, 7, utf8_decode("SCHOOL TOP FIVE STUDENTS IN CYCLE".$cycle->getCycle()), 0, 1, 'C');
+            if ($term->getTerm() == 0) 
+            {
+                $pdf->Cell(0, 7, utf8_decode("ANNUAL"), 0, 1, 'C');
+            } 
+            else 
+            {
+                $pdf->Cell(0, 7, utf8_decode("TERM ".$term->getTerm()), 0, 1, 'C');
+            }
+            
             $pdf->Ln(3);
 
             // Entête du tableau

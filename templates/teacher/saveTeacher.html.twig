@@ -9,14 +9,6 @@
     teacher
 {% endblock %}
 
-{% block subTitle %}
-    {% if slug != 0 %}
-        {% trans %}UPDATING STAFF{% endtrans %}
-    {% else %}
-        {% trans %}ADDING NEW STAFF{% endtrans %}
-    {% endif %}
-{% endblock %}
-
 {# {% block infoMessage %}
     {% include "includes/_info_message.html.twig" %}
 {% endblock %} #}
@@ -37,7 +29,7 @@
                         {% endif %}
                     </h4>
                 </div>
-                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
                     <div class="page-rightheader">
                         <div class="btn-list">
                             <a href="{{ path('teacher_displayTeacher') }}" class="btn btn-outline-primary btn-medium w-100 br-7">

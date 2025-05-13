@@ -98,7 +98,7 @@ class SaveDiplomaController extends AbstractController
             $this->em->persist($diploma);
             $this->em->flush(); 
 
-            $this->addFlash('info', $this->translator->trans('Diploma saved successfully'));
+            $this->addFlash('info', $this->translator->trans('Diploma saved with success !'));
             
             #j'affecte 1 à ma variable pour afficher le message
             $mySession->set('ajout', 1);

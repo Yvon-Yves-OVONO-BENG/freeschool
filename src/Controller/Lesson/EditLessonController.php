@@ -104,7 +104,7 @@ class EditLessonController extends AbstractController
             $this->em->persist($lesson);
             $this->em->flush(); // On modifie
 
-            $this->addFlash('info', $this->translator->trans('Lesson updated successfully'));
+            $this->addFlash('info', $this->translator->trans('Lesson updated with success !'));
             
             $mySession->set('miseAjour', 1);
 

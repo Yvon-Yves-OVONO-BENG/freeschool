@@ -3,16 +3,16 @@
 namespace App\Form;
 
 use App\Entity\Sex;
-use App\Entity\Student;
 use App\Entity\Country;
+use App\Entity\Student;
 use App\Entity\Handicap;
 use App\Entity\Movement;
 use App\Entity\Repeater;
 use App\Entity\Classroom;
+use App\Entity\Operateur;
 use App\Entity\EthnicGroup;
 use App\Entity\HandicapType;
 use App\Entity\ModeAdmission;
-use App\Entity\Operateur;
 use App\Entity\Responsability;
 use App\Repository\SexRepository;
 use App\Repository\CountryRepository;
@@ -20,21 +20,22 @@ use App\Repository\HandicapRepository;
 use App\Repository\MovementRepository;
 use App\Repository\RepeaterRepository;
 use App\Repository\ClassroomRepository;
+use App\Repository\OperateurRepository;
 use Symfony\Component\Form\AbstractType;
 use App\Repository\EthnicGroupRepository;
 use App\Repository\HandicapTypeRepository;
 use App\Repository\ModeAdmissionRepository;
-use App\Repository\OperateurRepository;
 use App\Repository\ResponsabilityRepository;
 use Symfony\Component\Form\FormBuilderInterface;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class StudentType extends AbstractType
 {
@@ -104,16 +105,23 @@ class StudentType extends AbstractType
             ->add('telephonePere', TextType::class, [
                 'label' => $this->translator->trans("Father's phone"),
                 'required' => false,
-                'attr' => [
-                    'pattern' => '[0-9]+'
-                ]
+                // 'attr' => [
+                //     'pattern' => '[0-9]+'
+                // ]
             ])
             ->add('telephoneMere', TextType::class, [
                 'label' => $this->translator->trans("Mother's phone"),
                 'required' => false,
-                'attr' => [
-                    'pattern' => '[0-9]+'
-                ]
+                // 'attr' => [
+                //     'pattern' => '[0-9]+'
+                // ]
+            ])
+            ->add('emailParent', EmailType::class, [
+                'label' => $this->translator->trans("Email's parent"),
+                'required' => false,
+                // 'attr' => [
+                //     'pattern' => '[0-9]+'
+                // ]
             ])
             ->add('responsability', EntityType::class, [
                 'label' => $this->translator->trans('Responsability'),
@@ -194,12 +202,16 @@ class StudentType extends AbstractType
             ->add('numeroHcr', TextType::class, [
                 'label' => $this->translator->trans('UNHCR number'),
                 'required' => false,
-                'attr' => [
-                    'pattern' => '[0-9]+'
-                ]
+                // 'attr' => [
+                //     'pattern' => '[0-9]+'
+                // ]
             ])
             ->add('professionPere', TextType::class, [
                 'label' => $this->translator->trans("Father's profession"),
+                'required' => false,
+            ])
+            ->add('professionTuteur', TextType::class, [
+                'label' => $this->translator->trans("Tutor's profession"),
                 'required' => false,
             ])
             ->add('professionMere', TextType::class, [
@@ -213,9 +225,9 @@ class StudentType extends AbstractType
             ->add('telephonePersonneEnCasUrgence', TextType::class, [
                 'label' => $this->translator->trans('Telephone of the person to contact in case of emergency'),
                 'required' => false,
-                'attr' => [
-                    'pattern' => '[0-9]+'
-                ]
+                // 'attr' => [
+                //     'pattern' => '[0-9]+'
+                // ]
             ])
             ->add('tuteur', TextType::class, [
                 'label' => $this->translator->trans("Tutor"),
@@ -224,9 +236,9 @@ class StudentType extends AbstractType
             ->add('telephoneTuteur', TextType::class, [
                 'label' => $this->translator->trans("Tutor's telephon"),
                 'required' => false,
-                'attr' => [
-                    'pattern' => '[0-9]+'
-                ]
+                // 'attr' => [
+                //     'pattern' => '[0-9]+'
+                // ]
             ])
             
             ->add('datePremiereEntreeEtablissementAt', DateType::class, [

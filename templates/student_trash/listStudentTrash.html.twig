@@ -143,7 +143,7 @@
                                             <th class="border-bottom-0 indigo-gradient">{% trans %}Classroom{% endtrans %}</th>
                                             <th class="border-bottom-0 orange-gradient">{% trans %}Phone{% endtrans %}</th>
                                             {# si c'est l'admin qui est connecté #}
-                                                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_INTENDANT') and headmasterFees == 0 %}
+                                                {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_INTENDANT') and headmasterFees == 0 %}
                                                 {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                                     <th class="border-bottom-0 blue-gradient">{% trans %}Actions{% endtrans %}</th>
                                                 {% endif %}
@@ -160,7 +160,7 @@
                                             <th class="border-bottom-0 indigo-gradient">{% trans %}Classroom{% endtrans %}</th>
                                             <th class="border-bottom-0 orange-gradient">{% trans %}Phone{% endtrans %}</th>
                                             {# si c'est l'admin qui est connecté #}
-                                                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_INTENDANT') and headmasterFees == 0 %}
+                                                {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_INTENDANT') and headmasterFees == 0 %}
                                                 {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                                     <th class="border-bottom-0 blue-gradient">{% trans %}Actions{% endtrans %}</th>
                                                 {% endif %}
@@ -178,7 +178,7 @@
                                             </td>
                                             <td style="vertical-align: middle;">{{ studentTrash.fullName }} 
                                                 
-                                                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                                {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
                                                     <br> <span class="badge badge-gradient-primary mt-2">{% trans %}Delete by : {% endtrans %}</span>
                                                     <span class="badge badge-gradient-danger mt-2">{{ studentTrash.deletedBy.fullName }}</span>
                                                     <span class="badge badge-gradient-primary mt-2">{% trans %}at {% endtrans %}</span>
@@ -191,7 +191,7 @@
                                             <td style="vertical-align: middle;">{{ studentTrash.classroom.classroom }}</td>
                                             <td style="vertical-align: middle;">{{ studentTrash.telephonePere }}</td>
                                                 {# si c'est l'admin qui est conncté #}
-                                                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_INTENDANT') and headmasterFees == 0 %}
+                                                {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_INTENDANT') and headmasterFees == 0 %}
                                                 {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                                     <td style="text-align: center !important; vertical-align: middle !important;">
 
@@ -252,18 +252,6 @@
     </div>
 </div>
 
-{# <script>
-    ///pour sélectionner /déselectionner les élèves à cocher
-    document.getElementById('select-all').addEventListener('change', function(e) {
-        let checkboxes = document.querySelectorAll('input[type="checkbox"][name="students[]"]');
-        checkboxes.forEach(checkbox => checkbox.checked = e.target.checked );
-    });
-
-    document.getElementById('select-al').addEventListener('change', function(e) {
-        let checkboxes = document.querySelectorAll('input[type="checkbox"][name="students[]"]');
-        checkboxes.forEach(checkbox => checkbox.checked = e.target.checked );
-    });
-</script> #}
-    <script src="{{ asset ('build/custom2/js/suppressionMultiple.js')}}"></script>
+<script src="{{ asset ('build/custom2/js/suppressionMultiple.js')}}"></script>
 
 {% endblock %}

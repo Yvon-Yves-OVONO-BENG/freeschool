@@ -129,6 +129,7 @@ class SaveDeliberationController extends AbstractController
                 ->setSchoolYear($nextSchoolYear)
                 ->setSubSystem($subSystem)
                 ->setSupprime(0)
+                ->setEmailParent($student->getEmailParent())
                 ;
 
             switch ($decision->getDecision()) 
@@ -295,7 +296,7 @@ class SaveDeliberationController extends AbstractController
 
         $this->em->flush();
 
-        $this->addFlash('info', $this->translator->trans('Deliberations saved successfully'));
+        $this->addFlash('info', $this->translator->trans('Deliberations saved with success !'));
 
         return $this->redirectToRoute('deliberation_displayDeliberation', [
             'idC' => $idC,

@@ -58,6 +58,7 @@ class PrintReportController extends AbstractController
         if($mySession)
         {
             $schoolYear = $mySession->get('schoolYear');
+            $school = $this->schoolRepository->findOneBy(['schoolYear' => $schoolYear ]);
             $subSystem = $mySession->get('subSystem');
 
         }else 
@@ -76,15 +77,15 @@ class PrintReportController extends AbstractController
         
         if(!empty($unrecordedEvaluations))
         {
-            $pdf = $this->reportService->printUnrecordedMark($unrecordedEvaluations);
+            $pdf = $this->reportService->printUnrecordedMark($unrecordedEvaluations, $school, $schoolYear, $subSystem);
 
             if ($subSystem->getId() == 1 ) 
             {
-              return new Response($pdf->Output("Unrecorded evaluation"), 200, ['Content-Type' => 'application/pdf']) ;
+              return new Response($pdf->Output("Unable print the report",'I'), 200, ['Content-Type' => 'application/pdf']) ;
             } 
             else 
             {
-                return new Response($pdf->Output(utf8_decode("Evaluations non saisies")), 200, ['Content-Type' => 'application/pdf']) ;
+                return new Response($pdf->Output(utf8_decode("Impression impossible des bulletins"),'I'), 200, ['Content-Type' => 'application/pdf']) ;
             }
             
         }
@@ -203,11 +204,11 @@ class PrintReportController extends AbstractController
 
                 if($selectedTerm->getTerm() != 0)
                 {
-                    $studentReport->setReportBody($this->reportService->getStudentReportBody($studentMarkSequence1, $studentMarkSequence2, $studentMarkTerm, $rankedStudents,  $index, $numberOfLessons,  $numberOfStudents, $rankedStudentsCategory1, $rankedStudentsCategory2, $rankedStudentsCategory3, [], $rankPerLesson, $subSystem, $selectedTerm, $schoolYear));
+                    $studentReport->setReportBody($this->reportService->getStudentReportBody($studentMarkSequence1, $studentMarkSequence2, $studentMarkTerm, $rankedStudents,  $index, $numberOfLessons,  $numberOfStudents, $rankedStudentsCategory1, $rankedStudentsCategory2, $rankedStudentsCategory3, $subSystem, $selectedTerm, $rankPerLesson, [], $schoolYear));
 
                 }else
                 {
-                    $studentReport->setReportBody($this->reportService->getStudentReportBody($studentMarkTerm1, $studentMarkTerm2, $studentMarkTerm, $rankedStudents,  $index, $numberOfLessons,  $numberOfStudents, $rankedStudentsCategory1, $rankedStudentsCategory2, $rankedStudentsCategory3, $studentMarkTerm3, $rankPerLesson, $subSystem, $selectedTerm, $schoolYear));
+                    $studentReport->setReportBody($this->reportService->getStudentReportBody($studentMarkTerm1, $studentMarkTerm2, $studentMarkTerm, $rankedStudents, $index, $numberOfLessons, $numberOfStudents, $rankedStudentsCategory1, $rankedStudentsCategory2, $rankedStudentsCategory3, $subSystem, $selectedTerm, $rankPerLesson, $studentMarkTerm3, $schoolYear));
                 }
 
                 // On sauvegarde le Report pour rappels

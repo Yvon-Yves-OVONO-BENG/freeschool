@@ -158,7 +158,7 @@
                                     <th class="border-bottom-0 indigo-gradient">{% trans %}Repeat{% endtrans %}</th>
                                     <th class="border-bottom-0 orange-gradient">{% trans %}Phone{% endtrans %}</th>
                                     {# si c'est l'admin qui est connecté #}
-                                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') and headmasterFees == 0 %}
+                                        {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') and headmasterFees == 0 %}
                                         {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                             <th class="border-bottom-0 blue-gradient">{% trans %}Actions{% endtrans %}</th>
                                         {% endif %}
@@ -179,7 +179,7 @@
                                     <th class="border-bottom-0 indigo-gradient">{% trans %}Repeat{% endtrans %}</th>
                                     <th class="border-bottom-0 orange-gradient">{% trans %}Phone{% endtrans %}</th>
                                     {# si c'est l'admin qui est connecté #}
-                                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') and headmasterFees == 0 %}
+                                        {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') and headmasterFees == 0 %}
                                         {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                             <th class="border-bottom-0 blue-gradient">{% trans %}Actions{% endtrans %}</th>
                                         {% endif %}
@@ -208,14 +208,14 @@
                                             cleanSchoolFees +
                                             photoFees %}
 
-                                                <a href="{{ path('print_eschool_attendance_certificate',{'id': student.id}) }}" target="_blank" type="button" class="btn btn-outline-primary btn-sm "><i class="fa fa-print"></i> {% trans %}Print School attendance certificate{% endtrans %}</a>
+                                                <a href="{{ path('print_school_attendance_certificate',{'id': student.id}) }}" target="_blank" type="button" class="btn btn-outline-primary btn-sm "><i class="fa fa-print"></i> {% trans %}Print School attendance certificate{% endtrans %}</a>
                                                 {% else %}
-                                                    <a href="{{ path('print_eschool_attendance_certificate',{'id': student.id}) }}" target="_blank" type="button" class="btn btn-outline-danger btn-sm disabled">
+                                                    <a href="{{ path('print_school_attendance_certificate',{'id': student.id}) }}" target="_blank" type="button" class="btn btn-outline-danger btn-sm disabled">
                                                     <i class="fa fa-print"></i> {% trans %}Print School attendance certificate{% endtrans %}</a>
 
                                             {% endif %}
                                             {% else %}
-                                                <a href="{{ path('print_eschool_attendance_certificate',{'id': student.id}) }}" target="_blank" type="button" class="btn btn-outline-danger btn-sm disabled">
+                                                <a href="{{ path('print_school_attendance_certificate',{'id': student.id}) }}" target="_blank" type="button" class="btn btn-outline-danger btn-sm disabled">
                                                     <i class="fa fa-print"></i> {% trans %}Print School attendance certificate{% endtrans %}</a>
                                         {% endif %}
                                          <br>
@@ -268,7 +268,7 @@
                                     <td style="vertical-align: middle;">{{ student.repeater.repeater }}</td>
                                     <td style="vertical-align: middle;">{{ student.telephone }}</td>
                                         {# si c'est l'admin qui est conncté #}
-                                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') and headmasterFees == 0 %}
+                                        {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') and headmasterFees == 0 %}
                                         {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                             <td>
                                                 <div class="row" style="margin-top: 10px;">

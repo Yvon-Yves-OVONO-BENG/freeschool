@@ -70,7 +70,7 @@ class EditTimeTableController extends AbstractController
             $this->em->persist($timeTable);
             $this->em->flush();
 
-            $this->addFlash('info', $this->translator->trans("Time table updated successfully !"));
+            $this->addFlash('info', $this->translator->trans("Time table updated with success ! !"));
             $mySession->set('miseAjour', 1);
 
             // on initialise le formulaire

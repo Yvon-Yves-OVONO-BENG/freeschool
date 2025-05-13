@@ -86,7 +86,7 @@ class SaveDepenseController extends AbstractController
 
             $this->em->flush(); 
 
-            $this->addFlash('info', $this->translator->trans('Spent saved successfully'));
+            $this->addFlash('info', $this->translator->trans('Spent saved sucwith success !cessfully'));
 
             $mySession->set('ajout', 1);
 

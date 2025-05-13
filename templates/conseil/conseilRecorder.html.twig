@@ -4,7 +4,7 @@
 
 {% block subTitle %}
     {% trans %}MANAGEMENT OF CLASS COUNCIL DECISIONS{% endtrans %}
-    {% if is_granted ('ROLE_ADMIN') %}
+    {% if is_granted ('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') %}
         {% trans %}OF{% endtrans %} [ {{teacher.fullName }} ]
     {% endif %}
 {% endblock %}
@@ -69,7 +69,7 @@
                                 <div class="col-md-12">
                                     <div class="row">
                                         <div class="col-md-8">
-                                            <form action="{{ path('conseil_conseilRecorder', {'id': teacher.id}) }}" method="post">
+                                            <form action="{{ path('conseil_conseilRecorder', {'slug': teacher.slug}) }}" method="post">
                                                 <div class="row">
                                                     <div class="col-md-3">
                                                         <div class="form-group">
@@ -206,7 +206,7 @@
                                                     </td>
                                                         {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                                         <td>
-                                                            <form action="{{ path('conseil_conseilRecorder', {'id': teacher.id}) }}" method="post">
+                                                            <form action="{{ path('conseil_conseilRecorder', {'slug': teacher.slug}) }}" method="post">
                                                                 <input type="hidden" name="term" value="{{ selectedTerm.id }}">
                                                                 <input type="hidden" name="classroom" value="{{ selectedClassroom.id }}">
                                                                 <input type="hidden" name="conseil" value="{{ conseil.id }}">
@@ -226,11 +226,11 @@
                                     {# fin affichage de la liste des elèves si les conseils existent déjà #}
                                 {% else %}
                                     {# affichage de la liste des elèves si les conseils n'existent pas encore #}
-                                    {% if not is_granted('ROLE_ADMIN') %}
+                                    {% if not is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') %}
                                         <div class="row mb-5">
                                             <div class="col-md-12">
                                                     {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
-                                                    <form action="{{ path('conseil_conseilRecorder', {'id': teacher.id}) }}" method="POST" onreset="return confirm('Do you want to reset all typed conseils ?')">   
+                                                    <form action="{{ path('conseil_conseilRecorder', {'slug': teacher.slug}) }}" method="POST" onreset="return confirm('Do you want to reset all typed conseils ?')">   
                                                         <input type="hidden" name="term" value="{{ selectedTerm.id }}">
                                                         <input type="hidden" name="classroom" value="{{ selectedClassroom.id }}">
                                                         <input type="hidden" name="numberOfStudents" value="{{ students|length }}">
@@ -292,7 +292,7 @@
                                     <div class="row mb-5">
                                         <div class="col-md-12">
                                             {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
-                                            <form action="{{ path('conseil_conseilRecorder', {'id': teacher.id}) }}" method="post"> 
+                                            <form action="{{ path('conseil_conseilRecorder', {'slug': teacher.slug}) }}" method="post"> 
                                                 <input type="hidden" name="term" value="{{ selectedTerm.id }}">
                                                 <input type="hidden" name="classroom" value="{{ selectedClassroom.id }}">
                                                 <input type="hidden" name="conseilToUpdateId" value="{{ conseilToUpdate.id }}">

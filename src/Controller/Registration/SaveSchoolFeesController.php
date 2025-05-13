@@ -65,9 +65,11 @@ class SaveSchoolFeesController extends AbstractController
         $registrationHistory = new RegistrationHistory();
 
         $feesTable = [];
+        
         $student = $this->studentRepository->findOneBy(['slug' => $slugStudent ]);
+        
         $level = $student->getClassroom()->getLevel()->getLevel();
-
+        
         if($request->request->has('saveSchoolFees')) 
         {
             $feesTable['schoolFees'] = $request->request->get('schoolFeesDeposit') ? $request->request->get('schoolFeesDeposit') : 0;
@@ -165,10 +167,10 @@ class SaveSchoolFeesController extends AbstractController
 
         $this->em->flush();
 
-        $this->addFlash('info', $this->translator->trans('Fees saved successfully'));
+        $this->addFlash('info', $this->translator->trans('Fees saved with success !'));
+        $mySession->set('ajout', 1);
 
-
-        return $this->redirectToRoute('registration_schoolFees', ['slugStudent' => $slugStudent]);
+        return $this->redirectToRoute('registration_schoolFees', ['slugStudent' => $slugStudent, 'a' => 1]);
     }
 
 }

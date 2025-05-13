@@ -742,7 +742,7 @@ class UpdateDeliberationController extends AbstractController
 
         $this->em->flush();
 
-        $this->addFlash('info', $this->translator->trans('Deliberation updated successfully'));
+        $this->addFlash('info', $this->translator->trans('Deliberation updated with success !'));
 
         return $this->redirectToRoute('deliberation_displayDeliberation', [
             'idC' => $idC,

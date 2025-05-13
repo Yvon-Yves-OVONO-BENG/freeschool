@@ -49,7 +49,7 @@ class AbsenceManagerService
         $elementIsPerssited = false;
 
         $numberOfStudents = $request->request->get('numberOfStudents');
-                
+               
         for ($i=1; $i <= $numberOfStudents ; $i++) 
         {
             $absence = $request->request->get('absence'.$i);
@@ -67,36 +67,14 @@ class AbsenceManagerService
                 $absenceToSave = new Absence();
 
                 #je fabrique mon slug
-                $characts    = 'abcdefghijklmnopqrstuvwxyz#{};()';
-                $characts   .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#{};()';	
-                $characts   .= '1234567890'; 
-                $slug      = ''; 
-        
-                for($i=0;$i < 15;$i++) 
-                { 
-                    $slug .= substr($characts,rand()%(strlen($characts)),1); 
-                }
-
-                //////j'extrait la derniere matiere de la table
-                $dernierAbsence = $this->absenceRepository->findBy([],['id' => 'DESC'],1,0);
-
-                /////je récupère l'id du sernier utilisateur
+                $slug = uniqid('', true);
                 
-                if ($dernierAbsence) 
-                {
-                    $id = $dernierAbsence[0]->getId();
-                } 
-                else 
-                {
-                    $id = 1;
-                }
-
                 $absenceToSave->setTerm($selectedTerm)
                     ->setStudent($student)
                     ->setAbsence($absence)
                     ->setCreatedBy($this->security->getUser())
                     ->setUpdatedBy($this->security->getUser())
-                    ->setSlug($slug.$id)
+                    ->setSlug($slug)
                     ;
                     
                 $this->em->persist($absenceToSave);
@@ -149,36 +127,14 @@ class AbsenceManagerService
                 $absenceToSave = new AbsenceTeacher();
 
                 #je fabrique mon slug
-                $characts    = 'abcdefghijklmnopqrstuvwxyz#{};()';
-                $characts   .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#{};()';	
-                $characts   .= '1234567890'; 
-                $slug      = ''; 
-        
-                for($i=0;$i < 15;$i++) 
-                { 
-                    $slug .= substr($characts,rand()%(strlen($characts)),1); 
-                }
-
-                //////j'extrait la derniere matiere de la table
-                $dernierAbsence = $this->absenceTeacherRepository->findBy([],['id' => 'DESC'],1,0);
-
-                /////je récupère l'id du sernier utilisateur
-                
-                if ($dernierAbsence) 
-                {
-                    $id = $dernierAbsence[0]->getId();
-                } 
-                else 
-                {
-                    $id = 1;
-                }
+                $slug = uniqid('', true); 
 
                 $absenceToSave->setTerm($selectedTerm)
                     ->setTeacher($teacher)
                     ->setAbsenceTeacher($absence)
                     ->setCreatedBy($this->security->getUser())
                     ->setCreatedAt($now)
-                    ->setSlug($slug.$id)
+                    ->setSlug($slug)
                     ;
                     
                 $this->em->persist($absenceToSave);
@@ -217,33 +173,11 @@ class AbsenceManagerService
         if($updatedAbsence !== null) 
         {
             #je fabrique mon slug
-            $characts    = 'abcdefghijklmnopqrstuvwxyz#{};()';
-            $characts   .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#{};()';	
-            $characts   .= '1234567890'; 
-            $slug      = ''; 
-    
-            for($i=0;$i < 15;$i++) 
-            { 
-                $slug .= substr($characts,rand()%(strlen($characts)),1); 
-            }
-
-            //////j'extrait la derniere matiere de la table
-            $dernierAbsence = $this->absenceRepository->findBy([],['id' => 'DESC'],1,0);
-
-            /////je récupère l'id du sernier utilisateur
-            
-            if ($dernierAbsence) 
-            {
-                $id = $dernierAbsence[0]->getId();
-            } 
-            else 
-            {
-                $id = 1;
-            }
+            $slug = uniqid('', true);
 
             $updatedAbsence->setAbsence($absence)
                 ->setUpdatedBy($this->security->getUser())
-                ->setSlug($slug.$id)
+                ->setSlug($slug)
                 ;
 
             $this->em->persist($updatedAbsence);
@@ -282,34 +216,11 @@ class AbsenceManagerService
         {
             $now = new DateTime('now');
 
-            $characts    = 'abcdefghijklmnopqrstuvwxyz#{};()';
-            $characts   .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#{};()';	
-            $characts   .= '1234567890'; 
-            $slug      = ''; 
-    
-            for($i=0;$i < 15;$i++) 
-            { 
-                $slug .= substr($characts,rand()%(strlen($characts)),1); 
-            }
-
-            //////j'extrait la derniere matiere de la table
-            $dernierAbsence = $this->absenceTeacherRepository->findBy([],['id' => 'DESC'],1,0);
-
-            /////je récupère l'id du sernier utilisateur
-            
-            if ($dernierAbsence) 
-            {
-                $id = $dernierAbsence[0]->getId();
-            } 
-            else 
-            {
-                $id = 1;
-            }
-
+            $slug = uniqid('', true);
             $updatedAbsence->setAbsenceTeacher($absence)
                 ->setUpdatedBy($this->security->getUser())
                 ->setUpdatedAt($now)
-                ->setSlug($slug.$id)
+                ->setSlug($slug)
                 ;
 
             $this->em->persist($updatedAbsence);

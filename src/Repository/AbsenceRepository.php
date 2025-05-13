@@ -29,6 +29,7 @@ class AbsenceRepository extends ServiceEntityRepository
             ->where('a.term = :term')
             ->innerJoin('a.student', 's')
             ->addSelect('s')
+            ->andWhere('s.supprime = 0')
             ->andWhere('s.classroom = :classroom')
             ->setParameters([
                 'term' => $term,
@@ -45,6 +46,7 @@ class AbsenceRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('a')
             ->innerJoin('a.student', 's')
             ->addSelect('s')
+            ->andWhere('s.supprime = 0')
             ->andWhere('s.classroom = :classroom')
             ->setParameters([
                 'classroom' => $classroom
@@ -62,6 +64,7 @@ class AbsenceRepository extends ServiceEntityRepository
             ->addSelect('s')
             ->innerJoin('s.sex', 'sx')
             ->addSelect('sx')
+            ->andWhere('s.supprime = 0')
             ->andWhere('s.classroom = :classroom')
             ->andWhere('sx.sex = :sex')
             ->setParameter('classroom', $classroom)
@@ -80,25 +83,41 @@ class AbsenceRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findClassroomAbsences(Classroom $classroom)
+    // public function findClassroomAbsences(Classroom $classroom)
+    // {
+    //     $queryBuilder = $this->em->createQueryBuilder();
+    //     $queryBuilder
+    //             ->select('a.absence AS absences')
+    //             ->from(Absence::class, 'a')
+    //             ->innerJoin(Student::class, 's')
+    //             ->innerJoin(Classroom::class, 'c')
+    //             ->innerJoin(Term::class, 't')
+    //             // ->andWhere('a.student = s.id')
+    //             // ->andWhere('s.classroom = c.id')
+    //             // ->andWhere('a.term = t.id')
+    //             ->where('s.classroom = :classroom')
+    //             ->setParameter('classroom', $classroom)
+    //             ;
+
+    //     $query = $queryBuilder->getQuery();
+
+    //     return $query->execute();
+    // }
+
+    public function findClassroomAbsences(int $classroomId)
     {
-        $queryBuilder = $this->em->createQueryBuilder();
-        $queryBuilder
-                ->select('a.absence AS absences')
-                ->from(Absence::class, 'a')
-                ->innerJoin(Student::class, 's')
-                ->innerJoin(Classroom::class, 'c')
-                ->innerJoin(Term::class, 't')
-                ->andWhere('a.student = s.id')
-                ->andWhere('s.classroom = c.id')
-                ->andWhere('a.term = t.id')
-                ->where('s.classroom = :classroom')
-                ->setParameter('classroom', $classroom)
+        return $this->createQueryBuilder('a')
+        ->select('a','s','c')
+                ->innerJoin('a.student', 's')
+                ->innerJoin('s.classroom', 'c')
+                ->andwhere('c.id = :classroomId')
+                ->andWhere('s.supprime = 0')
+                ->setParameter('classroomId', $classroomId)
+                ->getQuery()
+                ->getResult()
                 ;
 
-        $query = $queryBuilder->getQuery();
-
-        // return $query->execute();
+        
     }
 
 
@@ -112,6 +131,7 @@ class AbsenceRepository extends ServiceEntityRepository
                 ->innerJoin(Student::class, 's')
                 ->innerJoin(Classroom::class, 'c')
                 ->andWhere('s.id = a.student')
+                ->andWhere('s.supprime = 0')
                 ->andWhere('c.id = s.classroom')
                 ->andWhere('s.classroom = :classroom')
                 ->setParameter('classroom', $classroom)

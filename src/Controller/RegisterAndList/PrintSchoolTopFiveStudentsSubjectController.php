@@ -8,6 +8,7 @@ use App\Repository\SchoolRepository;
 use App\Repository\StudentRepository;
 use App\Service\FirstPerClassService;
 use App\Repository\ClassroomRepository;
+use App\Repository\TermRepository;
 use App\Service\PrintSchoolTopFiveStudentsSubjectService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,6 +25,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 class PrintSchoolTopFiveStudentsSubjectController extends AbstractController
 {
     public function __construct(
+        protected TermRepository $termRepository,
         protected SubjectRepository $subjectRepository, 
         protected SchoolRepository $schoolRepository, 
         protected EvaluationRepository $evaluationRepository, 

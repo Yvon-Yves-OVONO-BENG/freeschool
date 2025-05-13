@@ -53,7 +53,7 @@ class UnlockSchoolYearController extends AbstractController
         // On modifie le verrou dana la session
         $mySession->set('verrou', $verrou);
         
-        $this->addFlash('info', $this->translator->trans('All changes unlocked successfully'));
+        $this->addFlash('info', $this->translator->trans('All changes unlocked with success !'));
         $mySession->set('miseAjour', 1);
         return $this->redirectToRoute('verrou_displayLockOption', ['m' => 1]);
     }

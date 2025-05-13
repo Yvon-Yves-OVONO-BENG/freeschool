@@ -57,9 +57,10 @@ class PrintTopGirlsStudentsScienceClassroomController extends AbstractController
         $school = $this->schoolRepository->findOneBySchoolYear($schoolYear);
 
         $classroom = $this->classroomRepository->find($request->request->get('classroom'));
-        $term = $this->termRepository->find(5);
+        $term = $this->termRepository->find($request->request->get('term'));
         
         $students = $this->reportRepository->findTopGirlsStudentsByScienceClassroom($schoolYear, $subSystem, $classroom, $term);
+        
         if ($request->request->has('printBestStudentsPerClass')) 
         {
             $pdf = $this->printTopGirlsStudentsByScienceClassroomService->printTopGirlsStudentsByScienceClassroomService($students, $schoolYear, $school, $subSystem, $term, $classroom);

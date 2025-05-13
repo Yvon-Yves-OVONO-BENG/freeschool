@@ -138,7 +138,7 @@ class EditClassroomController extends AbstractController
                 $this->em->flush();
             }
 
-            $this->addFlash('info', $this->translator->trans('Classroom updated successfully'));
+            $this->addFlash('info', $this->translator->trans('Classroom updated with success !'));
             
             $mySession->set('miseAjour', 1);
             // On se redirige sur la page d'affichage des classes

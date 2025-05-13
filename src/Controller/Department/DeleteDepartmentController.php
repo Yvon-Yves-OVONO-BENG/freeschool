@@ -63,7 +63,7 @@ class DeleteDepartmentController extends AbstractController
             $this->em->remove($department);
             $this->em->flush();
             
-            $this->addFlash('info',  $this->translator->trans('Department deleted successfully'));
+            $this->addFlash('info',  $this->translator->trans('Department deleted with success !'));
             
             $mySession->set('suppression', 1);
             

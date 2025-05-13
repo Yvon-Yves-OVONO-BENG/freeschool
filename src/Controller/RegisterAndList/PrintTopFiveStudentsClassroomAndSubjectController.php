@@ -8,6 +8,7 @@ use App\Repository\SchoolRepository;
 use App\Repository\StudentRepository;
 use App\Service\FirstPerClassService;
 use App\Repository\ClassroomRepository;
+use App\Repository\TermRepository;
 use App\Service\PrintTopFiveStudentsClassroomAndSubjectService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,6 +25,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 class PrintTopFiveStudentsClassroomAndSubjectController extends AbstractController
 {
     public function __construct(
+        protected TermRepository $termRepository,
         protected SubjectRepository $subjectRepository, 
         protected SchoolRepository $schoolRepository, 
         protected EvaluationRepository $evaluationRepository, 
@@ -58,12 +60,12 @@ class PrintTopFiveStudentsClassroomAndSubjectController extends AbstractControll
 
         $subject = $this->subjectRepository->find($request->request->get('subject') );
         $classroom = $this->classroomRepository->find($request->request->get('classroom') );
+        $term = $this->termRepository->find($request->request->get('term') );
         
         // On recupère les premiers du trimestre choisi
-        $topFiveStudents = $this->evaluationRepository->findTopFiveStudentsSubjectAndClassroom($schoolYear, $subSystem, $subject, $classroom);
+        $topFiveStudents = $this->evaluationRepository->findTop5StudentsBySubjectClassAndTrimester($schoolYear, $subSystem, $subject->getId(), $classroom->getId(), $term->getTerm());
         
-        
-        $pdf = $this->printTopFiveStudentsClassroomAndSubjectService->printTopFiveStudentsClassroomAndSubjectService($topFiveStudents, $schoolYear, $school, $subSystem, $subject, $classroom);
+        $pdf = $this->printTopFiveStudentsClassroomAndSubjectService->printTopFiveStudentsClassroomAndSubjectService($topFiveStudents, $schoolYear, $school, $subSystem, $subject, $classroom, $term);
         
         if ($subSystem->getId() == 1 ) 
         {

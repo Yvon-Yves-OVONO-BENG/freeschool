@@ -28,7 +28,7 @@
 	<div class="hor-content main-content">
 		<div class="container">
 
-    {% if is_granted('ROLE_PROVISEUR') or is_granted('ROLE_INTENDANT') or is_granted('ROLE_ADMIN') or headmasterFees == 1 %}
+    {% if is_granted('ROLE_PROVISEUR') or is_granted('ROLE_INTENDANT') or is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or headmasterFees == 1 %}
         <!--Page header-->
         <div class="page-header">
             <div class="page-leftheader">

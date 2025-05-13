@@ -74,7 +74,7 @@ class ActivationKeyController extends AbstractController
             $this->em->flush();
 
             // $this->addFlash('info', 'Utilisateur ajouté avec succès et son mot de passe est :'.$code_aleatoire);
-            $this->addFlash('info', $this->translator->trans('License activated successfully !'));
+            $this->addFlash('info', $this->translator->trans('License activated with success ! !'));
 
             return $this->redirectToRoute('home_dashboard');
         }

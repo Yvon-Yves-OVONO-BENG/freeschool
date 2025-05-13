@@ -156,7 +156,7 @@ class SaveTeacherController extends AbstractController
             $this->em->persist($user);
             $this->em->flush(); 
 
-            $this->addFlash('info',  $this->translator->trans('Staff saved successfully'));
+            $this->addFlash('info',  $this->translator->trans('Staff saved with success !'));
             
             $mySession->set('ajout', 1);
             

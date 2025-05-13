@@ -147,7 +147,7 @@ class AjoutHistoriqueTeacherController extends AbstractController
             $this->em->persist($historiqueTeacher);
             $this->em->flush(); 
 
-            $this->addFlash('info', $this->translator->trans('Absence teacher saved successfully'));
+            $this->addFlash('info', $this->translator->trans('Absence teacher saved with success !'));
             
             #j'affecte 1 à ma variable pour afficher le message
             $mySession->set('ajout', 1);

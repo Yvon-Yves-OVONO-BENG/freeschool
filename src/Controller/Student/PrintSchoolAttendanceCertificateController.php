@@ -30,8 +30,8 @@ class PrintSchoolAttendanceCertificateController extends AbstractController
         )
     {}
 
-    #[Route("/print-school-attendance-certificate/{slug}", name:"print_eschool_attendance_certificate")]
-    public function printSchoolAttendanceCertificate(string $slug, Request $request): Response
+    #[Route("/print-school-attendance-certificate/{slug}", name:"print_school_attendance_certificate")]
+    public function printSchoolAttendanceCertificate(Request $request, string $slug): Response
     {
         $mySession = $request->getSession();
 

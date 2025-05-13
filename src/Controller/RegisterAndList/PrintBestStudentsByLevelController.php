@@ -59,7 +59,7 @@ class PrintBestStudentsByLevelController extends AbstractController
         $school = $this->schoolRepository->findOneBySchoolYear($schoolYear);
 
         $level = $this->levelRepository->find($request->request->get('level'));
-        $term = $this->termRepository->find(5);
+        $term = $this->termRepository->find($request->request->get('term'));
         
         $students = $this->reportRepository->findBestStudentsByLevel($schoolYear, $subSystem, $level, $term);
 

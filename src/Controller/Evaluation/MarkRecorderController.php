@@ -53,6 +53,7 @@ class MarkRecorderController extends AbstractController
     int $s = 0, int $deleteAllMarks = 0, int $sequenceSelectionnee = 0, int $lessonSelectionnee = 0): Response
     {
         $mySession = $request->getSession();
+
         if ($a == 1 || $m == 0 || $s == 0) 
         {
             #mes variables témoin pour afficher les sweetAlert
@@ -109,20 +110,23 @@ class MarkRecorderController extends AbstractController
             'schoolYear' => $schoolYear,
             'term' => $term1
         ])->isVerrouReport();
+
         $term2IsLocked = $this->verrouReportRepository->findOneBy([
             'schoolYear' => $schoolYear,
             'term' => $term2
         ])->isVerrouReport();
+
         $term3IsLocked = $this->verrouReportRepository->findOneBy([
             'schoolYear' => $schoolYear,
             'term' => $term3
         ])->isVerrouReport();
+
         $term0IsLocked = $this->verrouReportRepository->findOneBy([
             'schoolYear' => $schoolYear,
             'term' => $term0
         ])->isVerrouReport();
 
-
+        
         // on recupère les six sequences pour recupérer les verrouReport liés aux trimestres
         $sequence1 = $this->sequenceRepository->findOneBySequence(1);
         $sequence2 = $this->sequenceRepository->findOneBySequence(2);
@@ -175,7 +179,7 @@ class MarkRecorderController extends AbstractController
 
         $skillToUpdate = null;
         $evaluationToUpdate = null;
-
+        
         if($request->request->has('markToUpdate'))
         {
             // on recupère l'evaluation à modifier s'il sagit d'une demande de modification de note
@@ -215,6 +219,8 @@ class MarkRecorderController extends AbstractController
             } 
             
         }
+
+        $evaluations = [];
         
         if($request->request->has('sequence') || $deleteAllMarks == 1)
         {   
@@ -222,8 +228,22 @@ class MarkRecorderController extends AbstractController
             {
                 $sequenceId = $sequenceSelectionnee;
                 $lessonId = $lessonSelectionnee;
-            } 
-            else 
+
+                #je supprime la compétence
+                $skill = $this->skillRepository->findOneBy([
+                    'sequence' => $sequenceSelectionnee,
+                    'lesson' => $lessonSelectionnee
+                ]);
+
+                $this->em->remove($skill);
+                $this->em->flush();
+
+                $selectedSequence = $this->sequenceRepository->find($sequenceId);
+                $selectedLesson = $this->lessonRepository->find($lessonId);
+
+                // On supprime toutes les notes de l'évaluation et du cours choisis
+                $this->markManagerService->removeEvaluations($sequenceSelectionnee, $lessonSelectionnee);
+            }else 
             {
                 $sequenceId = (int)$request->request->get('sequence');
                 $lessonId = (int)$request->request->get('lesson');
@@ -231,15 +251,26 @@ class MarkRecorderController extends AbstractController
             
             $selectedLesson = $this->lessonRepository->find($lessonId);
             $selectedSequence = $this->sequenceRepository->find($sequenceId);
-            
+
             if ($request->request->has('saveMark')) 
             {  
+                $sequenceId = (int)$request->request->get('sequence');
+                $lessonId = (int)$request->request->get('lesson');
+
+                $selectedSequence = $this->sequenceRepository->find($sequenceId);
+                $selectedLesson = $this->lessonRepository->find($lessonId);
+
                 // On enregistre les notes si le bouton "Enregistrer" est cliqué
                 $this->markManagerService->saveMarks($selectedSequence, $selectedLesson, $request, $education);
                 
             }
             elseif($request->request->has('saveNotEvaluatedMark'))
             {
+                $sequenceId = (int)$request->request->get('sequence');
+                $lessonId = (int)$request->request->get('lesson');
+
+                $selectedSequence = $this->sequenceRepository->find($sequenceId);
+                $selectedLesson = $this->lessonRepository->find($lessonId);
                 // On enregistre les notes à non classé pour toute la classe si le bouton "Non évalué" est cliqué
                 $this->markManagerService->saveMarks($selectedSequence, $selectedLesson, $request, $education, true);
 
@@ -256,15 +287,14 @@ class MarkRecorderController extends AbstractController
                 $this->markManagerService->updateSkill($request->request->get('oldSkillId'), $request->request->get('newSkill'));
 
             }
-            // elseif ($request->request->has('removeAllMarks'))
-            elseif ($deleteAllMarks == 1)
-            {
-                // On supprime toutes les notes de l'évaluation et du cours choisis
-                $this->markManagerService->removeEvaluations($sequenceSelectionnee, $lessonSelectionnee);
-
-            }
             elseif($request->request->has('renewMark'))
             {
+                $sequenceId = (int)$request->request->get('sequence');
+                $lessonId = (int)$request->request->get('lesson');
+
+                $selectedSequence = $this->sequenceRepository->find($sequenceId);
+                $selectedLesson = $this->lessonRepository->find($lessonId);
+
                 // on reconduit les notes d'une évaluation à celle demandée
                 $newSequenceId = $request->request->get('newSequence');
 
@@ -273,7 +303,16 @@ class MarkRecorderController extends AbstractController
                 $selectedSequence = $this->sequenceRepository->find($newSequenceId);
 
             }
-
+            elseif ($request->request->has('displayMarkRecorder')) 
+            {
+                $sequenceId = (int)$request->request->get('sequence');
+                $lessonId = (int)$request->request->get('lesson');
+                
+                $selectedSequence = $this->sequenceRepository->find($sequenceId);
+                $selectedLesson = $this->lessonRepository->find($lessonId);
+                
+            }
+           
             // on recupère les notes à afficher
             $evaluations = $this->evaluationRepository->findEvaluations($sequenceId, $lessonId);
             
@@ -292,6 +331,38 @@ class MarkRecorderController extends AbstractController
                 'sequence' => $selectedSequence
                 ]);
 
+            #je récupère les stats de la classe
+            $noteMinMax = $this->evaluationRepository->getEvaluationStatistics($sequenceId, $lessonId);
+            // dd($noteMinMax);
+            $nombreSousMoyenneFille = 0;
+            $nombreSousMoyenneGarcon = 0;
+
+            $nombreMoyenneFille = 0;
+            $nombreMoyenneGarcon = 0;
+
+            // dd($evaluations);
+            ###je calcul le nombre de notes
+            foreach ($evaluations as $evaluation) 
+            {
+                if ($evaluation->getMark() < 10 and $evaluation->getMark() != 0.1 and $evaluation->getStudent()->getSex()->getSex() == ConstantsClass::SEX_F) 
+                {
+                    $nombreSousMoyenneFille = $nombreSousMoyenneFille + 1;
+                } 
+                elseif($evaluation->getMark() < 10 and $evaluation->getMark() != 0.1 and  $evaluation->getStudent()->getSex()->getSex() == ConstantsClass::SEX_M)
+                {
+                    $nombreSousMoyenneGarcon = $nombreSousMoyenneGarcon + 1;
+                }
+                elseif($evaluation->getMark() >= 10 and $evaluation->getStudent()->getSex()->getSex() == ConstantsClass::SEX_F)
+                {
+                    $nombreMoyenneFille = $nombreMoyenneFille + 1;
+                }
+                elseif($evaluation->getMark() >= 10 and $evaluation->getStudent()->getSex()->getSex() == ConstantsClass::SEX_M)
+                {
+                    $nombreMoyenneGarcon = $nombreMoyenneGarcon + 1;
+                }
+                
+            }
+            
             return $this->render('evaluation/markRecorder.html.twig', [
                 'sequences' => $sequences,
                 'lessons' => $lessons,
@@ -300,9 +371,15 @@ class MarkRecorderController extends AbstractController
                 'selectedLesson' => $selectedLesson,
                 'evaluations' => $evaluations,
                 'skill' => $skill,
+                'noteMinMax' => $noteMinMax,
                 'students' => $students,
                 'evaluationToUpdate' => $evaluationToUpdate,
                 'skillToUpdate' => $skillToUpdate,
+                'nombreSousMoyenneFille' => $nombreSousMoyenneFille,
+                'nombreMoyenneFille' => $nombreMoyenneFille,
+                'nombreSousMoyenneGarcon' => $nombreSousMoyenneGarcon,
+                'nombreMoyenneGarcon' => $nombreMoyenneGarcon,
+
                 'unrankedMark' => ConstantsClass::UNRANKED_MARK,
                 'school' => $school,
             ]);

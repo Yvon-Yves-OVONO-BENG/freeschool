@@ -83,7 +83,7 @@ class FeesController extends AbstractController
             $this->em->persist($fees);
             $this->em->flush();
 
-            $this->addFlash('info', $this->translator->trans('Fees updated successfully'));
+            $this->addFlash('info', $this->translator->trans('Fees updated with success !'));
             $mySession->set('miseAjour', 1);
 
             // On se redirige sur la page d'affichage des frais

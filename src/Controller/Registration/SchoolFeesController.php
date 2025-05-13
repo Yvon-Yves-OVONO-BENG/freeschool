@@ -35,15 +35,25 @@ class SchoolFeesController extends AbstractController
         )
     {}
 
-    #[Route("/schoolFees/{headmasterFees<[0-1]{1}>}/{slugStudent}", name:"registration_schoolFees")]
-    public function schoolFees(Request $request, int $headmasterFees = 0, string $slugStudent = null): Response
+    #[Route("/schoolFees/{headmasterFees<[0-1]{1}>}/{slugStudent}/{a<[0-1]{1}>}", name:"registration_schoolFees")]
+    public function schoolFees(Request $request, int $headmasterFees = 0, string $slugStudent = null, int $a = 0): Response
     {
         $mySession = $request->getSession();
         #mes variables témoin pour afficher les sweetAlert
-        $mySession->set('ajout',null);
-        $mySession->set('suppression', null);
-        $mySession->set('miseAjour', null);
-        $mySession->set('saisiNotes', null);
+        if ($a == 1) 
+        {
+            #mes variables témoin pour afficher les sweetAlert
+            $mySession->set('ajout', 1);
+
+        }
+        else
+        {
+            $mySession->set('ajout',null);
+            $mySession->set('suppression', null);
+            $mySession->set('miseAjour', null);
+            $mySession->set('saisiNotes', null);
+        }
+        
 
         $schoolYear = $mySession->get('schoolYear');
         $subSystem = $mySession->get('subSystem');
@@ -80,10 +90,10 @@ class SchoolFeesController extends AbstractController
             $registration = clone $studentRegistration;
             
         }
-
+        
         ///j'appele mon service feesService
         $feesTable = $this->feesService->getFeesTable($selectedClassroom, $fees);
-
+        
         $classrooms = $this->classroomService->splitClassrooms($classrooms);
         return $this->render('registration/schoolFees.html.twig', [
             'classrooms' => $classrooms,

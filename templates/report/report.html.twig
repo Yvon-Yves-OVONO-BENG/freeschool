@@ -172,7 +172,7 @@
                             </div>
 
                             {% if students|length > 0 %}
-                                <div class="col-md-4 text-right"> 
+                                <div class="card-options">
                                     <form action="{{ path('report_printReport', {'slug': selectedClassroom.slug, 'slugTerm': selectedTerm.slug}) }}" method="post" target="_blank">
                                         <div class="form-group">
                                             <button type="submit" class="btn btn-outline-primary " name="printAllReports">
@@ -192,16 +192,19 @@
                             <table border="1" class="table table-bordered text-nowrap" id="example2" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
+                                    <th class="border-bottom-0 indigo-gradient">{% trans %}N°{% endtrans %}</th>
                                     <th class="border-bottom-0 indigo-gradient">{% trans %}Full name{% endtrans %}</th>
                                     <th class="border-bottom-0 green-gradient">{% trans %}Report{% endtrans %}</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
                                     <tr>
+                                    <th class="border-bottom-0 indigo-gradient">{% trans %}N°{% endtrans %}</th>
                                     <th class="border-bottom-0 indigo-gradient">{% trans %}Full name{% endtrans %}</th>
                                     <th class="border-bottom-0 green-gradient">{% trans %}Report{% endtrans %}</th>
                                     </tr>
                                 </tfoot>
+                                {% set i = 1 %}
                                 {% for registrationHistory in registrationHistories %}
                                     {% set student = registrationHistory.student %}
                                     {% set history = registrationHistory.history %}
@@ -232,6 +235,7 @@
 
                                     {# {% for student in students %} #}
                                     <tr>
+                                        <td style="vertical-align: middle; text-align: center !important;">{{ i }}</td>
                                         <td style="vertical-align: middle;">{{ student.fullName }}</td>
                                         <td style="text-align: center; vertical-align:middle;"> 
                                             {% if student.solvable %}
@@ -244,6 +248,7 @@
 
                                         </td>
                                     </tr>
+                                    {% set i = i + 1 %}
                                 {% endfor %}
                             </table>
                         </div>

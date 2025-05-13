@@ -42,7 +42,7 @@ class AddSchoolController extends AbstractController
             if($school->getId()) // Si le id existe alors c'est une modification
             {
                 $this->em->flush(); // On modifie
-                $this->addFlash('info', $this->translator->trans('School updated successfully'));
+                $this->addFlash('info', $this->translator->trans('School updated with success !'));
 
             }else // Si le id n'existe pas alors c'est un ajoût
             {
@@ -51,7 +51,7 @@ class AddSchoolController extends AbstractController
                 $this->em->flush(); 
 
                 $id = $school->getId();
-                $this->addFlash('info', $this->translator->trans('School saved successfully'));
+                $this->addFlash('info', $this->translator->trans('School saved with success !'));
             }
         }
         

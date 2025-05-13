@@ -113,7 +113,7 @@ class DisplayTeacherController extends AbstractController
         {  
             if($sequenceId !== null)
             {
-                $evaluations = $this->teacherService->getUnrecordedMark($sequenceId, $request->request->get('level'));
+                $evaluations = $this->teacherService->displayTeachersLaters($sequenceId, $request->request->get('level'));
                 
                 $selectedSequence = $this->sequenceRepository->find($sequenceId);
                 $selectedLevel = $this->levelRepository->find($request->request->get('level')); 

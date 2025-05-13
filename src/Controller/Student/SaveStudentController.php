@@ -53,18 +53,18 @@ class SaveStudentController extends AbstractController
     #[Route('/saveStudent', name: 'student_saveStudent')]
     public function saveStudent(Request $request): Response
     {
-        $mySession = $request->getSession();
+        $maSession = $request->getSession();
 
-        $mySession->set('ajout',null);
-        $mySession->set('suppression', null);
-        $mySession->set('miseAjour', null);
-        $mySession->set('saisiNotes', null);
+        $maSession->set('ajout',null);
+        $maSession->set('suppression', null);
+        $maSession->set('miseAjour', null);
+        $maSession->set('saisiNotes', null);
          
 
-        if($mySession)
+        if($maSession)
         {
-            $schoolYear = $mySession->get('schoolYear');
-            $subSystem = $mySession->get('subSystem');
+            $schoolYear = $maSession->get('schoolYear');
+            $subSystem = $maSession->get('subSystem');
             
         }else 
         {
@@ -75,9 +75,9 @@ class SaveStudentController extends AbstractController
         $subSyste = $this->subSystemRepository->find($subSystem->getId());
         $school = $this->schoolRepository->findOneBySchoolYear(['schoolYear' => $schoolYear]);
 
-        if($mySession)
+        if($maSession)
         {
-            $verrou = $mySession->get('verrou');
+            $verrou = $maSession->get('verrou');
 
         }else {
             return $this->redirectToRoute("app_logout");
@@ -92,7 +92,7 @@ class SaveStudentController extends AbstractController
         }
         
         // on recupère le schoolYear de la BD pour qu'il soit suivi par le EntityManager au moment du persist
-        $schoolYear = $this->schoolYearRepository->find($mySession->get('schoolYear')->getId());
+        $schoolYear = $this->schoolYearRepository->find($maSession->get('schoolYear')->getId());
         $storedClassroom = new Classroom();
 
         $school = $this->schoolRepository->findBy([
@@ -243,9 +243,9 @@ class SaveStudentController extends AbstractController
             
             $this->studentService->addStudent($student, $this->getUser(), $registration, $schoolYear);
 
-            $this->addFlash('info', $this->translator->trans('Student saved successfully'));
+            $this->addFlash('info', $this->translator->trans('Student save with success !'));
                 
-            $mySession->set('ajout', 1);
+            $maSession->set('ajout', 1);
 
             // on vide le formulaire en conservant uniquement la classe
             // $storedClassroom = $student->getClassroom();

@@ -70,7 +70,17 @@ class PrintTopFiveStudentsByClassroomService
             // Entête de la fiche
             $pdf->SetFont('Times', 'B', $fontSize+4);
             $pdf->Cell(190, 7, utf8_decode("LISTE DES CINQS PREMIERS ELEVES DU LA ".$classroom->getClassroom()), 0, 1, 'C');
-            $pdf->Ln(3);
+            
+            if ($term->getTerm() == 0) 
+            {
+                $pdf->Cell(0, 7, utf8_decode("ANNUEL"), 0, 1, 'C');
+            } 
+            else 
+            {
+                $pdf->Cell(0, 7, utf8_decode("TRIMESTRE ".$term->getTerm()), 0, 1, 'C');
+            }
+        
+            $pdf->Ln(7);
 
             // Entête du tableau
             $pdf = $this->generalService->getTableHeaderPagination($pdf, $fontSize, $cellTableClassroom, $cellTableHeight, $cellTablePresence, $cellTableObservation, $cellTablePresence3, $subSystem);
@@ -139,7 +149,17 @@ class PrintTopFiveStudentsByClassroomService
             // Entête de la fiche
             $pdf->SetFont('Times', 'B', $fontSize+4);
             $pdf->Cell(190, 7, utf8_decode("SCHOOL TOP FIVE STUDENTS IN ".$classroom->getClassroom()), 0, 1, 'C');
-            $pdf->Ln(3);
+            
+            if ($term->getTerm() == 0) 
+            {
+                $pdf->Cell(0, 7, utf8_decode("ANNUAL"), 0, 1, 'C');
+            } 
+            else 
+            {
+                $pdf->Cell(0, 7, utf8_decode("TERM ".$term->getTerm()), 0, 1, 'C');
+            }
+            
+            $pdf->Ln(7);
 
             // Entête du tableau
             $pdf = $this->generalService->getTableHeaderPagination($pdf, $fontSize, $cellTableClassroom, $cellTableHeight, $cellTablePresence, $cellTableObservation, $cellTablePresence3, $subSystem);

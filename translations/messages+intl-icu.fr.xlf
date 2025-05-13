@@ -883,7 +883,7 @@
       </trans-unit>
       <trans-unit id="_IeNRJW" resname="List of APs">
         <source>List of APs</source>
-        <target>Lise des AP</target>
+        <target>Liste des AP</target>
       </trans-unit>
       <trans-unit id="2AG7tkC" resname="List of first">
         <source>List of first</source>
@@ -2999,7 +2999,7 @@
       </trans-unit>
       <trans-unit id="nJMAo4B" resname="Establishment Frequent Last Year">
         <source>Establishment Frequent Last Year</source>
-        <target>Etablisement fréquenté l'an dernier</target>
+        <target>Etablissement fréquenté l'an dernier</target>
       </trans-unit>
       <trans-unit id="KREBoH." resname="Operator">
         <source>Operator</source>
@@ -3415,7 +3415,7 @@
       </trans-unit>
       <trans-unit id="PGH4fpX" resname="School type">
         <source>School type</source>
-        <target>Type Etablisement</target>
+        <target>Type Etablissement</target>
       </trans-unit>
       <trans-unit id="WRk1sVs" resname="Public">
         <source>Public</source>
@@ -3475,7 +3475,7 @@
       </trans-unit>
       <trans-unit id="YWsHuOJ" resname="Edit School">
         <source>Edit School</source>
-        <target>Edition de l'Etablisement</target>
+        <target>Edition de l'Etablissement</target>
       </trans-unit>
       <trans-unit id="USqzxrm" resname="Education">
         <source>Education</source>
@@ -3575,7 +3575,7 @@
       </trans-unit>
       <trans-unit id="o9ZcpWl" resname="Nouveau mot de passe">
         <source>Nouveau mot de passe</source>
-        <target>__Nouveau mot de passe</target>
+        <target>Nouveau mot de passe</target>
       </trans-unit>
       <trans-unit id="hdSAXHb" resname="- - -">
         <source>- - -</source>
@@ -3903,7 +3903,7 @@
       </trans-unit>
       <trans-unit id="4dWreKP" resname="The School's top five students">
         <source>The School's top five students</source>
-        <target>Les cinqs meilleurs élèves de l'année</target>
+        <target>Les cinqs meilleurs élèves</target>
       </trans-unit>
       <trans-unit id="RtOLjqb" resname="Top five by subjects">
         <source>Top five by subjects</source>
@@ -3943,7 +3943,7 @@
       </trans-unit>
       <trans-unit id="PPZy0UR" resname="Top five students by classroom">
         <source>Top five students by classroom</source>
-        <target>Les cinqs meilleurs élèves pzr classe</target>
+        <target>Les cinqs meilleurs élèves par classe</target>
       </trans-unit>
       <trans-unit id="VH9SpYQ" resname="Top five students by classroom and discipline">
         <source>Top five students by classroom and discipline</source>
@@ -4101,9 +4101,9 @@
         <source>NIU</source>
         <target>NIU</target>
       </trans-unit>
-      <trans-unit id="j5bWklX" resname="Att. Cen.">
-        <source>Att. Cen.</source>
-        <target>__Att. Cen.</target>
+      <trans-unit id="XRdi1qS" resname="Att. Vic. Prin.">
+        <source>Att. Vic. Prin.</source>
+        <target>Cen. d'Att.</target>
       </trans-unit>
       <trans-unit id="xUsh068" resname="Display Historique Teacher">
         <source>Display Historique Teacher</source>
@@ -4352,6 +4352,698 @@
       <trans-unit id="ntp4vdj" resname="Choose a evaluation">
         <source>Choose a evaluation</source>
         <target>Choisir une évaluation</target>
+      </trans-unit>
+      <trans-unit id="Kb5dkZQ" resname="The fees is empty. Please save fees">
+        <source>The fees is empty. Please save fees</source>
+        <target>Les frais de scolarités sont vides. Veuillez les renseigner</target>
+      </trans-unit>
+      <trans-unit id="l3Zdkuw" resname="Tutor's profession">
+        <source>Tutor's profession</source>
+        <target>Profession du tuteur</target>
+      </trans-unit>
+      <trans-unit id="MEaEd_5" resname="Print subjects">
+        <source>Print subjects</source>
+        <target>Imprimer les matières</target>
+      </trans-unit>
+      <trans-unit id="hIbItVI" resname="Evaluation :">
+        <source>Evaluation :</source>
+        <target>Evaluation :</target>
+      </trans-unit>
+      <trans-unit id="r_s_K61" resname="Lesson :">
+        <source>Lesson :</source>
+        <target>Leçon :</target>
+      </trans-unit>
+      <trans-unit id="TuOw3kq" resname="Smaller note">
+        <source>Smaller note</source>
+        <target>Plus petite note</target>
+      </trans-unit>
+      <trans-unit id="Rt_ZVlu" resname="Highest note">
+        <source>Highest note</source>
+        <target>Plus grande note</target>
+      </trans-unit>
+      <trans-unit id="1h3DWRh" resname="Number of sub-average">
+        <source>Number of sub-average</source>
+        <target>Nombre de sous moyennes</target>
+      </trans-unit>
+      <trans-unit id="vpu..VF" resname="Number of average">
+        <source>Number of average</source>
+        <target>Nombre de moyennes</target>
+      </trans-unit>
+      <trans-unit id="z3OkGtJ" resname="Classified">
+        <source>Classified</source>
+        <target>Classés</target>
+      </trans-unit>
+      <trans-unit id="Sdpg_KK" resname="Success rate">
+        <source>Success rate</source>
+        <target>Taux de réussite</target>
+      </trans-unit>
+      <trans-unit id="enL8sZE" resname="Matière :">
+        <source>Matière :</source>
+        <target>Matière :</target>
+      </trans-unit>
+      <trans-unit id="QbNXyBq" resname="Best Results by term an year">
+        <source>Best Results by term an year</source>
+        <target>Meilleurs résultats</target>
+      </trans-unit>
+      <trans-unit id="B1hA0kD" resname="Best results">
+        <source>Best results</source>
+        <target>Meilleurs résultats</target>
+      </trans-unit>
+      <trans-unit id="Eq9BjGS" resname="Repertory of classroom">
+        <source>Repertory of classroom</source>
+        <target>Repertoire de la classe</target>
+      </trans-unit>
+      <trans-unit id="g6CLFed" resname="Repertory of parents">
+        <source>Repertory of parents</source>
+        <target>Repertoire des parents</target>
+      </trans-unit>
+      <trans-unit id="nN4OmEZ" resname="Best Results">
+        <source>Best Results</source>
+        <target>Meilleurs résultats</target>
+      </trans-unit>
+      <trans-unit id="9v4r0vJ" resname="The problem is solved with success !">
+        <source>The problem is solved with success !</source>
+        <target>Le problème est résolu avec succès !</target>
+      </trans-unit>
+      <trans-unit id="FCsfCqx" resname="This evaluation is already exist !">
+        <source>This evaluation is already exist !</source>
+        <target>Cette évaluation existe déjà !</target>
+      </trans-unit>
+      <trans-unit id="YEb6Lmh" resname="Entered by">
+        <source>Entered by</source>
+        <target>Saisie par</target>
+      </trans-unit>
+      <trans-unit id="pJzLP2d" resname="Update by">
+        <source>Update by</source>
+        <target>Mise à jour par</target>
+      </trans-unit>
+      <trans-unit id="xyxUBM." resname="At">
+        <source>At</source>
+        <target>Le</target>
+      </trans-unit>
+      <trans-unit id="p7GC_MJ" resname="Problems">
+        <source>Problems</source>
+        <target>Problèmes</target>
+      </trans-unit>
+      <trans-unit id="Ktb74.P" resname="Details evaluations of">
+        <source>Details evaluations of</source>
+        <target>Détails des évaluations de</target>
+      </trans-unit>
+      <trans-unit id="2DzwYOJ" resname="PROBLEMS MANAGEMENT">
+        <source>PROBLEMS MANAGEMENT</source>
+        <target>GESTION DES PROBLEMES</target>
+      </trans-unit>
+      <trans-unit id="wntNZOz" resname="Details evaluations">
+        <source>Details evaluations</source>
+        <target>Détails des évaluations</target>
+      </trans-unit>
+      <trans-unit id="m5kR3Rd" resname="Back to classroom">
+        <source>Back to classroom</source>
+        <target>Rentrer dans la classe</target>
+      </trans-unit>
+      <trans-unit id="ocWue8s" resname="Problem">
+        <source>Problem</source>
+        <target>Problème</target>
+      </trans-unit>
+      <trans-unit id="yTkyfKF" resname="Good">
+        <source>Good</source>
+        <target>Bon</target>
+      </trans-unit>
+      <trans-unit id="slzGmJt" resname="Evaluations">
+        <source>Evaluations</source>
+        <target>Evaluations</target>
+      </trans-unit>
+      <trans-unit id="jgDN9x_" resname="Full Name">
+        <source>Full Name</source>
+        <target>Nom complet</target>
+      </trans-unit>
+      <trans-unit id="gIJ0sJW" resname="Number of assessments">
+        <source>Number of assessments</source>
+        <target>Nombre d'évaluations</target>
+      </trans-unit>
+      <trans-unit id="RZid5J_" resname="Details">
+        <source>Details</source>
+        <target>Détails</target>
+      </trans-unit>
+      <trans-unit id="9hTGjF4" resname="Notes not yet entered">
+        <source>Notes not yet entered</source>
+        <target>Notes pas encore saisies</target>
+      </trans-unit>
+      <trans-unit id="KzGn0ET" resname="Transcript's students">
+        <source>Transcript's students</source>
+        <target>Relevés de notes des élèves</target>
+      </trans-unit>
+      <trans-unit id="BpWnLR4" resname="Choose a cycle">
+        <source>Choose a cycle</source>
+        <target>Choisir le cycle</target>
+      </trans-unit>
+      <trans-unit id="Vafk0OY" resname="Send roll of honor to whole class">
+        <source>Send roll of honor to whole class</source>
+        <target>Envoyer à toute la classe</target>
+      </trans-unit>
+      <trans-unit id="G6vGyRg" resname="Send to whole class">
+        <source>Send to whole class</source>
+        <target>Envoyer à toute la classe</target>
+      </trans-unit>
+      <trans-unit id="RuWdbIZ" resname="Download roll of honnor of">
+        <source>Download roll of honnor of</source>
+        <target>Télécharger le tableau d'honneur de</target>
+      </trans-unit>
+      <trans-unit id="YkV1KUg" resname="Send roll of honor">
+        <source>Send roll of honor</source>
+        <target>Enoyer le tableau d'honneur</target>
+      </trans-unit>
+      <trans-unit id="ANvI3rB" resname="Transcript's Students">
+        <source>Transcript's Students</source>
+        <target>Relevés de notes des élèves</target>
+      </trans-unit>
+      <trans-unit id="rPrqv69" resname="TRANSCRIPT'S STUDENTS MANAGMENT">
+        <source>TRANSCRIPT'S STUDENTS MANAGMENT</source>
+        <target>GESTION DES RELEVES DE NOTES DES ELEVES</target>
+      </trans-unit>
+      <trans-unit id="ootYZLH" resname="Uneable print transcript of insolvable">
+        <source>Uneable print transcript of insolvable</source>
+        <target>Désactiver l'impression des relevés</target>
+      </trans-unit>
+      <trans-unit id="Lr.d.r_" resname="Eable print transcript of insolvable">
+        <source>Eable print transcript of insolvable</source>
+        <target>Activer l'impression des relevés</target>
+      </trans-unit>
+      <trans-unit id="JjCqJSN" resname="Choose a class and period">
+        <source>Choose a class and period</source>
+        <target>Choisir la classe et la période</target>
+      </trans-unit>
+      <trans-unit id="td9mpS4" resname="Transcript's students evaluation">
+        <source>Transcript's students evaluation</source>
+        <target>Relevés des élèves de l'évaluation</target>
+      </trans-unit>
+      <trans-unit id="OzJ1Dyc" resname="Transcript's students term">
+        <source>Transcript's students term</source>
+        <target>Relevés des élèves du trimestre</target>
+      </trans-unit>
+      <trans-unit id="qOy0wAG" resname="Annuals transcript">
+        <source>Annuals transcript</source>
+        <target>Relevés annuels</target>
+      </trans-unit>
+      <trans-unit id="nge28kH" resname="Print all transcripts">
+        <source>Print all transcripts</source>
+        <target>Imprimer tous les relevés</target>
+      </trans-unit>
+      <trans-unit id="chFk8Nx" resname="Transcript">
+        <source>Transcript</source>
+        <target>Relevé</target>
+      </trans-unit>
+      <trans-unit id="Evd9diP" resname="Print transcript">
+        <source>Print transcript</source>
+        <target>Imprimer le relevé</target>
+      </trans-unit>
+      <trans-unit id="kx1Sy3W" resname="Sex :">
+        <source>Sex :</source>
+        <target>Sexe :</target>
+      </trans-unit>
+      <trans-unit id="FSPB6Kj" resname="Repeat :">
+        <source>Repeat :</source>
+        <target>Redoublant :</target>
+      </trans-unit>
+      <trans-unit id="foucVlH" resname="Administrator saved successfully">
+        <source>Administrator saved successfully</source>
+        <target>Administrateur ajouté avec succès</target>
+      </trans-unit>
+      <trans-unit id="c1ZjQHP" resname="Administrator deleted successfully">
+        <source>Administrator deleted successfully</source>
+        <target>Administrateur supprimé avec succès</target>
+      </trans-unit>
+      <trans-unit id="9gzngkQ" resname="Administrator updated successfully">
+        <source>Administrator updated successfully</source>
+        <target>Administrateur mise à jour avec succès</target>
+      </trans-unit>
+      <trans-unit id="VFT4Pql" resname="Enterfull name">
+        <source>Enterfull name</source>
+        <target>Enterfull name</target>
+      </trans-unit>
+      <trans-unit id="G51A.1H" resname="Please enter a full name">
+        <source>Please enter a full name</source>
+        <target>Veuillez saisir le nom</target>
+      </trans-unit>
+      <trans-unit id="oaiUHuw" resname="Your full name should be at least ">
+        <source>Your full name should be at least </source>
+        <target>Le nom doit avoir au moins </target>
+      </trans-unit>
+      <trans-unit id="NZVj2rE" resname=" characters">
+        <source> characters</source>
+        <target> caraactères</target>
+      </trans-unit>
+      <trans-unit id="BFK_4jc" resname="Add an">
+        <source>Add an</source>
+        <target>Ajout dun</target>
+      </trans-unit>
+      <trans-unit id="Gsdpn7S" resname="Update administrator">
+        <source>Update administrator</source>
+        <target>Mise à jour d'administrateur</target>
+      </trans-unit>
+      <trans-unit id="cxiHVXi" resname="Add an administrator">
+        <source>Add an administrator</source>
+        <target>Ajout d'unnadministrateur</target>
+      </trans-unit>
+      <trans-unit id="pxJR.uj" resname="Display administrators registered">
+        <source>Display administrators registered</source>
+        <target>Afficher les administrateurs enregistrés</target>
+      </trans-unit>
+      <trans-unit id="MI1qbSg" resname="This field is required !">
+        <source>This field is required !</source>
+        <target>Che champs est requis !</target>
+      </trans-unit>
+      <trans-unit id="GVNggiI" resname="List of administrators">
+        <source>List of administrators</source>
+        <target>Liste des administrateurs</target>
+      </trans-unit>
+      <trans-unit id="1nQlgWf" resname="Imprimer">
+        <source>Imprimer</source>
+        <target>Imprimer</target>
+      </trans-unit>
+      <trans-unit id="V7Uji_P" resname="Administrators saved">
+        <source>Administrators saved</source>
+        <target>Administrateurs enregistrés</target>
+      </trans-unit>
+      <trans-unit id="PFMML0S" resname="administrators">
+        <source>administrators</source>
+        <target>administrateurs</target>
+      </trans-unit>
+      <trans-unit id="vSXJscj" resname="Enable / Disable">
+        <source>Enable / Disable</source>
+        <target>Activé / Désactivé</target>
+      </trans-unit>
+      <trans-unit id="QXoR.gq" resname="Hour absenses saved with success !">
+        <source>Hour absenses saved with success !</source>
+        <target>Heures d'absences enregitrées avec succès !</target>
+      </trans-unit>
+      <trans-unit id="clsksZj" resname="Hour absense updated with success !">
+        <source>Hour absense updated with success !</source>
+        <target>Heure absense  mise à jour avec succès !</target>
+      </trans-unit>
+      <trans-unit id="3kTIhWb" resname="Hour absenses deleted with success !">
+        <source>Hour absenses deleted with success !</source>
+        <target>Heures absenses supprimé avec succès !</target>
+      </trans-unit>
+      <trans-unit id="xoG606L" resname="License activated with success ! !">
+        <source>License activated with success ! !</source>
+        <target>Licence activée with success ! !</target>
+      </trans-unit>
+      <trans-unit id="_p5O_UV" resname="Administrator saved with success !">
+        <source>Administrator saved with success !</source>
+        <target>Administrateur saved with success !</target>
+      </trans-unit>
+      <trans-unit id="j6MLIkm" resname="Administrator deleted with success !">
+        <source>Administrator deleted with success !</source>
+        <target>Administrateur supprimé avec succès !</target>
+      </trans-unit>
+      <trans-unit id="G_tQwjy" resname="Administrator updated with success !">
+        <source>Administrator updated with success !</source>
+        <target>Administrateur  mise à jour avec succès !</target>
+      </trans-unit>
+      <trans-unit id="W3Axmxf" resname="Classroom deleted with success !">
+        <source>Classroom deleted with success !</source>
+        <target>Classe supprimée avec succès !</target>
+      </trans-unit>
+      <trans-unit id="mdkZelg" resname="Classroom updated with success !">
+        <source>Classroom updated with success !</source>
+        <target>Classe mise à jour avec succès !</target>
+      </trans-unit>
+      <trans-unit id="I755YTn" resname="Classroom saved with success !">
+        <source>Classroom saved with success !</source>
+        <target>Classe enregistrée avec succès !</target>
+      </trans-unit>
+      <trans-unit id="T7Y.3aJ" resname="Decision council saved with success !">
+        <source>Decision council saved with success !</source>
+        <target>Décisions du conseil enregistrées avec succès !</target>
+      </trans-unit>
+      <trans-unit id="GEk0D6c" resname="Decision council updated with success !">
+        <source>Decision council updated with success !</source>
+        <target>Décision du conseil mise à jour avec succès !</target>
+      </trans-unit>
+      <trans-unit id="pY_Gcug" resname="Decision council deleted with success !">
+        <source>Decision council deleted with success !</source>
+        <target>Décision du conseil supprimée avec succès !</target>
+      </trans-unit>
+      <trans-unit id="AjtvCTY" resname="Decision deleted with success !">
+        <source>Decision deleted with success !</source>
+        <target>Décision du conseil supprimée avec succès !</target>
+      </trans-unit>
+      <trans-unit id="_GKxQrF" resname="Decision updated with success !">
+        <source>Decision updated with success !</source>
+        <target>Décision  mise à jour avec succès !</target>
+      </trans-unit>
+      <trans-unit id="7HnkmKY" resname="Decision saved with success !">
+        <source>Decision saved with success !</source>
+        <target>Décision enregistré avec succès !</target>
+      </trans-unit>
+      <trans-unit id="KxftnMe" resname="Deliberations canceled with success ! !">
+        <source>Deliberations canceled with success ! !</source>
+        <target>Déliberations annulées avec succès ! !</target>
+      </trans-unit>
+      <trans-unit id="GpcD6SJ" resname="Deliberations saved with success !">
+        <source>Deliberations saved with success !</source>
+        <target>Déliberations enregistrées avec succès !</target>
+      </trans-unit>
+      <trans-unit id="Xs8OAAL" resname="Deliberation updated with success !">
+        <source>Deliberation updated with success !</source>
+        <target>Déliberation mise à jour avec succès !</target>
+      </trans-unit>
+      <trans-unit id="HbUW7Y1" resname="Department deleted with success !">
+        <source>Department deleted with success !</source>
+        <target>Département supprimé avec succès !</target>
+      </trans-unit>
+      <trans-unit id="vBW9nUS" resname="Department updated with success !">
+        <source>Department updated with success !</source>
+        <target>Département mise à jour avec succès !</target>
+      </trans-unit>
+      <trans-unit id="JY.1GzN" resname="Department saved with success !">
+        <source>Department saved with success !</source>
+        <target>Département enregistré avec succès !</target>
+      </trans-unit>
+      <trans-unit id="n7RhOCM" resname="Spent deleted with success !">
+        <source>Spent deleted with success !</source>
+        <target>Dépense supprimée avec succès !</target>
+      </trans-unit>
+      <trans-unit id="KLhuyoW" resname="Spent updated with success !">
+        <source>Spent updated with success !</source>
+        <target>Dépense mise à jour avec succès !</target>
+      </trans-unit>
+      <trans-unit id="xbkDZtM" resname="Spent saved sucwith success !cessfully">
+        <source>Spent saved sucwith success !cessfully</source>
+        <target>Dépense saved sucwith success !cessfully</target>
+      </trans-unit>
+      <trans-unit id="s_9NZW_" resname="Diploma deleted with success !">
+        <source>Diploma deleted with success !</source>
+        <target>Diplôme supprimé avec succès !</target>
+      </trans-unit>
+      <trans-unit id="5SlvSB_" resname="Diploma updated with success !">
+        <source>Diploma updated with success !</source>
+        <target>Diplôme mise à jour avec succès !</target>
+      </trans-unit>
+      <trans-unit id="3JHpvCc" resname="Diploma saved with success !">
+        <source>Diploma saved with success !</source>
+        <target>Diplôme enregistré avec succès !</target>
+      </trans-unit>
+      <trans-unit id="DHbcvC2" resname="Duty deleted with success !">
+        <source>Duty deleted with success !</source>
+        <target>Fonction supprimée avec succès !</target>
+      </trans-unit>
+      <trans-unit id="gIDkpoT" resname="Duty updated with success !">
+        <source>Duty updated with success !</source>
+        <target>Fonction mise à jour avec succès !</target>
+      </trans-unit>
+      <trans-unit id="Wp9HIKh" resname="Duty saved with success !">
+        <source>Duty saved with success !</source>
+        <target>Fonction enregistrée avec succès !</target>
+      </trans-unit>
+      <trans-unit id="qLPIFbr" resname="Fees updated with success !">
+        <source>Fees updated with success !</source>
+        <target>Frais mise à jour avec succès !</target>
+      </trans-unit>
+      <trans-unit id="rmBFTz8" resname="Rank deleted with success !">
+        <source>Rank deleted with success !</source>
+        <target>Grade supprimé avec succès !</target>
+      </trans-unit>
+      <trans-unit id="aV1Pq4O" resname="Rank updated with success !">
+        <source>Rank updated with success !</source>
+        <target>Grade mise à jour avec succès !</target>
+      </trans-unit>
+      <trans-unit id="Y0mATBv" resname="Rank saved with success !">
+        <source>Rank saved with success !</source>
+        <target>Grade enregistré avec succès !</target>
+      </trans-unit>
+      <trans-unit id="0MGps00" resname="Absence teacher saved with success !">
+        <source>Absence teacher saved with success !</source>
+        <target>Absence de l'enseignant enregistrée avec succès !</target>
+      </trans-unit>
+      <trans-unit id="ml1VgNv" resname="Hours teacher updated with success !">
+        <source>Hours teacher updated with success !</source>
+        <target>Heures de l'enseignant mises à jour avec succès !</target>
+      </trans-unit>
+      <trans-unit id="KPpq5tM" resname="Hours teacher deleted with success !">
+        <source>Hours teacher deleted with success !</source>
+        <target>Heures de l'enseignant supprimé avec succès !</target>
+      </trans-unit>
+      <trans-unit id="GG8YOrF" resname="Lesson deleted with success !">
+        <source>Lesson deleted with success !</source>
+        <target>Leçon supprimée avec succès !</target>
+      </trans-unit>
+      <trans-unit id="73FT0iV" resname="Lesson updated with success !">
+        <source>Lesson updated with success !</source>
+        <target>Leçon mise à jour avec succès !</target>
+      </trans-unit>
+      <trans-unit id="mN7eYm6" resname="Lesson saved with success !">
+        <source>Lesson saved with success !</source>
+        <target>Leçon enregistrée avec succès !</target>
+      </trans-unit>
+      <trans-unit id="5a.KrRj" resname="Password updated with success ! !">
+        <source>Password updated with success ! !</source>
+        <target>Mot de passe mise à jour avec succès ! !</target>
+      </trans-unit>
+      <trans-unit id="Qj9CE3f" resname="Password with success ! reset ! ">
+        <source>Password with success ! reset ! </source>
+        <target>Mot de passe with success ! reset ! </target>
+      </trans-unit>
+      <trans-unit id="7gVXS.z" resname="Secret question save with success ! !">
+        <source>Secret question save with success ! !</source>
+        <target>Question secrète enregistrée avec succès ! !</target>
+      </trans-unit>
+      <trans-unit id="o1uGKo5" resname="Lesson plain deleted with success !">
+        <source>Lesson plain deleted with success !</source>
+        <target>Leçon prévue supprimée avec succès !</target>
+      </trans-unit>
+      <trans-unit id="SVQL1PI" resname="Number of planned lessons updated with success !">
+        <source>Number of planned lessons updated with success !</source>
+        <target>Nombre de laçons faites mises à jour avec succès !</target>
+      </trans-unit>
+      <trans-unit id="VdB13HJ" resname="Lesson done saved with success ! !">
+        <source>Lesson done saved with success ! !</source>
+        <target>Leçon faite enregistrée avec succès ! !</target>
+      </trans-unit>
+      <trans-unit id="cLCOgwL" resname="Number of planned lessons saved with success !">
+        <source>Number of planned lessons saved with success !</source>
+        <target>Nombre de laçons faites enregistré avec succès !</target>
+      </trans-unit>
+      <trans-unit id="WsH9t6v" resname="Fees saved with success !">
+        <source>Fees saved with success !</source>
+        <target>Frais enregistrés avec succès !</target>
+      </trans-unit>
+      <trans-unit id="66ZP6vT" resname="Receipt changed with success !">
+        <source>Receipt changed with success !</source>
+        <target>Reçu changé avec succès !</target>
+      </trans-unit>
+      <trans-unit id="uxIm9wJ" resname="Print report of insolvable activate with success !">
+        <source>Print report of insolvable activate with success !</source>
+        <target>Impression des bulletins des insolvables activée avec succès !</target>
+      </trans-unit>
+      <trans-unit id="A4Q.3Up" resname="Print report of insolvable desactivate with success !">
+        <source>Print report of insolvable desactivate with success !</source>
+        <target>Impression des bulletins des insolvables désactivée avec succès !</target>
+      </trans-unit>
+      <trans-unit id="fLV2woV" resname="Limit coefficient/mark updated with success !">
+        <source>Limit coefficient/mark updated with success !</source>
+        <target>Limite des coefficients/note mise à jour avec succès !</target>
+      </trans-unit>
+      <trans-unit id="tGw1AYr" resname="Limit coefficient updated with success !">
+        <source>Limit coefficient updated with success !</source>
+        <target>Limite des coefficients mise à jour avec succès !</target>
+      </trans-unit>
+      <trans-unit id="QJ8AvPZ" resname="School updated with success !">
+        <source>School updated with success !</source>
+        <target>Etablissement à jour avec succès !</target>
+      </trans-unit>
+      <trans-unit id="bcnDQlQ" resname="Registration of excluded activate with success !">
+        <source>Registration of excluded activate with success !</source>
+        <target>Enregistrement des exclus activé avec succès !</target>
+      </trans-unit>
+      <trans-unit id="cbojdvs" resname="Student deleted with success !">
+        <source>Student deleted with success !</source>
+        <target>Elève supprimé avec succès !</target>
+      </trans-unit>
+      <trans-unit id="icuqedX" resname="Exclusion registration disabled with success !">
+        <source>Exclusion registration disabled with success !</source>
+        <target>Enregistrement des exclus désactivé avec succès !</target>
+      </trans-unit>
+      <trans-unit id="Gl8kbfL" resname="Student updated with success !">
+        <source>Student updated with success !</source>
+        <target>Elève mise à jour avec succès !</target>
+      </trans-unit>
+      <trans-unit id="caap00I" resname="Student save with success !">
+        <source>Student save with success !</source>
+        <target>Elève enregistré avec succès !</target>
+      </trans-unit>
+      <trans-unit id="vE8fHON" resname="Student delete with success !">
+        <source>Student delete with success !</source>
+        <target>Elève supprimé(e) avec succès !</target>
+      </trans-unit>
+      <trans-unit id="ohp1sbj" resname="Student restored with success !">
+        <source>Student restored with success !</source>
+        <target>Elève restauré(e) avec succès !</target>
+      </trans-unit>
+      <trans-unit id="uTycDpG" resname="Subject deleted with success !">
+        <source>Subject deleted with success !</source>
+        <target>Matière supprimée avec succès !</target>
+      </trans-unit>
+      <trans-unit id="d.ZwN_h" resname="Subject updated with success !">
+        <source>Subject updated with success !</source>
+        <target>Matière mise à jour avec succès !</target>
+      </trans-unit>
+      <trans-unit id="V4Bq4JX" resname="Subject saved with success !">
+        <source>Subject saved with success !</source>
+        <target>Matière enregistrée avec succès !</target>
+      </trans-unit>
+      <trans-unit id="ipTM_eK" resname="School saved with success !">
+        <source>School saved with success !</source>
+        <target>Etablissement enregistré avec succès !</target>
+      </trans-unit>
+      <trans-unit id="gGwmFHK" resname="Staff saved with success !">
+        <source>Staff saved with success !</source>
+        <target>Personnel enregistré avec succès !</target>
+      </trans-unit>
+      <trans-unit id="GiacGWY" resname="User updated with success !">
+        <source>User updated with success !</source>
+        <target>utilisateur mise à jour avec succès !</target>
+      </trans-unit>
+      <trans-unit id="JojK313" resname="Staff deleted with success !">
+        <source>Staff deleted with success !</source>
+        <target>Personnel supprimé avec succès !</target>
+      </trans-unit>
+      <trans-unit id="lbU761R" resname="Staff updated with success !">
+        <source>Staff updated with success !</source>
+        <target>Personnel mise à jour avec succès !</target>
+      </trans-unit>
+      <trans-unit id="_unaUXk" resname="Time table deleted with success !">
+        <source>Time table deleted with success !</source>
+        <target>Emploi du temps supprimé avec succès !</target>
+      </trans-unit>
+      <trans-unit id="5I9H0Mk" resname="Time table updated with success ! !">
+        <source>Time table updated with success ! !</source>
+        <target>Emploi du temps mise à jour avec succès ! !</target>
+      </trans-unit>
+      <trans-unit id="7jt4Cwp" resname="Time table saved with success ! !">
+        <source>Time table saved with success ! !</source>
+        <target>Emploi du temps enregistré avec succès ! !</target>
+      </trans-unit>
+      <trans-unit id="A.ci5Zs" resname="Password updated with success !">
+        <source>Password updated with success !</source>
+        <target>Mot de passe mise à jour avec succès !</target>
+      </trans-unit>
+      <trans-unit id="gejhUTh" resname="All changes locked with success !">
+        <source>All changes locked with success !</source>
+        <target>Toutes les modifications bloquées avec succès !</target>
+      </trans-unit>
+      <trans-unit id="4mZ7ihs" resname="Sequence lock with success !">
+        <source>Sequence lock with success !</source>
+        <target>Séquence bloquée avec succès !</target>
+      </trans-unit>
+      <trans-unit id="GIwspIG" resname="Sequence unlock with success !">
+        <source>Sequence unlock with success !</source>
+        <target>Séquence débloquée avec succès !</target>
+      </trans-unit>
+      <trans-unit id="4LqYJdX" resname="All changes unlocked with success !">
+        <source>All changes unlocked with success !</source>
+        <target>Toutes les modifications débloquées avec succès !</target>
+      </trans-unit>
+      <trans-unit id="jMTwQX9" resname="Enter full name">
+        <source>Enter full name</source>
+        <target>Saisir le nom complet</target>
+      </trans-unit>
+      <trans-unit id="D2raTol" resname="Marks saved with success !">
+        <source>Marks saved with success !</source>
+        <target>Notes enregistrées avec succès !</target>
+      </trans-unit>
+      <trans-unit id="wW4nlnO" resname="Subject unranked with success !">
+        <source>Subject unranked with success !</source>
+        <target>Matière non classée avec succès !</target>
+      </trans-unit>
+      <trans-unit id="BqHdmlO" resname="Mark updated with success !">
+        <source>Mark updated with success !</source>
+        <target>Note mise à jour avec succès !</target>
+      </trans-unit>
+      <trans-unit id="AXStctN" resname="Skill updated with success !">
+        <source>Skill updated with success !</source>
+        <target>Compétence mise à jour avec succès !</target>
+      </trans-unit>
+      <trans-unit id="nEcc7_u" resname="Marks deleted with success !">
+        <source>Marks deleted with success !</source>
+        <target>Note supprimée avec succès !</target>
+      </trans-unit>
+      <trans-unit id="UfkZ23B" resname="Marks renewed with success !">
+        <source>Marks renewed with success !</source>
+        <target>Notes reconduites avec succès !</target>
+      </trans-unit>
+      <trans-unit id="ySdPFTa" resname="Hour absences saved with success !">
+        <source>Hour absences saved with success !</source>
+        <target>Heures d'absences enregistrées avec succès !</target>
+      </trans-unit>
+      <trans-unit id="4lhoiK9" resname="Hour absences deleted with success !">
+        <source>Hour absences deleted with success !</source>
+        <target>Heures d'absences supprimées avec succès !</target>
+      </trans-unit>
+      <trans-unit id="FS7vlcl" resname="Hour absences deleted with sucsess !">
+        <source>Hour absences deleted with sucsess !</source>
+        <target>Heures d'absences supprimées avec succès !</target>
+      </trans-unit>
+      <trans-unit id="6AxsyOj" resname="Decisions council saved with success !">
+        <source>Decisions council saved with success !</source>
+        <target>Decisions du conseil enregistrées avec succès !</target>
+      </trans-unit>
+      <trans-unit id="fY9ZJ4c" resname="success ">
+        <source>success </source>
+        <target>succès </target>
+      </trans-unit>
+      <trans-unit id="br4xK4X" resname="Secret question save with success !">
+        <source>Secret question save with success !</source>
+        <target>Question Secrète enregistrée avec succès !</target>
+      </trans-unit>
+      <trans-unit id="FUjkHfS" resname="Unable to send email(s) : No Internet connection !">
+        <source>Unable to send email(s) : No Internet connection !</source>
+        <target>Echec d'envoie du mail : Pas de connexion internet</target>
+      </trans-unit>
+      <trans-unit id="aX5Rz89" resname="Transcript generation error !">
+        <source>Transcript generation error !</source>
+        <target>Erreur de génération du relevé</target>
+      </trans-unit>
+      <trans-unit id="T9Vekm8" resname="Transcript send with success !">
+        <source>Transcript send with success !</source>
+        <target>Relevé envoyé avec succès</target>
+      </trans-unit>
+      <trans-unit id="PJl2iC8" resname="Error sending mail !">
+        <source>Error sending mail !</source>
+        <target>Erreur d'envoie du mail</target>
+      </trans-unit>
+      <trans-unit id="SP6j_gV" resname="Erreur lors de la génération du relevé PDF !">
+        <source>Erreur lors de la génération du relevé PDF !</source>
+        <target>__Erreur lors de la génération du relevé PDF !</target>
+      </trans-unit>
+      <trans-unit id="GPJYz4H" resname="Email's parent">
+        <source>Email's parent</source>
+        <target>Email du parent</target>
+      </trans-unit>
+      <trans-unit id=".lmywQu" resname="Send to all">
+        <source>Send to all</source>
+        <target>Tout envoyer</target>
+      </trans-unit>
+      <trans-unit id=".9zD9MK" resname="LYCEE BILINGUE D'ODZA / G.B.H.S ODZA">
+        <source>LYCEE BILINGUE D'ODZA / G.B.H.S ODZA</source>
+        <target>__LYCEE BILINGUE D'ODZA / G.B.H.S ODZA</target>
+      </trans-unit>
+      <trans-unit id="cXoS7Ar" resname="Subject in Classes">
+        <source>Subject in Classes</source>
+        <target>Matière dans les classes</target>
+      </trans-unit>
+      <trans-unit id="z5IvJdH" resname="Display Subject classes">
+        <source>Display Subject classes</source>
+        <target>Affiche des matières dans les classes</target>
+      </trans-unit>
+      <trans-unit id="HeD73LZ" resname="SUBJECTS IN CLASSES">
+        <source>SUBJECTS IN CLASSES</source>
+        <target>MATIERE DISPENSEE DANS LES CLASSES</target>
+      </trans-unit>
+      <trans-unit id="LvFtIw8" resname="Display subjects">
+        <source>Display subjects</source>
+        <target>Afficher les matières</target>
       </trans-unit>
     </body>
   </file>

@@ -88,7 +88,7 @@ class EditSchoolController extends AbstractController
 
             $this->em->flush();
 
-            $this->addFlash('info', $this->translator->trans('School updated successfully'));
+            $this->addFlash('info', $this->translator->trans('School updated with success !'));
 
             $mySession->set('miseAjour', 1);
 

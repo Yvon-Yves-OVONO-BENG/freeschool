@@ -131,7 +131,7 @@ class SaveClassroomController extends AbstractController
             $this->em->persist($unrankedCoefficient);
             $this->em->flush();
 
-            $this->addFlash('info', $this->translator->trans('Classroom saved successfully'));
+            $this->addFlash('info', $this->translator->trans('Classroom saved with success !'));
             $mySession->set('ajout',1);
             
             $classroom = new Classroom();

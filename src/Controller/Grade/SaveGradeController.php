@@ -103,7 +103,7 @@ class SaveGradeController extends AbstractController
             $this->em->persist($grade);
             $this->em->flush(); 
 
-            $this->addFlash('info', $this->translator->trans('Rank saved successfully'));
+            $this->addFlash('info', $this->translator->trans('Rank saved with success !'));
             
             #j'affecte 1 à ma variable pour afficher le message
             $mySession->set('ajout', 1);

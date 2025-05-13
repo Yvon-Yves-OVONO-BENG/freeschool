@@ -375,19 +375,19 @@ class RegisterAndListService
                 
                 foreach($students as $student)
                 {
-                    if($student->getSex()->getSex() == "F" && $student->getRepeater()->getRepeater() == 'Oui')
+                    if($student->getSex()->getSex() == "F" && $student->getRepeater()->getRepeater() == 'Oui' && $student->isSupprime() == 0)
                     {
                         $redoublantsFilles1 = $redoublantsFilles1 + 1 ;
 
-                    }elseif($student->getSex()->getSex() == "F" && $student->getRepeater()->getRepeater() == 'Non')
+                    }elseif($student->getSex()->getSex() == "F" && $student->getRepeater()->getRepeater() == 'Non' && $student->isSupprime() == 0)
                     {
                         $nouveauxFilles1 = $nouveauxFilles1 + 1;
 
-                    }elseif($student->getSex()->getSex() == "M" && $student->getRepeater()->getRepeater() == 'Oui')
+                    }elseif($student->getSex()->getSex() == "M" && $student->getRepeater()->getRepeater() == 'Oui' && $student->isSupprime() == 0)
                     {
                         $redoublantsGarcons1 = $redoublantsGarcons1 + 1 ;
 
-                    }elseif($student->getSex()->getSex() == "M" && $student->getRepeater()->getRepeater() == 'Non')
+                    }elseif($student->getSex()->getSex() == "M" && $student->getRepeater()->getRepeater() == 'Non' && $student->isSupprime() == 0)
                     {
                         $nouveauxGarcons1 = $nouveauxGarcons1 + 1;
                     }
@@ -450,8 +450,8 @@ class RegisterAndListService
                     }
 
                     $pdf->Cell(10, $cellBodyHeight2, $numero, 1, 0, 'C', true);
-                    $pdf->Cell(30, $cellBodyHeight2, $student->getRegistrationNumber(), 1, 0, 'L', true);
-                    $pdf->Cell(80, $cellBodyHeight2, utf8_decode($student->getFullName()), 1, 0, 'L', true);
+                    $pdf->Cell(25, $cellBodyHeight2, $student->getRegistrationNumber(), 1, 0, 'L', true);
+                    $pdf->Cell(75, $cellBodyHeight2, utf8_decode($student->getFullName()), 1, 0, 'L', true);
 
                     if(strlen($student->getBirthplace())  > 16 )
                     {
@@ -464,17 +464,20 @@ class RegisterAndListService
 
                     $pdf->Cell(57, $cellBodyHeight2, $student->getBirthday()->format('d/m/Y').utf8_decode(' à ').utf8_decode($student->getBirthplace()), 1, 0, 'L', true);
                     
+                    
+                    $pdf->SetFont('Times', '', $fontSize);
+                    $pdf->Cell(10, $cellBodyHeight2, $student->getSex()->getSex(), 1, 0, 'C', true);
+
                     if($student->getRepeater()->getRepeater() == 'Oui')
                     {
-                        $sex = $student->getSex()->getSex().'**';
+                        $statut = 'R';
 
                     }else
                     {
-                        $sex = $student->getSex()->getSex();
+                        $statut = 'N';
                     }
 
-                    $pdf->SetFont('Times', '', $fontSize);
-                    $pdf->Cell(12, $cellBodyHeight2, $sex, 1, 1, 'C', true);
+                    $pdf->Cell(10, $cellBodyHeight2, $statut, 1, 1, 'C', true);
 
                     
                     // $pdf->Ln();
@@ -527,19 +530,19 @@ class RegisterAndListService
                 
                 foreach($students as $student)
                 {
-                    if($student->getSex()->getSex() == "F" && $student->getRepeater()->getRepeater() == 'Oui')
+                    if($student->getSex()->getSex() == "F" && $student->getRepeater()->getRepeater() == 'Oui' && $student->isSupprime() == 0)
                     {
                         $redoublantsFilles2 = $redoublantsFilles2 + 1 ;
 
-                    }elseif($student->getSex()->getSex() == "F" && $student->getRepeater()->getRepeater() == 'Non')
+                    }elseif($student->getSex()->getSex() == "F" && $student->getRepeater()->getRepeater() == 'Non' && $student->isSupprime() == 0)
                     {
                         $nouveauxFilles2 = $nouveauxFilles2 + 1;
 
-                    }elseif($student->getSex()->getSex() == "M" && $student->getRepeater()->getRepeater() == 'Oui')
+                    }elseif($student->getSex()->getSex() == "M" && $student->getRepeater()->getRepeater() == 'Oui' && $student->isSupprime() == 0)
                     {
                         $redoublantsGarcons2 = $redoublantsGarcons2 + 1 ;
 
-                    }elseif($student->getSex()->getSex() == "M" && $student->getRepeater()->getRepeater() == 'Non')
+                    }elseif($student->getSex()->getSex() == "M" && $student->getRepeater()->getRepeater() == 'Non' && $student->isSupprime() == 0)
                     {
                         $nouveauxGarcons2 = $nouveauxGarcons2 + 1;
                     }
@@ -596,8 +599,8 @@ class RegisterAndListService
                     }
                     $numero++;
                     $pdf->Cell(10, $cellBodyHeight2, $numero, 1, 0, 'C', true);
-                    $pdf->Cell(30, $cellBodyHeight2, $student->getRegistrationNumber(), 1, 0, 'L', true);
-                    $pdf->Cell(80, $cellBodyHeight2, utf8_decode($student->getFullName()), 1, 0, 'L', true);
+                    $pdf->Cell(25, $cellBodyHeight2, $student->getRegistrationNumber(), 1, 0, 'L', true);
+                    $pdf->Cell(75, $cellBodyHeight2, utf8_decode($student->getFullName()), 1, 0, 'L', true);
 
                     if(strlen($student->getBirthplace())  > 16 )
                     {
@@ -610,17 +613,20 @@ class RegisterAndListService
 
                     $pdf->Cell(57, $cellBodyHeight2, $student->getBirthday()->format('d/m/Y').utf8_decode(' à ').utf8_decode($student->getBirthplace()), 1, 0, 'L', true);
                     
+                    
+                    $pdf->SetFont('Times', '', $fontSize);
+                    $pdf->Cell(10, $cellBodyHeight2, $student->getSex()->getSex(), 1, 0, 'C', true);
+
                     if($student->getRepeater()->getRepeater() == 'Oui')
                     {
-                        $sex = $student->getSex()->getSex().'**';
+                        $statut = 'R';
 
                     }else
                     {
-                        $sex = $student->getSex()->getSex();
+                        $statut = 'N';
                     }
 
-                    $pdf->SetFont('Times', '', $fontSize);
-                    $pdf->Cell(12, $cellBodyHeight2, $sex, 1, 1, 'C', true);
+                    $pdf->Cell(10, $cellBodyHeight2, $statut, 1, 1, 'C', true);
                     
                     // $pdf->Ln();
 
@@ -1464,8 +1470,9 @@ class RegisterAndListService
 
                     if ($girls != 0 && $boys != 0) 
                     {
-                        $totalPercent = ($percentGirls + $percentBoys) / 2;
-                    } elseif($girls != 0 && $boys == 0) 
+                        $totalPercent = (($notesGirls + $notesBoys)/($girls + $boys)) * 100;
+                    } 
+                    elseif($girls != 0 && $boys == 0) 
                     {
                         $totalPercent = $percentGirls ;
                     }elseif($girls == 0 && $boys != 0) 
@@ -2383,8 +2390,10 @@ class RegisterAndListService
             // $students = $markReport->getClassroom()->getStudents();
 
             $students = $this->studentRepository->findBy([
-                'classroom' => $markReport->getClassroom()
+                'supprime' => 0,
+                'classroom' => $markReport->getClassroom(),
             ]);
+
             #jz trie par ordre alphabétique
             usort($students, function($a, $b) 
             {
@@ -2546,6 +2555,7 @@ class RegisterAndListService
             // $students = $markReport->getClassroom()->getStudents();
 
             $students = $this->studentRepository->findBy([
+                'supprime' => 0,
                 'classroom' => $markReport->getClassroom()
             ]);
             
@@ -2951,7 +2961,7 @@ class RegisterAndListService
     {
         $absenceReports = [];
         $absenceReport = [];
-
+        
         // pour chaque liste on construit le relevé d'absences'
         foreach($allAbsences as $studentAbsences)
         {
@@ -2969,8 +2979,9 @@ class RegisterAndListService
             ]);
 
             $numberOfStudents = count($students);
-
+            
             $absences = $studentAbsences['absences'];
+            
             if ($absences)
             {
                 $numberOfAbsences = count($absences);
@@ -2991,8 +3002,8 @@ class RegisterAndListService
 
                 foreach($absences as $absence)
                 {
-                    
                     $absenceReportRow->setStudentName($absence->getStudent()->getFullName());
+                    $absenceReportRow->setSex($absence->getStudent()->getSex()->getSex());
 
                     switch($absence->getTerm()->getTerm())
                     {
@@ -3176,7 +3187,10 @@ class RegisterAndListService
                 else
                 $boys = $boys + 1;
             }
+
+            $pdf->SetFont('Times', 'B', 9);
             $pdf->Cell(30, 5, utf8_decode($classroom->getClassroom()), 1, 0, 'C');
+            $pdf->SetFont('Times', 'B', 12);
             $pdf->Cell(101, 5, utf8_decode($this->generalService->getNameWithTitle($supervisor->getFullName(), $supervisor->getSex()->getSex())), 1, 0, 'C');
             $pdf->Cell(20, 5, $girls, 1, 0, 'C');
             $pdf->Cell(20, 5, $boys, 1, 0, 'C');

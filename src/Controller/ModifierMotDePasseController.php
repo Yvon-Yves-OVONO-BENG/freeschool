@@ -73,7 +73,7 @@ class ModifierMotDePasseController extends AbstractController
 
             $this->em->flush();
 
-            $this->addFlash('info', $this->translator->trans('Password updated successfully !'));
+            $this->addFlash('info', $this->translator->trans('Password updated with success ! !'));
             
             $mySession->set('miseAjour', 1);
 

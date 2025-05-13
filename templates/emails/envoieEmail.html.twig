@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <title>{% trans %}Transcript{% endtrans %}</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                            line-height: 1.6;
+                color: #333;
+            }
+            .header {
+                background-color: #f4f4f4;
+                padding: 20px;
+                text-align: center;
+            }
+            .content {
+                margin: 20px;
+            }
+            .footer {
+                margin-top: 30px;
+                font-size: 0.9em;
+                text-align: center;
+                color: #888;
+            }
+        </style>
+    </head>     
+    <body>
+        <div class="header">
+            <h1>{{ school.frenchName }} / {{ school.englishName }}</h1>
+        </div>
+        <div class="content">
+            <p>Bonjour Chèr Parent / Hello dear parent</p>
+            <p>
+                Tout en espérant que vous allez bien, vous trouverez en pièce jointe le relevé de notes de votre enfant <b> {{ student ? student.fullName : studentName }}</b> en classe de <b>{{ student ? student.classroom.classroom : classroom.classroom }}</b> pour le compte
+                {% if sequence %}
+                    de la 
+                    {{ sequence.sequence }}
+                    {% if sequence.sequence == 1 %}
+                        ère 
+                        {% else %}
+                        ème
+                    {% endif %} 
+                    évaluation.
+                {% endif %}
+
+                {% if term %}
+                    du
+                    {{ term.term }} 
+                    {% if term.term == 1 %}
+                        er trimestre
+                        {% else %}
+                        {% if term.term == 2 or term.term == 3%}
+                            ème  trimestre.
+                            {% else %}
+                            Annuel.
+                        {% endif %}
+                        
+                    {% endif %}
+                {% endif %}
+                
+
+                <br>
+                <br>
+                Hoping tha you are well, you will find attached the transcript of you child marks <b>{{ student ? student.fullName : studentName }}</b> in class <b>{{ student ? student.classroom.classroom : classroom.classroom }} </b> for the 
+                {% if sequence %}
+                    {{ sequence.sequence }}
+                    {% if sequence.sequence == 1 %}
+                        st 
+                        {% else %}
+                        {% if sequence.sequence == 2 %}
+                            nd
+                            {% else %}
+                            {% if sequence.sequence == 3 %}
+                                rd 
+                                {% else %}
+                                th
+                            {% endif %}
+                        {% endif %}
+                    {% endif %} assessment.
+                {% endif %}
+                
+                {% if term %}
+                    {{ term.term }} 
+                    {% if term.term == 1 %}
+                        st term.
+                        {% else %}
+                        {% if term.term == 2 %}
+                            nd term.
+                            {% else %}
+                            {% if term.term == 3 %}
+                                rd term.
+                                {% else %}
+                                Annual.
+                            {% endif %}
+                        {% endif %}
+                    {% endif %} 
+                {% endif %}
+                    
+            </p>
+            
+            <p>
+                L'administration de l'établissement / School administration.
+            </p>
+            <p>Merci de votre confiance. / Thank you for your confidence.</p>
+        </div>
+        <div class="footer">
+            <p>&copy; {{ "now"|date("Y") }} | Freeschool | Tous droits réservés / All rights reserved.</p>
+        </div>
+    </body>
+</html>

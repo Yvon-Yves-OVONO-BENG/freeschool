@@ -72,6 +72,7 @@ class PrintHistoriqueAbsenceController extends AbstractController
             $teacher = $this->teacherRepository->findOneBySlug([
                 'slug' => $slug
             ]);
+            
             $pdf = $this->historiqueAbsenceTeacherService->printHistoricAttendance($school, $schoolYear, $teacher);
             
             if ($subSystem->getId() == 1 ) 

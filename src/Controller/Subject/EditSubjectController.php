@@ -114,7 +114,7 @@ class EditSubjectController extends AbstractController
             ->setSubSystem($subSyste);
 
             $this->em->flush(); // On modifie
-            $this->addFlash('info', $this->translator->trans('Subject updated successfully'));
+            $this->addFlash('info', $this->translator->trans('Subject updated with success !'));
 
             $mySession->set('miseAjour', 1);
 

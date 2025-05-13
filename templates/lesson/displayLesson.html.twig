@@ -46,7 +46,7 @@
                 </div>
                 <div class="page-rightheader">
                     <div class="btn-list">
-                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_CENSEUR') %}
+                        {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_CENSEUR') %}
                             {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                 <form action="{{ path('lesson_saveLesson') }}" method="post">
                                     <div class="form-group">
@@ -139,7 +139,7 @@
                                         <th class="border-bottom-0 orange-gradient">{% trans %}Group{% endtrans %}</th>
                                         <th class="border-bottom-0 blue-gradient">{% trans %}Teacher{% endtrans %}</th>
                                         <th class="border-bottom-0 indigo-gradient">{% trans %}Hours per week{% endtrans %}</th>
-                                            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                            {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
                                             {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                                 <th class="border-bottom-0 green-gradient">{% trans %}Actions{% endtrans %}</th>
                                             {% endif %}
@@ -153,7 +153,7 @@
                                         <th class="border-bottom-0 orange-gradient">{% trans %}Group{% endtrans %}</th>
                                         <th class="border-bottom-0 blue-gradient">{% trans %}Teacher{% endtrans %}</th>
                                         <th class="border-bottom-0 indigo-gradient">{% trans %}Hours per week{% endtrans %}</th>
-                                            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                            {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
                                             {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                                 <th class="border-bottom-0 green-gradient">{% trans %}Actions{% endtrans %}</th>
                                             {% endif %}
@@ -181,7 +181,7 @@
                                         <td style="vertical-align: middle;">
                                             <h6  class="text-secondary"><span class="badge bg-danger">{{ lesson.weekHours }}</span></h6>
                                         </td>
-                                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                        {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
                                             {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                                 <td>
                                                     <div class="row" style="margin-top: 10px;">

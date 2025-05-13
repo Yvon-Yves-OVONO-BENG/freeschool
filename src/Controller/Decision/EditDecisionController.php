@@ -75,7 +75,7 @@ class EditDecisionController extends AbstractController
             $decision->setDecision(strtoupper($decision->getDecision()));
 
             $this->em->flush(); // On modifie
-            $this->addFlash('info', $this->translator->trans('Decision updated successfully'));
+            $this->addFlash('info', $this->translator->trans('Decision updated with success !'));
 
             $mySession->set('miseAjour', 1);
 

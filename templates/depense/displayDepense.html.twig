@@ -53,7 +53,7 @@
 
                 <div class="card border-primary">
                     <div class="card-header">
-                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_SECRETAIRE') %}
+                        {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_SECRETAIRE') %}
                             <div class="col-md-4">
                                 <button type="button" class="btn btn-primary  mt-1 mb-1 me-3 form-control-sm">
                                     <span>{% trans %}Total Expenses{% endtrans %}</span>
@@ -95,7 +95,7 @@
                                         <th class="border-bottom-0 orange-gradient">{% trans %}Reason{% endtrans %}</th>
                                         <th class="border-bottom-0 blue-gradient">{% trans %}Rubric{% endtrans %}</th>
                                         {# si c'est l'admin qui est connecté #}
-                                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                        {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
                                             {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                                 <th class="border-bottom-0 blue-gradient">{% trans %}Actions{% endtrans %}</th>
                                             {% endif %}
@@ -109,7 +109,7 @@
                                         <th class="border-bottom-0 orange-gradient">{% trans %}Reason{% endtrans %}</th>
                                         <th class="border-bottom-0 blue-gradient">{% trans %}Rubric{% endtrans %}</th>
                                         {# si c'est l'admin qui est connecté #}
-                                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                        {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
                                             {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                                 <th class="border-bottom-0 blue-gradient">{% trans %}Actions{% endtrans %}</th>
                                             {% endif %}
@@ -125,7 +125,7 @@
                                             <td>{{ depense.rubrique.rubrique }}</td>
                                             
                                             {# si c'est l'admin qui est conncté #}
-                                            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                            {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
                                                 {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                                     <td>
                                                         <div class="btn-group">

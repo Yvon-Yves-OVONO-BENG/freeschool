@@ -14,8 +14,12 @@ class Pagination extends Fpdf
 		$this->AliasNbPages('{totalPages}');
 		$this->SetFont('Times','BI',8);
 		// Page number
-		// $this->Cell(100, 5, utf8_decode("Lycée Bilingue d'ODZA / G.B.H.S ODZA"), 0, 0, 'L');
-		$this->Cell(0,5,utf8_decode("Lycée de BOULI / G.H.S BOULI       - - -     Page ".$this->PageNo().'/{totalPages}'),0,0,'R');
+		// $this->Cell(100, 5, utf8_decode("Lycée Bilingue d'Odza / G.B.H.S ODZA"), 0, 0, 'L');
+		// $this->Cell(0,5,utf8_decode("L.B NGUELEMENDOUKA / G.B.H.S NGUELEMENDOUKA     - - -     Page ".$this->PageNo().'/{totalPages}'),0,0,'R');
+		// $this->Cell(0,5,utf8_decode("C.E.S Ankom / G.H.S Ankom     - - -     Page ".$this->PageNo().'/{totalPages}'),0,0,'R');
+		// $this->Cell(0,5,utf8_decode("Lycée Bilingue d'Odza / G.B.H.S Odza    - - -     Page ".$this->PageNo().' / {totalPages}'),0,0,'R');
+		$this->Cell(0,5,utf8_decode("Lycée Technique d'Ayos / G.T.H.S Ayos    - - -     Page ".$this->PageNo().' / {totalPages}'),0,0,'R');
+		// $this->Cell(0,5,utf8_decode("Lycée de Martap / G.H.S Martap    - - -     Page ".$this->PageNo().' / {totalPages}'),0,0,'R');
     }
 
     public function RotatedText($x,$y,$txt,$angle)

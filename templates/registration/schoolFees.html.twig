@@ -89,7 +89,16 @@
                         <div class="card-body">
                             <div class="box-widget widget-user text-center">
                                 <div class="widget-user-image mx-auto">
-                                    <img alt="Photo eleve" class="rounded-circle" src="{{ student.photo ? asset('images/students/' ~ student.photo) : asset('images/students/defaultPhoto.jpg')}}" width="200" height="110">
+                                    {% if student.photo %}
+                                        <img alt="Photo eleve" class="rounded-circle" src="{{ asset ('images/students/' ~ student.photo) }}" width="200" height="110">
+                                        {% else %}
+                                        {% if student.sex.sex == "F" %}
+                                            <img alt="Photo eleve" class="rounded-circle" src="{{ asset ('images/students/fille.jpg')}}" width="200" height="110">
+                                            {% else %}
+                                            <img alt="Photo eleve" class="rounded-circle" src="{{ asset ('images/students/garcon.jpg')}}" width="200" height="110">
+                                        {% endif %}
+                                    {% endif %}
+                                
                                 </div>
                                 <div class="mt-4 ms-sm-5 ms-0">
                                     <h4 class="pro-user-username  mb-2 font-weight-bold">{{ student.fullName }}</h4>
@@ -194,7 +203,7 @@
                                     <form method="post" action="{{ path('registration_saveSchoolFees', {'slugStudent': student.slug}) }}">
                                 {% endif %}
                             {% endif %}
-<div class="row">
+                                <div class="row">
                                     <div class="col-md-3 border-bottom-0 indigo-gradient">
                                         <div class="form-group">
                                             {# <label for="schoolFeesName"></label> #}<br>
@@ -556,6 +565,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             {# {% if headmasterFees == 0 %} #}
+                                            
                                                     {% if totalRest != 0 %}
                                                     <label for="saveStdentFees"></label>
                                                     <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="saveSchoolFees">

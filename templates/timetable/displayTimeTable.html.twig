@@ -50,7 +50,7 @@
                 </div>
                 <div class="page-rightheader">
                     <div class="btn-list">
-                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_CENSEUR') %}
+                        {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_CENSEUR') %}
                                 {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                     <form action="{{ path('save_time_table') }}" method="post">
                                         <div class="form-group">

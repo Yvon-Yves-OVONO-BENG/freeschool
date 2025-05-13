@@ -120,7 +120,7 @@ class SaveLessonController extends AbstractController
                 $this->em->persist($lesson);
                 $this->em->flush(); 
 
-                $this->addFlash('info', $this->translator->trans('Lesson saved successfully'));
+                $this->addFlash('info', $this->translator->trans('Lesson saved with success !'));
                 $mySession->set('ajout',1);
             }
             else

@@ -64,6 +64,7 @@ class StudentCardController extends AbstractController
             
             // On recupère les élèves de la classe sélectinnée
             $students = $this->studentRepository->findBy([
+                'supprime' => 0,
                 'classroom' => $selectedClassroom
             ], [
                 'fullName' => 'ASC'

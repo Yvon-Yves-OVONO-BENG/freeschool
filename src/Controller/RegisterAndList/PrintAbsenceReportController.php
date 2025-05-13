@@ -89,18 +89,18 @@ class PrintAbsenceReportController extends AbstractController
                 {
                     $absencesOfClassroom = [];
                     $absencesOfClassroom['classroom'] = $classroom;
-                    
-                    $absencesOfClassroom['absences'] = $this->absenceRepository->findClassroomAbsences($classroom);
+                   
+                    $absencesOfClassroom['absences'] = $this->absenceRepository->findClassroomAbsences($classroom->getId());
 
                     $allAbsences[] =  $absencesOfClassroom;
 
                 }
             }
         }
-
-        $absenceReports = $this->registerAndListService->getAbsenceReports($allAbsences);
+        // dd($allAbsences);
+        $absencesReports = $this->registerAndListService->getAbsenceReports($allAbsences);
         
-        $pdf =  $this->registerAndListService->printAbsenceReports($absenceReports, $schoolYear, $school);
+        $pdf =  $this->registerAndListService->printAbsenceReports($absencesReports, $schoolYear, $school);
 
         if($teacherId != 0)
 		{

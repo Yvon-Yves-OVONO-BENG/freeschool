@@ -1,0 +1,388 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Transcript's Students{% endtrans %}{% endblock %}
+
+{% block subTitle %}
+    {% trans %}REPORTS MANAGMENT{% endtrans %}
+{% endblock %}
+
+{% block stylesheets %}
+	<style>
+		th,
+		tfoot {
+			font-size: 15px !important;
+			text-align: center !important;
+			font-weight: bold !important;
+			background-color: #F1F1F1 !important;
+		}
+
+		tr:hover {
+			background-color: rgba(62, 128, 235, 0.2) !important;
+			color: #3e80eb !important;
+		}
+	</style>
+{% endblock %}
+
+{% block body %}
+
+    
+<!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+        
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary">
+                        <i class="fa fa-file-text-o"></i> {% trans %}TRANSCRIPT'S STUDENTS MANAGMENT{% endtrans %}
+                    </h4>
+                </div>
+                <div class="page-rightheader">
+                    
+                    <div class="btn-list">
+                        {% if verrouInsolvable %}
+
+                            <a href="{{ path('desactive_print_report_insolvable', {'transcript': 1 }) }}" class="btn btn-outline-danger">
+                                <i class="fe fe-x-circle me-2"></i> 
+                                {% trans %}Uneable print transcript of insolvable{% endtrans %}
+                            </a>
+        
+                            {% else %}
+                                <a href="{{ path('activate_print_report_insolvable', {'transcript': 1 }) }}" class="btn btn-outline-primary">
+                                    <i class="fe fe-check-circle me-2"></i> 
+                                    {% trans %}Eable print transcript of insolvable{% endtrans %}
+                                </a>
+                        
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
+            <!--End Page header-->
+            {% for message in app.flashes('info')  %}
+                {# <div class="alert alert-danger">{{ message }}</div> #}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true">×</button>
+                    <i class="fa fa-check-circle-o me-2" aria-hidden="true"></i>{{ message }}
+                </div>
+            {% endfor %}
+
+            {% for message in app.flashes('danger')  %}
+                {# <div class="alert alert-danger">{{ message }}</div> #}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true">×</button>
+                    <i class="fa fa-frown-o me-2" aria-hidden="true"></i>{{ message }}
+                </div>
+            {% endfor %}
+
+            {% for message in app.flashes('error')  %}
+                {# <div class="alert alert-danger">{{ message }}</div> #}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true">×</button>
+                    <i class="fa fa-chain-broken me-2" aria-hidden="true"></i>{{ message }}
+                </div>
+            {% endfor %}
+            <!-- Row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="expanel expanel-primary border-primary">
+                        <div class="expanel-heading">
+                            <h3 class="expanel-title">{% trans %}Choose a class and period{% endtrans %}</h3>
+                        </div>
+                        <div class="expanel-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <form action="{{ path('transcript_student') }}" method="post">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <select class="form-control select2-show-search" data-placeholder="Choose a classroom" name="classroom" id="classroom" required style="border: 1px solid #0f0;">
+                                                        <option label="Choose a classroom">{% trans %}Choose a class{% endtrans %}</option>
+                                                        
+                                                        {% if subSystem == 'Francophone / French Speaker' %}
+                                                            {% if school.education.education == 'Général' %}
+                                                                {% include "includes/_selectClassrooms.html.twig" %}
+                                                                {% else %}
+                                                                    {% include "includes/_selectClassroomsTech.html.twig" %}
+                                                            {% endif %}
+                                                            {% else %}
+                                                                {% include "includes/_selectClassroomsEn.html.twig" %}
+                                                        {% endif %}
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <select name="period" id="term" class="form-control select2 custom-select" required>
+                                                        <option value="">{% trans %}Choose a period{% endtrans %}</option>
+                                                         <optgroup label="Evaluations">
+                                                            {% for sequence in sequences %}
+                                                                <option value="s{{ sequence.id }}" {% if selectedSequence.id == sequence.id %}
+                                                                        selected
+                                                                    {% endif %}>
+                                                                    {% trans %}Evaluation{% endtrans %} {{ sequence.sequence }}
+                                                                </option>
+                                                            {% endfor %}
+                                                        </optgroup>
+                                                        <optgroup label="{% trans %}Term{% endtrans %}">
+                                                            {% for term in terms %}
+                                                                {% if term.term != annualTerm %}
+                                                                    <option value="t{{ term.id }}" 
+                                                                    {% if selectedTerm.id == term.id %}
+                                                                        selected
+                                                                    {% endif %}>
+                                                                        {% trans %}Term{% endtrans %} {{ term.term }}
+                                                                    </option>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        </optgroup>
+                                                        <optgroup label="{% trans %}Annual{% endtrans %}">
+                                                            {% for term in terms %}
+                                                                {% if term.term == annualTerm %}
+                                                                    <option value="t{{ term.id }}" 
+                                                                    {% if selectedTerm.id == term.id %}
+                                                                        selected
+                                                                    {% endif %}>
+                                                                        {% trans %}Annual{% endtrans %}
+                                                                    </option>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        </optgroup>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="displayStudents">
+                                                        <i class="fa fa-list"></i>
+                                                        {% trans %}Display{% endtrans %}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                    </form>
+                                </div>
+                                
+                                {% if methodIsPost %}
+                                    {% if selectedClassroom.id is not null %}
+                                        <div class="col-md-6 text-right">  
+                                            <button type="button" class="btn btn-primary mb-1 me-3">
+                                                <span>{% trans %}Number of students{% endtrans %}</span>
+                                                <span class="badge bg-white text-dark rounded-pill">{{ students|length }}</span>
+                                            </button>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+			<!--End Row -->
+            {% if methodIsPost %}
+                <div class="card border-primary">
+                    <div class="card-header">
+                        {% if selectedClassroom.id is not null %}
+                            
+                            <div class="col-md-4 text-left">
+                                    
+                                {% if selectedSequence.id is not null %}
+                                    <button type="button" class="btn btn-primary">
+                                        <span>{% trans %}Transcript's students evaluation{% endtrans %} N° </span>
+                                        <span class="badge bg-white text-dark rounded-pill">0{{ selectedSequence.sequence }}</span>
+                                    </button>
+                                    {% else %}
+                                        {% if selectedTerm.id is not null %}
+                                            <button type="button" class="btn btn-primary">
+                                                {% if selectedTerm.term == 0 %}
+                                                    <span>{% trans %}Transcript's students{% endtrans %} </span>
+                                                    <span class="badge bg-white text-dark rounded-pill">{% trans %}Annual{% endtrans %}</span>
+                                                    {% else %}
+                                                    <span>{% trans %}Transcript's students term{% endtrans %} N°</span>
+                                                    <span class="badge bg-white text-dark rounded-pill">0{{ selectedTerm.term }}</span>
+                                                {% endif %}
+                                                
+                                            </button>
+                                            {% else %}
+                                            <button type="button" class="btn btn-primary">
+                                                <span>{% trans %}Annuals transcript{% endtrans %}</span>
+                                                <span class="badge bg-white text-dark rounded-pill"></span>
+                                            </button>
+                                        {% endif %}
+                                {% endif %}
+                                   
+                            </div>
+
+                            {% if students|length > 0 %}
+                                <div class="col-md-4 text-right mt-3"> 
+                                    {% if selectedSequence.id is not null %}
+                                        <form action="{{ path('print_transcript_sequence_classroom') }}" method="post" target="_blank">
+                                        
+                                        <input type="hidden" name="slugClassroom" value="{{ selectedClassroom.slug }}">
+                                        <input type="hidden" name="sequenceId" value="{{ selectedSequence.id }}">
+
+                                        {% else %}
+
+                                        {% if selectedTerm.id is not null and selectedTerm.term != 0  %}
+                                            <form action="{{ path('print_transcript_term_classroom') }}" method="post" target="_blank">
+
+                                            <input type="hidden" name="slugClassroom" value="{{ selectedClassroom.slug }}">
+                                            <input type="hidden" name="term" value="{{ selectedTerm.id }}">
+                                            {% else %}
+                                            <form action="{{ path('print_transcript_annual_classroom') }}" method="post" target="_blank">
+
+                                            <input type="hidden" name="slugClassroom" value="{{ selectedClassroom.slug }}">
+                                            <input type="hidden" name="term" value="{{ selectedTerm.id }}">
+                                        {% endif %}
+
+                                    {% endif %}
+                                        
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-outline-primary " name="printAllTranscripts">
+                                                <i class="si si-printer"></i>
+                                                {% trans %}Print all transcripts{% endtrans %}
+                                            </button>
+                                        </div>
+
+                                    </form>
+
+                                </div>
+                                <div class="col-md-4 text-right"> 
+
+                                    {% if selectedSequence.id is not null %}
+                                        <form action="{{ path('send_transcript_sequence_classroom') }}" method="post">
+                                        
+                                        <input type="hidden" name="slugClassroom" value="{{ selectedClassroom.slug }}">
+                                        <input type="hidden" name="sequenceId" value="{{ selectedSequence.id }}">
+
+                                        {% else %}
+
+                                        {% if selectedTerm.id is not null and selectedTerm.term != 0  %}
+                                            <form action="{{ path('send_transcript_term_classroom') }}" method="post">
+
+                                            <input type="hidden" name="slugClassroom" value="{{ selectedClassroom.slug }}">
+                                            <input type="hidden" name="term" value="{{ selectedTerm.id }}">
+                                            {% else %}
+                                            <form action="{{ path('send_transcript_annual_classroom') }}" method="post">
+
+                                            <input type="hidden" name="slugClassroom" value="{{ selectedClassroom.slug }}">
+                                            <input type="hidden" name="term" value="{{ selectedTerm.id }}">
+                                        {% endif %}
+
+                                    {% endif %}
+                                        
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-outline-primary " name="printAllTranscripts">
+                                                <i class="fa fa-send-o me-2"></i>
+                                                {% trans %}Send to all{% endtrans %}
+                                            </button>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            
+                            <table border="1" class="table table-bordered text-nowrap" id="example2" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th class="border-bottom-0 indigo-gradient">{% trans %}N°{% endtrans %}</th>
+                                        <th class="border-bottom-0 indigo-gradient">{% trans %}Full name{% endtrans %}</th>
+                                        <th class="border-bottom-0 green-gradient">{% trans %}Transcript{% endtrans %}</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th class="border-bottom-0 indigo-gradient">{% trans %}N°{% endtrans %}</th>
+                                        <th class="border-bottom-0 indigo-gradient">{% trans %}Full name{% endtrans %}</th>
+                                        <th class="border-bottom-0 green-gradient">{% trans %}Transcript{% endtrans %}</th>
+                                    </tr>
+                                </tfoot>
+                                {% set i = 1 %}
+                                {% for registrationHistory in registrationHistories %}
+                                    {% set student = registrationHistory.student %}
+                                    {% set history = registrationHistory.history %}
+
+                                    {# {% set registration = student.registration ? student.registration : emptyRegistration %} #}
+                                    {% set totalApeeFees = 0 %}
+                                    {% set totalComputerFees = 0 %}
+                                    {% set totalMedicalBookletFees = 0 %}
+                                    {% set totalCleanSchoolFees = 0 %}
+                                    {% set totalPhotoFees = 0 %}
+
+                                    {% for histor in history %}
+                                        {% set totalApeeFees = totalApeeFees + histor.apeeFees %}
+
+                                        {% set totalComputerFees = totalComputerFees + histor.computerFees %}
+
+                                        {% set totalMedicalBookletFees = totalMedicalBookletFees + histor.medicalBookletFees %}
+
+                                        {% set totalCleanSchoolFees = totalCleanSchoolFees + histor.cleanSchoolFees %}
+
+                                        {% set totalPhotoFees = totalPhotoFees + histor.photoFees %}
+                                    {% endfor %}
+                                    {# {% endfor %} #}
+
+                                    {% set totalAvance = totalApeeFees + totalComputerFees + totalMedicalBookletFees + totalCleanSchoolFees + totalPhotoFees %}
+
+                                    {% set totalFees = feesTable.apeeFees + feesTable.computerFees + feesTable.medicalBookletFees + feesTable.cleanSchoolFees + feesTable.photoFees %}
+
+                                    {# {% for student in students %} #}
+                                    <tr>
+                                        <td style="vertical-align: middle; text-align: center !important;">{{ i }}</td>
+                                        <td style="vertical-align: middle;">{{ student.fullName }}</td>
+                                        <td style="text-align: center; vertical-align:middle;"> 
+
+                                            {% if student.solvable %}
+                                                {% if selectedSequence.id is not null %}
+
+                                                    <a href="{{ path('print_transcript_sequence_student', {'slugStudent': student.slug, 'sequenceId': selectedSequence.id }) }}" target="_blank" class="btn btn-outline-primary" data-bs-toggle="tooltip" title="{% trans %}Print report of {% endtrans %} {{ student.fullName }}">
+                                                        <i class="si si-printer me-2"></i> {% trans %}Print transcript{% endtrans %}
+                                                    </a>
+                                                    <a href="{{ path ('send_transcript_sequence_student', {'slugStudent': student.slug, 'sequenceId': selectedSequence.id }) }}" class="btn btn-outline-primary"><i class="fa fa-send-o me-2"></i>{% trans %}Send{% endtrans %}</a>
+                                
+                                                    {% else %}
+                                                    {% if selectedTerm.id is not null and selectedTerm.term != 0 %}
+                                                        
+                                                        <a href="{{ path('print_transcript_term_student', {'slugStudent': student.slug, 'slugTerm': selectedTerm.slug }) }}" target="_blank" class="btn btn-outline-primary" data-bs-toggle="tooltip" title="{% trans %}Print report of {% endtrans %} {{ student.fullName }}">
+                                                            <i class="si si-printer me-2"></i> {% trans %}Print transcript{% endtrans %}
+                                                        </a>
+                                                        <a href="{{ path ('send_transcript_term_student', {'slugStudent': student.slug, 'slugTerm': selectedTerm.slug }) }}" class="btn btn-outline-primary"><i class="fa fa-send-o me-2"></i>{% trans %}Send{% endtrans %}</a>
+                                
+                                                        {% else %}
+
+                                                        <a href="{{ path ('print_transcript_annual_student', {'slugStudent': student.slug, 'slugTerm': selectedTerm.slug }) }}" target="_blank" class="btn btn-outline-primary" data-bs-toggle="tooltip" title="{% trans %}Print report of {% endtrans %} {{ student.fullName }}">
+                                                            <i class="si si-printer me-2"></i> {% trans %}Print transcript{% endtrans %}
+                                                        </a>
+                                                        <a href="{{ path ('send_transcript_annual_student', {'slugStudent': student.slug, 'slugTerm': selectedTerm.slug }) }}" class="btn btn-outline-primary"><i class="fa fa-send-o me-2"></i>{% trans %}Send{% endtrans %}</a>
+                                
+                                                    {% endif %}
+                                                {% endif %}
+                                                    
+                                                {% else %}
+											    <a href="javascript:void(0);" class="btn btn-danger disabled"><i class="si si-printer me-2"></i> {% trans %}Printing not possible{% endtrans %}</a>
+                                            {% endif %}
+                                                
+                                        </td>
+                                    </tr>
+                                    {% set i = i + 1 %}
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

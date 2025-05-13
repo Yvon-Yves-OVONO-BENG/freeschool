@@ -82,7 +82,7 @@ class ReponseQuestionController extends AbstractController
             $this->em->flush();
 
             #j'affiche le message de confirmation d'ajout
-            $this->addFlash('info', $this->translator->trans('Secret question save successfully !'));
+            $this->addFlash('info', $this->translator->trans('Secret question save with success !'));
 
             #j'affecte 1 à ma variable pour afficher le message
             $mySession->set('ajout', 1);

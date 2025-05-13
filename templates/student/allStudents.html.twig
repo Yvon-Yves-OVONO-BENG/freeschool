@@ -208,7 +208,7 @@
                                                 {% else %}
                                                     <span class="badge badge-default mt-2">{{ student.sex.sex }}</span>
                                             {% endif %}
-                                            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                            {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
                                                 <br> <span class="badge badge-gradient-primary mt-2">{% trans %}Saved by : {% endtrans %}</span>
                                                 <span class="badge badge-gradient-danger mt-2">{{ student.createdBy ? student.createdBy.fullName: "//" }}</span>
                                                 <span class="badge badge-gradient-primary mt-2">{% trans %}at {% endtrans %}</span>

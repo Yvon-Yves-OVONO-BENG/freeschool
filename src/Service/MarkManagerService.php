@@ -205,12 +205,12 @@ class MarkManagerService
             $this->em->flush();
             if($notEvaluated == false)
             {
-                $flashBag->add('info', $this->translator->trans('Marks saved successfully'));
+                $flashBag->add('info', $this->translator->trans('Marks saved with success !'));
                 $mySession = $this->request->getSession();
                 $mySession->set('saisiNotes', 1);
             }else
             {
-                $flashBag->add('info', $this->translator->trans('Subject unranked successfully'));
+                $flashBag->add('info', $this->translator->trans('Subject unranked with success !'));
                 $mySession = $this->request->getSession();
                 $mySession->set('saisiNotes', 1);
             }
@@ -266,7 +266,7 @@ class MarkManagerService
             
             $this->em->flush();
 
-            $flashBag->add('info', $this->translator->trans('Mark updated successfully'));
+            $flashBag->add('info', $this->translator->trans('Mark updated with success !'));
             $mySession = $this->request->getSession();
             $mySession->set('saisiNotes', 1);
         }
@@ -294,7 +294,7 @@ class MarkManagerService
             
             $this->em->flush();
     
-            $flashBag->add('info', $this->translator->trans('Skill updated successfully'));
+            $flashBag->add('info', $this->translator->trans('Skill updated with success !'));
 
             $mySession = $this->request->getSession();
             $mySession->set('saisiNotes', 1);
@@ -372,7 +372,7 @@ class MarkManagerService
         if($elementIsRemoved)
         {
             $this->em->flush();
-            $flashBag->add('info', $this->translator->trans('Marks deleted successfully'));
+            $flashBag->add('info', $this->translator->trans('Marks deleted with success !'));
 
             $mySession = $this->request->getSession();
             $mySession->set('suppression', 1);
@@ -431,14 +431,24 @@ class MarkManagerService
             }
         }
 
+        // $oldLessonSkill= $this->skillRepository->findOneBy([
+        //     'lesson' => $selectedLesson,
+        //     'term' => $selectedSequence->getTerm()
+        // ]);
+
         $oldLessonSkill= $this->skillRepository->findOneBy([
             'lesson' => $selectedLesson,
-            'term' => $selectedSequence->getTerm()
+            'sequence' => $selectedSequence
         ]);
+
+        // $lessonSkill = $this->skillRepository->findOneBy([
+        //     'lesson' => $selectedLesson,
+        //     'term' => $newSequence->getTerm()
+        // ]);
 
         $lessonSkill = $this->skillRepository->findOneBy([
             'lesson' => $selectedLesson,
-            'term' => $newSequence->getTerm()
+            'sequence' => $newSequence
         ]);
 
         if ($lessonSkill === null) 
@@ -448,7 +458,7 @@ class MarkManagerService
             $skill = new Skill();
 
             $skill->setLesson($selectedLesson)
-                ->setTerm($newSequence->getTerm())
+                ->setSequence($newSequence)
                 ->setSkill($oldLessonSkill->getSkill());
 
             $this->em->persist($skill);
@@ -457,7 +467,7 @@ class MarkManagerService
         if($elementIsPersisted)
         {
             $this->em->flush();
-            $flashBag->add('info', $this->translator->trans('Marks renewed successfully'));
+            $flashBag->add('info', $this->translator->trans('Marks renewed with success !'));
             $mySession = $this->request->getSession();
             $mySession->set('saisiNotes', 1);
         }else 

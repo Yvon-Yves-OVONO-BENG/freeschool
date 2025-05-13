@@ -62,7 +62,7 @@ class PrintSchoolTopFiveStudentsController extends AbstractController
         $topFiveStudents = $this->reportRepository->findSchoolTopFiveStudents($schoolYear, $subSystem, $term);
         
        
-        $pdf = $this->printSchoolTopFiveStudentsService->printSchoolTopFiveStudentsService($topFiveStudents, $schoolYear, $school, $subSystem);
+        $pdf = $this->printSchoolTopFiveStudentsService->printSchoolTopFiveStudentsService($topFiveStudents, $schoolYear, $school, $subSystem, $term);
         
         if ($subSystem->getId() == 1 ) 
         {

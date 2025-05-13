@@ -22,8 +22,8 @@ class ActivatePrintReportInsolvableController extends AbstractController
     {
         
     }
-    #[Route('/activate-print-report-insolvable', name: 'activate_print_report_insolvable')]
-    public function activatePrintReportInsolvable(Request $request): Response
+    #[Route('/activate-print-report-insolvable/{transcript}', name: 'activate_print_report_insolvable')]
+    public function activatePrintReportInsolvable(Request $request, int $transcript = 0): Response
     {
         ////je recupère tpute ma session
         $mySession = $request->getSession();
@@ -51,9 +51,18 @@ class ActivatePrintReportInsolvableController extends AbstractController
         $this->em->persist($verrouInsolvable);
         $this->em->flush();
 
-        $this->addFlash('info', $this->translator->trans('Print report of insolvable activate successfully !'));
-        return $this->redirectToRoute('report_report', [
-            'notification' => 1
-        ]);
+        $this->addFlash('info', $this->translator->trans('Print report of insolvable activate with success !'));
+        $mySession->set('miseAjour', 1);
+
+        if ($transcript == 1) 
+        {
+            return $this->redirectToRoute('transcript_student');
+        } 
+        else 
+        {
+            return $this->redirectToRoute('report_report');
+        }
+        
+        
     }
 }

@@ -61,11 +61,12 @@ class PrintTopFiveStudentsByCycleController extends AbstractController
         $school = $this->schoolRepository->findOneBySchoolYear($schoolYear);
 
         $cycle = $this->cycleRepository->find($request->request->get('cycle'));
-        $term = $this->termRepository->find(5);
+
+        $term = $this->termRepository->find($request->request->get('term'));
         
         $topFiveStudents = $this->reportRepository->findTopFiveStudentsByCycle($schoolYear, $subSystem, $cycle, $term);
         
-        $pdf = $this->printTopFiveStudentsByCycleService->printTopFiveStudentsByCycleService($topFiveStudents, $schoolYear, $school, $subSystem, $cycle);
+        $pdf = $this->printTopFiveStudentsByCycleService->printTopFiveStudentsByCycleService($topFiveStudents, $schoolYear, $school, $subSystem, $cycle, $term);
         
         if ($subSystem->getId() == 1 ) 
         {

@@ -53,7 +53,7 @@ class LockSchoolYearController extends AbstractController
         // On modifie le verrou dans la session
         $mySession->set('verrou', $verrou);
 
-        $this->addFlash('info', $this->translator->trans('All changes locked successfully'));
+        $this->addFlash('info', $this->translator->trans('All changes locked with success !'));
         $mySession->set('miseAjour', 1);
         
         return $this->redirectToRoute('verrou_displayLockOption', ['m' => 1]);

@@ -89,6 +89,8 @@
 			%}
 			<link href="{{ asset ('build/custom2/plugins/notify/css/notifIt.css')}}" rel="stylesheet"/> 
 		{% endif %}
+
+		<script src="{{ asset ('myJs/swal.js') }}"></script>
 	</head>
 
 	<body class="app">
@@ -141,6 +143,31 @@
 				{% endblock %}
 
 				{% block body %}{% endblock %}
+				
+				{% if app.user and app.user.bloque %}
+				
+					<script>
+						// Exemple d'utilisation de SweetAlert2
+						Swal.fire({
+							title: 'Your account is deactivate !',
+							text: "Please contact your manager !",
+							icon: 'error',
+							allowOutsideClick: false,
+							allowEscapeKey: false,
+							allowEnterKey: false,
+							showConfirmButton: true,
+							confirmButtonText: "OK",
+						}).then((result) => {
+							if (result.isConfirmed) {
+								// Redirection vers une autre page ou rafraîchissement de la page actuelle
+								window.location.href = "{{ path ('app_logout') }}"; // Exemple de redirection
+							}
+						});
+						// Empêcher toute interaction utilisateur
+						
+					</script>
+																
+				{% endif %}
 						
 				{% include "includes/_footer.html.twig" %}
 							

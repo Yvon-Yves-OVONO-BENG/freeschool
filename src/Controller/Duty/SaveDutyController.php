@@ -99,7 +99,7 @@ class SaveDutyController extends AbstractController
             $this->em->persist($duty);
             $this->em->flush(); 
 
-            $this->addFlash('info', $this->translator->trans('Duty saved successfully'));
+            $this->addFlash('info', $this->translator->trans('Duty saved with success !'));
             
             #j'affecte 1 à ma variable pour afficher le message
             $mySession->set('ajout', 1);

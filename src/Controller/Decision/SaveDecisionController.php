@@ -99,7 +99,7 @@ class SaveDecisionController extends AbstractController
             $this->em->persist($decision);
             $this->em->flush(); 
 
-            $this->addFlash('info', $this->translator->trans('Decision saved successfully'));
+            $this->addFlash('info', $this->translator->trans('Decision saved with success !'));
             
             #j'affecte 1 à ma variable pour afficher le message
             $mySession->set('ajout', 1);

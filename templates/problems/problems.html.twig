@@ -1,0 +1,287 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% trans %}Report reconstruction{% endtrans %} {% trans %}and{% endtrans %} {% trans %}Problems{% endtrans %}
+{% endblock %}
+
+{% block stylesheets %}
+	<style>
+		th,
+		tfoot {
+			font-size: 15px !important;
+			text-align: center !important;
+			font-weight: bold !important;
+			background-color: #F1F1F1 !important;
+		}
+
+		tr:hover {
+			background-color: rgba(62, 128, 235, 0.2) !important;
+			color: #3e80eb !important;
+		}
+
+        td {
+			font-size: 12px !important;
+			text-align: center !important;
+		}
+        .background-red {
+            background-color: red;
+        }
+        .text-red-bold{
+            color: red;
+            font-weight: bold;
+        }
+        .text-bold{
+            font-weight: bold;
+        }
+	</style>
+{% endblock %}
+
+{% block body %}    
+<!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+        
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary"><i class="fa fa-wrench me-2"></i>{% trans %}Report reconstruction{% endtrans %} {% trans %}and{% endtrans %} {% trans %}Problems{% endtrans %}</h4>
+                </div>
+                <div class="page-rightheader">
+                    <div class="btn-list">
+                        
+                    </div>
+                </div>
+            </div>
+            <!--End Page header-->
+
+            <!-- Row -->
+            <div class="row">
+                <div class="col-md-12 col-lg-12">
+                    <div class="card border-primary">
+                        <div class="card-header">
+                            <div class="col-lg-5">
+                                <form action="{{ path('display_problems') }}" method="post">
+                                    <div class="row mt-3">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <select name="period" id="period" class="form-control select2-show-search" data-placeholder="Choose a period" required>
+                                                    <option label="Choose a period" value="">
+                                                        {% trans %}Choose a period{% endtrans %}
+                                                    </option>
+                                                    <optgroup label="{% trans %}Evaluations{% endtrans %}">
+                                                        {% for sequence in sequences %}
+                                                            <option value="s{{ sequence.id }}">{% trans %}Evaluation{% endtrans %} {{ sequence.sequence }}</option>
+                                                        {% endfor %}
+                                                    </optgroup>
+                                                    
+                                                    <optgroup label="{% trans %}Terms{% endtrans %}">
+                                                        {% for term in terms %}
+                                                            {% if term.term != annualTerm %}
+                                                                <option value="t{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <select class="form-control select2-show-search" data-placeholder="Choose a classroom" name="classroom" id="classroom" required style="border: 1px solid #0f0;">
+                                                    <option label="Choose a classroom" value="">{% trans %}Choose a class{% endtrans %}</option>
+                                                    
+                                                    {% if subSystem == 'Francophone / French Speaker' %}
+                                                        {% if school.education.education == 'Général' %}
+                                                            {% include "includes/_selectClassrooms.html.twig" %}
+                                                            {% else %}
+                                                                {% include "includes/_selectClassroomsTech.html.twig" %}
+                                                        {% endif %}
+                                                        {% else %}
+                                                            {% include "includes/_selectClassroomsEn.html.twig" %}
+                                                    {% endif %}
+
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printBestStudentsPerClass">
+                                                    <i class="fa fa-eye me-2"></i>
+                                                    {% trans %}Display{% endtrans %}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                
+                                </form>
+                            </div>
+                            
+                            <div class="col-lg-7 text-right">
+                                {% if display == true and tableauResultats|length > 0 %}
+                                    {% if firstPeriodLetter == 't' %}
+                                        <button type="button" class="btn btn-primary me-3">
+                                            <span>{% trans %}Term{% endtrans %}</span>
+                                            <span class="badge bg-white text-dark">{{ term.term }}</span>
+                                        </button>
+                                        {% else %}
+                                        {% if firstPeriodLetter == 's' %}
+                                            <button type="button" class="btn btn-primary me-3">
+                                                <span>{% trans %}Evaluation{% endtrans %}</span>
+                                                <span class="badge bg-white text-dark">{{ sequence.sequence }}</span>
+                                            </button>
+                                        {% endif %}
+                                    {% endif %}
+                                    
+                                    <button type="button" class="btn btn-primary me-3">
+                                        <span>{% trans %}Classroom{% endtrans %}</span>
+                                        <span class="badge bg-white text-dark">{{ classroom.classroom }}</span>
+                                    </button>
+                                
+                                    {% else %}
+                                        {% if firstPeriodLetter == 't' %}
+                                            <button type="button" class="btn btn-primary me-3">
+                                                <span>{% trans %}Term{% endtrans %}</span>
+                                                <span class="badge bg-white text-dark">{{ term.term }}</span>
+                                            </button>
+                                            {% else %}
+                                            {% if firstPeriodLetter == 's' %}
+                                                <button type="button" class="btn btn-primary me-3">
+                                                    <span>{% trans %}Evaluation{% endtrans %}</span>
+                                                    <span class="badge bg-white text-dark">{{ sequence.sequence }}</span>
+                                                </button>
+                                            {% endif %}
+                                        {% endif %}
+                                        
+                                        {% if classroom %}
+                                            <button type="button" class="btn btn-primary me-3">
+                                                <span>{% trans %}Classroom{% endtrans %}</span>
+                                                <span class="badge bg-white text-dark">{{ classroom.classroom }}</span>
+                                            </button>
+
+                                            <button type="button" class="btn btn-danger me-3">
+                                                <span>{% trans %}Notes not yet entered{% endtrans %}</span>
+                                            </button>
+                                        {% endif %}
+
+                                        
+
+                                {% endif %}
+
+                            </div>
+                        </div>
+                        
+                        <div class="card-body">
+                            <div class="row mt-4">
+                                <div class="col-lg-12">
+                                    <table id="example-1" class="table table-striped table-bordered text-nowrap">
+                                        <thead>
+                                            <tr>
+                                                <th class="border-bottom-0">N°</th>
+                                                <th class="border-bottom-0">{% trans %}Full Name{% endtrans %}</th>
+                                                <th class="border-bottom-0">{% trans %}Evaluation{% endtrans %} | {% trans %}Number of assessments{% endtrans %}</th>
+                                                
+                                                {% if sequence %}
+                                                    <th class="border-bottom-0">{% trans %}Operations{% endtrans %}</th>
+                                                {% endif %}
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <th class="border-bottom-0">N°</th>
+                                                <th class="border-bottom-0">{% trans %}Full Name{% endtrans %}</th>
+                                                <th class="border-bottom-0">{% trans %}Evaluation{% endtrans %} | {% trans %}Number of assessments{% endtrans %}</th>
+                                                {% if sequence %}
+                                                    <th class="border-bottom-0">{% trans %}Operations{% endtrans %}</th>
+                                                {% endif %}
+                                            </tr>
+                                        </tfoot>
+                                        <tbody>
+                                            {% if tableauResultats|length > 0 %}
+                                                {% set i = 1 %}
+                                                {% for tableauResultat in tableauResultats %}
+
+                                                    <tr>
+                                                        <td style="text-align: center !important; vertical-align: middle !important;">{{ i }}</td>
+                                                        <td style="text-align: left !important; vertical-align: middle !important;" class="text-bold">{{ tableauResultat['nomEleve'] }}</td>
+                                                        
+                                                        {% if firstPeriodLetter == 's' %}
+                                                            <td>
+                                                                <p class="text-bold">
+                                                                    {{ tableauResultat['sequences'][sequence.sequence] }} {% trans %}Evaluations{% endtrans %}
+                                                                </p>  
+                                                            </td>
+                                                            {% else %}
+                                                            {% if firstPeriodLetter == 't' %}
+                                                                <td >
+                                                                    {% if term.term == 1 %}
+                                                                        {% for sequenceId in [1, 2] %}
+                                                                            {% set nbEvaluations = tableauResultat['sequences'][sequenceId] ?? 0 %}
+                                                                            
+                                                                            {% if tableauResultat['sequences'][1] != tableauResultat['sequences'][2] %}
+                                                                                <p class="text-red-bold">
+                                                                                {% else %}
+                                                                                <p class="text-bold">
+                                                                            {% endif %}
+                                                                                    {% trans %}Evaluation{% endtrans %} {{ sequenceId }} : {{ nbEvaluations }} {% trans %}Evaluations{% endtrans %}<br>
+                                                                                </p>
+                                                                            
+                                                                        {% endfor %}
+
+                                                                        {% else %}
+                                                                        {% if term.term == 2 %}
+                                                                            {% for sequenceId in [3, 4] %}
+                                                                                {% set nbEvaluations = tableauResultat['sequences'][sequenceId] ?? 0 %}
+                                                                                {% if tableauResultat['sequences'][3] != tableauResultat['sequences'][4] %}
+                                                                                    <p class="text-red-bold">
+                                                                                    {% else %}
+                                                                                    <p class="text-bold">
+                                                                                {% endif %}
+                                                                                        {% trans %}Evaluation{% endtrans %} {{ sequenceId }} : {{ nbEvaluations }} {% trans %}Evaluations{% endtrans %}<br>
+                                                                                    </p>
+                                                                            {% endfor %}
+                                                                            {% else %}
+                                                                            {% if term.term == 3 %}
+                                                                                {% for sequenceId in [5, 6] %}
+                                                                                    {% set nbEvaluations = tableauResultat['sequences'][sequenceId] ?? 0 %}
+                                                                                    {% if tableauResultat['sequences'][5] != tableauResultat['sequences'][6] %}
+                                                                                        <p class="text-red-bold">
+                                                                                        {% else %}
+                                                                                        <p class="text-bold">
+                                                                                    {% endif %}
+                                                                                            {% trans %}Evaluation{% endtrans %} {{ sequenceId }} : {{ nbEvaluations }} {% trans %}Evaluations{% endtrans %}<br>
+                                                                                        </p>
+                                                                            {% endfor %}
+                                                                            {% endif %}
+                                                                        {% endif %}
+                                                                    {% endif %}
+                                                                </td>
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    
+                                                        
+                                                        {% if sequence %}
+                                                            <td style="text-align: center !important; vertical-align: middle !important;">
+                                                                <a href="{{ path('details_evaluations_sequence_student', {'slugStudent': tableauResultat['slugStudent'], 'sequenceId': sequence.id, 'slugClassroom': tableauResultat['slugClassroom'] }) }}" class="btn btn-outline-primary" rel="noopener noreferrer">
+                                                                    <i class="fa fa-wrench me-2"></i>{% trans %}Recontructing the report{% endtrans %}
+                                                                </a>
+                                                            </td>
+                                                        {% endif %}
+                                                    </tr>
+                                                    {% set i = i + 1 %}
+                                                {% endfor %}
+                                            {% endif %}
+                                        </body>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            <!--End Row -->
+        </div>
+    </div>
+</div>
+{% endblock %}

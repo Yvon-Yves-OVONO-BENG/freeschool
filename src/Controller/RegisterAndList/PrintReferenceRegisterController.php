@@ -12,6 +12,7 @@ use App\Repository\ClassroomRepository;
 use App\Service\RegisterAndListService;
 use App\Repository\EvaluationRepository;
 use App\Entity\ReportElements\StudentReport;
+use App\Repository\StudentRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -32,6 +33,7 @@ class PrintReferenceRegisterController extends AbstractController
         protected ReportService $reportService, 
         protected SchoolRepository $schoolRepository, 
         protected SequenceRepository $sequenceRepository, 
+        protected StudentRepository $studentRepository,
         protected ClassroomRepository $classroomRepository, 
         protected EvaluationRepository $evaluationRepository, 
         protected RegisterAndListService $registerAndListService, 
@@ -74,7 +76,13 @@ class PrintReferenceRegisterController extends AbstractController
             // On recupère la classe choisie
             $choosedClassroom = $this->classroomRepository->find($idC);
 
-            if(count($choosedClassroom->getStudents()))
+            $students = $this->studentRepository->findBy([
+                'classroom' => $choosedClassroom,
+                'supprime' =>0
+            ]);
+            
+            
+            if(count($students))
             {
                 $classrooms[] = $choosedClassroom;
             }
@@ -95,9 +103,19 @@ class PrintReferenceRegisterController extends AbstractController
                 $allClassrooms = $this->classroomRepository->findForSelect($schoolYear, $subSystem);
                 
             }
+
+
             foreach ($allClassrooms as $oneClassroom) 
             {
-                if(count($oneClassroom->getStudents()))
+                $studentsInOneClassroom = [];
+
+                foreach ($oneClassroom->getStudents() as $studentInOneClassroom) 
+                {
+                    if($studentInOneClassroom->isSupprime() == 0)
+                    $studentsInOneClassroom = $studentInOneClassroom;
+                }
+
+                if(count($studentsInOneClassroom))
                 {
                     $classrooms[] = $oneClassroom;
                 }
@@ -106,7 +124,12 @@ class PrintReferenceRegisterController extends AbstractController
 
         foreach ($classrooms as $selectedClassroom) 
         {
-            $numberOfStudents = count($selectedClassroom->getStudents());
+            $students = $this->studentRepository->findBy([
+                'classroom' => $choosedClassroom,
+                'supprime' =>0
+            ]);
+
+            $numberOfStudents = count($students);
             $numberOfLessons = count($selectedClassroom->getLessons());
         
             if($firstPeriodLetter === 't') // si la période est trimestrielle
@@ -215,11 +238,11 @@ class PrintReferenceRegisterController extends AbstractController
                                                                                                     $numberOfStudents, 
                                                                                                     $rankedStudentsCategory1, 
                                                                                                     $rankedStudentsCategory2, 
-                                                                                                    $rankedStudentsCategory3, 
-                                                                                                    $rankPerLesson = [], 
-                                                                                                    $studentMarkSequence3 = [], 
+                                                                                                    $rankedStudentsCategory3,   
                                                                                                     $subSystem, 
-                                                                                                    $selectedTerm));
+                                                                                                    $selectedTerm,
+                                                                                                    $rankPerLesson = [],
+                                                                                                    $studentMarkSequence3 = []));
 
                         }elseif($firstPeriodLetter === 's')
                         {
@@ -234,15 +257,15 @@ class PrintReferenceRegisterController extends AbstractController
                                                                                                     $numberOfStudents, 
                                                                                                     $rankedStudentsCategory1, 
                                                                                                     $rankedStudentsCategory2, 
-                                                                                                    $rankedStudentsCategory3, 
-                                                                                                    $rankPerLesson = [], 
-                                                                                                    $studentMarkSequence3 = [], 
+                                                                                                    $rankedStudentsCategory3,  
                                                                                                     $subSystem, 
-                                                                                                    $selectedTerm ));
+                                                                                                    $selectedTerm,
+                                                                                                    $rankPerLesson = [], 
+                                                                                                    $studentMarkSequence3 = []));
 
                         }else
                         {
-                            //    bulletiins annuels
+                            //    bulletins annuels
                             $studentReport->setReportBody($this->reportService->getStudentReportBody($studentMarkTerm1, 
                                                                                                     $studentMarkTerm2, 
                                                                                                     $studentMarkTerm, 
@@ -253,10 +276,13 @@ class PrintReferenceRegisterController extends AbstractController
                                                                                                     $rankedStudentsCategory1, 
                                                                                                     $rankedStudentsCategory2, 
                                                                                                     $rankedStudentsCategory3, 
-                                                                                                    $studentMarkTerm3, 
-                                                                                                    $studentMarkSequence3 = [], 
                                                                                                     $subSystem, 
-                                                                                                    $selectedTerm));
+                                                                                                    $selectedTerm,
+                                                                                                    $rankPerLesson = [], 
+                                                                                                    $studentMarkSequence3 = [],
+                                                                                                    $studentMarkTerm3,  
+                                                                                                
+                                                                                                ));
                         }
 
                         $studentReport->setNumberOfLessons($numberOfLessons);

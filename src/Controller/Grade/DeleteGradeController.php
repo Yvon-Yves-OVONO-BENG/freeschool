@@ -59,7 +59,7 @@ class DeleteGradeController extends AbstractController
         $this->em->remove($grade);
         $this->em->flush();
         
-        $this->addFlash('info', $this->translator->trans('Rank deleted successfully'));
+        $this->addFlash('info', $this->translator->trans('Rank deleted with success !'));
 
         #j'affecte 1 à ma variable pour afficher le message
         $mySession->set('suppression', 1);

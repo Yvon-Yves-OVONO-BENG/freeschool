@@ -51,7 +51,7 @@ class ReinitialiserMotDePasseController extends AbstractController
             $this->em->flush();
 
             #j'affiche le message de confirmation d'ajout
-            $this->addFlash('info', $this->translator->trans("Password successfully reset ! "));
+            $this->addFlash('info', $this->translator->trans("success "));
 
             return $this->redirectToRoute('home_mainMenu');
             

@@ -10,6 +10,7 @@
 {% endblock %}
 
 {% block body %}
+   
 <!-- App-Content -->
 	<div class="hor-content main-content">
 		<div class="container">
@@ -25,7 +26,15 @@
                     </div>
                 </div>
             </div>
+            
             <!--End Page header-->
+            {% for message in app.flashes('info')  %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true">×</button>
+                    <i class="fa fa-frown-o me-2" aria-hidden="true"></i>
+                    {{ message }}
+                </div>
+            {% endfor %}
 
             <div class="card border-primary">
                 <div class="my-card-header">

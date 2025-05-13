@@ -116,7 +116,7 @@ class EditDepartmentController extends AbstractController
             ;
 
             $this->em->flush(); // On modifie
-            $this->addFlash('info', $this->translator->trans('Department updated successfully'));
+            $this->addFlash('info', $this->translator->trans('Department updated with success !'));
 
             $mySession->set('miseAjour', 1);
 

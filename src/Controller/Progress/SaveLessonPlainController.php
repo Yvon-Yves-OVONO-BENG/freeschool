@@ -82,7 +82,7 @@ class SaveLessonPlainController extends AbstractController
             $this->em->persist($progress[0]);
             $this->em->flush(); 
 
-            $this->addFlash('info', $this->translator->trans('Number of planned lessons saved successfully'));
+            $this->addFlash('info', $this->translator->trans('Number of planned lessons saved with success !'));
             $mySession->set('ajout', 1);
 
             $progress = new Lesson;

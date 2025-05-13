@@ -63,7 +63,7 @@ class RestoreStudentTrashController extends AbstractController
         $this->em->persist($studentTrash);
         $this->em->flush();
 
-        $this->addFlash('info', $this->translator->trans('Student restored successfully'));
+        $this->addFlash('info', $this->translator->trans('Student restored with success !'));
         
         $mySession->set('miseAjour', 1);
 

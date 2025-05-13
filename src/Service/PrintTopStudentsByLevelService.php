@@ -105,8 +105,18 @@ class PrintTopStudentsByLevelService
                 
                 
             }
+
+            if ($term->getTerm() == 0) 
+            {
+                $pdf->Cell(0, 7, utf8_decode("ANNUEL"), 0, 0, 'C');
+            } 
+            else 
+            {
+                $pdf->Cell(0, 7, utf8_decode("TRIMESTRE ".$term->getTerm()), 0, 0, 'C');
+            }
             
-            $pdf->Ln(3);
+            
+            $pdf->Ln(7);
 
             // Entête du tableau
             $pdf = $this->generalService->getTableHeaderPagination($pdf, $fontSize, $cellTableClassroom, $cellTableHeight, $cellTablePresence, $cellTableObservation, $cellTablePresence3, $subSystem);
@@ -206,8 +216,17 @@ class PrintTopStudentsByLevelService
                 
                 
             }
+
+            if ($term->getTerm() == 0) 
+            {
+                $pdf->Cell(0, 7, utf8_decode("ANNUAL"), 0, 0, 'C');
+            } 
+            else 
+            {
+                $pdf->Cell(0, 7, utf8_decode("TERM ".$term->getTerm()), 0, 0, 'C');
+            }
             
-            $pdf->Ln(3);
+            $pdf->Ln(7);
 
             // Entête du tableau
             $pdf = $this->generalService->getTableHeaderPagination($pdf, $fontSize, $cellTableClassroom, $cellTableHeight, $cellTablePresence, $cellTableObservation, $cellTablePresence3, $subSystem);

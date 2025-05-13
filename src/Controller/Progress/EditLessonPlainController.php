@@ -72,7 +72,7 @@ class EditLessonPlainController extends AbstractController
         {
             $this->em->persist($progress);
             $this->em->flush(); // On modifie
-            $this->addFlash('info', $this->translator->trans('Number of planned lessons successfully updated'));
+            $this->addFlash('info', $this->translator->trans('Number of planned lessons updated with success !'));
             $mySession->set('miseAjour', 1);
             // On se redirige sur la page d'affichage des leçons prévues
             return $this->redirectToRoute('display_lesson_plain', ['m' => 1 ]);

@@ -55,7 +55,7 @@ class CancelDeliberationController extends AbstractController
 
         }
 
-        $this->addFlash('info', $this->translator->trans('Deliberations canceled successfully !'));
+        $this->addFlash('info', $this->translator->trans('Deliberations canceled with success ! !'));
 
         return $this->redirectToRoute('deliberation_displayDeliberation', [
             'idC' => $idC,

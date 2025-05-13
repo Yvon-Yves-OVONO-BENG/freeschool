@@ -55,17 +55,17 @@ class PrintLatersTeacherController extends AbstractController
 
         $selectedSequence = $this->sequenceRepository->find($idS);
 
-        $evaluations = $this->teacherService->getUnrecordedMark($idS, $idL);
+        $evaluations = $this->teacherService->displayTeachersLaters($idS, $idL);
 
         $pdf = $this->teacherService->printLaters($evaluations, $school, $schoolYear, $selectedSequence);
 
         if ($subSystem->getId() == 1 ) 
         {
-            return new Response($pdf->Output(utf8_decode("Laters of recording evaluation of term ".$selectedSequence->getSequence()), "I"), 200, ['Content-Type' => 'application/pdf']) ;
+            return new Response($pdf->Output(utf8_decode("Laters of recording evaluation ".$selectedSequence->getSequence()), "I"), 200, ['Content-Type' => 'application/pdf']) ;
         } 
         else 
         {
-            return new Response($pdf->Output(utf8_decode("Retardataires dans les saisies des notes du trimestre ".$selectedSequence->getSequence()), "I"), 200, ['Content-Type' => 'application/pdf']) ;
+            return new Response($pdf->Output(utf8_decode("Retardataires dans les saisies des notes de l'évaluation ".$selectedSequence->getSequence()), "I"), 200, ['Content-Type' => 'application/pdf']) ;
         }
     }
 }

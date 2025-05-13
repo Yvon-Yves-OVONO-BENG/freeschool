@@ -28,8 +28,8 @@ class DesactivePrintReportInsolvableController extends AbstractController
         )
     {}
 
-    #[Route('/desactive-print-report-insolvable', name: 'desactive_print_report_insolvable')]
-    public function desactivePrintReportInsolvable(Request $request): Response
+    #[Route('/desactive-print-report-insolvable/{transcript}', name: 'desactive_print_report_insolvable')]
+    public function desactivePrintReportInsolvable(Request $request, int $transcript = 0): Response
     {
         $mySession = $request->getSession();
         $mySession->set('ajout',null);
@@ -94,8 +94,16 @@ class DesactivePrintReportInsolvableController extends AbstractController
         $this->em->persist($verrouInsolvable);
         $this->em->flush();
 
-        $this->addFlash('info', $this->translator->trans('Print report of insolvable desactivate successfully !'));
+        $this->addFlash('info', $this->translator->trans('Print report of insolvable desactivate with success !'));
         $mySession->set('miseAjour', 1);
-        return $this->redirectToRoute('report_report');
+
+        if ($transcript == 1) 
+        {
+            return $this->redirectToRoute('transcript_student');
+        } 
+        else 
+        {
+            return $this->redirectToRoute('report_report');
+        }
     }
 }

@@ -28,7 +28,7 @@
     <div class="row" style="margin-top: 100px;">
         <div class="col mx-auto">
             <div class="row justify-content-center">
-                <div class="col-xl-7 col-lg-12">
+                <div class="col-xl-6 col-lg-12">
                     <div class="row p-0 m-0">
                         <div class="col-md-4 col-lg-4 p-0 mx-auto">
                             <div class="text-justified text-white p-5 register-1 overflow-hidden" >
@@ -54,8 +54,12 @@
                                 
                                 <div class="card-body">
                                     <div class="text-center mb-3">
-                                        <h4 class="mb-2">{% trans %}SUB SYSTEM & SCHOOL YEAR{% endtrans %}</h4>
-                                        <a href="javascript:void(0);" class="">SOUS-SYSTEME & ANNE SCOLAIRE</a>
+                                        {# <h4 class="mb-2">{% trans %}L.B NGUELEMENDOUKA {% endtrans %}</h4> #}
+                                        {# <h4 class="mb-2">{% trans %}G.B.H.S NGUELEMENDOUKA{% endtrans %}</h4> #}
+                                        {# <h4 class="mb-2">{% trans %}LYCEE DE MARTAP / G.H.S MARTAP{% endtrans %}</h4> #}
+                                        <h4 class="mb-2">{% trans %}LYCEE BILINGUE D'ODZA / G.B.H.S ODZA{% endtrans %}</h4>
+                                        {# <h4 class="mb-2">{% trans %}LYCEE TECHNIQUE D'AYOS/ G.T.H.S AYOS{% endtrans %}</h4> #}
+                                        <br>
                                     </div>
                                     <form id="login-form" class="row g-3 needs-validation" novalidate action="{{ path('home_mainMenu') }}" method="post">
                                         
@@ -106,6 +110,8 @@
                                 </div>
                             </div>
                         </div>
+
+                        
                     </div>
                 </div>
             </div>

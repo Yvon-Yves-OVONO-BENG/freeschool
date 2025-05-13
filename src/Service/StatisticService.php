@@ -1542,8 +1542,8 @@ class StatisticService
 
                         $pdf->Cell((($cellWidth1/2)/2)/3, $cellHeigh0, $lesson['lessonsByTrimester']['annuel']['nbreLessonTheoriquePrevue'], 
                                                                         1, 0, 'C', $fill);
-
-                        $pdf->Cell((($cellWidth1/2)/2)/3, $cellHeigh0, $lesson['lessonsByTrimester']['Trimestre1']['nbreLessonTheoriqueFaite'], 
+                        
+                        $pdf->Cell((($cellWidth1/2)/2)/3, $cellHeigh0, $lesson['lessonsByTrimester']['trimestre1']['nbreLessonTheoriqueFaite'], 
                                                                                 1, 0, 'C', $fill);
 
                         if($lesson['lessonsByTrimester']['annuel']['nbreLessonTheoriquePrevue'] == 0)
@@ -1552,7 +1552,7 @@ class StatisticService
                         }
                         else
                         {
-                            $pdf->Cell((($cellWidth1/2)/2)/3, $cellHeigh0, number_format(($lesson['lessonsByTrimester']['Trimestre1']['nbreLessonTheoriqueFaite']/$lesson['lessonsByTrimester']['annuel']['nbreLessonTheoriquePrevue'])*100, 2), 
+                            $pdf->Cell((($cellWidth1/2)/2)/3, $cellHeigh0, number_format(($lesson['lessonsByTrimester']['trimestre1']['nbreLessonTheoriqueFaite']/$lesson['lessonsByTrimester']['annuel']['nbreLessonTheoriquePrevue'])*100, 2), 
                                                                                 1, 0, 'C', $fill);
                         }
 
@@ -1578,7 +1578,7 @@ class StatisticService
                         $pdf->Cell((($cellWidth1/2)/2)/3, $cellHeigh0, $lesson['lessonsByTrimester']['annuel']['nbreLessonPratiquePrevue'], 
                                                                         1, 0, 'C', $fill);
 
-                        $pdf->Cell((($cellWidth1/2)/2)/3, $cellHeigh0, $lesson['lessonsByTrimester']['Trimestre1']['nbreLessonPratiqueFaite'], 
+                        $pdf->Cell((($cellWidth1/2)/2)/3, $cellHeigh0, $lesson['lessonsByTrimester']['trimestre1']['nbreLessonPratiqueFaite'], 
                                                                                 1, 0, 'C', $fill);
 
                         if($lesson['lessonsByTrimester']['annuel']['nbreLessonPratiquePrevue'] == 0)
@@ -1623,7 +1623,7 @@ class StatisticService
                         $pdf->Cell((($cellWidth1/2)/2)/3, $cellHeigh0, $lesson['lessonsByTrimester']['annuel']['nbreLessonTheoriquePrevue'], 
                                                                         1, 0, 'C', $fill);
 
-                        $pdf->Cell((($cellWidth1/2)/2)/3, $cellHeigh0, $lesson['lessonsByTrimester']['Trimestre1']['nbreLessonTheoriqueFaite'] + $lesson['lessonsByTrimester']['Trimestre2']['nbreLessonTheoriqueFaite'], 
+                        $pdf->Cell((($cellWidth1/2)/2)/3, $cellHeigh0, $lesson['lessonsByTrimester']['trimestre1']['nbreLessonTheoriqueFaite'] + $lesson['lessonsByTrimester']['Trimestre2']['nbreLessonTheoriqueFaite'], 
                                                                                 1, 0, 'C', $fill);
 
                         if($lesson['lessonsByTrimester']['annuel']['nbreLessonTheoriquePrevue'] == 0)
@@ -1632,7 +1632,7 @@ class StatisticService
                         }
                         else
                         {
-                            $pdf->Cell((($cellWidth1/2)/2)/3, $cellHeigh0, number_format((($lesson['lessonsByTrimester']['Trimestre1']['nbreLessonTheoriqueFaite'] + $lesson['lessonsByTrimester']['Trimestre2']['nbreLessonTheoriqueFaite'])/$lesson['lessonsByTrimester']['annuel']['nbreLessonTheoriquePrevue'])*100, 2), 
+                            $pdf->Cell((($cellWidth1/2)/2)/3, $cellHeigh0, number_format((($lesson['lessonsByTrimester']['trimestre1']['nbreLessonTheoriqueFaite'] + $lesson['lessonsByTrimester']['Trimestre2']['nbreLessonTheoriqueFaite'])/$lesson['lessonsByTrimester']['annuel']['nbreLessonTheoriquePrevue'])*100, 2), 
                                                                                 1, 0, 'C', $fill);
                         }
 
@@ -1658,7 +1658,7 @@ class StatisticService
                         $pdf->Cell((($cellWidth1/2)/2)/3, $cellHeigh0, $lesson['lessonsByTrimester']['annuel']['nbreLessonPratiquePrevue'], 
                                                                         1, 0, 'C', $fill);
 
-                        $pdf->Cell((($cellWidth1/2)/2)/3, $cellHeigh0, $lesson['lessonsByTrimester']['Trimestre1']['nbreLessonPratiqueFaite'] + $lesson['lessonsByTrimester']['Trimestre2']['nbreLessonPratiqueFaite'], 
+                        $pdf->Cell((($cellWidth1/2)/2)/3, $cellHeigh0, $lesson['lessonsByTrimester']['trimestre1']['nbreLessonPratiqueFaite'] + $lesson['lessonsByTrimester']['Trimestre2']['nbreLessonPratiqueFaite'], 
                                                                                 1, 0, 'C', $fill);
 
                         if($lesson['lessonsByTrimester']['annuel']['nbreLessonPratiquePrevue'] == 0)
@@ -1703,7 +1703,7 @@ class StatisticService
                         $pdf->Cell((($cellWidth1/2)/2)/3, $cellHeigh0, $lesson['lessonsByTrimester']['annuel']['nbreLessonTheoriquePrevue'], 
                                                                         1, 0, 'C', $fill);
 
-                        $pdf->Cell((($cellWidth1/2)/2)/3, $cellHeigh0, $lesson['lessonsByTrimester']['Trimestre1']['nbreLessonTheoriqueFaite'] + $lesson['lessonsByTrimester']['Trimestre2']['nbreLessonTheoriqueFaite'] + $lesson['lessonsByTrimester']['Trimestre3']['nbreLessonTheoriqueFaite'], 
+                        $pdf->Cell((($cellWidth1/2)/2)/3, $cellHeigh0, $lesson['lessonsByTrimester']['trimestre1']['nbreLessonTheoriqueFaite'] + $lesson['lessonsByTrimester']['Trimestre2']['nbreLessonTheoriqueFaite'] + $lesson['lessonsByTrimester']['Trimestre3']['nbreLessonTheoriqueFaite'], 
                                                                                 1, 0, 'C', $fill);
 
                         if($lesson['lessonsByTrimester']['annuel']['nbreLessonTheoriquePrevue'] == 0)
@@ -1712,7 +1712,7 @@ class StatisticService
                         }
                         else
                         {
-                            $pdf->Cell((($cellWidth1/2)/2)/3, $cellHeigh0, number_format((($lesson['lessonsByTrimester']['Trimestre1']['nbreLessonTheoriqueFaite'] + $lesson['lessonsByTrimester']['Trimestre2']['nbreLessonTheoriqueFaite'] + $lesson['lessonsByTrimester']['Trimestre3']['nbreLessonTheoriqueFaite'])/$lesson['lessonsByTrimester']['annuel']['nbreLessonTheoriquePrevue'])*100, 2), 
+                            $pdf->Cell((($cellWidth1/2)/2)/3, $cellHeigh0, number_format((($lesson['lessonsByTrimester']['trimestre1']['nbreLessonTheoriqueFaite'] + $lesson['lessonsByTrimester']['Trimestre2']['nbreLessonTheoriqueFaite'] + $lesson['lessonsByTrimester']['Trimestre3']['nbreLessonTheoriqueFaite'])/$lesson['lessonsByTrimester']['annuel']['nbreLessonTheoriquePrevue'])*100, 2), 
                                                                                 1, 0, 'C', $fill);
                         }
 
@@ -1738,7 +1738,7 @@ class StatisticService
                         $pdf->Cell((($cellWidth1/2)/2)/3, $cellHeigh0, $lesson['lessonsByTrimester']['annuel']['nbreLessonPratiquePrevue'], 
                                                                         1, 0, 'C', $fill);
 
-                        $pdf->Cell((($cellWidth1/2)/2)/3, $cellHeigh0, $lesson['lessonsByTrimester']['Trimestre1']['nbreLessonPratiqueFaite'] + $lesson['lessonsByTrimester']['Trimestre2']['nbreLessonPratiqueFaite'] + $lesson['lessonsByTrimester']['Trimestre3']['nbreLessonPratiqueFaite'], 
+                        $pdf->Cell((($cellWidth1/2)/2)/3, $cellHeigh0, $lesson['lessonsByTrimester']['trimestre1']['nbreLessonPratiqueFaite'] + $lesson['lessonsByTrimester']['Trimestre2']['nbreLessonPratiqueFaite'] + $lesson['lessonsByTrimester']['Trimestre3']['nbreLessonPratiqueFaite'], 
                                                                                 1, 0, 'C', $fill);
 
                         if($lesson['lessonsByTrimester']['annuel']['nbreLessonPratiquePrevue'] == 0)
@@ -2032,7 +2032,7 @@ class StatisticService
 
 
 
-    public function dataCollectionTableRowPagination(Pagination $pdf, ClassroomStatisticSlipRow $row, bool $fill = false, array $lessons): Pagination
+    public function dataCollectionTableRowPagination(Pagination $pdf, ClassroomStatisticSlipRow $row, array $lessons, bool $fill = false): Pagination
     {
         $cellWidth0 = 55;
         $cellHeigh0 = 4;
@@ -2131,7 +2131,7 @@ class StatisticService
     }
 
 
-    public function ligneFicheDeCollecteDesTauxDeCouverturesDesProgrammesEtHeuresEnseignements(Pagination $pdf, ClassroomStatisticSlipRow $row, bool $fill = false, array $lessons, int $term): Pagination
+    public function ligneFicheDeCollecteDesTauxDeCouverturesDesProgrammesEtHeuresEnseignements(Pagination $pdf, ClassroomStatisticSlipRow $row, array $lessons, int $term, bool $fill = false): Pagination
     {
         $cellWidth0 = 55;
         $cellHeigh0 = 4;
@@ -3231,7 +3231,7 @@ class StatisticService
                     foreach($statistics[0] as $row)
                     {
                         // une ligne du tableau
-                        $pdf = $this->dataCollectionTableRowPagination($pdf, $row, false, $lessons);
+                        $pdf = $this->dataCollectionTableRowPagination($pdf, $row, $lessons, false);
                         $rowCounter++;
 
                         // on insère une nouvelle page avec entête de tableau si c'est nécessaire
@@ -3399,7 +3399,7 @@ class StatisticService
 
 
 
-                    $pdf = $this->dataCollectionTableRowPagination($pdf, $rowCycle, true, $lessons);
+                    $pdf = $this->dataCollectionTableRowPagination($pdf, $rowCycle, $lessons, true);
                     $rowCounter++;
 
                     // on insère une nouvelle page avec entête de tableau si c'est nécessaire
@@ -3438,7 +3438,7 @@ class StatisticService
                     foreach($statistics[1] as $row)
                     {
                         // une ligne du tableau
-                        $pdf = $this->dataCollectionTableRowPagination($pdf, $row, false, $lessons);
+                        $pdf = $this->dataCollectionTableRowPagination($pdf, $row, $lessons, false);
                         $rowCounter++;
 
                         // on insère une nouvelle page avec entête de tableau si c'est nécessaire
@@ -3613,7 +3613,7 @@ class StatisticService
 
                     $pdf->Cell((($tauxAssiduite)/2), $cellHeigh0*2, utf8_decode($pourcentageAssiduiteEnseignant), 1, 0, 'C', true);
 
-                    $pdf = $this->dataCollectionTableRowPagination($pdf, $rowCycle, true, $lessons);
+                    $pdf = $this->dataCollectionTableRowPagination($pdf, $rowCycle, $lessons, true);
                     $rowCounter++;
 
                     // on insère une nouvelle page avec entête de tableau si c'est nécessaire
@@ -3657,7 +3657,7 @@ class StatisticService
                 $pdf->Cell((($tauxAssiduite)/2), $cellHeigh0*2, number_format(($pourcentageAssiduiteEnseignant1 + $pourcentageAssiduiteEnseignant)/2, 2), 1, 0, 'C', true);
 
 
-                $pdf = $this->dataCollectionTableRowPagination($pdf, $rowSchool, true, $lessons);
+                $pdf = $this->dataCollectionTableRowPagination($pdf, $rowSchool, $lessons, true);
 
                 // $pdf->Ln(3);
                 // $pdf->SetFont('Times', 'B', 12);
@@ -3819,7 +3819,7 @@ class StatisticService
                     foreach($statistics[0] as $row)
                     {
                         // une ligne du tableau
-                        $pdf = $this->dataCollectionTableRowPagination($pdf, $row, false, $lessons);
+                        $pdf = $this->dataCollectionTableRowPagination($pdf, $row, $lessons, false);
                         $rowCounter++;
 
                         // on insère une nouvelle page avec entête de tableau si c'est nécessaire
@@ -3987,7 +3987,7 @@ class StatisticService
 
 
 
-                    $pdf = $this->dataCollectionTableRowPagination($pdf, $rowCycle, true, $lessons);
+                    $pdf = $this->dataCollectionTableRowPagination($pdf, $rowCycle, $lessons, true);
                     $rowCounter++;
 
                     // on insère une nouvelle page avec entête de tableau si c'est nécessaire
@@ -4009,7 +4009,7 @@ class StatisticService
                     foreach($statistics[1] as $row)
                     {
                         // une ligne du tableau
-                        $pdf = $this->dataCollectionTableRowPagination($pdf, $row, false, $lessons);
+                        $pdf = $this->dataCollectionTableRowPagination($pdf, $row, $lessons, false);
                         $rowCounter++;
 
                         // on insère une nouvelle page avec entête de tableau si c'est nécessaire
@@ -4166,7 +4166,7 @@ class StatisticService
 
                     $pdf->Cell((($tauxAssiduite)/2), $cellHeigh0*2, utf8_decode($pourcentageAssiduiteEnseignant), 1, 0, 'C', true);
 
-                    $pdf = $this->dataCollectionTableRowPagination($pdf, $rowCycle, true, $lessons);
+                    $pdf = $this->dataCollectionTableRowPagination($pdf, $rowCycle, $lessons, true);
                     $rowCounter++;
 
                     // on insère une nouvelle page avec entête de tableau si c'est nécessaire
@@ -4210,7 +4210,7 @@ class StatisticService
                 $pdf->Cell((($tauxAssiduite)/2), $cellHeigh0*2, number_format(($pourcentageAssiduiteEnseignant1 + $pourcentageAssiduiteEnseignant)/2, 2), 1, 0, 'C', true);
 
 
-                $pdf = $this->dataCollectionTableRowPagination($pdf, $rowSchool, true, $lessons);
+                $pdf = $this->dataCollectionTableRowPagination($pdf, $rowSchool, $lessons, true);
 
                 // $pdf->Ln(3);
                 // $pdf->SetFont('Times', 'B', 12);
@@ -4360,7 +4360,7 @@ class StatisticService
                     foreach($statistics[0] as $row)
                     {
                         // une ligne du tableau
-                        $pdf = $this->ligneFicheDeCollecteDesTauxDeCouverturesDesProgrammesEtHeuresEnseignements($pdf, $row, false, $lessons, $term);
+                        $pdf = $this->ligneFicheDeCollecteDesTauxDeCouverturesDesProgrammesEtHeuresEnseignements($pdf, $row, $lessons, $term, false);
                         $rowCounter++;
 
                         // on insère une nouvelle page avec entête de tableau si c'est nécessaire
@@ -4770,7 +4770,7 @@ class StatisticService
                     }
                     
 
-                    // $pdf = $this->dataCollectionTableRowPagination($pdf, $rowCycle, true, $lessons);
+                    // $pdf = $this->dataCollectionTableRowPagination($pdf, $rowCycle, $lessons, true);
                     $rowCounter++;
 
                     // on insère une nouvelle page avec entête de tableau si c'est nécessaire
@@ -4793,7 +4793,7 @@ class StatisticService
                     foreach($statistics[1] as $row)
                     {
                         // une ligne du tableau
-                        $pdf = $this->ligneFicheDeCollecteDesTauxDeCouverturesDesProgrammesEtHeuresEnseignements($pdf, $row, false, $lessons, $term);
+                        $pdf = $this->ligneFicheDeCollecteDesTauxDeCouverturesDesProgrammesEtHeuresEnseignements($pdf, $row, $lessons, $term, false);
                         $rowCounter++;
 
                         // on insère une nouvelle page avec entête de tableau si c'est nécessaire
@@ -5975,7 +5975,7 @@ class StatisticService
                     foreach($statistics[0] as $row)
                     {
                         // une ligne du tableau
-                        $pdf = $this->dataCollectionTableRowPagination($pdf, $row, false, $lessons);
+                        $pdf = $this->dataCollectionTableRowPagination($pdf, $row, $lessons, false);
                         $rowCounter++;
 
                         // on insère une nouvelle page avec entête de tableau si c'est nécessaire
@@ -6143,7 +6143,7 @@ class StatisticService
 
 
 
-                    $pdf = $this->dataCollectionTableRowPagination($pdf, $rowCycle, true, $lessons);
+                    $pdf = $this->dataCollectionTableRowPagination($pdf, $rowCycle, $lessons, true);
                     $rowCounter++;
 
                     // on insère une nouvelle page avec entête de tableau si c'est nécessaire
@@ -6165,7 +6165,7 @@ class StatisticService
                     foreach($statistics[1] as $row)
                     {
                         // une ligne du tableau
-                        $pdf = $this->dataCollectionTableRowPagination($pdf, $row, false, $lessons);
+                        $pdf = $this->dataCollectionTableRowPagination($pdf, $row, $lessons, false);
                         $rowCounter++;
 
                         // on insère une nouvelle page avec entête de tableau si c'est nécessaire
@@ -6322,7 +6322,7 @@ class StatisticService
 
                     $pdf->Cell((($tauxAssiduite)/2), $cellHeigh0*2, utf8_decode($pourcentageAssiduiteEnseignant), 1, 0, 'C', true);
 
-                    $pdf = $this->dataCollectionTableRowPagination($pdf, $rowCycle, true, $lessons);
+                    $pdf = $this->dataCollectionTableRowPagination($pdf, $rowCycle, $lessons, true);
                     $rowCounter++;
 
                     // on insère une nouvelle page avec entête de tableau si c'est nécessaire
@@ -6366,7 +6366,7 @@ class StatisticService
                 $pdf->Cell((($tauxAssiduite)/2), $cellHeigh0*2, number_format(($pourcentageAssiduiteEnseignant1 + $pourcentageAssiduiteEnseignant)/2, 2), 1, 0, 'C', true);
 
 
-                $pdf = $this->dataCollectionTableRowPagination($pdf, $rowSchool, true, $lessons);
+                $pdf = $this->dataCollectionTableRowPagination($pdf, $rowSchool, $lessons, true);
 
                 // $pdf->Ln(3);
                 // $pdf->SetFont('Times', 'B', 12);
@@ -9600,6 +9600,22 @@ class StatisticService
     }
 
 
+    /**
+     * FICHE DE CONSEIL DE CLASSE
+     *
+     * @param array $allStudentReports
+     * @param array $statisticSlipPerClass
+     * @param integer $numberOfLessons
+     * @param SchoolYear $schoolYear
+     * @param Classroom $classroom
+     * @param integer $numberOfStudents
+     * @param integer $numberOfBoys
+     * @param integer $numberOfGirls
+     * @param Term $term
+     * @param School $school
+     * @param SubSystem $subSystem
+     * @return Pagination
+     */
     public function printClassCouncil(array $allStudentReports, array $statisticSlipPerClass, int $numberOfLessons, SchoolYear $schoolYear, Classroom $classroom, int $numberOfStudents, int $numberOfBoys, int $numberOfGirls, Term $term, School $school, SubSystem $subSystem): Pagination
     {
         if($subSystem->getSubSystem() == constantsClass::FRANCOPHONE)
@@ -9736,14 +9752,14 @@ class StatisticService
                 $pdf->Cell($cellWidth1, $cellHeight5, utf8_decode('ADMINISTRATION'), 1, 0, 'L');
                 $pdf->Cell($cellWidth2, $cellHeight5, utf8_decode($supervisor->getFullName()), 1, 0, 'L');
                 $pdf->Cell($cellWidth3, $cellHeight5, utf8_decode($supervisor->getGrade()->getGrade()), 1, 0, 'L');
-                $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode($supervisor->getDuty()->getDuty()), 1, 0, 'L');
+                $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode("SUR. GEN"), 1, 0, 'L');
                 $pdf->Cell($cellWidth5, $cellHeight5, '', 1, 1, 'L');
             }else
             {
                 $pdf->Cell($cellWidth1, $cellHeight5, utf8_decode('ADMINISTRATION'), 1, 0, 'L');
                 $pdf->Cell($cellWidth2, $cellHeight5, utf8_decode(""), 1, 0, 'L');
                 $pdf->Cell($cellWidth3, $cellHeight5, utf8_decode(""), 1, 0, 'L');
-                $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode("Surveillant Général"), 1, 0, 'L');
+                $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode("Sur. Gén."), 1, 0, 'L');
                 $pdf->Cell($cellWidth5, $cellHeight5, '', 1, 1, 'L');
             }
 
@@ -10620,7 +10636,15 @@ class StatisticService
                 $pdf->Cell($cellWidth1, $cellHeight5, utf8_decode('ADMINISTRATION'), 1, 0, 'L');
                 $pdf->Cell($cellWidth2, $cellHeight5, utf8_decode($censor->getFullName()), 1, 0, 'L');
                 $pdf->Cell($cellWidth3, $cellHeight5, utf8_decode($censor->getGrade()->getGrade()), 1, 0, 'L');
-                $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode($censor->getDuty()->getDuty()), 1, 0, 'L');
+                $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode("Vice-Principal"), 1, 0, 'L');
+                $pdf->Cell($cellWidth5, $cellHeight5, '', 1, 1, 'L');
+            }
+            else
+            {
+                $pdf->Cell($cellWidth1, $cellHeight5, utf8_decode('ADMINISTRATION'), 1, 0, 'L');
+                $pdf->Cell($cellWidth2, $cellHeight5, utf8_decode(""), 1, 0, 'L');
+                $pdf->Cell($cellWidth3, $cellHeight5, utf8_decode(""), 1, 0, 'L');
+                $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode("Vice-Principal"), 1, 0, 'L');
                 $pdf->Cell($cellWidth5, $cellHeight5, '', 1, 1, 'L');
             }
 
@@ -10631,7 +10655,15 @@ class StatisticService
                 $pdf->Cell($cellWidth1, $cellHeight5, utf8_decode('ADMINISTRATION'), 1, 0, 'L');
                 $pdf->Cell($cellWidth2, $cellHeight5, utf8_decode($supervisor->getFullName()), 1, 0, 'L');
                 $pdf->Cell($cellWidth3, $cellHeight5, utf8_decode($supervisor->getGrade()->getGrade()), 1, 0, 'L');
-                $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode($supervisor->getDuty()->getDuty()), 1, 0, 'L');
+                $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode("Att. Sup."), 1, 0, 'L');
+                $pdf->Cell($cellWidth5, $cellHeight5, '', 1, 1, 'L');
+            }
+            else
+            {
+                $pdf->Cell($cellWidth1, $cellHeight5, utf8_decode('ADMINISTRATION'), 1, 0, 'L');
+                $pdf->Cell($cellWidth2, $cellHeight5, utf8_decode(""), 1, 0, 'L');
+                $pdf->Cell($cellWidth3, $cellHeight5, utf8_decode(""), 1, 0, 'L');
+                $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode("Att. Sup."), 1, 0, 'L');
                 $pdf->Cell($cellWidth5, $cellHeight5, '', 1, 1, 'L');
             }
 
@@ -10643,6 +10675,14 @@ class StatisticService
                 $pdf->Cell($cellWidth2, $cellHeight5, utf8_decode($counsellor->getFullName()), 1, 0, 'L');
                 $pdf->Cell($cellWidth3, $cellHeight5, utf8_decode($counsellor->getGrade()->getGrade()), 1, 0, 'L');
                 $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode($counsellor->getDuty()->getDuty()), 1, 0, 'L');
+                $pdf->Cell($cellWidth5, $cellHeight5, '', 1, 1, 'L');
+            }
+            else
+            {
+                $pdf->Cell($cellWidth1, $cellHeight5, utf8_decode('ORIENTATION'), 1, 0, 'L');
+                $pdf->Cell($cellWidth2, $cellHeight5, utf8_decode(""), 1, 0, 'L');
+                $pdf->Cell($cellWidth3, $cellHeight5, utf8_decode(""), 1, 0, 'L');
+                $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode("Orientation"), 1, 0, 'L');
                 $pdf->Cell($cellWidth5, $cellHeight5, '', 1, 1, 'L');
             }
 
@@ -11368,7 +11408,16 @@ class StatisticService
 
     }
 
-    // Imprime la fiche des taux d'assiduité par classe
+    
+    /**
+     * fiche des taux d'assiduité par classe
+     *
+     * @param Term $term
+     * @param array $classrooms
+     * @param SchoolYear $schoolYear
+     * @param School $school
+     * @return Pagination
+     */
     public function printRateOfPresencePerClass(Term $term, array $classrooms, SchoolYear $schoolYear, School $school): Pagination
     {
         $mySession =  $this->request->getSession();
@@ -11970,6 +12019,18 @@ class StatisticService
     }
 
 
+    /**
+     * ENTETE DU TABLEAU TAUX DE PRESENCE
+     *
+     * @param Pagination $pdf
+     * @param integer $fontSize
+     * @param integer $cellTableClassroom
+     * @param integer $cellTableHeight
+     * @param integer $cellTablePresence
+     * @param integer $cellTableObservation
+     * @param integer $cellTablePresence3
+     * @return Pagination
+     */
     public function getTableHeaderRateOfPresence(Pagination $pdf, int $fontSize, int $cellTableClassroom, int $cellTableHeight, int $cellTablePresence, int $cellTableObservation, int $cellTablePresence3): Pagination
     {
         $mySession =  $this->request->getSession();
@@ -12038,7 +12099,20 @@ class StatisticService
         return $pdf;
     }
 
-    // Affiche une ligne de la fiche statistique d'assiduité des élèves
+    /**
+     *  ligne de la fiche statistique d'assiduité des élèves
+     *
+     * @param array $classrooms
+     * @param array $rateOfPresence
+     * @param Term $term
+     * @param integer $fontSize
+     * @param integer $cellTableClassroom
+     * @param integer $cellTableHeight
+     * @param integer $cellTablePresence3
+     * @param integer $cellTableObservation
+     * @param string $levelName
+     * @return array
+     */
     public function displayTableContent(array $classrooms, array $rateOfPresence, Term $term, int $fontSize, int $cellTableClassroom, int $cellTableHeight, int $cellTablePresence3, int $cellTableObservation, string $levelName): array
     {
         $mySession =  $this->request->getSession();
@@ -12352,7 +12426,19 @@ class StatisticService
         return $rateOfPresence;
     }
 
-    /////Affiche le total par cycle et établissement
+    /**
+     * Affiche le total par cycle et établissement
+     *
+     * @param array $rateOfPresence
+     * @param integer $cellTableClassroom
+     * @param integer $cellTableHeight
+     * @param integer $cellTablePresence3
+     * @param integer $cellTableObservation
+     * @param integer $fontSize
+     * @param string $summaryName
+     * @param boolean $cycle
+     * @return array
+     */
     public function displaySummary(array $rateOfPresence, int $cellTableClassroom, int $cellTableHeight, int $cellTablePresence3, int $cellTableObservation, int $fontSize, string $summaryName, bool $cycle = true): array
     {
         $mySession =  $this->request->getSession();
@@ -12521,6 +12607,15 @@ class StatisticService
         return $rateOfPresence;
     }
 
+    /**
+     * RECAP DES DELIBERATION
+     *
+     * @param array $classrooms
+     * @param School $school
+     * @param SchoolYear $schoolYear
+     * @param SubSystem $subSystem
+     * @return Pagination
+     */
     public function printDeliberationRecapList(array $classrooms, School $school, SchoolYear $schoolYear, SubSystem $subSystem): Pagination
     {
         $classroomsLevel1 = [];
@@ -13229,7 +13324,7 @@ class StatisticService
     }
 
     /////LIGNE DE MON TABLEAU DE LA FICHE DE SYNTHESE PEDAGOGIQUE
-    public function pedagogicalSummarySheetTableRow(Pagination $pdf, ClassroomStatisticSlipRow $row, bool $fill = false, array $lessons): Pagination
+    public function pedagogicalSummarySheetTableRow(Pagination $pdf, ClassroomStatisticSlipRow $row, array $lessons, bool $fill = false): Pagination
     {
         $couvertureProgramme = 75;
         $cellHeigh0 = 4;
@@ -13440,7 +13535,7 @@ class StatisticService
                 foreach($statistics[0] as $row)
                 {
                     // une ligne du tableau
-                    //$pdf = $this->pedagogicalSummarySheetTableRow($pdf, $row, false, $lessons);
+                    //$pdf = $this->pedagogicalSummarySheetTableRow($pdf, $row, $lessons, false);
                     $couvertureProgramme = 75;
                     $cellHeigh0 = 4;
             
@@ -13759,8 +13854,8 @@ class StatisticService
                 foreach($statistics[1] as $row)
                 {
                     // une ligne du tableau
-                     $pdf = $this->pedagogicalSummarySheetTableRow($pdf, $row, false, $lessons);
-                     $rowCounter++;
+                    $pdf = $this->pedagogicalSummarySheetTableRow($pdf, $row, $lessons, false);
+                    $rowCounter++;
 
                     // on insère une nouvelle page avec entête de tableau si c'est nécessaire
                     // $pdf = $this->addNewPageSlipPerSubject($pdf, $pageCounter, $rowCounter);

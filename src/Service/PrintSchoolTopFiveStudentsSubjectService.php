@@ -69,6 +69,7 @@ class PrintSchoolTopFiveStudentsSubjectService
             // Entête de la fiche
             $pdf->SetFont('Times', 'B', $fontSize+4);
             $pdf->Cell(190, 7, utf8_decode("LISTE DES CINQS PREMIERS ELEVES EN ".$subject->getSubject()), 0, 1, 'C');
+            $pdf->Cell(190, 7, utf8_decode("ANNUEL"), 0, 1, 'C');
             $pdf->Ln(3);
 
             // Entête du tableau
@@ -138,6 +139,7 @@ class PrintSchoolTopFiveStudentsSubjectService
             // Entête de la fiche
             $pdf->SetFont('Times', 'B', $fontSize+4);
             $pdf->Cell(190, 7, utf8_decode("SCHOOL TOP FIVE STUDENTS IN ".$subject->getSubject()), 0, 1, 'C');
+            $pdf->Cell(190, 7, utf8_decode("ANNUAL"), 0, 1, 'C');
             $pdf->Ln(3);
 
             // Entête du tableau

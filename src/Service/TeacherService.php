@@ -40,7 +40,7 @@ class TeacherService
      * @param integer $classroomId
      * @return array
      */
-    public function getUnrecordedMark(int $sequenceId, int $levelId = 0, int $classroomId = 0): array
+    public function getUnrecordedMark(int $termId, int $levelId = 0, int $classroomId = 0): array
     {  
         $evaluations = [];
 
@@ -52,7 +52,68 @@ class TeacherService
             $schoolYear = $mySession->get('schoolYear');
         }
 
-        $selectedSequence = $this->sequenceRepository->find($sequenceId);
+        $selectedTerm = $this->termRepository->find($termId);
+        $selectedLevel = $this->levelRepository->find($levelId);
+        $selectedClassroom = $this->classroomRepository->find($classroomId);
+
+        // toutes les séquences du trimestre
+        $sequences = $selectedTerm->getSequences();
+
+        if($selectedLevel) // Les lessons du niveau sélectionné
+        {
+            $allLessons = $this->lessonRepository->findAllForLevel($selectedLevel, $schoolYear, $subSystem);
+        }
+        elseif($selectedClassroom) // Les lessons de la classe sélectionnée
+        {
+            $allLessons = $this->lessonRepository->findAllToDisplay($selectedClassroom, $subSystem, true);
+        }
+        else // Les lessons de tous les niveax
+        {
+            $allLessons = $this->lessonRepository->findAllLessonsOfSchoolYear($schoolYear, $subSystem);
+        }
+        
+        foreach ($allLessons as $lesson) 
+        {
+            foreach ($sequences as $sequence) 
+            {
+                $recordedEvaluation = $this->evaluationRepository->findOneBy([
+                    'lesson' => $lesson, 
+                    'sequence' => $sequence
+                ]);
+              
+                if($recordedEvaluation == null)
+                {
+                    $evaluations[] = ['lesson' => $lesson, 'sequence' => $sequence];
+                }
+            }
+        }
+        
+        return $evaluations;
+    }
+
+
+    /**
+     * Enseignants dans le retard des saisies par séquence
+     *
+     * @param integer $sequenceId
+     * @param integer $levelId
+     * @param integer $classroomId
+     * @return array
+     */
+    public function displayTeachersLaters(int $sequenceId, int $levelId = 0, int $classroomId = 0): array
+    {  
+        $evaluations = [];
+
+        $mySession = $this->request->getSession();
+
+        if($mySession)
+        {
+            $subSystem = $mySession->get('subSystem');
+            $schoolYear = $mySession->get('schoolYear');
+        }
+
+        // $selectedTerm = $this->termRepository->find($termId);
+        $sequence = $this->sequenceRepository->find($sequenceId);
         $selectedLevel = $this->levelRepository->find($levelId);
         $selectedClassroom = $this->classroomRepository->find($classroomId);
 
@@ -62,32 +123,34 @@ class TeacherService
         if($selectedLevel) // Les lessons du niveau sélectionné
         {
             $allLessons = $this->lessonRepository->findAllForLevel($selectedLevel, $schoolYear, $subSystem);
-
-        }elseif($selectedClassroom) // Les lessons de la classe sélectionnée
+        }
+        elseif($selectedClassroom) // Les lessons de la classe sélectionnée
         {
             $allLessons = $this->lessonRepository->findAllToDisplay($selectedClassroom, $subSystem, true);
-
-        }else // Les lessons de tous les niveax
+        }
+        else // Les lessons de tous les niveax
         {
             $allLessons = $this->lessonRepository->findAllLessonsOfSchoolYear($schoolYear, $subSystem);
         }
-
+        
         foreach ($allLessons as $lesson) 
         {
             // foreach ($sequences as $sequence) 
             // {
                 $recordedEvaluation = $this->evaluationRepository->findOneBy([
                     'lesson' => $lesson, 
-                    'sequence' => $selectedSequence
+                    'sequence' => $sequence
                 ]);
+              
                 if($recordedEvaluation == null)
                 {
-                    $evaluations[] = ['lesson' => $lesson, 'sequence' => $selectedSequence];
+                    $evaluations[] = ['lesson' => $lesson, 'sequence' => $sequence];
                 }
             // }
         }
-
+        
         return $evaluations;
+        
     }
 
     /**
@@ -111,14 +174,14 @@ class TeacherService
 
         $pdf = new Pagination();
 
-         // On insère une page
-         $pdf = $this->generalService->newPagePagination($pdf, 'P', 10, $fontSize-3);
+        // On insère une page
+        $pdf = $this->generalService->newPagePagination($pdf, 'P', 10, $fontSize-3);
             
-         // Administrative Header
-         $pdf = $this->generalService->getAdministrativeHeaderPagination($school, $pdf, $cellHeaderHeight1, $fontSize, $schoolYear);
+        // Administrative Header
+        $pdf = $this->generalService->getAdministrativeHeaderPagination($school, $pdf, $cellHeaderHeight1, $fontSize, $schoolYear);
          
-         // Entête de la liste
-         $pdf = $this-> getHeaderLatersList($pdf, $school, $sequence);
+        // Entête de la liste
+        $pdf = $this-> getHeaderLatersList($pdf, $school, $sequence);
 
         //  entête du tableau 
         $pdf = $this->getTableHeaderLatersList($pdf, $cellHeaderHeight, $numberWith, $fullNameWith, $classroomWith, $subjectWith);
@@ -132,17 +195,24 @@ class TeacherService
             $number++;
             $pdf->SetFont('Times', '', 9);
             $pdf->Cell($numberWith, $cellHeaderHeight, $number, 1, 0, 'C');
-            $pdf->Cell($fullNameWith, $cellHeaderHeight, utf8_decode($lesson->getTeacher()->getFullName()), 1, 0, 'L');
-            $pdf->Cell($classroomWith, $cellHeaderHeight, utf8_decode($sequence->getSequence()), 1, 0, 'C');
-            $pdf->Cell($classroomWith, $cellHeaderHeight, utf8_decode($lesson->getClassroom()->getClassroom()), 1, 0, 'C');
-            $pdf->Cell($subjectWith, $cellHeaderHeight, utf8_decode($lesson->getSubject()->getSubject()), 1, 0, 'L');
+            $pdf->Cell($fullNameWith+10, $cellHeaderHeight, utf8_decode($lesson->getTeacher()->getFullName()), 1, 0, 'L');
+            // $pdf->Cell($classroomWith, $cellHeaderHeight, utf8_decode($sequence->getSequence()), 1, 0, 'C');
+            $pdf->Cell($classroomWith+10, $cellHeaderHeight, utf8_decode($lesson->getClassroom()->getClassroom()), 1, 0, 'C');
+            $pdf->Cell($subjectWith+5, $cellHeaderHeight, utf8_decode($lesson->getSubject()->getSubject()), 1, 0, 'C');
             $pdf->Ln();
         }
 
         return $pdf;
     }
 
-
+    /**
+     * Undocumented function
+     *
+     * @param Pagination $pdf
+     * @param School $school
+     * @param Sequence $sequence
+     * @return Pagination
+     */
     public function getHeaderLatersList(Pagination $pdf, School $school, Sequence $sequence): Pagination
     {
         $mySession = $this->request->getSession();
@@ -158,8 +228,8 @@ class TeacherService
             $pdf->Cell(0, 5, 'LISTE DES NOTES ENCORE ATTENDUES', 0, 2, 'C');
             $pdf->Ln(2);
             $pdf->SetFont('Times', 'B', 12);
-            $pdf->Cell(100, 5, utf8_decode($school->getFrenchName()), 0, 0, 'L');
-            $pdf->Cell(90, 5, 'SEQUENCE : '.$sequence->getSequence(), 0, 2, 'R');
+            // $pdf->Cell(100, 5, utf8_decode($school->getFrenchName()), 0, 0, 'L');
+            $pdf->Cell(0, 5, 'EVALUATION : '.$sequence->getSequence(), 0, 2, 'C');
             $pdf->Ln();
         } else 
         {
@@ -167,13 +237,14 @@ class TeacherService
             $pdf->Cell(0, 5, 'LIST OF NOTES STILL AWAITED', 0, 2, 'C');
             $pdf->Ln(2);
             $pdf->SetFont('Times', 'B', 12);
-            $pdf->Cell(100, 5, utf8_decode($school->getFrenchName()), 0, 0, 'L');
-            $pdf->Cell(90, 5, 'SEQUENCE : '.$sequence->getSequence(), 0, 2, 'R');
+            // $pdf->Cell(100, 5, utf8_decode($school->getFrenchName()), 0, 0, 'L');
+            $pdf->Cell(0, 5, 'EVALUATION : '.$sequence->getSequence(), 0, 2, 'C');
             $pdf->Ln();
         }
         
         return $pdf;
     }
+
 
     public function getTableHeaderLatersList(Pagination $pdf, int $cellHeaderHeight, int $numberWith, int $fullNameWith, int $classroomWith, int $subjectWith): Pagination
     {
@@ -188,19 +259,19 @@ class TeacherService
         {
             $pdf->SetFont('Times', 'B', 10);
             $pdf->Cell($numberWith, $cellHeaderHeight, 'No', 1, 0, 'C', true);
-            $pdf->Cell($fullNameWith, $cellHeaderHeight, utf8_decode('Noms et Prénoms'), 1, 0, 'C', true);
-            $pdf->Cell($classroomWith, $cellHeaderHeight, 'Evaluation', 1, 0, 'C', true);
-            $pdf->Cell($classroomWith, $cellHeaderHeight, 'Classes', 1, 0, 'C', true);
-            $pdf->Cell($subjectWith, $cellHeaderHeight, utf8_decode('Matières'), 'LTR', 0, 'C', true);
+            $pdf->Cell($fullNameWith+10, $cellHeaderHeight, utf8_decode('Noms et Prénoms'), 1, 0, 'C', true);
+            // $pdf->Cell($classroomWith, $cellHeaderHeight, 'Evaluation', 1, 0, 'C', true);
+            $pdf->Cell($classroomWith+10, $cellHeaderHeight, 'Classes', 1, 0, 'C', true);
+            $pdf->Cell($subjectWith+5, $cellHeaderHeight, utf8_decode('Matières'), 'LTR', 0, 'C', true);
             $pdf->Ln();
         }else
         {
             $pdf->SetFont('Times', 'B', 10);
             $pdf->Cell($numberWith, $cellHeaderHeight, 'No', 1, 0, 'C', true);
-            $pdf->Cell($fullNameWith, $cellHeaderHeight, utf8_decode('First and last names'), 1, 0, 'C', true);
-            $pdf->Cell($classroomWith, $cellHeaderHeight, 'Evaluation', 1, 0, 'C', true);
-            $pdf->Cell($classroomWith, $cellHeaderHeight, 'Classes', 1, 0, 'C', true);
-            $pdf->Cell($subjectWith, $cellHeaderHeight, utf8_decode('Subjects'), 'LTR', 0, 'C', true);
+            $pdf->Cell($fullNameWith+10, $cellHeaderHeight, utf8_decode('First and last names'), 1, 0, 'C', true);
+            // $pdf->Cell($classroomWith, $cellHeaderHeight, 'Evaluation', 1, 0, 'C', true);
+            $pdf->Cell($classroomWith+10, $cellHeaderHeight, 'Classes', 1, 0, 'C', true);
+            $pdf->Cell($subjectWith+5, $cellHeaderHeight, utf8_decode('Subjects'), 'LTR', 0, 'C', true);
             $pdf->Ln();
         }
 
@@ -252,7 +323,7 @@ class TeacherService
                 // entête de la fiche
                 $pdf->Ln($cellHeaderHeight5);
                 $pdf->SetFont('Times', 'B', $fontSize);
-                $pdf->Cell(0, $cellHeaderHeight5, utf8_decode('N°__________/'.$schoolYear->getSchoolYear().'/'.ConstantsClass::SERVICE_NOTE), 0, 1, 'C');
+                $pdf->Cell(0, $cellHeaderHeight5, utf8_decode('N°__________/'.$schoolYear->getSchoolYear().'/'.$school->getServiceNote()), 0, 1, 'C');
                 $pdf->Ln();
                 $pdf->SetFont('Times', 'B', $fontSize15);
                 $pdf->Cell(0, $cellHeaderHeight7, utf8_decode('CERTIFICAT DE PRISE/REPRISE DE SERVICE'), 0, 1, 'C');
@@ -759,7 +830,6 @@ class TeacherService
         return $pdf;
     }
 
-
     public function getFrenchCivility(Teacher $teacher): string
     {
         $sex = $teacher->getSex()->getSex();
@@ -823,6 +893,7 @@ class TeacherService
         return 'Né le';
     }
 
+
     public function getAffectationTitle(Teacher $teacher): string
     {
         $sex = $teacher->getSex()->getSex();
@@ -835,7 +906,8 @@ class TeacherService
         return 'Affecté/Nommé';
     }
 
-    public function getMatrimonialStatusOnSex(Teacher $teacher): string
+    
+    public function getMatrimonialStatusOnSex(Teacher $teacher)
     {
         $sex = $teacher->getSex()->getSex();
 

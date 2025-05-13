@@ -119,9 +119,9 @@
                                 {% for historiqueTeacher in historiqueTeachers %}
                                 <tr>
                                     <td>{{ historiqueTeacher.teacher.fullName }} <br>
-                                        <a href="{{ path ('print_historic_teacher', {'slug': historiqueTeacher.teacher.slug }) }}" target="_blank" class="btn btn-outline-primary"><i class="fe fe-printer me-2"></i>
+                                        {# <a href="{{ path ('print_historic_teacher', {'slug': historiqueTeacher.teacher.slug }) }}" target="_blank" class="btn btn-outline-primary"><i class="fe fe-printer me-2"></i>
                                             {% trans %}Print attendance{% endtrans %}
-                                        </a>
+                                        </a> #}
                                 </td>
                                     <td>{{ historiqueTeacher.classroom.classroom }}</td>
                                     <td>{{ historiqueTeacher.day.day }}</td>
@@ -131,7 +131,7 @@
                                     </td>
                                     <td>{{ historiqueTeacher.nombreHeure }}</td>
                                     <td>{{ historiqueTeacher.subject.subject }}</td>
-                                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_SURVEILLANT_GENERAL') %}
+                                    {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_SURVEILLANT_GENERAL') %}
                                         {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                             <td style="text-align: center; vertical-align:middle">
                                                 

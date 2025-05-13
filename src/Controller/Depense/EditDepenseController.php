@@ -77,7 +77,7 @@ class EditDepenseController extends AbstractController
             $this->em->persist($depense);
 
             $this->em->flush(); // On modifie
-            $this->addFlash('info', $this->translator->trans('Spent updated successfully'));
+            $this->addFlash('info', $this->translator->trans('Spent updated with success !'));
 
             $mySession->set('miseAjour', 1);
             // On se redirige sur la page d'affichage des classes

@@ -148,7 +148,7 @@ class EditTeacherController extends AbstractController
             }
             
             $this->em->flush(); // On modifie
-            $this->addFlash('info', $this->translator->trans('Staff updated successfully'));
+            $this->addFlash('info', $this->translator->trans('Staff updated with success !'));
 
             $mySession->set('miseAjour', 1);
             

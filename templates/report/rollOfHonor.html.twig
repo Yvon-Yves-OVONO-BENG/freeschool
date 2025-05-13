@@ -51,10 +51,10 @@
                         </div>
                         <div class="expanel-body">
                             <div class="row">
-                                <div class="col-md-9">
+                                <div class="col-md-7">
                                     <form action="{{ path('report_rollOfHonor') }}" method="post">
                                         <div class="row">
-                                            <div class="col-md-3">
+                                            <div class="col-md-4">
                                                 <div class="form-group">
                                                     <select class="form-control select2-show-search" data-placeholder="Choose a classroom" name="classroom" id="classroom" required style="border: 1px solid #0f0;">
                                                         <option label="Choose a classroom">{% trans %}Choose a classroom{% endtrans %}
@@ -120,7 +120,13 @@
                                                 </button>
                                             </div>
                                         </form>
+                                        
                                     {% endif %}
+                                </div>
+                                <div class="col-md-2 text-rigth">
+                                    <a href="javascript:void(0);" class="btn btn-outline-primary" data-bs-toggle="tooltip" title="{% trans %}Send roll of honor to whole class{% endtrans %}">
+                                        <i class="fa fa-send-o me-2"></i>{% trans %}Send to whole class{% endtrans %}
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -176,30 +182,52 @@
                                     <table border="1" class="table table-bordered text-nowrap" id="example2" width="100%" cellspacing="0">
                                         <thead>
                                             <tr>
-                                            <th class="border-bottom-0 indigo-gradient">{% trans %}Full name{% endtrans %}</th>
-                                            <th class="border-bottom-0 green-gradient">{% trans %}Roll of honor{% endtrans %}</th>
+                                                <th class="border-bottom-0 indigo-gradient">{% trans %}N°{% endtrans %}</th>
+                                                <th class="border-bottom-0 indigo-gradient">{% trans %}Photo{% endtrans %}</th>
+                                                <th class="border-bottom-0 indigo-gradient">{% trans %}Full name{% endtrans %}</th>
+                                                <th class="border-bottom-0 green-gradient">{% trans %}Roll of honor{% endtrans %}</th>
                                             </tr>
                                         </thead>
                                         <tfoot>
                                             <tr>
-                                            <th class="border-bottom-0 indigo-gradient">{% trans %}Full name{% endtrans %}</th>
-                                            <th class="border-bottom-0 green-gradient">{% trans %}Roll of honor{% endtrans %}</th>
+                                                <th class="border-bottom-0 indigo-gradient">{% trans %}N°{% endtrans %}</th>
+                                                <th class="border-bottom-0 indigo-gradient">{% trans %}Photo{% endtrans %}</th>
+                                                <th class="border-bottom-0 indigo-gradient">{% trans %}Full name{% endtrans %}</th>
+                                                <th class="border-bottom-0 green-gradient">{% trans %}Roll of honor{% endtrans %}</th>
                                             </tr>
                                         </tfoot>
                                         <tbody>
+                                        {% set i = 1 %}
                                             {% for report in reports %}
-                                                <tr class="table-row">
-                                                    <td style="vertical-align:middle;">{{ report.student.fullName }}</td>
-                                                    <td style="text-align: center; vertical-align:middle;">
-                                                        {% if report.moyenne >= 12 %}
-                                                            <a href="{{ path('report_printRollOfHonor', {'slug': selectedClassroom.slug, 'slugTerm': selectedTerm.slug, 'slugStudent': report.student.slug}) }}" target="_blank" class="btn btn-outline-success" data-bs-toggle="tooltip" title="Télécharger le tableau d'honneur de {{ report.student.fullName }}">
-                                                                <i class="fa fa-download"></i>
+                                                {% if report.moyenne >= 12 %}
+                                                    <tr class="table-row">
+                                                        <td style="vertical-align:middle; text-align: center !important;">{{ i }}</td>
+
+                                                        <td style="vertical-align: middle; text-align:center;">
+                                                            <div class="box-widget widget-user text-center">
+                                                                <div class="widget-user-image mx-auto">
+                                                                    {% if report.student.sex.sex == 'F' %}
+                                                                        <img alt="{{ report.student.fullName }}" class="rounded-circle" src="{{ report.student.photo ? asset('images/students/' ~ report.student.photo) : asset('images/students/fille.jpg')}}" width="100" height="100">
+                                                                        {% else %} 
+                                                                        <img alt="{{ report.student.fullName }}" class="rounded-circle" src="{{ report.student.photo ? asset('images/students/' ~ report.student.photo) : asset('images/students/garcon.jpg')}}" width="100" height="100">
+                                                                    {% endif %}
+
+                                                                </div>
+                                                            </div>
+                                                        </td>
+
+                                                        <td style="vertical-align:middle;">{{ report.student.fullName }}</td>
+                                                        <td style="text-align: center; vertical-align:middle;">
+                                                            <a href="{{ path('report_printRollOfHonor', {'slug': selectedClassroom.slug, 'slugTerm': selectedTerm.slug, 'slugStudent': report.student.slug}) }}" target="_blank" class="btn btn-outline-primary" data-bs-toggle="tooltip" title="{% trans %}Download roll of honnor of {% endtrans %}{{ report.student.fullName }}">
+                                                                <i class="fa fa-download me-2"></i>{% trans %}Download{% endtrans %}
                                                             </a>
-                                                        {% else %}
-                                                            <i class="fa fa-close btn-outline-danger" disabled></i>
-                                                        {% endif %}
-                                                    </td>
-                                                </tr>
+                                                            <a href="javascript:void(0);" class="btn btn-outline-primary" data-bs-toggle="tooltip" title="{% trans %}Send roll of honor{% endtrans %} {{ report.student.fullName }}">
+                                                                <i class="fa fa-send-o me-2"></i>{% trans %}Send{% endtrans %}
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                {% endif %}
+                                                {% set i = i + 1 %}
                                             {% endfor %}
                                         </tbody>
                                     </table>

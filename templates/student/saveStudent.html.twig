@@ -203,7 +203,6 @@
                                                 </div>
                                             </div>
 
-
                                         </div>
                                         
                                         <div class="row mb-1">
@@ -271,13 +270,19 @@
                                         </div>
 
                                         <div class="row mb-1">
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <div class="form-group">
                                                     {{ form_row(formStudent.tuteur, {'attr': {'class': 'form-control form-control-sm'}}) }}
                                                 </div>
                                             </div>
 
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.professionTuteur, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
                                                 <div class="form-group">
                                                     {{ form_row(formStudent.telephoneTuteur, {'attr': {'class': 'form-control form-control-sm'}}) }}
                                                 </div>
@@ -285,13 +290,18 @@
                                         </div>
                                         <div class="row mb-1">
 
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    {{ form_row(formStudent.emailParent, {'attr': {'class': 'form-control form-control-sm'}}) }}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
                                                 <div class="form-group">
                                                     {{ form_row(formStudent.personneAContacterEnCasUergence, {'attr': {'class': 'form-control form-control-sm'}}) }}
                                                 </div>
                                             </div>
 
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <div class="form-group">
                                                     {{ form_row(formStudent.telephonePersonneEnCasUrgence, {'attr': {'class': 'form-control form-control-sm'}}) }}
                                                 </div>

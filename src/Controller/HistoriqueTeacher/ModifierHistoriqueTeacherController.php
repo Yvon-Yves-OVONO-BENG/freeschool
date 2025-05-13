@@ -98,7 +98,7 @@ class ModifierHistoriqueTeacherController extends AbstractController
 
             $this->em->flush(); // On modifie
 
-            $this->addFlash('info', $this->translator->trans('Hours teacher updated successfully'));
+            $this->addFlash('info', $this->translator->trans('Hours teacher updated with success !'));
 
             $mySession->set('miseAjour', 1);
 

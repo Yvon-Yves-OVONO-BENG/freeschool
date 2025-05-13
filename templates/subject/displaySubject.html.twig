@@ -40,7 +40,7 @@
                 </div>
                 <div class="page-rightheader">
                     <div class="btn-list">
-                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                        {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
                             {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                 <a href="{{ path('subject_saveSubject') }}" class="btn btn-outline-primary" name="addNewSubject">
                                     <i class="fa fa-plus"></i>
@@ -77,7 +77,7 @@
                                     <th class="border-bottom-0 green-gradient">{% trans %}Group{% endtrans %}</th>
                                     <th class="border-bottom-0 orange-gradient">{% trans %}Department{% endtrans %}</th>
                                     <th class="border-bottom-0 blue-gradient">{% trans %}Educational facilitator{% endtrans %}</th>
-                                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                    {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
                                         {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                             <th class="border-bottom-0 indigo-gradient">{% trans %}Actions{% endtrans %}</th>
                                         {% endif %}
@@ -91,7 +91,7 @@
                                     <th class="border-bottom-0 green-gradient">{% trans %}Group{% endtrans %}</th>
                                     <th class="border-bottom-0 orange-gradient">{% trans %}Department{% endtrans %}</th>
                                     <th class="border-bottom-0 blue-gradient">{% trans %}Educational facilitator{% endtrans %}</th>
-                                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                    {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
                                         {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                             <th class="border-bottom-0 indigo-gradient">{% trans %}Actions{% endtrans %}</th>
                                         {% endif %}
@@ -107,9 +107,19 @@
                                     <td style="vertical-align: middle;">{{ subject.department ? subject.department.department : '' }}</td style="vertical-align: middle;">
                                     <td style="vertical-align: middle;">{{ subject.department ? (subject.department.educationalFacilitator ? subject.department.educationalFacilitator.fullName : '') : '' }}</td>
                                     
-                                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                    {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
                                         {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                             <td style="vertical-align: middle; text-align: center;">
+                                               
+
+                                                <a href="{{ path ('subject_classes', { 'slug': subject.slug }) }}" class="btn btn-outline-primary position-relative me-5">
+                                                    <i class="fa fa-bank me-2"></i> {% trans %}Subject in Classes{% endtrans %}
+                                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                    {{ subject.lessons|length }}
+                                                    <span class="visually-hidden">unread messages</span>
+                                                    </span>
+                                                </a>
+                                                
                                                 <form action="{{ path('subject_editSubject', {'slug': subject.slug}) }}" method="post" style="display: inline-block;">
                                                     <div class="form-group">
                                                         <button type="submit"  class="btn btn-outline-primary" name="subjectToUpdate" data-bs-toggle="tooltip" title="Modifier la matière {{ subject.subject }}">

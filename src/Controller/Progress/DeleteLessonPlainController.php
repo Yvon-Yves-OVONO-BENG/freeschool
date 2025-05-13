@@ -39,7 +39,7 @@ class DeleteLessonPlainController extends AbstractController
         $this->em->remove($plainLesson);
         $this->em->flush();
             
-        $this->addFlash('info', $this->translator->trans('Lesson plain deleted successfully'));
+        $this->addFlash('info', $this->translator->trans('Lesson plain deleted with success !'));
         $mySession->set('suppression', 1);
         return $this->redirectToRoute('display_lesson_plain', ['s' => 1 ]);
     }

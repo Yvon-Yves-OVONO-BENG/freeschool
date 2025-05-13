@@ -58,14 +58,14 @@ class LockSequenceController extends AbstractController
         {
             $verrouSequence->setVerrouSequence(true);
     
-            $this->addFlash('info', $this->translator->trans('Sequence lock successfully !'));
+            $this->addFlash('info', $this->translator->trans('Sequence lock with success !'));
             $mySession->set('miseAjour', 1);
 
         }else
         {
             $verrouSequence->setVerrouSequence(false);
     
-            $this->addFlash('info', $this->translator->trans('Sequence unlock successfully !'));
+            $this->addFlash('info', $this->translator->trans('Sequence unlock with success !'));
             $mySession->set('miseAjour',1);
         }
 

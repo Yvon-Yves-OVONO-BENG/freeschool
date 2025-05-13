@@ -1,0 +1,192 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {% trans %}Details evaluations of{% endtrans %} {{ student.fullName }}{% endblock %}
+
+{% block stylesheets %}
+	<style>
+		th,
+		tfoot {
+			font-size: 15px !important;
+			text-align: center !important;
+			font-weight: bold !important;
+			background-color: #F1F1F1 !important;
+		}
+
+		tr:hover {
+			background-color: rgba(62, 128, 235, 0.2) !important;
+			color: #3e80eb !important;
+		}
+
+        td {
+			font-size: 12px !important;
+			text-align: center !important;
+		}
+	</style>
+{% endblock %}
+
+{% block body %}    
+<!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+        
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary"><i class="fe fe-edit me-2"></i> {% trans %}Details evaluations{% endtrans %} </h4>
+                </div>
+                <div class="page-rightheader">
+                    <div class="btn-list">
+
+                        <a href="{{ path ('display_problems')}}" class="btn btn-outline-primary">
+                            <i class="fa fa-wrench me-2"></i>{% trans %}Report reconstruction{% endtrans %} {% trans %}and{% endtrans %} {% trans %}Problems{% endtrans %}
+                        </a>
+                        
+                    </div>
+                </div>
+            </div>
+            <!--End Page header-->
+            {% for message in app.flashes('info')  %}
+                {# <div class="alert alert-danger">{{ message }}</div> #}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true">×</button>
+                    <i class="fa fa-check-circle-o me-2" aria-hidden="true"></i>{{ message }}
+                </div>
+            {% endfor %}
+            <!-- Row -->
+            <div class="row">
+                <div class="col-md-12 col-lg-12">
+                    <div class="card border-primary">
+                        <div class="card-header">
+                            <div class="col-lg-9">
+                                <div class="card-title mt-2">
+                                    <h3 class="text-red">
+                                        <span class="badge bg-danger">{{ student.fullName }}</span> -
+                                        <span class="badge bg-danger">{% trans %}Classroom{% endtrans %} : {{ student.classroom.classroom }} </span> -
+                                        
+                                        {% if term %}
+                                            <span class="badge bg-danger">{% trans %}Term{% endtrans %} : {{ term.term }}</span>
+                                            {% else %} 
+                                            <span class="badge bg-danger">{% trans %}Evaluation{% endtrans %} : {{ sequence.sequence }}</span> 
+                                        {% endif %}
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 text-right">
+                                <form action="{{ path ('display_problems')}}" method='post'>
+                                
+                                    {% if term %}
+                                        <input type="hidden" name="period" value="t{{ term.id }}">
+                                    {% else %}
+                                        <input type="hidden" name="period" value="s{{ sequence.id }}">
+                                    {% endif %}
+                                    <input type="hidden" name="classroom" value="{{ student.classroom.id }}">
+                                    <button class="btn btn-outline-primary btn-pill">
+                                        <i class="fa fa-arrow-left me-2 fs-14"></i>{% trans %}Back to classroom{% endtrans %}
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <form action="{{ path ('enregistrer_notes_evaluation_eleve', {'slugStudent': student.slug, 'sequenceId': sequence.id }) }}" method="post">
+                                        <table class="table table-striped table-bordered text-nowrap">
+                                            <thead>
+                                                <tr>
+                                                    <th>{% trans %}N°{% endtrans %}</th>
+                                                    <th>{% trans %}Subject{% endtrans %}</th>
+                                                    {% if term %}
+                                                        {% for sequence in sequences %}
+                                                            <th>{% trans %}Evaluation{% endtrans %} {{ sequence.sequence }}</th>
+                                                        {% endfor %}
+                                                        {% else %}
+                                                        <th>{% trans %}Evaluation{% endtrans %}  {{ sequence.sequence }}</th>
+                                                    {% endif %}
+
+                                                    <th>{% trans %}Operations{% endtrans %}</th>
+                                                </tr>
+                                            </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>{% trans %}N°{% endtrans %}</th>
+                                                    <th>{% trans %}Subject{% endtrans %}</th>
+                                                    {% if term %}
+                                                        {% for sequence in sequences %}
+                                                            <th>{% trans %}Evaluation{% endtrans %} {{ sequence.sequence }}</th>
+                                                        {% endfor %}
+                                                        {% else %}
+                                                        <th>{% trans %}Evaluation{% endtrans %}  {{ sequence.sequence }}</th>
+                                                    {% endif %}
+
+                                                    <th>{% trans %}Operations{% endtrans %}</th>
+                                                </tr>
+                                            </tfoot>
+                                            <tbody>
+                                                {% set i = 1 %}
+                                                {% for matiere in resultats %}
+                                                    
+                                                    <tr >
+                                                        <td>{{ i }}</td>
+                                                        <td>{{ matiere['nomSubject'] }}</td>
+                                                        {# hasIssue : variable pour suivre les évaluations#}
+                                                        {% set hasIssue = false %}
+
+                                                        {% if term %}
+                                                            {# je parcours les séquences #}
+                                                            {% for sequence in sequences %}
+                                                                {# si une évaluation est manquante #}
+                                                                {% if matiere.evaluations[sequence.sequence] is not defined %}
+                                                                    {% set hasIssue = true %}
+                                                                {% endif %}
+
+                                                                <td>{{ matiere.evaluations[sequence.sequence]|default('Not rate') }}</td>
+                                                            {% endfor %}
+
+                                                            {% else %}
+                                                                <td>
+                                                                    {# {{ matiere.evaluations[sequence.sequence]|default('Not rate') }} #}
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <input type="text" value="{{ matiere.evaluations[sequence.sequence]|default('Not rate') }}" class="form-control" disabled="">
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                        
+                                                                            <input type="number" name="mark{{i}}" required="required" min="0" max="20" step="0.01" value="{{ matiere.evaluations[sequence.sequence]|default('Not rate') }}" class="form-control">
+                                                                            <input type="hidden" name="evaluationId{{i}}" value="{{ matiere.evaluations['evaluationId'] }}" class="form-control">
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                        {% endif %}
+                                        
+                                                        <td>
+                                                        
+                                                            <button type="submit" class="btn btn-outline-primary" name="submitOneNote"><i class="fa fa-save me-2"></i>{% trans %}Save{% endtrans %}
+                                                            </button>
+                                                            
+                                                        </td>
+                                                    </tr>
+                                                    {% set i = i + 1 %}
+                                                {% endfor %}
+                                                    
+                                            </tbody>
+                                        </table>
+                                        <div class="row">
+                                            <div class="col-md-8"></div>
+                                            <div class="col-md-4">
+                                                <button class="btn btn-outline-primary btn-md btn-block" type="submit" name="submitAllNotes"><i class="fa fa-save me-2"></i>{% trans %}Save all{% endtrans %}</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                    </div>
+                </div>
+            </div>
+            <!--End Row -->
+        </div>
+    </div>
+</div>
+{% endblock %}

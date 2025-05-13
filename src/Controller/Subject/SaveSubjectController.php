@@ -116,7 +116,7 @@ class SaveSubjectController extends AbstractController
             $this->em->persist($subject);
             $this->em->flush(); 
 
-            $this->addFlash('info', $this->translator->trans('Subject saved successfully'));
+            $this->addFlash('info', $this->translator->trans('Subject saved with success !'));
             $mySession->set('ajout', 1);
 
             $subject = new Subject();

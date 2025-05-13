@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\SkillRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SkillRepository::class)]
@@ -13,7 +14,13 @@ class Skill
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    /**
+     * @Assert\Length(
+     * max = 47,
+     * maxMessage = "La compétence ne peut dépasser {{ limit }} caractères."
+     * )
+     */
+    #[ORM\Column(length: 47)]
     private ?string $skill = null;
 
     #[ORM\ManyToOne(inversedBy: 'skills')]

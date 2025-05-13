@@ -71,42 +71,52 @@ class PrintTopFiveStudentsByLevelService
 
             // Entête de la fiche
             $pdf->SetFont('Times', 'B', $fontSize+4);
-            $pdf->Cell(150, 7, utf8_decode("LISTE DES CINQS PREMIERS ELEVES DU NIVEAU "), 0, 0, 'R');
+            $pdf->Cell(0, 7, utf8_decode("LISTE DES CINQS PREMIERS ELEVES DU NIVEAU "), 0, 1, 'C');
             
             switch ($level->getLevel()) 
             {
                 case 1:
-                    $pdf->Cell(10, 7, utf8_decode(ConstantsClass::LEVEL_1), 0, 1, 'L');
+                    $pdf->Cell(0, 7, utf8_decode(ConstantsClass::LEVEL_1), 0, 1, 'C');
                     break;
 
                 case 2:
-                    $pdf->Cell(10, 7, utf8_decode(ConstantsClass::LEVEL_2), 0, 1, 'L');
+                    $pdf->Cell(0, 7, utf8_decode(ConstantsClass::LEVEL_2), 0, 1, 'C');
                     break;
 
                 case 3:
-                    $pdf->Cell(10, 7, utf8_decode(ConstantsClass::LEVEL_3), 0, 1, 'L');
+                    $pdf->Cell(0, 7, utf8_decode(ConstantsClass::LEVEL_3), 0, 1, 'C');
                     break;
 
                 case 4:
-                    $pdf->Cell(10, 7, utf8_decode(ConstantsClass::LEVEL_4), 0, 1, 'L');
+                    $pdf->Cell(0, 7, utf8_decode(ConstantsClass::LEVEL_4), 0, 1, 'C');
                     break;
 
                 case 5:
-                    $pdf->Cell(10, 7, utf8_decode(ConstantsClass::LEVEL_5), 0, 1, 'L');
+                    $pdf->Cell(0, 7, utf8_decode(ConstantsClass::LEVEL_5), 0, 1, 'C');
                     break;
 
                 case 6:
-                    $pdf->Cell(10, 7, utf8_decode(ConstantsClass::LEVEL_6), 0, 1, 'L');
+                    $pdf->Cell(0, 7, utf8_decode(ConstantsClass::LEVEL_6), 0, 1, 'C');
                     break;
 
                 case 7:
-                    $pdf->Cell(10, 7, utf8_decode(ConstantsClass::LEVEL_7), 0, 1, 'L');
+                    $pdf->Cell(0, 7, utf8_decode(ConstantsClass::LEVEL_7), 0, 1, 'C');
                     break;
                 
                 
             }
+
+            if ($term->getTerm() == 0) 
+            {
+                $pdf->Cell(0, 7, utf8_decode("ANNUEL"), 0, 0, 'C');
+            } 
+            else 
+            {
+                $pdf->Cell(0, 7, utf8_decode("TRIMESTRE ".$term->getTerm()), 0, 0, 'C');
+            }
             
-            $pdf->Ln(3);
+            
+            $pdf->Ln(7);
 
             // Entête du tableau
             $pdf = $this->generalService->getTableHeaderPagination($pdf, $fontSize, $cellTableClassroom, $cellTableHeight, $cellTablePresence, $cellTableObservation, $cellTablePresence3, $subSystem);
@@ -177,37 +187,45 @@ class PrintTopFiveStudentsByLevelService
             switch ($level->getLevel()) 
             {
                 case 1:
-                    $pdf->Cell(10, 7, utf8_decode(ConstantsClass::FROM_1), 0, 1, 'L');
+                    $pdf->Cell(0, 7, utf8_decode(ConstantsClass::FROM_1), 0, 1, 'C');
                     break;
 
                 case 2:
-                    $pdf->Cell(10, 7, utf8_decode(ConstantsClass::FROM_2), 0, 1, 'L');
+                    $pdf->Cell(0, 7, utf8_decode(ConstantsClass::FROM_2), 0, 1, 'C');
                     break;
 
                 case 3:
-                    $pdf->Cell(10, 7, utf8_decode(ConstantsClass::FROM_3), 0, 1, 'L');
+                    $pdf->Cell(0, 7, utf8_decode(ConstantsClass::FROM_3), 0, 1, 'C');
                     break;
 
                 case 4:
-                    $pdf->Cell(10, 7, utf8_decode(ConstantsClass::FROM_4), 0, 1, 'L');
+                    $pdf->Cell(0, 7, utf8_decode(ConstantsClass::FROM_4), 0, 1, 'C');
                     break;
 
                 case 5:
-                    $pdf->Cell(10, 7, utf8_decode(ConstantsClass::FROM_5), 0, 1, 'L');
+                    $pdf->Cell(0, 7, utf8_decode(ConstantsClass::FROM_5), 0, 1, 'C');
                     break;
 
                 case 6:
-                    $pdf->Cell(10, 7, utf8_decode(ConstantsClass::LOWER_6), 0, 1, 'L');
+                    $pdf->Cell(0, 7, utf8_decode(ConstantsClass::LOWER_6), 0, 1, 'C');
                     break;
 
                 case 7:
-                    $pdf->Cell(10, 7, utf8_decode(ConstantsClass::UPPER_6), 0, 1, 'L');
+                    $pdf->Cell(0, 7, utf8_decode(ConstantsClass::UPPER_6), 0, 1, 'C');
                     break;
                 
-                
+            }
+
+            if ($term->getTerm() == 0) 
+            {
+                $pdf->Cell(0, 7, utf8_decode("ANNUAL"), 0, 0, 'C');
+            } 
+            else 
+            {
+                $pdf->Cell(0, 7, utf8_decode("TERM ".$term->getTerm()), 0, 0, 'C');
             }
             
-            $pdf->Ln(3);
+            $pdf->Ln(7);
 
             // Entête du tableau
             $pdf = $this->generalService->getTableHeaderPagination($pdf, $fontSize, $cellTableClassroom, $cellTableHeight, $cellTablePresence, $cellTableObservation, $cellTablePresence3, $subSystem);

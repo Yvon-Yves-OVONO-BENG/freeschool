@@ -70,7 +70,7 @@
                         </button>
                         {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                             {# <a href="{{ path('display_all_students') }}" class="btn btn-outline-primary" name="addNewStudent"> #}
-                            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_INTENDANT') %}
+                            {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_INTENDANT') %}
                                 <a href="{{ path('student_saveStudent') }}" class="btn btn-outline-primary" name="addNewStudent">
                                     <i class="fa fa-user-plus me-2"></i> {% trans %}Add new student{% endtrans %}
                                 </a>
@@ -124,7 +124,7 @@
                             <form action="{{ path('registration_printSchoolFeesStatement', {'slug': selectedClassroom.slug}) }}" method="post" target="_blank">
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="printSchoolFeesStatement"><i class="fa fa-print"></i> 
-                                    {% trans %}Print the class financial statement{% endtrans %}
+                                    {% trans %}Financial statement{% endtrans %}
                                     </button>
                                 </div>
                             </form>
@@ -132,22 +132,23 @@
                     </div>
                         
                     {% if methodIsPost %}
-                        <div class="col-md-2">
-                            <form action="#">
+                        
+
+                        <div class="col-md-2 position-relative me-5 ">
+                            <form action="{{ path('repertory_classroom', {'slug': selectedClassroom.slug}) }}" method="post" target="_blank">
                                 <div class="form-group">
-                                    <button type="button" class="btn btn-primary">
-                                        <span>{% trans %}Class{% endtrans %}</span>
-                                        <span class="badge bg-white text-dark rounded-pill">{{ selectedClassroom.classroom }}</span>
+                                    <button type="submit" class="btn btn-outline-primary">
+                                        <i class="fe fe-printer me-2"></i>{% trans %}Repertory of classroom{% endtrans %}
                                     </button>
                                 </div>
                             </form>
                         </div>
 
                         <div class="col-md-2">
-                            <form action="{{ path('repertory_classroom', {'slug': selectedClassroom.slug}) }}" method="post" target="_blank">
+                            <form action="{{ path('repertory_parent_classroom', {'slug': selectedClassroom.slug}) }}" method="post" target="_blank">
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-outline-primary">
-                                        <i class="fe fe-printer me-2"></i>{% trans %}Print repertory of classroom{% endtrans %}
+                                        <i class="fe fe-printer me-2"></i>{% trans %}Repertory of parents{% endtrans %}
                                     </button>
                                 </div>
                             </form>
@@ -188,6 +189,12 @@
 
                 <div class="card border-primary">
                     <div class="card-header mt-2">
+                        
+                        <button type="button" class="btn btn-primary position-relative me-5 mb-2">
+                            <span>{% trans %}Class{% endtrans %}</span>
+                            <span class="badge bg-white text-dark rounded-pill">{{ selectedClassroom.classroom }}</span>
+                        </button>
+                                
                         <button type="button" class="btn btn-primary position-relative me-5 mb-2">
                             {% trans %}Girls{% endtrans %}
                             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -266,11 +273,9 @@
                                             <th class="border-bottom-0 green-gradient">{% trans %}Photo{% endtrans %}</th>
                                             <th class="border-bottom-0 indigo-gradient">{% trans %}Full name{% endtrans %}</th>
                                             <th class="border-bottom-0 green-gradient">{% trans %}Birth{% endtrans %}</th>
-                                            <th class="border-bottom-0 orange-gradient">{% trans %}Sex{% endtrans %}</th>
-                                            <th class="border-bottom-0 indigo-gradient">{% trans %}Repeat{% endtrans %}</th>
                                             <th class="border-bottom-0 orange-gradient">{% trans %}Phone{% endtrans %}</th>
                                             {# si c'est l'admin qui est connecté #}
-                                                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_INTENDANT') and headmasterFees == 0 %}
+                                                {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_INTENDANT') and headmasterFees == 0 %}
                                                 {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                                     <th class="border-bottom-0 blue-gradient">{% trans %}Actions{% endtrans %}</th>
                                                 {% endif %}
@@ -284,11 +289,9 @@
                                             <th class="border-bottom-0 green-gradient">{% trans %}Photo{% endtrans %}</th>
                                             <th class="border-bottom-0 indigo-gradient">{% trans %}Full name{% endtrans %}</th>
                                             <th class="border-bottom-0 green-gradient">{% trans %}Birth{% endtrans %}</th>
-                                            <th class="border-bottom-0 orange-gradient">{% trans %}Sex{% endtrans %}</th>
-                                            <th class="border-bottom-0 indigo-gradient">{% trans %}Repeat{% endtrans %}</th>
                                             <th class="border-bottom-0 orange-gradient">{% trans %}Phone{% endtrans %}</th>
                                             {# si c'est l'admin qui est connecté #}
-                                                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_INTENDANT') and headmasterFees == 0 %}
+                                                {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_INTENDANT') and headmasterFees == 0 %}
                                                 {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                                     <th class="border-bottom-0 blue-gradient">{% trans %}Actions{% endtrans %}</th>
                                                 {% endif %}
@@ -318,7 +321,7 @@
                                                     
                                                     <br> <span class="badge bg-primary mt-2">{{ student.registrationNumber }}</span>
 
-                                                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                                    {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
                                                         <br> <span class="badge badge-gradient-primary mt-2">{% trans %}Saved by : {% endtrans %}</span>
                                                         <span class="badge badge-gradient-danger mt-2">{{ student.createdBy ? student.createdBy.fullName: "//" }}</span>
                                                         <span class="badge badge-gradient-primary mt-2">{% trans %}at {% endtrans %}</span>
@@ -326,30 +329,27 @@
                                                     {% endif %}
                                                     
                                                 </td>
-                                                <td style="vertical-align: middle;">{{ student.birthday|date('d-m-Y') }} à {{ student.birthplace }}</td>
-                                                
-                                                <td style="vertical-align: middle; text-align: center !important;">
+                                                <td style="vertical-align: middle;">
+                                                    {{ student.birthday|date('d-m-Y') }} à {{ student.birthplace }} <br>
+                                                    {% trans %}Sex :{% endtrans %}
                                                     {% if student.sex.sex == "F" %}
                                                         <span class="badge bg-primary mt-2">{{ student.sex.sex }}</span>
                                                         {% else %}
                                                             <span class="badge badge-default mt-2">{{ student.sex.sex }}</span>
                                                     {% endif %}
-
-                                                </td>
-
-                                                <td style="vertical-align: middle; text-align: center !important;">
+                                                    <br>
+                                                    {% trans %}Repeat :{% endtrans %}
                                                     {% if student.repeater.repeater == "Oui" %}
                                                         <span class="badge bg-danger mt-2">{{ student.repeater.repeater }}</span>
                                                         {% else %}
                                                         <span class="badge bg-success mt-2">{{ student.repeater.repeater }}</span>
-                                                        
                                                     {% endif %}
-                                                    
                                                 </td>
+                                                
 
                                                 <td style="vertical-align: middle; text-align: center !important;">{{ student.personneAContacterEnCasUergence }}</td>
                                                     {# si c'est l'admin qui est conncté #}
-                                                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_INTENDANT') and headmasterFees == 0 %}
+                                                    {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_INTENDANT') and headmasterFees == 0 %}
                                                     {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                                         <td style="text-align: center !important; vertical-align: middle !important;">
 
@@ -361,7 +361,7 @@
                                                                         {% trans %}Student sheet{% endtrans %}
                                                                     </a>
 
-                                                                    <a class="dropdown-item" href="{{ path('print_eschool_attendance_certificate', {'slug': student.slug}) }}" target="_blank">
+                                                                    <a class="dropdown-item" href="{{ path('print_school_attendance_certificate', {'slug': student.slug}) }}" target="_blank">
                                                                         <i class="fe fe-printer me-2"></i> 
                                                                         {% trans %}School certificate{% endtrans %}
                                                                     </a>

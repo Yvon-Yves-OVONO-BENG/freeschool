@@ -87,14 +87,13 @@ class ReportController extends AbstractController
             $feesTable = $this->feesService->getFeesTable($selectedClassroom, $fees);
 
             $students = $this->studentRepository->findBy([
-                'classroom' => $selectedClassroom
+                'supprime' => 0,
+                'classroom' => $selectedClassroom,
             ], [
                 'fullName' => 'ASC'
             ]);
             
             $selectedTerm = $this->termRepository->find($request->request->get('term'));
-
-            $methodIsPost = true;
 
             $idc = $request->request->get('classroom');
             $selectedClassroom = $this->classroomRepository->find($idc);
@@ -104,7 +103,8 @@ class ReportController extends AbstractController
             {
                 $apeeFees = $fees->getApeeFees1();
                 $computerFees = $fees->getComputerFees1();
-            }else
+            }
+            else
             {
                 $apeeFees = $fees->getApeeFees2();
                 $computerFees = $fees->getComputerFees2();

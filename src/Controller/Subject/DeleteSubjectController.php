@@ -70,7 +70,7 @@ class DeleteSubjectController extends AbstractController
             $this->em->remove($subject);
             $this->em->flush();
             
-            $this->addFlash('info', $this->translator->trans('Subject deleted successfully'));
+            $this->addFlash('info', $this->translator->trans('Subject deleted with success !'));
             $mySession->set('suppression', 1);
 
             return $this->redirectToRoute('subject_displaySubject',

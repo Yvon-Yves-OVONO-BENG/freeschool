@@ -1,0 +1,28 @@
+{% if pourcentage >= 0 and pourcentage <= 25 %}
+    <div class="progress progress-sm">
+        <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated" style="width: 25%"></div>
+    </div>
+    {% else %}
+    {% if pourcentage > 25 and pourcentage <= 50 %}
+        <div class="progress progress-sm">
+            <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" style="width: 47%"></div>
+        </div>
+        {% else %}
+        {% if pourcentage > 51 and pourcentage <= 75 %}
+            <div class="progress progress-sm">
+                <div class="progress-bar bg-warning progress-bar-striped progress-bar-animated" style="width: 72%"></div>
+            </div>
+            {% else %}
+            {% if pourcentage > 76 and pourcentage <= 100 %}
+                <div class="progress progress-sm">
+                    <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" style="width: 98%"></div>
+                </div>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+{% endif %}
+
+
+
+
+

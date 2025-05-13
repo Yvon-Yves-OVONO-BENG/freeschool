@@ -70,6 +70,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'enregistrePar', targetEntity: HistoriqueTeacher::class)]
     private Collection $historiqueTeachers;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $slug = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $bloque = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $supprime = null;
+
     public function __construct()
     {
         $this->classrooms = new ArrayCollection();
@@ -455,6 +464,42 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $historiqueTeacher->setEnregistrePar(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(?string $slug): self
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function isBloque(): ?bool
+    {
+        return $this->bloque;
+    }
+
+    public function setBloque(?bool $bloque): self
+    {
+        $this->bloque = $bloque;
+
+        return $this;
+    }
+
+    public function isSupprime(): ?bool
+    {
+        return $this->supprime;
+    }
+
+    public function setSupprime(?bool $supprime): self
+    {
+        $this->supprime = $supprime;
 
         return $this;
     }

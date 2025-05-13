@@ -66,10 +66,16 @@ class DeleteLessonController extends AbstractController
             ]);
         }else 
         {
+            $skills = $lesson->getSkills();
+            foreach ($skills as $skill) 
+            {
+                $this->em->remove($skill);
+            }
+            
             $this->em->remove($lesson);
             $this->em->flush();
             
-            $this->addFlash('info', $this->translator->trans('Lesson deleted successfully'));
+            $this->addFlash('info', $this->translator->trans('Lesson deleted with success !'));
             $mySession->set('suppression', 1);
             
             return $this->redirectToRoute('lesson_displayLesson', [

@@ -9,6 +9,7 @@ use App\Repository\SubjectRepository;
 use App\Service\FirstPerClassService;
 use App\Repository\ClassroomRepository;
 use App\Repository\EvaluationRepository;
+use App\Repository\TermRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -25,6 +26,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class PrintSchoolTopFiveStudentsLevelAndSubjectController extends AbstractController
 {
     public function __construct(
+        protected TermRepository $termRepository,
         protected SubjectRepository $subjectRepository, 
         protected LevelRepository $levelRepository, 
         protected SchoolRepository $schoolRepository, 
@@ -60,12 +62,12 @@ class PrintSchoolTopFiveStudentsLevelAndSubjectController extends AbstractContro
 
         $subject = $this->subjectRepository->find($request->request->get('subject') );
         $level = $this->levelRepository->find($request->request->get('level') );
+        $term = $this->termRepository->find($request->request->get('term') );
         
         // On recupère les premiers du trimestre choisi
-        $topFiveStudents = $this->evaluationRepository->findTopFiveStudentsLevelAndSubject($schoolYear, $subSystem, $level, $subject);
+        $topFiveStudents = $this->evaluationRepository->findTop5StudentsByLevelSubjectAndTrimester($schoolYear, $subSystem, $level, $subject, $term->getTerm());
         
-        
-        $pdf = $this->printSchoolTopFiveStudentsLevelAndSubjectService->printSchoolTopFiveStudentsLevelAndSubjectService($topFiveStudents, $schoolYear, $school, $subSystem, $level, $subject);
+        $pdf = $this->printSchoolTopFiveStudentsLevelAndSubjectService->printSchoolTopFiveStudentsLevelAndSubjectService($topFiveStudents, $schoolYear, $school, $subSystem, $level, $subject, $term);
         
         if ($subSystem->getId() == 1 ) 
         {

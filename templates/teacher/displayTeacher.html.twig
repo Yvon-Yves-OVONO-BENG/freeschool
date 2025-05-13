@@ -65,7 +65,7 @@
                                     <span class="badge bg-white text-dark rounded-pill">{{ teachers|length }}</span>
                                 </button>
 
-                                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
                                     {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                         <a href="{{ path('teacher_saveTeacher') }}" class="btn btn-outline-primary" name="addNewTeacher">
                                             <i class="fa fa-plus"></i>
@@ -244,7 +244,7 @@
                                         <th class="border-bottom-0 indigo-gradient">{% trans %}Rank{% endtrans %}</th>
                                         <th class="border-bottom-0 green-gradient">{% trans %}department{% endtrans %}</th>
                                         <th class="border-bottom-0 orange-gradient">{% trans %}Phone number{% endtrans %}</th>
-                                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                        {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
                                             {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                                 <th class="border-bottom-0 blue-gradient">{% trans %}Actions{% endtrans %}</th>
                                             {% endif %}
@@ -259,7 +259,7 @@
                                         <th class="border-bottom-0 indigo-gradient">{% trans %}Rank{% endtrans %}</th>
                                         <th class="border-bottom-0 green-gradient">{% trans %}department{% endtrans %}</th>
                                         <th class="border-bottom-0 orange-gradient">{% trans %}Phone number{% endtrans %}</th>
-                                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                        {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
                                             {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                                 <th class="border-bottom-0 blue-gradient">{% trans %}Actions{% endtrans %}</th>
                                             {% endif %}
@@ -326,7 +326,7 @@
                                         <td>{% trans %}Unknow{% endtrans %}</td>
                                         {% endif %}
                                         <td>{{ teacher.phoneNumber }}</td>
-                                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+                                        {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
                                             {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                                 <td>
                                                     <div class="btn-group">

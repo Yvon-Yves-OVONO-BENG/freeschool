@@ -260,9 +260,6 @@ class Student
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $slug = null;
 
-    #[ORM\Column]
-    private ?bool $supprime = null;
-
     #[ORM\ManyToOne]
     private ?User $deletedBy = null;
 
@@ -1361,18 +1358,6 @@ class Student
     public function setSlug(?string $slug): self
     {
         $this->slug = $slug;
-
-        return $this;
-    }
-
-    public function isSupprime(): ?bool
-    {
-        return $this->supprime;
-    }
-
-    public function setSupprime(bool $supprime): self
-    {
-        $this->supprime = $supprime;
 
         return $this;
     }

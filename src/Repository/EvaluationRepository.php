@@ -111,7 +111,6 @@ class EvaluationRepository extends ServiceEntityRepository
             ->join('s.classroom', 'cl')
             ->join('s.sex', 'sexe')
             ->where('subj.id = :subjectId')
-            ->andWhere('s.supprime = 0')
             ->andWhere('s.schoolYear = :schoolYear')
             ->andWhere('s.subSystem = :subSystem')
             ->setParameters([
@@ -186,7 +185,6 @@ class EvaluationRepository extends ServiceEntityRepository
             AND e.sequence IN (:evaluationIds)
             AND sc = :schoolYear
             AND sb = :subSystem
-            AND s.supprime = 0
             GROUP BY s.id
             ORDER BY moyenne DESC'
         );
@@ -239,7 +237,6 @@ class EvaluationRepository extends ServiceEntityRepository
             ->andWhere('e.sequence IN (:sequences)')
             ->andWhere('s.schoolYear = :schoolYear')
             ->andWhere('s.subSystem = :subSystem')
-            ->andWhere('s.supprime = 0')
             ->setParameter('levelId', $levelId)
             ->setParameter('subjectId', $subjectId)
             ->setParameter('sequences', $sequences)
@@ -281,7 +278,6 @@ class EvaluationRepository extends ServiceEntityRepository
             ->where('c.id = :classId')
             ->andWhere('s.schoolYear = :schoolYear')
             ->andWhere('s.subSystem = :subSystem')
-            ->andWhere('s.supprime = 0')
             ->andWhere('sub.id = :subjectId')
             ->andWhere('e.sequence IN (:sequences)')
             ->setParameter('classId', $classId)
@@ -455,7 +451,6 @@ class EvaluationRepository extends ServiceEntityRepository
                 ])
             ->innerJoin('e.student', 's')
             ->addSelect('s')
-            ->andWhere('s.supprime = 0')
             ->orderBy('s.fullName', 'ASC')
             ->getQuery()
             ->getResult()
@@ -548,7 +543,6 @@ class EvaluationRepository extends ServiceEntityRepository
             ->addSelect('ls')
             ->andWhere('ls.subject = :subject')
             ->andWhere('e.student = :student')
-            ->andWhere('s.supprime = 0')
             ->setParameters([
                 'sequence' => $sequence,
                 'subject' => $subject,
@@ -588,13 +582,14 @@ class EvaluationRepository extends ServiceEntityRepository
      * @param integer $lesson
      * @return array
      */
-    public function getEvaluationStatistics(int $sequence, int $lesson): array
+    public function getEvaluationStatistics(int $sequenceId, int $lessonId): array
     {
         $qb = $this->createQueryBuilder('e')
             ->select(
                 'MIN(CASE WHEN sex.sex = :female THEN e.mark ELSE 0 END) AS minMarkGirls',
-                'MAX(CASE WHEN sex.sex = :female THEN e.mark ELSE 0 END) AS maxMarkGirls',
                 'MIN(CASE WHEN sex.sex = :male THEN e.mark ELSE 0 END) AS minMarkBoys',
+
+                'MAX(CASE WHEN sex.sex = :female THEN e.mark ELSE 0 END) AS maxMarkGirls',
                 'MAX(CASE WHEN sex.sex = :male THEN e.mark ELSE 0 END) AS maxMarkBoys',
                 'MIN(e.mark) AS minMarkClass',
                 'MAX(e.mark) AS maxMarkClass'
@@ -603,15 +598,42 @@ class EvaluationRepository extends ServiceEntityRepository
             ->join('s.sex', 'sex')
             ->where('e.sequence = :sequence')
             ->andWhere('e.lesson = :lesson')
-            ->andWhere('s.supprime = 0')
             ->setParameters([
-                'sequence' => $sequence,
-                'lesson' => $lesson,
+                'sequence' => $sequenceId,
+                'lesson' => $lessonId,
                 'female' => 'F',
                 'male' => 'M',
                 ]);
 
         return $qb->getQuery()->getResult();
+    }
+
+    public function getEvaluationStatisticsRaw(int $sequenceId, int $lessonId): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = <<<SQL
+            SELECT
+                MIN(CASE WHEN sex.sex = 'F' THEN e.mark END) AS minMarkGirls,
+                MAX(CASE WHEN sex.sex = 'F' THEN e.mark END) AS maxMarkGirls,
+                MIN(CASE WHEN sex.sex = 'M' THEN e.mark END) AS minMarkBoys,
+                MAX(CASE WHEN sex.sex = 'M' THEN e.mark END) AS maxMarkBoys,
+                MIN(e.mark) AS minMarkClass,
+                MAX(e.mark) AS maxMarkClass
+            FROM evaluation e
+            JOIN student s ON e.student_id = s.id
+            JOIN sex ON s.sex_id = sex.id
+            WHERE e.sequence_id = :sequenceId
+            AND e.lesson_id = :lessonId
+        SQL;
+
+        $stmt = $conn->prepare($sql);
+        $result = $stmt->executeQuery([
+            'sequenceId' => $sequenceId,
+            'lessonId' => $lessonId,
+        ]);
+
+        return $result->fetchAssociative();
     }
 
     /**

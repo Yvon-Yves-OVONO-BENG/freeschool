@@ -49,7 +49,6 @@ class ConseilRepository extends ServiceEntityRepository
             ->innerJoin('a.student', 's')
             ->addSelect('s')
             ->andWhere('s.classroom = :classroom')
-            ->andWhere('s.supprime = 0')
             ->setParameters([
                 'term' => $term,
                 'classroom' => $classroom
@@ -66,7 +65,6 @@ class ConseilRepository extends ServiceEntityRepository
             ->innerJoin('a.student', 's')
             ->addSelect('s')
             ->andWhere('s.classroom = :classroom')
-            ->andWhere('s.supprime = 0')
             ->setParameters([
                 'classroom' => $classroom
             ])
@@ -84,7 +82,6 @@ class ConseilRepository extends ServiceEntityRepository
             ->innerJoin('s.sex', 'sx')
             ->addSelect('sx')
             ->andWhere('s.classroom = :classroom')
-            ->andWhere('s.supprime = 0')
             ->andWhere('sx.sex = :sex')
             ->setParameter('classroom', $classroom)
             ->setParameter('sex', $sex)
@@ -115,7 +112,6 @@ class ConseilRepository extends ServiceEntityRepository
                 ->andWhere('a.student = s.id')
                 ->andWhere('s.classroom = c.id')
                 ->andWhere('a.term = t.id')
-                ->andWhere('s.supprime = 0')
                 ->setParameter('classroom', $classroom)
                 ;
 
@@ -136,7 +132,6 @@ class ConseilRepository extends ServiceEntityRepository
                 ->innerJoin(Classroom::class, 'c')
                 ->andWhere('s.id = a.student')
                 ->andWhere('c.id = s.classroom')
-                ->andWhere('s.supprime = 0')
                 ->andWhere('s.classroom = :classroom')
                 ->setParameter('classroom', $classroom)
                 ->groupBy('student')

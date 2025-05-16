@@ -69,7 +69,6 @@ class RegistrationRepository extends ServiceEntityRepository
                 // ->innerJoin(Classroom::class, 'c')
                 ->andWhere('r.student = s.id')
                 ->andWhere('s.classroom = :classroom')
-                ->andWhere('s.supprime = 0')
                 ->setParameter(
                     'classroom', $classroom,
                     )

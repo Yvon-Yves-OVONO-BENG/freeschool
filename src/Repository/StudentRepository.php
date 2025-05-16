@@ -76,7 +76,6 @@ class StudentRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('s')
             ->where('s.classroom = :classroom')
             ->andWhere('s.schoolYear = :schoolYear')
-            ->andWhere('s.supprime = 0')
             ->setParameters([
                 'classroom' => $classroom,
                 'schoolYear' => $schoolYear
@@ -117,7 +116,6 @@ class StudentRepository extends ServiceEntityRepository
             ->andWhere('s.subSystem = :subSystem')
             ->andWhere('cl.level = lv.id')
             ->andWhere('cy.cycle = 1')
-            ->andWhere('s.supprime = 0')
             ->setParameters(['schoolYear' => $schoolYear, 'subSystem' => $subSystem])
             ->orderBy('s.fullName')
             ->getQuery()
@@ -139,7 +137,6 @@ class StudentRepository extends ServiceEntityRepository
         ->andWhere('s.subSystem = :subSystem')
         ->andWhere('cl.level = lv.id')
         ->andWhere('cy.cycle = 2')
-        ->andWhere('s.supprime = 0')
         ->setParameters(['schoolYear' => $schoolYear, 'subSystem' => $subSystem])
         ->innerJoin('s.sex', 'sx')
         ->innerJoin('s.classroom', 'cl')
@@ -189,7 +186,6 @@ class StudentRepository extends ServiceEntityRepository
             ->addSelect('r')
             ->andWhere('r.responsability != :responsability')
             ->andWhere('r.responsability IS NOT NULL')
-            ->andWhere('s.supprime = 0')
             ->setParameters([
                 'schoolYear' => $schoolYear,
                 'classroom' => $classroom, 
@@ -217,7 +213,6 @@ class StudentRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('s')
                 ->andWhere('s.schoolYear = :schoolYear')
-                ->andWhere('s.supprime = 0')
                 ->setParameter('schoolYear', $schoolYear);
 
         if($classroom)
@@ -271,7 +266,6 @@ class StudentRepository extends ServiceEntityRepository
                 ->andWhere('s.classroom = c.id')
                 ->andWhere('r.student = s.id')
                 ->andWhere('c.classroom = :classroom')
-                ->andWhere('s.supprime = 0')
                 ->setParameter(
                     'classroom', $classroom,
                     )
@@ -298,7 +292,6 @@ class StudentRepository extends ServiceEntityRepository
             ->addSelect('d')
             ->where('s.decision = :decision')
             ->andWhere('s.classroom = :classroom')
-            ->andWhere('s.supprime = 0')
             ->setParameters([
                 'decision' => 1,
                 'classroom' => $classroom,
@@ -322,7 +315,6 @@ class StudentRepository extends ServiceEntityRepository
             ->addSelect('d')
             ->where('s.decision = :decision')
             ->andWhere('s.classroom = :classroom')
-            ->andWhere('s.supprime = 0')
             ->setParameters([
                 'decision' => 2,
                 'classroom' => $classroom,

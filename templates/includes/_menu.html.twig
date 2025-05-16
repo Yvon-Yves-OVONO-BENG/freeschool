@@ -194,7 +194,7 @@
 																			{% if is_granted('ROLE_CENSEUR') %}
 																				<li aria-haspopup="true">
 																					<a href="{{ path('my_transcripts', {'slug': currentUser.teacher.slug }) }}">
-																						<i class="fa fa-file-pdf-o me-2"></i>
+																						<i class="fa fa-file-pdf me-2"></i>
 																						{% trans %}Transcripts{% endtrans %}
 																					</a>
 																				</li>
@@ -285,7 +285,7 @@
 													</a>
 													<ul class="sub-menu border-primary">
 														<li aria-haspopup="true"><a href="{{ path('report_report') }}">
-															<i class="fa fa-file-pdf-o"></i>
+															<i class="fa fa-file-text"></i>
 															{% trans %}Report{% endtrans %}</a>
 														</li>
 														<li aria-haspopup="true"><a href="{{ path('transcript_student') }}">
@@ -297,11 +297,11 @@
 															{% trans %}Honor rolls{% endtrans %}</a>
 														</li>
 														<li aria-haspopup="true"><a href="{{ path('report_studentCard') }}">
-															<i class="fa fa-address-card-o"></i>
+															<i class="fa fa-address-card"></i>
 															{% trans %}School cards{% endtrans %}</a>
 														</li>
 														<li aria-haspopup="true"><a href="{{ path('fiche_sport') }}">
-															<i class="fa fa-address-card-o"></i>
+															<i class="fa fa-address-card"></i>
 															{% trans %}Sport Sheet{% endtrans %}</a>
 														</li>
 													</ul>
@@ -331,7 +331,7 @@
 															<i class="fa fa-bar-chart"></i>{% trans %}Statistical sheets by subject{% endtrans %}</a></li>
 
 														<li aria-haspopup="true"><a href="{{ path('statistic_classCouncil') }}">
-															<i class="fa fa-file-pdf-o"></i>{% trans %}Class council sheets{% endtrans %}</a></li>
+															<i class="fa fa-file-text"></i>{% trans %}Class council sheets{% endtrans %}</a></li>
 
 														<li aria-haspopup="true"><a href="{{ path('statistic_rateOfSuccessPerClass') }}">
 															<i class="fa fa-percent"></i>{% trans %}Success rate by class{% endtrans %}</a>
@@ -361,7 +361,7 @@
 												</a>
 												<ul class="sub-menu border-primary">
 													<li aria-haspopup="true" class="sub-menu-sub"><a href="javascript:void(0);">
-														<i class="fa fa-file-pdf-o"></i>{% trans %}Lists{% endtrans %}</a>
+														<i class="fa fa-file-pdf"></i>{% trans %}Lists{% endtrans %}</a>
 														<ul class="sub-menu border-danger">
 															<li aria-haspopup="true">
 																<a href="{{ path('register_and_list_printAllStudentList') }}" target="_blank">
@@ -414,7 +414,7 @@
 													{% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_CENSEUR') or is_granted('ROLE_CONSEILLER')  %}
 
 														<li aria-haspopup="true"><a href="{{ path('register_and_list_printSchoolStructure') }}" target="_blank">
-															<i class="fa fa-building-o"></i>{% trans %}Structure of the establishment{% endtrans %}</a>
+															<i class="fa fa-building"></i>{% trans %}Structure of the establishment{% endtrans %}</a>
 														</li>
 
 														<li aria-haspopup="true"><a href="{{ path('register_and_list_referenceRegister') }}">
@@ -522,10 +522,10 @@
 																			
 																			{% endif %}
 																			<li aria-haspopup="true"><a href="{{ path('deliberation_deliberationList') }}">
-																				<i class="fa fa-file-pdf-o"></i>{% trans %}Lists of deliberations{% endtrans %}</a></li>
+																				<i class="fa fa-file-pdf"></i>{% trans %}Lists of deliberations{% endtrans %}</a></li>
 
 																			<li aria-haspopup="true"><a href="{{ path('delibeartion_studentProvisoryList') }}">
-																				<i class="fa fa-file-pdf-o"></i>{% trans %}Provisional lists{% endtrans %}</a></li>
+																				<i class="fa fa-file-pdf"></i>{% trans %}Provisional lists{% endtrans %}</a></li>
 																		</ul>
 																	</div>
 																	<div class="col-lg-3 col-md-12 col-xs-12 link-list">
@@ -537,9 +537,9 @@
 																				<li aria-haspopup="true"><a href="{{ path('registration_feesStatement') }}">
 																				<i class="fa fa-money"></i> {% trans %}Statements of expenses{% endtrans %}</a></li>
 
-																				<li aria-haspopup="true"><a href="{{ path('teacher_displayAssumedDuty') }}"><i class="fa fa-file-pdf-o"></i>{% trans %}Testimony{% endtrans %}</a></li>
+																				<li aria-haspopup="true"><a href="{{ path('teacher_displayAssumedDuty') }}"><i class="fa fa-file-pdf"></i>{% trans %}Testimony{% endtrans %}</a></li>
 																				<li aria-haspopup="true"><a class="nav-link" data-toggle="" href="{{ path('verrou_displayLockOption') }}" data-parent=""><i class="fa fa-fw fa-lock"></i>{% trans %}Lock any changes{% endtrans %}</a></li>
-																				<li aria-haspopup="true"><a class="nav-link" data-toggle="" href="{{ path('list_student_trash', {'a': 1 }) }}" data-parent=""><i class="fa fa-fw fa-trash"></i>{% trans %}Students deleted{% endtrans %}</a></li>
+																				{# <li aria-haspopup="true"><a class="nav-link" data-toggle="" href="{{ path('list_student_trash', {'a': 1 }) }}" data-parent=""><i class="fa fa-fw fa-trash"></i>{% trans %}Students deleted{% endtrans %}</a></li> #}
 																			{% endif %}
 																		</ul>
 																	</div>
@@ -550,7 +550,7 @@
 																			</li> #}
 																			<li aria-haspopup="true">
 																				<a href="{{ path('etat_finance') }}" class="sub-icon">
-																					<i class="fa fa-check-square-o"></i>
+																					<i class="fa fa-check-square"></i>
 																					{% trans %}State finance{% endtrans %}
 																				</a>
 																			</li>
@@ -593,7 +593,7 @@
 																				<i class="fa fa-codiepie"></i>{% trans %}Software License{% endtrans %}</h3></li>
 																			<li aria-haspopup="true">
 																				<a href="{{ path('activation_key') }}" class="sub-icon">
-																					<i class="fa fa-calendar-check-o"></i>
+																					<i class="fa fa-calendar-check"></i>
 																					{% trans %}Activate{% endtrans %}
 																				</a>
 																			</li>

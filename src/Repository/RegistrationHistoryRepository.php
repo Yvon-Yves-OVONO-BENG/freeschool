@@ -33,7 +33,6 @@ class RegistrationHistoryRepository extends ServiceEntityRepository
                  ->innerJoin(Student::class, 's')
                  ->andWhere('r.student = s.id')
                  ->andWhere('s.classroom = :classroom')
-                 ->andWhere('s.supprime = 0')
                  ->setParameter(
                      'classroom', $classroom,
                      )

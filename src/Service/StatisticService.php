@@ -689,8 +689,8 @@ class StatisticService
         }else
         {
             $pdf->Cell($cellWidth0, $cellHeigh0, utf8_decode($firstColum), 'LTR', 0, 'C', true);
-            $pdf->Cell($cellWidth1, $cellHeigh0, 'Regist.', 1, 0, 'C', true);
-            $pdf->Cell($cellWidth1, $cellHeigh0, utf8_decode('Having Comp.'), 1, 0, 'C', true);
+            $pdf->Cell($cellWidth1, $cellHeigh0, 'Numb. Regist.', 1, 0, 'C', true);
+            $pdf->Cell($cellWidth1, $cellHeigh0, utf8_decode('Numb. Sat.'), 1, 0, 'C', true);
             $pdf->Cell($cellWidth1, $cellHeigh0, utf8_decode('Absent'), 1, 0, 'C', true);
             $pdf->SetFont('Times', 'B', 8);
             $pdf->Cell($cellWidth1, $cellHeigh0, utf8_decode("Attendance rate (%)"), 1, 0, 'C', true);
@@ -700,12 +700,12 @@ class StatisticService
             $pdf->SetFont('Times', 'B', 8);
 
             $pdf->Cell($cellWidth1, $cellHeigh0, 'Gen Avg', 'LTR', 0, 'C', true);
-            $pdf->Cell($cellWidth2, $cellHeigh0, 'Avg', 'LTR', 0, 'C', true);
-            $pdf->Cell($cellWidth2, $cellHeigh0, 'Avg', 'LTR', 0, 'C', true);
+            $pdf->Cell($cellWidth2, $cellHeigh0, 'Avg of', 'LTR', 0, 'C', true);
+            $pdf->Cell($cellWidth2, $cellHeigh0, 'Avg of', 'LTR', 0, 'C', true);
 
             $pdf->SetFont('Times', 'B', 8);
 
-            $pdf->Cell($cellWidth3, $cellHeigh0, utf8_decode('Appréciation'), 'LTR', 0, 'C', true);
+            $pdf->Cell($cellWidth3, $cellHeigh0, utf8_decode('Appreciations'), 'LTR', 0, 'C', true);
             $pdf->SetFont('Times', 'B', 10);
             $pdf->Ln();
 
@@ -10582,7 +10582,7 @@ class StatisticService
 
             if($term->getTerm() != ConstantsClass::ANNUEL_TERM)
             {
-                $pdf->Cell(0, 5, utf8_decode('QUARTER STATISTICAL SHEET N°'.$term->getTerm()), 0, 1, 'C');
+                $pdf->Cell(0, 5, utf8_decode('QUARTERLY STATISTICAL SHEET N°'.$term->getTerm()), 0, 1, 'C');
 
             }else
             {
@@ -10595,7 +10595,7 @@ class StatisticService
             $pdf->SetFont('Times', 'B', 12);
             $pdf->Cell(30, 5, utf8_decode($classroom->getClassroom()), 0, 0, 'L');
             $pdf->SetFont('Times', '', 12);
-            $pdf->Cell(40, 5, 'Head Teacher : ', 0, 0, 'L');
+            $pdf->Cell(45, 5, 'Class Master / Mistress: ', 0, 0, 'L');
             $pdf->SetFont('Times', 'B', 12);
 
             $principalTeacher = $classroom->getPrincipalTeacher();
@@ -10603,7 +10603,7 @@ class StatisticService
             $pdf->Cell(90, 5, utf8_decode($this->generalService->getNameWithTitle($principalTeacher->getFullName(), $principalTeacher->getSex()->getSex())), 0, 1, 'L');
             $pdf->SetFont('Times', '', 12);
             $pdf->Cell(0, 7, 'Class Council held on : _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _', 0, 1, 'L');
-            $pdf->Cell(0, 7, utf8_decode('President of the council : _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _'), 0, 1, 'L');
+            $pdf->Cell(0, 7, utf8_decode('President of the council : _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _'), 0, 1, 'L');
             $pdf->Ln();
             $pdf->Cell(0, 5, utf8_decode('Members present at the class council :  '), 0, 1, 'L');
             $pdf->Ln(2);
@@ -10611,7 +10611,7 @@ class StatisticService
 
             // ENTETE DU TABLEAU
             $pdf->Cell($cellWidth1, $cellHeight7, utf8_decode('Subjects'), 1, 0, 'C', true);
-            $pdf->Cell($cellWidth2, $cellHeight7, utf8_decode('Lastnames and firstnames'), 1, 0, 'C', true);
+            $pdf->Cell($cellWidth2, $cellHeight7, utf8_decode('Name'), 1, 0, 'C', true);
             $pdf->Cell($cellWidth3, $cellHeight7, utf8_decode('Grade'), 1, 0, 'C', true);
             $pdf->Cell($cellWidth4, $cellHeight7, utf8_decode('Quality'), 1, 0, 'C', true);
             $pdf->SetFont('Times', 'B', 10);
@@ -10626,7 +10626,7 @@ class StatisticService
             $pdf->Cell($cellWidth1, $cellHeight5, utf8_decode('ADMINISTRATION'), 1, 0, 'L');
             $pdf->Cell($cellWidth2, $cellHeight5, utf8_decode($headmaster->getFullName()), 1, 0, 'L');
             $pdf->Cell($cellWidth3, $cellHeight5, utf8_decode($headmaster->getGrade()->getGrade()), 1, 0, 'L');
-            $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode($headmaster->getDuty()->getDuty()), 1, 0, 'L');
+            $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode("THE PRINCIPAL"), 1, 0, 'L');
             $pdf->Cell($cellWidth5, $cellHeight5, '', 1, 1, 'L');
 
             // Affichage du censeur d'attache
@@ -10655,7 +10655,7 @@ class StatisticService
                 $pdf->Cell($cellWidth1, $cellHeight5, utf8_decode('ADMINISTRATION'), 1, 0, 'L');
                 $pdf->Cell($cellWidth2, $cellHeight5, utf8_decode($supervisor->getFullName()), 1, 0, 'L');
                 $pdf->Cell($cellWidth3, $cellHeight5, utf8_decode($supervisor->getGrade()->getGrade()), 1, 0, 'L');
-                $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode("Att. Sup."), 1, 0, 'L');
+                $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode("S.D.M."), 1, 0, 'L');
                 $pdf->Cell($cellWidth5, $cellHeight5, '', 1, 1, 'L');
             }
             else
@@ -10663,7 +10663,7 @@ class StatisticService
                 $pdf->Cell($cellWidth1, $cellHeight5, utf8_decode('ADMINISTRATION'), 1, 0, 'L');
                 $pdf->Cell($cellWidth2, $cellHeight5, utf8_decode(""), 1, 0, 'L');
                 $pdf->Cell($cellWidth3, $cellHeight5, utf8_decode(""), 1, 0, 'L');
-                $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode("Att. Sup."), 1, 0, 'L');
+                $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode("S.D.M."), 1, 0, 'L');
                 $pdf->Cell($cellWidth5, $cellHeight5, '', 1, 1, 'L');
             }
 
@@ -10674,7 +10674,7 @@ class StatisticService
                 $pdf->Cell($cellWidth1, $cellHeight5, utf8_decode('ORIENTATION'), 1, 0, 'L');
                 $pdf->Cell($cellWidth2, $cellHeight5, utf8_decode($counsellor->getFullName()), 1, 0, 'L');
                 $pdf->Cell($cellWidth3, $cellHeight5, utf8_decode($counsellor->getGrade()->getGrade()), 1, 0, 'L');
-                $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode($counsellor->getDuty()->getDuty()), 1, 0, 'L');
+                $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode("Counseillor"), 1, 0, 'L');
                 $pdf->Cell($cellWidth5, $cellHeight5, '', 1, 1, 'L');
             }
             else
@@ -10682,7 +10682,7 @@ class StatisticService
                 $pdf->Cell($cellWidth1, $cellHeight5, utf8_decode('ORIENTATION'), 1, 0, 'L');
                 $pdf->Cell($cellWidth2, $cellHeight5, utf8_decode(""), 1, 0, 'L');
                 $pdf->Cell($cellWidth3, $cellHeight5, utf8_decode(""), 1, 0, 'L');
-                $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode("Orientation"), 1, 0, 'L');
+                $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode("Counseillor"), 1, 0, 'L');
                 $pdf->Cell($cellWidth5, $cellHeight5, '', 1, 1, 'L');
             }
 
@@ -10693,7 +10693,7 @@ class StatisticService
                 $pdf->Cell($cellWidth1, $cellHeight5, utf8_decode('SOCIALE ACTION '), 1, 0, 'L');
                 $pdf->Cell($cellWidth2, $cellHeight5, utf8_decode($socialAction->getFullName()), 1, 0, 'L');
                 $pdf->Cell($cellWidth3, $cellHeight5, utf8_decode($socialAction->getGrade()->getGrade()), 1, 0, 'L');
-                $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode($socialAction->getDuty()->getDuty()), 1, 0, 'L');
+                $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode("Social service"), 1, 0, 'L');
                 $pdf->Cell($cellWidth5, $cellHeight5, '', 1, 1, 'L');
             }else
             {
@@ -10732,7 +10732,7 @@ class StatisticService
                 $pdf->Cell($cellWidth1);
                 $pdf->Cell($cellWidth2, $cellHeight5*$counter, utf8_decode($principalTeacher->getFullName()), 1, 0, 'L');
                 $pdf->Cell($cellWidth3, $cellHeight5*$counter, utf8_decode($principalTeacher->getGrade()->getGrade()), 1, 0, 'L');
-                $pdf->Cell($cellWidth4, $cellHeight5*$counter, utf8_decode('Head teacher'), 1, 0, 'L');
+                $pdf->Cell($cellWidth4, $cellHeight5*$counter, utf8_decode('Class master'), 1, 0, 'L');
                 $pdf->Cell($cellWidth5, $cellHeight5*$counter, '', 1, 1, 'L');
             }
 
@@ -10786,7 +10786,7 @@ class StatisticService
             $pdf->Ln();
 
             $pdf->SetFont('Times', '', 12);
-            $pdf->Cell(40, 5, 'Overall workforce : ', 0, 0, 'L');
+            $pdf->Cell(40, 5, 'Total enrollment : ', 0, 0, 'L');
             $pdf->SetFont('Times', 'B', 12);
             $pdf->Cell(30, 5, $this->generalService->formatInteger($numberOfStudents), 0, 0, 'C');
 
@@ -10803,19 +10803,19 @@ class StatisticService
             $pdf->Ln(2);
 
             $pdf->SetFont('Times', '', 12);
-            $pdf->Cell(60, 5, utf8_decode("Number of students classified : "), 0, 0, 'L');
+            $pdf->Cell(60, 5, utf8_decode("Number of students evaluated : "), 0, 0, 'L');
             $pdf->SetFont('Times', 'B', 12);
             $pdf->Cell(35, 5, $this->generalService->formatInteger(count($classifiedStudents)), 0, 0, 'L');
 
             $pdf->SetFont('Times', '', 12);
-            $pdf->Cell(60, 5, utf8_decode("Number of unclassified students : "), 0, 0, 'L');
+            $pdf->Cell(60, 5, utf8_decode("Number of students not evaluated : "), 0, 0, 'L');
             $pdf->SetFont('Times', 'B', 12);
             $pdf->Cell(35, 5,  $this->generalService->formatInteger($numberOfStudents - count($classifiedStudents)), 0, 1, 'C');
 
             $pdf->Ln(2);
 
             $pdf->SetFont('Times', '', 12);
-            $pdf->Cell(60, 5, utf8_decode('Average >= 10 : '), 0, 0, 'L');
+            $pdf->Cell(60, 5, utf8_decode('Averages >= 10 : '), 0, 0, 'L');
             $pdf->SetFont('Times', 'B', 12);
             $pdf->Cell(35, 5, $this->generalService->formatInteger($this->generalService->getNumberOfSuccedStudents($classifiedStudents)), 0, 0, 'L');
 
@@ -10839,7 +10839,7 @@ class StatisticService
             $pdf->Ln(2);
 
             $pdf->SetFont('Times', '', 12);
-            $pdf->Cell(60, 5, utf8_decode('Overall average : '), 0, 0, 'L');
+            $pdf->Cell(60, 5, utf8_decode('Class average : '), 0, 0, 'L');
             $pdf->SetFont('Times', 'B', 12);
             $pdf->Cell(35, 5, $this->generalService->formatMark($classroomProfile->getClassroomAverage()), 0, 1, 'L');
 
@@ -10866,7 +10866,7 @@ class StatisticService
             $pdf->Ln();
 
             $pdf->Cell(10, $cellHeight7, utf8_decode('N°'), 1, 0, 'C', true);
-            $pdf->Cell(80, $cellHeight7, utf8_decode('Lastnames and firstnames'), 1, 0, 'C', true);
+            $pdf->Cell(80, $cellHeight7, utf8_decode('Name'), 1, 0, 'C', true);
             $pdf->Cell(15, $cellHeight7, utf8_decode('Sex'), 1, 0, 'C', true);
             $pdf->Cell(65, $cellHeight7, utf8_decode('Date and place of birth'), 1, 0, 'C', true);
             $pdf->Cell(20, $cellHeight7, utf8_decode('Average'), 1, 1, 'C', true);
@@ -10896,7 +10896,7 @@ class StatisticService
             $pdf->Ln();
 
             $pdf->Cell(10, $cellHeight7, utf8_decode('N°'), 1, 0, 'C', true);
-            $pdf->Cell(80, $cellHeight7, utf8_decode('Lastnames and firstnames'), 1, 0, 'C', true);
+            $pdf->Cell(80, $cellHeight7, utf8_decode('Name'), 1, 0, 'C', true);
             $pdf->Cell(15, $cellHeight7, utf8_decode('Sex'), 1, 0, 'C', true);
             $pdf->Cell(65, $cellHeight7, utf8_decode('Date and place of birth'), 1, 0, 'C', true);
             $pdf->Cell(20, $cellHeight7, utf8_decode('Average'), 1, 1, 'C', true);
@@ -10928,19 +10928,19 @@ class StatisticService
             $pdf->Cell(10, 5, '', 0, 0, 'L');
             $pdf->Cell(10, 5, '1. ', 0, 0, 'L');
             $pdf->SetFont('Times', 'B', 12);
-            $pdf->Cell(30, 5, 'Positives', 0, 1, 'L');
+            $pdf->Cell(30, 5, 'Positive', 0, 1, 'L');
             $pdf->Ln();
 
             $pdf->Cell(10, $cellHeight7, utf8_decode('N°'), 1, 0, 'C', true);
-            $pdf->Cell(80, $cellHeight7, utf8_decode('Lastnames and firstnames'), 1, 0, 'C', true);
+            $pdf->Cell(80, $cellHeight7, utf8_decode('Name'), 1, 0, 'C', true);
             $pdf->Cell(18, $cellHeight7, 'Avg', 1, 0, 'C', true);
             $pdf->Cell(10, $cellHeight7, 'Sex', 1, 0, 'C', true);
             $pdf->SetFont('Times', 'B', 8);
-            $pdf->Cell(24, $cellHeight7, utf8_decode('Roll of honor'), 1, 0, 'C', true);
+            $pdf->Cell(24, $cellHeight7, utf8_decode('Honor rolls'), 1, 0, 'C', true);
             $pdf->SetFont('Times', 'B', 9);
             $pdf->Cell(24, $cellHeight7, 'Encouragement', 1, 0, 'C', true);
-            $pdf->SetFont('Times', 'B', 11);
-            $pdf->Cell(24, $cellHeight7, utf8_decode('Congratulat'), 1, 1, 'C', true);
+            $pdf->SetFont('Times', 'B', 8);
+            $pdf->Cell(24, $cellHeight7, utf8_decode('Congratulations'), 1, 1, 'C', true);
             $pdf->SetFont('Times', 'B', 12);
 
             // on recupère les élèves à sanctions positives
@@ -10976,11 +10976,11 @@ class StatisticService
 
             $pdf->Cell(118, $cellHeight7*3, 'TOTAL', 1, 0, 'C',true);
             $pdf->SetFont('Times', 'B', 8);
-            $pdf->Cell(24, $cellHeight7, utf8_decode('Roll of honor'), 1, 0, 'C',true);
+            $pdf->Cell(24, $cellHeight7, utf8_decode('Honor rolls'), 1, 0, 'C',true);
             $pdf->SetFont('Times', 'B', 9);
             $pdf->Cell(24, $cellHeight7, utf8_decode('Encouragement'), 1, 0, 'C',true);
-            $pdf->SetFont('Times', 'B', 11);
-            $pdf->Cell(24, $cellHeight7, utf8_decode('Congratulat'), 1, 1, 'C',true);
+            $pdf->SetFont('Times', 'B', 8);
+            $pdf->Cell(24, $cellHeight7, utf8_decode('Congratulations'), 1, 1, 'C',true);
             $pdf->SetFont('Times', 'B', 12);
 
             $pdf->Cell(118);
@@ -11025,7 +11025,7 @@ class StatisticService
             $pdf->Ln();
 
             $pdf->Cell(10, $cellHeight7, utf8_decode('N°'), 1, 0, 'C', true);
-            $pdf->Cell(70, $cellHeight7, utf8_decode('Lastnames and firstnames'), 1, 0, 'C', true);
+            $pdf->Cell(70, $cellHeight7, utf8_decode('Name'), 1, 0, 'C', true);
             $pdf->Cell(10, $cellHeight7, 'Avg', 1, 0, 'C', true);
             $pdf->Cell(10, $cellHeight7, 'Sex', 1, 0, 'C', true);
 
@@ -11060,8 +11060,8 @@ class StatisticService
             $pdf->SetXY($x, $y-$cellHeight7/2);
 
             $pdf->SetFont('Times', 'B', 8);
-            $pdf->Cell(15, $cellHeight7/2, 'Exclusion', 'LTR', 2, 'C', true);
-            $pdf->Cell(15, $cellHeight7/2, 'Temporary', 'LBR', 0, 'C', true);
+            $pdf->Cell(15, $cellHeight7/2, 'Days of', 'LTR', 2, 'C', true);
+            $pdf->Cell(15, $cellHeight7/2, 'suspension', 'LBR', 0, 'C', true);
             $x = $pdf->GetX();
             $y = $pdf->GetY();
             $pdf->SetXY($x, $y-$cellHeight7/2);
@@ -11153,8 +11153,8 @@ class StatisticService
             $pdf->SetXY($x, $y-$cellHeight7/2);
 
             $pdf->SetFont('Times', 'B', 8);
-            $pdf->Cell(15, $cellHeight7/2, 'Exclusion', 'LTR', 2, 'C', true);
-            $pdf->Cell(15, $cellHeight7/2, 'Temporary', 'LBR', 0, 'C', true);
+            $pdf->Cell(15, $cellHeight7/2, 'Days of', 'LTR', 2, 'C', true);
+            $pdf->Cell(15, $cellHeight7/2, 'suspension', 'LBR', 0, 'C', true);
             $x = $pdf->GetX();
             $y = $pdf->GetY();
             $pdf->SetXY($x, $y-$cellHeight7/2);
@@ -11235,7 +11235,7 @@ class StatisticService
             $pdf->SetFont('Times', 'B', 12);
             $pdf->Cell(10, 5, 'D. ', 0, 0, 'L');
             $pdf->SetFont('Times', 'BU', 12);
-            $pdf->Cell(30, 5, 'RESULTS BY SUBJECT ', 0, 1, 'L');
+            $pdf->Cell(30, 5, 'RESULTS PER SUBJECT ', 0, 1, 'L');
             $pdf->Ln();
 
             // entête du tableau
@@ -11250,7 +11250,7 @@ class StatisticService
             $pdf->Ln();
             $pdf->Ln();
             $pdf->SetFont('Times', '', 12);
-            $pdf->Cell(0, $cellHeight7, 'Performance Analysis : _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _', 0, 1, 'L');
+            $pdf->Cell(0, $cellHeight7, 'Analysis of performance : _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _', 0, 1, 'L');
             $pdf->Cell(0, $cellHeight7, '_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _', 0, 1, 'L');
             $pdf->Cell(0, $cellHeight7, '_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _', 0, 1, 'L');
 
@@ -11272,14 +11272,14 @@ class StatisticService
             $pdf->SetFont('Times', 'B', 10);
             $pdf->Cell(30, $cellHeight7, '', 'LRT', 0, 'C', true);
             $pdf->Cell(84, $cellHeight7, 'Disciplinary sanctions', 1, 0, 'C', true);
-            $pdf->Cell(36, $cellHeight7, 'Nomber of', 'LRT', 0, 'C', true);
+            $pdf->Cell(36, $cellHeight7, 'Number of', 'LRT', 0, 'C', true);
             $pdf->Cell(20, $cellHeight7, 'Rate', 'LRT', 0, 'C', true);
             $pdf->Cell(20, $cellHeight7, 'Rate', 'LRT', 1, 'C', true);
 
             $pdf->Cell(30, $cellHeight7, 'Class', 'LR', 0, 'C', true);
-            $pdf->Cell(12, $cellHeight7, 'WB', 'LRT', 0, 'C', true);
-            $pdf->Cell(12, $cellHeight7, 'BB', 'LRT', 0, 'C', true);
-            $pdf->Cell(60, $cellHeight7, 'Exclusions', 1, 0, 'C', true);
+            $pdf->Cell(12, $cellHeight7, 'Aca.', 'LRT', 0, 'C', true);
+            $pdf->Cell(12, $cellHeight7, 'Warn. ', 'LRT', 0, 'C', true);
+            $pdf->Cell(60, $cellHeight7, 'Sanctions', 1, 0, 'C', true);
             $pdf->Cell(36, $cellHeight7, 'sanctions', 'LRB', 0, 'C', true);
             $pdf->Cell(20, $cellHeight7, utf8_decode('absences'), 'LR', 0, 'C', true);
             $pdf->Cell(20, $cellHeight7, utf8_decode('attendance'), 'LR', 1, 'C', true);
@@ -11287,12 +11287,12 @@ class StatisticService
 
 
             $pdf->Cell(30, $cellHeight7, '', 'LRB', 0, 'C', true);
-            $pdf->Cell(12, $cellHeight7, '', 'LRB', 0, 'C', true);
-            $pdf->Cell(12, $cellHeight7, '', 'LRB', 0, 'C', true);
+            $pdf->Cell(12, $cellHeight7, 'Warn.', 'LRB', 0, 'C', true);
+            $pdf->Cell(12, $cellHeight7, 'Cond.', 'LRB', 0, 'C', true);
             $pdf->Cell(12, $cellHeight7, '3j', 1, 0, 'C', true);
             $pdf->Cell(12, $cellHeight7, '5j', 1, 0, 'C', true);
             $pdf->Cell(12, $cellHeight7, '8j', 1, 0, 'C', true);
-            $pdf->Cell(24, $cellHeight7, utf8_decode('Definitive'), 1, 0, 'C', true);
+            $pdf->Cell(24, $cellHeight7, utf8_decode('Dismiss'), 1, 0, 'C', true);
             $pdf->Cell(24, $cellHeight7, 'Absences', 'LRB', 0, 'C', true);
             $pdf->Cell(12, $cellHeight7, 'CD', 'LRB', 0, 'C', true);
             $pdf->Cell(20, $cellHeight7, utf8_decode('( % )'), 'LRB', 0, 'C', true);
@@ -11308,7 +11308,7 @@ class StatisticService
             $totalAbsenceRate = $this->generalService->getFormatRatio($totalAbsence, $this->generalService->getNumberOfTermHours($classroom));
             $totalPresneceRate = 100 - (float)$totalAbsenceRate;
 
-            $pdf->Cell(30, $cellHeight7, utf8_decode('Garcons'), 1, 0, 'C', true);
+            $pdf->Cell(30, $cellHeight7, utf8_decode('Boys'), 1, 0, 'C', true);
             $pdf->Cell(12, $cellHeight7, $this->generalService->formatInteger($badTotal['boysAC']), 1, 0, 'C');
             $pdf->Cell(12, $cellHeight7, $this->generalService->formatInteger($badTotal['boysBC']), 1, 0, 'C');
             $pdf->Cell(12, $cellHeight7, $this->generalService->formatInteger($badTotal['boysEclusion3']), 1, 0, 'C');
@@ -11320,7 +11320,7 @@ class StatisticService
             $pdf->Cell(20, $cellHeight7, $absenceRateBoys, 1, 0, 'C');
             $pdf->Cell(20, $cellHeight7, $presenceRateBoys, 1, 1, 'C');
 
-            $pdf->Cell(30, $cellHeight7, 'Filles', 1, 0, 'C', true);
+            $pdf->Cell(30, $cellHeight7, 'Girls', 1, 0, 'C', true);
             $pdf->Cell(12, $cellHeight7, $this->generalService->formatInteger($badTotal['girlsAC']), 1, 0, 'C');
             $pdf->Cell(12, $cellHeight7, $this->generalService->formatInteger($badTotal['girlsBC']), 1, 0, 'C');
             $pdf->Cell(12, $cellHeight7, $this->generalService->formatInteger($badTotal['girlsEclusion3']), 1, 0, 'C');
@@ -11364,16 +11364,16 @@ class StatisticService
             $pdf->Ln();
             $pdf->Ln();
             $pdf->SetFont('Times', 'BU', 12);
-            $pdf->Cell(0, $cellHeight7, 'Remarques : ', 0, 1, 'L');
+            $pdf->Cell(0, $cellHeight7, 'Remarks : ', 0, 1, 'L');
             $pdf->SetFont('Times', '', 12);
-            $pdf->Cell(0, $cellHeight7, utf8_decode('This statistical form must be carefully completed and must be submitted to the surveillance '), 0, 1, 'L');
-            $pdf->Cell(0, $cellHeight7, utf8_decode('general for its conservation and exploitation.'), 0, 1, 'L');
+            $pdf->Cell(0, $cellHeight7, utf8_decode('This statistical form must be carefully completed and must be submitted to the discipline department'), 0, 1, 'L');
+            $pdf->Cell(0, $cellHeight7, utf8_decode('for its conservation and exploitation.'), 0, 1, 'L');
             $pdf->SetFont('Times', 'BU', 12);
             $pdf->Cell(0, $cellHeight7, 'NB :', 0, 1, 'L');
             $pdf->SetFont('Times', '', 12);
-            $pdf->Cell(0, $cellHeight7, utf8_decode(' If necessary, the head teacher must draw up an additional list of positive sanctions and/or '), 0, 1, 'L');
+            $pdf->Cell(0, $cellHeight7, utf8_decode(' If necessary, the class master / mistress must draw up an additional list of positive and négative sanctions  '), 0, 1, 'L');
 
-            $pdf->Cell(0, $cellHeight7, utf8_decode('negative, which must be attached to this form.'), 0, 1, 'L');
+            $pdf->Cell(0, $cellHeight7, utf8_decode('which must be attached to this form.'), 0, 1, 'L');
 
             $pdf->Ln();
 
@@ -11396,7 +11396,7 @@ class StatisticService
                 $pdf->Ln();
                 $pdf->Ln();
                 $pdf->SetFont('Times', 'BU', 12);
-                $pdf->Cell(90, $cellHeight7, utf8_decode('The Head Teacher'), 0, 0, 'L');
+                $pdf->Cell(90, $cellHeight7, utf8_decode('The Class Master / Mistress'), 0, 0, 'L');
                 $pdf->Cell(90, $cellHeight7, utf8_decode('The President of the Class Council'), 0, 0, 'R');
             }
             

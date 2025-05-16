@@ -330,9 +330,9 @@ class MarkRecorderController extends AbstractController
                 // 'term' => $selectedSequence->getTerm()
                 'sequence' => $selectedSequence
                 ]);
-
+            
             #je récupère les stats de la classe
-            $noteMinMax = $this->evaluationRepository->getEvaluationStatistics($sequenceId, $lessonId);
+            $noteMinMax = $this->evaluationRepository->getEvaluationStatisticsRaw($sequenceId, $lessonId);
             // dd($noteMinMax);
             $nombreSousMoyenneFille = 0;
             $nombreSousMoyenneGarcon = 0;

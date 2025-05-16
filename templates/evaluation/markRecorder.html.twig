@@ -278,8 +278,8 @@
                                                 <tbody>
                                                     <tr>
                                                         <td class="intitule">1.{% trans %}Girls{% endtrans %}</td>
-                                                        <td>{{ noteMinMax[0]['minMarkGirls'] }}</td>
-                                                        <td>{{ noteMinMax[0]['maxMarkGirls'] }}</td>
+                                                        <td>{{ noteMinMax['minMarkGirls'] }}</td>
+                                                        <td>{{ noteMinMax['maxMarkGirls'] }}</td>
                                                         <td>{{ nombreSousMoyenneFille }}</td>
                                                         <td>{{ nombreMoyenneFille }}</td>
                                                         <td>{{ filles }}</td>
@@ -290,17 +290,17 @@
                                                                 // <br>
                                                                 {% else %}
                                                                 {{ ((nombreMoyenneFille / (nombreSousMoyenneFille + nombreMoyenneFille)) * 100)|number_format(2, ',', '')   }} % <br>
-                                                                {% set pourcentage = (((nombreMoyenneFille) / (nombreSousMoyenneFille + nombreMoyenneFille)) * 100)|number_format(2, ',', '') %}
+                                                                {% set pourcentage = ((nombreMoyenneFille / (nombreSousMoyenneFille + nombreMoyenneFille)) * 100)|number_format(2, ',', '') %}
                                                             
-                                                                {% include "includes/_pourcentage.html.twig" %}
+                                                                {# {% include "includes/_pourcentage.html.twig" %} #}
                                                             {% endif %}
                                                             
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="intitule">2. {% trans %}Boys{% endtrans %}</td>
-                                                        <td>{{ noteMinMax[0]['minMarkBoys'] }}</td>
-                                                        <td>{{ noteMinMax[0]['maxMarkBoys'] }}</td>
+                                                        <td>{{ noteMinMax['minMarkBoys'] }}</td>
+                                                        <td>{{ noteMinMax['maxMarkBoys'] }}</td>
                                                         <td>{{ nombreSousMoyenneGarcon }}</td>
                                                         <td>{{ nombreMoyenneGarcon }}</td>
                                                         <td>{{ garcons }}</td>
@@ -310,8 +310,8 @@
                                                                 //
                                                                 {% else %}
                                                                 {{ ((nombreMoyenneGarcon / (nombreSousMoyenneGarcon + nombreMoyenneGarcon)) * 100)|number_format(2, ',', '')}} % <br>
-                                                                {% set pourcentage = (((nombreMoyenneGarcon) / (nombreSousMoyenneGarcon + nombreMoyenneGarcon)) * 100)|number_format(2, ',', '') %}
-                                                                {% include "includes/_pourcentage.html.twig" %}
+                                                                {% set pourcentage = ((nombreMoyenneGarcon / (nombreSousMoyenneGarcon + nombreMoyenneGarcon)) * 100)|number_format(2, ',', '') %}
+                                                                {# {% include "includes/_pourcentage.html.twig" %} #}
                                                             {% endif %}
                                                             
 
@@ -319,13 +319,13 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="intitule">3. {% trans %}Classroom{% endtrans %}</td>
-                                                        {% if noteMinMax[0]['minMarkBoys'] < noteMinMax[0]['minMarkGirls'] %}
-                                                            <td class="intitule">{{ noteMinMax[0]['minMarkBoys'] }}</td>
+                                                        {% if noteMinMax['minMarkBoys'] < noteMinMax['minMarkGirls'] %}
+                                                            <td class="intitule">{{ noteMinMax['minMarkBoys'] }}</td>
                                                             {% else %}
-                                                            <td class="intitule">{{ noteMinMax[0]['minMarkGirls'] }}</td>
+                                                            <td class="intitule">{{ noteMinMax['minMarkGirls'] }}</td>
                                                         {% endif %}
 
-                                                        <td class="intitule">{{ noteMinMax[0]['maxMarkClass'] }}</td>
+                                                        <td class="intitule">{{ noteMinMax['maxMarkClass'] }}</td>
                                                         <td class="intitule">{{ nombreSousMoyenneFille + nombreSousMoyenneGarcon }}</td>
                                                         <td class="intitule">{{ nombreMoyenneFille + nombreMoyenneGarcon }}</td>
                                                         <td class="intitule">{{ filles + garcons }}</td>
@@ -338,7 +338,7 @@
                                                                 {{ (((nombreMoyenneFille + nombreMoyenneGarcon) / (nombreSousMoyenneFille + nombreMoyenneFille + nombreSousMoyenneGarcon + nombreMoyenneGarcon)) * 100)|number_format(2, ',', '') }} % <br>
                                                                 {% set pourcentage = (((nombreMoyenneFille + nombreMoyenneGarcon) / (nombreSousMoyenneFille + nombreMoyenneFille + nombreSousMoyenneGarcon + nombreMoyenneGarcon)) * 100)|number_format(2, ',', '') %}
                                                             
-                                                                {% include "includes/_pourcentage.html.twig" %}
+                                                                {# {% include "includes/_pourcentage.html.twig" %} #}
                                                             {% endif %}
                                                             
                                                         </td>

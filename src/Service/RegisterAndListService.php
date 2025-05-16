@@ -1398,7 +1398,7 @@ class RegisterAndListService
                         $pdf->Cell(0, $cellHeight2+5, "PROFIL DE LA CLASSE", 0, 1, 'C');
                     }else
                     {
-                        $pdf->Cell(0, $cellHeight2+5, "CLASS PROFILE", 0, 1, 'C');
+                        $pdf->Cell(0, $cellHeight2+5, "GENERAL CLASS STATISTICS", 0, 1, 'C');
                     }
                     
                     $pdf->Ln(5);
@@ -1428,7 +1428,7 @@ class RegisterAndListService
                         $pdf->Cell(90, $cellHeight2+5, "EFFECTIF", 1, 0, 'C', true);
                     }else
                     {
-                        $pdf->Cell(90, $cellHeight2+5, "EFFECTIVE", 1, 0, 'C', true);
+                        $pdf->Cell(90, $cellHeight2+5, "ENROLLMENT", 1, 0, 'C', true);
                     }
                     $pdf->SetFont('Arial', '', 18);
                     $pdf->Cell(50, $cellHeight2+5, $girls, 1, 0, 'C');
@@ -1443,7 +1443,7 @@ class RegisterAndListService
                         $pdf->Cell(90, $cellHeight2+5, "Moyenne >= 10/20", 1, 0, 'C', true);
                     }else
                     {
-                        $pdf->Cell(90, $cellHeight2+5, "Average >= 10/20", 1, 0, 'C', true);
+                        $pdf->Cell(90, $cellHeight2+5, "Averages >= 10/20", 1, 0, 'C', true);
                     }
                     $pdf->SetFont('Arial', '', 18);
                     $pdf->Cell(50, $cellHeight2+5, $notesGirls, 1, 0, 'C');
@@ -1532,16 +1532,16 @@ class RegisterAndListService
                     {
                         if($school->isLycee())
                         {
-                            $pdf->Cell(130, $cellHeight2+5, "The Head Teacher", 0, 0, 'L');
-                            $pdf->Cell(90, $cellHeight2+5, "The Censor", 0, 0, 'C');
+                            $pdf->Cell(130, $cellHeight2+5, "The Class Master / Mistress", 0, 0, 'L');
+                            $pdf->Cell(90, $cellHeight2+5, "The Vice-Principal", 0, 0, 'C');
                         }else
                         {
-                            $pdf->Cell(130, $cellHeight2+5, "The Head Teacher", 0, 0, 'L');
-                            $pdf->Cell(90, $cellHeight2+5, "The Supervisor", 0, 0, 'C');
+                            $pdf->Cell(130, $cellHeight2+5, "The Class Master / Mistress", 0, 0, 'L');
+                            $pdf->Cell(90, $cellHeight2+5, "The Senior Discipline Master / Mistress", 0, 0, 'C');
                         }
                     }else
                     {
-                        $pdf->Cell(130, $cellHeight2+5, "The Head Teacher", 0, 0, 'L');
+                        $pdf->Cell(130, $cellHeight2+5, "The Class Master / Mistress", 0, 0, 'L');
                         $pdf->Cell(90, $cellHeight2+5, "The Prefect of Studies", 0, 0, 'C');
                     }
                     }

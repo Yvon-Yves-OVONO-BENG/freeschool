@@ -57,9 +57,11 @@
 
 		<!-- Color Skin css -->
 		<link id="theme" href="{{ asset ('build/custom2/colors/color1.css')}}" rel="stylesheet" type="text/css"/>
+		<link id="theme" href="{{ asset ('mesStylesSwal/style.css')}}" rel="stylesheet" type="text/css"/>
 
 		<!-- INTERNAL Switcher css -->
 		<link href="{{ asset ('build/custom2/switcher/css/switcher.css')}}" rel="stylesheet"/>
+		<link href="{{ asset ('build/custom2/switcher/demo.css')}}" rel="stylesheet"/>
 		<link href="{{ asset ('build/custom2/switcher/demo.css')}}" rel="stylesheet"/>
 
 		<link href="{{ asset ('build/custom2/plugins/datatables/DataTables/css/dataTables.bootstrap5.css')}}" rel="stylesheet" />
@@ -349,16 +351,29 @@
 				<script>
 
 					{# swal('Success !', '{{ notificationSuccess }}', 'success'); #}
-					window.onload = () => {
+					{# window.onload = () => {
 						notif({
-						msg: "<b>   {{ notificationSuccess }}</b>",
+						msg: "<b> {{ notificationSuccess }} </b>",
 						type: "success",
 						position: "right",
 						width: 500,
 						height: 60,
 						autohide: true
 						});
-						}
+					} #}
+
+					Swal.fire({
+							toast: true,
+							icon: 'success',
+							title: "<b>{{ notificationSuccess }}</b>",
+							position: 'top-end',
+							showConfirmButton: false,
+							timer: 6000,
+							timerProgressBar: true,
+							customClass: {
+								popup: 'saisiNotesSwal'
+							}
+						});
 				</script>
 			{% endif %}
 		{% endif %}
@@ -381,7 +396,7 @@
 				{% endfor %}
 
 				<script>
-					swal({
+					{# swal({
 						title: "{% trans %}Congratulations{% endtrans %}",
 						text: "{{ notificationSuccess }}",
 						type: "success",
@@ -389,7 +404,20 @@
 						showConfirmButton: false,
 						confirmButtonText: 'Ok',
 						cancelButtonText: false
-					});
+					}); #}
+
+					Swal.fire({
+							toast: true,
+							icon: 'success',
+							title: "<b>{{ notificationSuccess }}</b>",
+							position: 'top-end',
+							showConfirmButton: false,
+							timer: 6000,
+							timerProgressBar: true,
+							customClass: {
+								popup: 'saisiNotesSwal'
+							}
+						});
 					{# swal('Success !', '{{ notificationSuccess }}', 'success'); #}
 					{# window.onload = () => {
 						notif({
@@ -425,7 +453,7 @@
 				<script>
 
 					{# swal('Success !', '{{ notificationSuccess }}', 'success'); #}
-					window.onload = () => {
+					{# window.onload = () => {
 						notif({
 						msg: "<b>   {{ notificationSuccess }}</b>",
 						type: "info",
@@ -434,7 +462,20 @@
 						height: 60,
 						autohide: true
 						});
-						}
+						} #}
+
+						Swal.fire({
+							toast: true,
+							icon: 'success',
+							title: "<b>{{ notificationSuccess }}</b>",
+							position: 'top-start',
+							showConfirmButton: false,
+							timer: 6000,
+							timerProgressBar: true,
+							customClass: {
+								popup: 'miseAjourSwal'
+							}
+						});
 				</script>
 			{% endif %}
 		{% endif %}

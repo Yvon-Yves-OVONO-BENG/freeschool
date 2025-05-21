@@ -87,7 +87,6 @@ class ReportController extends AbstractController
             $feesTable = $this->feesService->getFeesTable($selectedClassroom, $fees);
 
             $students = $this->studentRepository->findBy([
-                'supprime' => 0,
                 'classroom' => $selectedClassroom,
             ], [
                 'fullName' => 'ASC'

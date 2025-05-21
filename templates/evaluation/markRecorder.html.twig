@@ -415,6 +415,7 @@
                                                         <tr>
                                                             <th class="border-bottom-0 indigo-gradient">{% trans %}N°{% endtrans %}</th>
                                                             <th class="border-bottom-0 green-gradient">{% trans %}Full name{% endtrans %}</th>
+                                                            <th class="border-bottom-0 green-gradient">{% trans %}Gender{% endtrans %}</th>
                                                             <th class="border-bottom-0 orange-gradient">{% trans %}Note/20{% endtrans %}</th>
                                                             {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') %}
                                                                 <th class="border-bottom-0 blue-gradient">{% trans %}Entered by{% endtrans %}</th>
@@ -428,6 +429,7 @@
                                                         <tr>
                                                             <th class="border-bottom-0 indigo-gradient">{% trans %}N°{% endtrans %}</th>
                                                             <th class="border-bottom-0 green-gradient">{% trans %}Full name{% endtrans %}</th>
+                                                            <th class="border-bottom-0 green-gradient">{% trans %}Gender{% endtrans %}</th>
                                                             <th class="border-bottom-0 orange-gradient">{% trans %}Note/20{% endtrans %}</th>
                                                             {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') %}
                                                                 <th class="border-bottom-0 blue-gradient">{% trans %}Entered by{% endtrans %}</th>
@@ -445,6 +447,9 @@
                                                             <td style="text-align: center; vertical-align:middle;">{{ i }}</td>
                                                             <td style="text-align:left !important; vertical-align:middle;">
                                                                 {{ evaluation.student.fullName }}
+                                                            </td>
+                                                            <td style="text-align:left !important; vertical-align:middle;">
+                                                                {{ evaluation.student.sex.sex }}
                                                             </td>
                                                             <td>
                                                                 <input type="text" name="mark{{i}}" readonly="readonly" class="form-control"

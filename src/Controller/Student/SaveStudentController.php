@@ -138,6 +138,31 @@ class SaveStudentController extends AbstractController
         
         if ($form->isSubmitted() && $form->isValid()) 
         {
+            #je fabrique mon slug
+            $characts    = 'abcdefghijklmnopqrstuvwxyz#{};()';
+            $characts   .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#{};()';	
+            $characts   .= '1234567890'; 
+            $slug      = ''; 
+    
+            for($i=0;$i < 15;$i++) 
+            { 
+                $slug .= substr($characts,rand()%(strlen($characts)),1); 
+            }
+
+            //////j'extrait le dernier élève de la table
+            $dernierStudent = $this->studentRepository->findBy([],['id' => 'DESC'],1,0);
+
+            /////je récupère l'id du sernier utilisateur
+            
+            if ($dernierStudent) 
+            {
+                $id = $dernierStudent[0]->getId();
+            } 
+            else 
+            {
+                $id = 1;
+            }
+            
             $qrCode = null;
             $data =  $form->getData();
 
@@ -186,31 +211,6 @@ class SaveStudentController extends AbstractController
             $clubBilingue = $request->request->get('clubBilingue');
             $clubLv2 = $request->request->get('clubLv2');
 
-            #je fabrique mon slug
-            $characts    = 'abcdefghijklmnopqrstuvwxyz#{};()';
-            $characts   .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#{};()';	
-            $characts   .= '1234567890'; 
-            $slug      = ''; 
-    
-            for($i=0;$i < 15;$i++) 
-            { 
-                $slug .= substr($characts,rand()%(strlen($characts)),1); 
-            }
-
-            //////j'extrait le dernier élève de la table
-            $dernierStudent = $this->studentRepository->findBy([],['id' => 'DESC'],1,0);
-
-            /////je récupère l'id du sernier utilisateur
-            
-            if ($dernierStudent) 
-            {
-                $id = $dernierStudent[0]->getId();
-            } 
-            else 
-            {
-                $id = 1;
-            }
-
             $student->setFullName($this->strService->strToUpper($student->getFullName()))
                     ->setRegistrationNumber($this->strService->strToUpper($student->getRegistrationNumber()))
                     ->setBirthplace($this->strService->strToUpper($student->getBirthplace()))
@@ -236,7 +236,6 @@ class SaveStudentController extends AbstractController
                     ->setClubLv2($clubLv2)
                     ->setSlug($slug.$id)
                     ->setSubSystem($subSyste)
-                    ->setSupprime(0)
                     ->setSchoolYear($schoolYear);
             
             $storedClassroom = $student->getClassroom();

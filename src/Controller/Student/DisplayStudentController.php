@@ -176,7 +176,6 @@ class DisplayStudentController extends AbstractController
 
             $students = $this->studentRepository->findBy([
                 'classroom' => $selectedClassroom,
-                'supprime' => 0,
             ], ['fullName' => 'ASC' ]);
 
             $methodIsPost = true;

@@ -128,7 +128,6 @@ class SaveDeliberationController extends AbstractController
                 ->setPrevId($student->getId())
                 ->setSchoolYear($nextSchoolYear)
                 ->setSubSystem($subSystem)
-                ->setSupprime(0)
                 ->setEmailParent($student->getEmailParent())
                 ;
 

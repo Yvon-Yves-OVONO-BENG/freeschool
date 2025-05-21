@@ -345,7 +345,6 @@ class LessonRepository extends ServiceEntityRepository
                 FROM App\Entity\Classroom c
                 INNER JOIN c.students st
                 WHERE st.id = :studentId
-                AND st.supprime = 0
             )
             ORDER BY s.subject ASC
             '
@@ -380,7 +379,6 @@ class LessonRepository extends ServiceEntityRepository
             LEFT JOIN App\Entity\Evaluation e WITH e.lesson = l.id AND e.sequence = :sequenceId
             LEFT JOIN e.student st
             WHERE c.id = :classroomId
-            AND st.supprime = 0
             ORDER BY st.fullName ASC, sub.subject ASC
             '
         )
@@ -451,7 +449,6 @@ class LessonRepository extends ServiceEntityRepository
                 FROM App\Entity\Classroom c
                 INNER JOIN c.students st
                 WHERE st.id = :studentId
-                AND st.supprime = 0
             )
             GROUP BY s.id
             ORDER BY s.subject ASC
@@ -497,7 +494,6 @@ class LessonRepository extends ServiceEntityRepository
             LEFT JOIN e.student st
             WHERE c.id = :classroomId
             AND st.classroom = c.id
-            AND st.supprime = 0
             GROUP BY st.fullName, s.id
             ORDER BY s.subject ASC
             '
@@ -570,7 +566,6 @@ class LessonRepository extends ServiceEntityRepository
             LEFT JOIN App\Entity\Evaluation e WITH e.lesson = l.id AND e.student = :studentId
             LEFT JOIN e.student st
             WHERE st.id = :studentId
-            AND st.supprime = 0
             GROUP BY s.id
             ORDER BY s.subject ASC' 
         );
@@ -611,7 +606,6 @@ class LessonRepository extends ServiceEntityRepository
             LEFT JOIN App\Entity\Evaluation e WITH e.lesson = l.id
             LEFT JOIN e.student st
             WHERE c.id = :classroomId
-            AND st.supprime = 0
             AND st.classroom = c.id
             GROUP BY st.fullName, s.id
             ORDER BY s.subject ASC' 

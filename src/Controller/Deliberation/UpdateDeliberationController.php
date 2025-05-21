@@ -724,8 +724,39 @@ class UpdateDeliberationController extends AbstractController
         // si l'élève se trouvait déjà au next year
         if($nextYearStudent != null)
         {
-            if(($newDecision->getDecision() == ConstantsClass::DECISION_EXPELLED) || ($newDecision->getDecision() == ConstantsClass::DECISION_CATCHUPPED) )
+            if(($newDecision->getDecision() == ConstantsClass::DECISION_EXPELLED) || 
+            ($newDecision->getDecision() == ConstantsClass::DECISION_CATCHUPPED) )
             {
+                foreach ($nextYearStudent->getReports() as $report) 
+                {
+                    $this->em->remove($report);
+                }
+
+                foreach ($nextYearStudent->getAbsences() as $absence) 
+                {
+                    $this->em->remove($absence);
+                }
+
+                foreach ($nextYearStudent->getRegistrationHistories() as $registrationHistorie) 
+                {
+                    $this->em->remove($registrationHistorie);
+                }
+
+                foreach ($nextYearStudent->getRegistrations() as $registration) 
+                {
+                    $this->em->remove($registration);
+                }
+
+                foreach ($nextYearStudent->getEvaluations() as $evaluation) 
+                {
+                    $this->em->remove($evaluation);
+                }
+
+                foreach ($nextYearStudent->getConseils() as $conseil) 
+                {
+                    $this->em->remove($conseil);
+                }
+
                 $this->em->remove($nextYearStudent);
     
             }else

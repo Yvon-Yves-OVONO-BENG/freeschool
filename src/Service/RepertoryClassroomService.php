@@ -115,44 +115,42 @@ class RepertoryClassroomService
         $numberOfStudents = count($studentList);
         foreach($studentList as $student)
         {
-            if ($student->isSupprime() == 0) 
+            $numero++;
+            if ($numero % 2 != 0) 
             {
-                $numero++;
-                if ($numero % 2 != 0) 
-                {
-                    $pdf->SetFillColor(219,238,243);
-                }
-                else 
-                {
-                    $pdf->SetFillColor(255,255,255);
-                }
-                $pdf->Cell(10, $cellBodyHeight2, $numero, 1, 0, 'C', true);
-                $pdf->SetFont('Times', '', $fontSize-1);
-                $pdf->Cell(80, $cellBodyHeight2, utf8_decode($student->getFullName()), 1, 0, 'L', true);
-
-                $pdf->SetFont('Times', '', $fontSize-2);
-                $pdf->Cell(94.5, $cellBodyHeight2, ($student->getTelephonePere() ? utf8_decode($student->getTelephonePere())." - "  : " - ").($student->getTelephoneMere() ? utf8_decode($student->getTelephoneMere())." - " : " - " ).($student->getTelephoneTuteur() ? utf8_decode($student->getTelephoneTuteur())." - " :" - ").($student->getTelephonePersonneEnCasUrgence() ? utf8_decode($student->getTelephonePersonneEnCasUrgence()." - ") :" - "), 1, 0, 'C', true);
-                
-                $pdf->Ln();
-
-                // if( ($numero % 30) == 0 && $numberOfStudents > 30) /*On passe à une nouvelle page après 30 lignes*/
-                // {
-                //     // On insère une page
-                //     $pdf = $this->generalService->newPage($pdf, 'P', 15, $fontSize-3);
-                    
-                //     // Administrative Header
-                //     $pdf = $this->generalService->getAdministrativeHeader($school, $pdf, $cellHeaderHeight, $fontSize, $schoolYear);
-        
-                //     // Entête de la liste
-                //     $pdf = $this->getHeaderStudentList($pdf, $classroom);
-
-                //     // entête du tableau
-                //     $pdf = $this->getTableHeaderStudentList($pdf, $cellHeaderHeight2);
-
-                //     $pdf->SetFont('Times', '', $fontSize);
-
-                // }
+                $pdf->SetFillColor(219,238,243);
             }
+            else 
+            {
+                $pdf->SetFillColor(255,255,255);
+            }
+            $pdf->Cell(10, $cellBodyHeight2, $numero, 1, 0, 'C', true);
+            $pdf->SetFont('Times', '', $fontSize-1);
+            $pdf->Cell(80, $cellBodyHeight2, utf8_decode($student->getFullName()), 1, 0, 'L', true);
+
+            $pdf->SetFont('Times', '', $fontSize-2);
+            $pdf->Cell(94.5, $cellBodyHeight2, ($student->getTelephonePere() ? utf8_decode($student->getTelephonePere())." - "  : " - ").($student->getTelephoneMere() ? utf8_decode($student->getTelephoneMere())." - " : " - " ).($student->getTelephoneTuteur() ? utf8_decode($student->getTelephoneTuteur())." - " :" - ").($student->getTelephonePersonneEnCasUrgence() ? utf8_decode($student->getTelephonePersonneEnCasUrgence()." - ") :" - "), 1, 0, 'C', true);
+            
+            $pdf->Ln();
+
+            // if( ($numero % 30) == 0 && $numberOfStudents > 30) /*On passe à une nouvelle page après 30 lignes*/
+            // {
+            //     // On insère une page
+            //     $pdf = $this->generalService->newPage($pdf, 'P', 15, $fontSize-3);
+                
+            //     // Administrative Header
+            //     $pdf = $this->generalService->getAdministrativeHeader($school, $pdf, $cellHeaderHeight, $fontSize, $schoolYear);
+    
+            //     // Entête de la liste
+            //     $pdf = $this->getHeaderStudentList($pdf, $classroom);
+
+            //     // entête du tableau
+            //     $pdf = $this->getTableHeaderStudentList($pdf, $cellHeaderHeight2);
+
+            //     $pdf->SetFont('Times', '', $fontSize);
+
+            // }
+            
             
         }
         $pdf = $this->generalService->doAt($pdf, $school, $cellHeaderHeight2);
@@ -227,70 +225,68 @@ class RepertoryClassroomService
         $numberOfStudents = count($studentList);
         foreach($studentList as $student)
         {
-            if ($student->isSupprime() == 0) 
-            {
-                $numero++;
-                // if ($numero % 2 != 0) 
-                // {
-                //     $pdf->SetFillColor(219,238,243);
-                // }
-                // else 
-                // {
-                //     $pdf->SetFillColor(255,255,255);
-                // }
-                $pdf->Cell(10, $cellBodyHeight2, $numero, 1, 0, 'C', true);
-                $pdf->SetFont('Times', '', $fontSize-1);
-                $pdf->Cell(0, $cellBodyHeight2, utf8_decode($student->getFullName()), 1, 1, 'C', true);
+            $numero++;
+            // if ($numero % 2 != 0) 
+            // {
+            //     $pdf->SetFillColor(219,238,243);
+            // }
+            // else 
+            // {
+            //     $pdf->SetFillColor(255,255,255);
+            // }
+            $pdf->Cell(10, $cellBodyHeight2, $numero, 1, 0, 'C', true);
+            $pdf->SetFont('Times', '', $fontSize-1);
+            $pdf->Cell(0, $cellBodyHeight2, utf8_decode($student->getFullName()), 1, 1, 'C', true);
 
-                $pdf->SetFont('Times', 'B', $fontSize-2);
-                $pdf->Cell(29, $cellBodyHeight2, utf8_decode(""), 1, 0, 'C');
-                $pdf->Cell(52, $cellBodyHeight2, utf8_decode("Père/Father"), 1, 0, 'C');
-                $pdf->Cell(52, $cellBodyHeight2, utf8_decode("Mère/Mother"), 1, 0, 'C');
-                $pdf->Cell(52, $cellBodyHeight2, utf8_decode("Tuteur/Tutor"), 1, 1, 'C');
+            $pdf->SetFont('Times', 'B', $fontSize-2);
+            $pdf->Cell(29, $cellBodyHeight2, utf8_decode(""), 1, 0, 'C');
+            $pdf->Cell(52, $cellBodyHeight2, utf8_decode("Père/Father"), 1, 0, 'C');
+            $pdf->Cell(52, $cellBodyHeight2, utf8_decode("Mère/Mother"), 1, 0, 'C');
+            $pdf->Cell(52, $cellBodyHeight2, utf8_decode("Tuteur/Tutor"), 1, 1, 'C');
 
-                $pdf->Cell(29, $cellBodyHeight2, utf8_decode("Nom / Name"), 1, 0, 'C');
-                $pdf->SetFont('Times', '', $fontSize-2);
-                $pdf->Cell(52, $cellBodyHeight2, utf8_decode($student->getFatherName() ? utf8_decode($student->getFatherName())  : " - "), 1, 0, 'C');
-                $pdf->Cell(52, $cellBodyHeight2, utf8_decode($student->getMotherName() ? utf8_decode($student->getMotherName())  : " - "), 1, 0, 'C');
-                $pdf->Cell(52, $cellBodyHeight2, utf8_decode($student->getTuteur() ? utf8_decode($student->getTuteur())  : " - "), 1, 1, 'C');
+            $pdf->Cell(29, $cellBodyHeight2, utf8_decode("Nom / Name"), 1, 0, 'C');
+            $pdf->SetFont('Times', '', $fontSize-2);
+            $pdf->Cell(52, $cellBodyHeight2, utf8_decode($student->getFatherName() ? utf8_decode($student->getFatherName())  : " - "), 1, 0, 'C');
+            $pdf->Cell(52, $cellBodyHeight2, utf8_decode($student->getMotherName() ? utf8_decode($student->getMotherName())  : " - "), 1, 0, 'C');
+            $pdf->Cell(52, $cellBodyHeight2, utf8_decode($student->getTuteur() ? utf8_decode($student->getTuteur())  : " - "), 1, 1, 'C');
 
-                $pdf->SetFont('Times', 'B', $fontSize-2);
-                $pdf->Cell(29, $cellBodyHeight2, utf8_decode("Profession"), 1, 0, 'C');
-                $pdf->SetFont('Times', '', $fontSize-2);
-                $pdf->Cell(52, $cellBodyHeight2, utf8_decode($student->getProfessionPere() ? utf8_decode($student->getProfessionPere())  : " - "), 1, 0, 'C');
-                $pdf->Cell(52, $cellBodyHeight2, utf8_decode($student->getProfessionMere() ? utf8_decode($student->getProfessionMere())  : " - "), 1, 0, 'C');
-                $pdf->Cell(52, $cellBodyHeight2, utf8_decode($student->getProfessionTuteur() ? utf8_decode($student->getProfessionTuteur())  : " - "), 1, 1, 'C');
+            $pdf->SetFont('Times', 'B', $fontSize-2);
+            $pdf->Cell(29, $cellBodyHeight2, utf8_decode("Profession"), 1, 0, 'C');
+            $pdf->SetFont('Times', '', $fontSize-2);
+            $pdf->Cell(52, $cellBodyHeight2, utf8_decode($student->getProfessionPere() ? utf8_decode($student->getProfessionPere())  : " - "), 1, 0, 'C');
+            $pdf->Cell(52, $cellBodyHeight2, utf8_decode($student->getProfessionMere() ? utf8_decode($student->getProfessionMere())  : " - "), 1, 0, 'C');
+            $pdf->Cell(52, $cellBodyHeight2, utf8_decode($student->getProfessionTuteur() ? utf8_decode($student->getProfessionTuteur())  : " - "), 1, 1, 'C');
 
-                $pdf->SetFont('Times', 'B', $fontSize-2);
-                $pdf->Cell(29, $cellBodyHeight2, utf8_decode("Contact"), 1, 0, 'C');
-                $pdf->SetFont('Times', '', $fontSize-2);
-                $pdf->Cell(52, $cellBodyHeight2, utf8_decode($student->getTelephonePere() ? utf8_decode($student->getTelephonePere())  : " - "), 1, 0, 'C');
-                $pdf->Cell(52, $cellBodyHeight2, utf8_decode($student->getTelephoneMere() ? utf8_decode($student->getTelephoneMere()) : " - "), 1, 0, 'C');
-                $pdf->Cell(52, $cellBodyHeight2, utf8_decode($student->getTelephoneTuteur() ? utf8_decode($student->getTelephoneTuteur()) :" - "), 1, 1, 'C');
+            $pdf->SetFont('Times', 'B', $fontSize-2);
+            $pdf->Cell(29, $cellBodyHeight2, utf8_decode("Contact"), 1, 0, 'C');
+            $pdf->SetFont('Times', '', $fontSize-2);
+            $pdf->Cell(52, $cellBodyHeight2, utf8_decode($student->getTelephonePere() ? utf8_decode($student->getTelephonePere())  : " - "), 1, 0, 'C');
+            $pdf->Cell(52, $cellBodyHeight2, utf8_decode($student->getTelephoneMere() ? utf8_decode($student->getTelephoneMere()) : " - "), 1, 0, 'C');
+            $pdf->Cell(52, $cellBodyHeight2, utf8_decode($student->getTelephoneTuteur() ? utf8_decode($student->getTelephoneTuteur()) :" - "), 1, 1, 'C');
 
+            
+
+            // $pdf->Cell(94.5, $cellBodyHeight2, ($student->getTelephonePere() ? utf8_decode($student->getTelephonePere())." - "  : " - ").($student->getTelephoneMere() ? utf8_decode($student->getTelephoneMere())." - " : " - " ).($student->getTelephoneTuteur() ? utf8_decode($student->getTelephoneTuteur())." - " :" - ").($student->getTelephonePersonneEnCasUrgence() ? utf8_decode($student->getTelephonePersonneEnCasUrgence()." - ") :" - "), 1, 0, 'C', true);
+            
+
+            // if( ($numero % 30) == 0 && $numberOfStudents > 30) /*On passe à une nouvelle page après 30 lignes*/
+            // {
+            //     // On insère une page
+            //     $pdf = $this->generalService->newPage($pdf, 'P', 15, $fontSize-3);
                 
+            //     // Administrative Header
+            //     $pdf = $this->generalService->getAdministrativeHeader($school, $pdf, $cellHeaderHeight, $fontSize, $schoolYear);
+    
+            //     // Entête de la liste
+            //     $pdf = $this->getHeaderStudentList($pdf, $classroom);
 
-                // $pdf->Cell(94.5, $cellBodyHeight2, ($student->getTelephonePere() ? utf8_decode($student->getTelephonePere())." - "  : " - ").($student->getTelephoneMere() ? utf8_decode($student->getTelephoneMere())." - " : " - " ).($student->getTelephoneTuteur() ? utf8_decode($student->getTelephoneTuteur())." - " :" - ").($student->getTelephonePersonneEnCasUrgence() ? utf8_decode($student->getTelephonePersonneEnCasUrgence()." - ") :" - "), 1, 0, 'C', true);
-                
+            //     // entête du tableau
+            //     $pdf = $this->getTableHeaderStudentList($pdf, $cellHeaderHeight2);
 
-                // if( ($numero % 30) == 0 && $numberOfStudents > 30) /*On passe à une nouvelle page après 30 lignes*/
-                // {
-                //     // On insère une page
-                //     $pdf = $this->generalService->newPage($pdf, 'P', 15, $fontSize-3);
-                    
-                //     // Administrative Header
-                //     $pdf = $this->generalService->getAdministrativeHeader($school, $pdf, $cellHeaderHeight, $fontSize, $schoolYear);
-        
-                //     // Entête de la liste
-                //     $pdf = $this->getHeaderStudentList($pdf, $classroom);
+            //     $pdf->SetFont('Times', '', $fontSize);
 
-                //     // entête du tableau
-                //     $pdf = $this->getTableHeaderStudentList($pdf, $cellHeaderHeight2);
-
-                //     $pdf->SetFont('Times', '', $fontSize);
-
-                // }
-            }
+            // }
+            
             
         }
         $pdf = $this->generalService->doAt($pdf, $school, $cellHeaderHeight2);

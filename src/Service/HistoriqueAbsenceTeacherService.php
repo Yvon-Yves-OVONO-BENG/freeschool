@@ -217,41 +217,36 @@ class HistoriqueAbsenceTeacherService
 
         foreach($attendances as $attendance)
         {
-            if ($attendance->isSupprime() == 0) 
+            switch ($attendance->getSequence()->getSequence()) 
             {
+                case 1:
+                    $nombreHeureSeq1 = $nombreHeureSeq1 + $attendance->getNombreHeure();
+                    $historicSeq1[] = $attendance;
+                    break;
+                case 2:
+                    $nombreHeureSeq2 = $nombreHeureSeq2 + $attendance->getNombreHeure();
+                    $historicSeq2[] = $attendance;
+                    break;
 
-                switch ($attendance->getSequence()->getSequence()) 
-                {
-                    case 1:
-                        $nombreHeureSeq1 = $nombreHeureSeq1 + $attendance->getNombreHeure();
-                        $historicSeq1[] = $attendance;
-                        break;
-                    case 2:
-                        $nombreHeureSeq2 = $nombreHeureSeq2 + $attendance->getNombreHeure();
-                        $historicSeq2[] = $attendance;
-                        break;
+                case 3:
+                    $nombreHeureSeq3 += $attendance->getNombreHeure();
+                    $historicSeq3[] = $attendance;
+                    break;
 
-                    case 3:
-                        $nombreHeureSeq3 += $attendance->getNombreHeure();
-                        $historicSeq3[] = $attendance;
-                        break;
+                case 4:
+                    $nombreHeureSeq4 += $attendance->getNombreHeure();
+                    $historicSeq4[] = $attendance;
+                    break;
 
-                    case 4:
-                        $nombreHeureSeq4 += $attendance->getNombreHeure();
-                        $historicSeq4[] = $attendance;
-                        break;
+                case 5:
+                    $nombreHeureSeq5 += $attendance->getNombreHeure();
+                    $historicSeq5[] = $attendance;
+                    break;
 
-                    case 5:
-                        $nombreHeureSeq5 += $attendance->getNombreHeure();
-                        $historicSeq5[] = $attendance;
-                        break;
-
-                    case 6:
-                        $nombreHeureSeq6 += $attendance->getNombreHeure();
-                        $historicSeq6[] = $attendance;
-                        break;
-                }
-
+                case 6:
+                    $nombreHeureSeq6 += $attendance->getNombreHeure();
+                    $historicSeq6[] = $attendance;
+                    break;
             }
         }
 

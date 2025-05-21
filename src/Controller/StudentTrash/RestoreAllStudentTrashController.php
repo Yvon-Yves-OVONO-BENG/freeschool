@@ -55,13 +55,10 @@ class RestoreAllStudentTrashController extends AbstractController
             return $this->redirectToRoute('home_mainMenu');
         }
 
-        $studentTrashs = $this->studentRepository->findBy([
-            'supprime' => 1
-        ]);
+        $studentTrashs = $this->studentRepository->findAll();
         
         foreach ($studentTrashs as $student) 
         {
-            $student->setSupprime(0);
             $this->em->persist($student);
         }
         $this->em->flush();

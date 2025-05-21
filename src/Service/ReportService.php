@@ -1587,11 +1587,11 @@ class ReportService
 
                     $pdf->SetFont('Times', '', $fontSize-1);
                     $pdf->Cell(30, $cellHeaderStudentHeight, utf8_decode(''), 0, 0, 'L');
-                    $pdf->Cell(17, $cellHeaderStudentHeight, 'NIU : ', 0, 0, 'L');
+                    $pdf->Cell(10, $cellHeaderStudentHeight, 'NIU : ', 0, 0, 'L');
 
                     $pdf->SetFont('Times', 'B', $fontSize-1);
 
-                    $pdf->Cell(30, $cellHeaderStudentHeight, $student->getRegistrationNumber(), 0, 0, 'L');
+                    $pdf->Cell(20, $cellHeaderStudentHeight, $student->getRegistrationNumber(), 0, 0, 'L');
 
                     $pdf->SetFont('Times', '', $fontSize-1);
                     $pdf->Cell(22, $cellHeaderStudentHeight, 'Redoublant(e) : ', 0, 0, 'L');
@@ -1602,20 +1602,20 @@ class ReportService
                     // dd($student->getRepeater()->getRepeater());
                     if ($student->getRepeater()->getRepeater() == ConstantsClass::REPEATER_NO) 
                     {
-                        $pdf->Cell(20, $cellHeaderStudentHeight, "Non", 0, 0, 'L');
-                        $pdf->Image('build/custom/images/unchecked.png', 142, 65, 4, 4) ;
+                        $pdf->Cell(10, $cellHeaderStudentHeight, "Non", 0, 0, 'L');
+                        $pdf->Image('build/custom/images/unchecked.png', 105, 65.5, 4, 4) ;
                         
-                        $pdf->Cell(10, $cellHeaderStudentHeight, "Oui", 0, 0, 'L');
-                        $pdf->Image('build/custom/images/checked.png', 122, 65, 4, 4) ;
+                        $pdf->Cell(20, $cellHeaderStudentHeight, "Oui", 0, 0, 'R');
+                        $pdf->Image('build/custom/images/checked.png', 135, 65.5, 4, 4) ;
                         $pdf->Cell(10, $cellHeaderStudentHeight, '', 0, 1, 'L');
                         
                     }else
                     {
-                        $pdf->Cell(20, $cellHeaderStudentHeight, "Non", 0, 0, 'L');
-                        $pdf->Image('build/custom/images/unchecked.png', 122, 65, 4, 4);
+                        $pdf->Cell(10, $cellHeaderStudentHeight, "Non", 0, 0, 'L');
+                        $pdf->Image('build/custom/images/unchecked.png', 105, 65.5, 4, 4);
                         
-                        $pdf->Cell(10, $cellHeaderStudentHeight, "Oui", 0, 0, 'L');
-                        $pdf->Image('build/custom/images/checked.png', 142, 65, 4, 4);
+                        $pdf->Cell(20, $cellHeaderStudentHeight, "Oui", 0, 0, 'R');
+                        $pdf->Image('build/custom/images/checked.png', 135, 65.5, 4, 4);
                         $pdf->Cell(10, $cellHeaderStudentHeight, '', 0, 1, 'L');
                         
                     }
@@ -1669,11 +1669,11 @@ class ReportService
 
                     $pdf->SetFont('Times', '', $fontSize-1);
                     $pdf->Cell(30, $cellHeaderStudentHeight, utf8_decode(''), 0, 0, 'L');
-                    $pdf->Cell(17, $cellHeaderStudentHeight, 'Registration number  : ', 0, 0, 'L');
+                    $pdf->Cell(10, $cellHeaderStudentHeight, 'NIU : ', 0, 0, 'L');
 
                     $pdf->SetFont('Times', 'B', $fontSize-1);
 
-                    $pdf->Cell(30, $cellHeaderStudentHeight, $student->getRegistrationNumber(), 0, 0, 'L');
+                    $pdf->Cell(20, $cellHeaderStudentHeight, $student->getRegistrationNumber(), 0, 0, 'L');
 
                     $pdf->SetFont('Times', '', $fontSize-1);
                     $pdf->Cell(22, $cellHeaderStudentHeight, 'Repeater : ', 0, 0, 'L');
@@ -1683,20 +1683,20 @@ class ReportService
 
                     if ($student->getRepeater()->getRepeater() == ConstantsClass::REPEATER_NO) 
                     {
-                        $pdf->Cell(20, $cellHeaderStudentHeight, "Non", 0, 0, 'L');
-                        $pdf->Image('build/custom/images/unchecked.png', 142, 65, 4, 4) ;
+                        $pdf->Cell(10, $cellHeaderStudentHeight, "Non", 0, 0, 'L');
+                        $pdf->Image('build/custom/images/unchecked.png', 105, 65.5, 4, 4) ;
                         
-                        $pdf->Cell(10, $cellHeaderStudentHeight, "Oui", 0, 0, 'L');
-                        $pdf->Image('build/custom/images/checked.png', 122, 65, 4, 4) ;
+                        $pdf->Cell(20, $cellHeaderStudentHeight, "Oui", 0, 0, 'R');
+                        $pdf->Image('build/custom/images/checked.png', 135, 65.5, 4, 4) ;
                         $pdf->Cell(10, $cellHeaderStudentHeight, '', 0, 1, 'L');
                         
                     }else
                     {
-                        $pdf->Cell(20, $cellHeaderStudentHeight, "Non", 0, 0, 'L');
-                        $pdf->Image('build/custom/images/unchecked.png', 122, 65, 4, 4);
+                        $pdf->Cell(10, $cellHeaderStudentHeight, "Non", 0, 0, 'L');
+                        $pdf->Image('build/custom/images/unchecked.png', 105, 65.5, 4, 4);
                         
-                        $pdf->Cell(10, $cellHeaderStudentHeight, "Oui", 0, 0, 'L');
-                        $pdf->Image('build/custom/images/checked.png', 142, 65, 4, 4);
+                        $pdf->Cell(20, $cellHeaderStudentHeight, "Oui", 0, 0, 'R');
+                        $pdf->Image('build/custom/images/checked.png', 135, 65.5, 4, 4);
                         $pdf->Cell(10, $cellHeaderStudentHeight, '', 0, 1, 'L');
                         
                     }

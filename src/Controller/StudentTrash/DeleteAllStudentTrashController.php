@@ -56,7 +56,6 @@ class DeleteAllStudentTrashController extends AbstractController
         }
 
         $studentTrashs = $this->studentRepository->findBy([
-            'supprime' => 1
         ]);
         
         

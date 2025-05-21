@@ -69,7 +69,6 @@ class ListStudentTrashController extends AbstractController
 
         ////je récupère tous les élèves supprimés
         $studentTrashs = $this->studentRepository->findBy([
-            'supprime' => 1, 
             'schoolYear' => $schoolYear, 
             'subSystem' => $subSystem, 
         ]);

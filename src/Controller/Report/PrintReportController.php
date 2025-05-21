@@ -150,7 +150,7 @@ class PrintReportController extends AbstractController
         
         // Moyennes trimestrielles des élèves classés et moyennes par groupe et classement par order de mérite trimestriel
         $allRankedStudents = $this->reportService->getRankedStudents($studentMarkTerm, $selectedClassroom, $selectedTerm);
-
+        
         // On reupère le classement trimetriel
         $rankedStudents = $allRankedStudents['rankedTerm'];
 

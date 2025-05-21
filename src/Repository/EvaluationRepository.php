@@ -74,7 +74,6 @@ class EvaluationRepository extends ServiceEntityRepository
                 ->andWhere('sb.id = l.subject')
                 ->innerJoin(Classroom::class, 'cl')
                 ->andWhere('cl.id = st.classroom')
-                ->andWhere('st.supprime = 0')
                 ->andWhere('l.subject = :subject')
                 ->andWhere('st.schoolYear = :schoolYear')
                 ->andWhere('st.subSystem = :subSystem')
@@ -322,7 +321,6 @@ class EvaluationRepository extends ServiceEntityRepository
                 ->andWhere('l.subject = :subject')
                 ->andWhere('st.schoolYear = :schoolYear')
                 ->andWhere('st.subSystem = :subSystem')
-                ->andWhere('st.supprime = 0')
                 ->setParameters([
                     'schoolYear' => $schoolYear,
                     'subSystem' => $subSystem,
@@ -367,7 +365,6 @@ class EvaluationRepository extends ServiceEntityRepository
                 ->andWhere('l.subject = :subject')
                 ->andWhere('st.schoolYear = :schoolYear')
                 ->andWhere('st.subSystem = :subSystem')
-                ->andWhere('st.supprime = 0')
                 ->setParameters([
                     'schoolYear' => $schoolYear,
                     'subSystem' => $subSystem,
@@ -416,7 +413,6 @@ class EvaluationRepository extends ServiceEntityRepository
                 ->andWhere('l.subject = :subject')
                 ->andWhere('st.schoolYear = :schoolYear')
                 ->andWhere('st.subSystem = :subSystem')
-                ->andWhere('st.supprime = 0')
                 ->setParameters([
                     'schoolYear' => $schoolYear,
                     'subSystem' => $subSystem,
@@ -483,7 +479,6 @@ class EvaluationRepository extends ServiceEntityRepository
             ->addSelect('tc')
             ->innerJoin('sb.category', 'ct')
             ->addSelect('ct')
-            ->andWhere('st.supprime = 0')
             ->setParameters([
                 'sequence' => $sequence,
                 'classroom' => $classroom
@@ -514,7 +509,6 @@ class EvaluationRepository extends ServiceEntityRepository
             ->innerJoin('e.student', 'st')
             ->addSelect('st')
             ->andWhere('st.classroom = :classroom')
-            ->andWhere('st.supprime = 0')
             ->setParameters([
                 'sequence' => $sequence,
                 'subject' => $subject,
@@ -567,7 +561,6 @@ class EvaluationRepository extends ServiceEntityRepository
             ->addSelect('sq')
             ->innerJoin('e.student', 'st')
             ->addSelect('st')
-            ->andWhere('st.supprime = 0')
             ->setParameter('lesson', $lesson)
             ->orderBy('st.fullName')
             ->getQuery()

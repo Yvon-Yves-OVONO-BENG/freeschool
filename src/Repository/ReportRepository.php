@@ -64,7 +64,7 @@ class ReportRepository extends ServiceEntityRepository
             ->addSelect('st')
             ->andWhere('st.schoolYear = :schoolYear')
             ->andWhere('st.subSystem = :subSystem')
-            ->andWhere('st.supprime = 0')
+            
             ->andWhere('r.term = :term')
             ->setParameters([
                 'schoolYear' => $schoolYear,
@@ -100,7 +100,7 @@ class ReportRepository extends ServiceEntityRepository
             ->andWhere('lv.cycle = :cycle')
             ->andWhere('st.schoolYear = :schoolYear')
             ->andWhere('st.subSystem = :subSystem')
-            ->andWhere('st.supprime = 0')
+            
             ->andWhere('r.term = :term')
             ->setParameters([
                 'schoolYear' => $schoolYear,
@@ -134,7 +134,7 @@ class ReportRepository extends ServiceEntityRepository
             ->andWhere('cl.level = :level')
             ->andWhere('st.schoolYear = :schoolYear')
             ->andWhere('st.subSystem = :subSystem')
-            ->andWhere('st.supprime = 0')
+            
             ->andWhere('r.term = :term')
             ->setParameters([
                 'schoolYear' => $schoolYear,
@@ -168,7 +168,7 @@ class ReportRepository extends ServiceEntityRepository
             ->andWhere('cl.level = :level')
             ->andWhere('st.schoolYear = :schoolYear')
             ->andWhere('st.subSystem = :subSystem')
-            ->andWhere('st.supprime = 0')
+            
             ->andWhere('r.term = :term')
             ->andWhere('r.moyenne >= 12.5')
             ->setParameters([
@@ -202,7 +202,7 @@ class ReportRepository extends ServiceEntityRepository
             ->andWhere('st.classroom = :classroom')
             ->andWhere('st.schoolYear = :schoolYear')
             ->andWhere('st.subSystem = :subSystem')
-            ->andWhere('st.supprime = 0')
+            
             ->andWhere('r.term = :term')
             ->setParameters([
                 'schoolYear' => $schoolYear,
@@ -240,7 +240,7 @@ class ReportRepository extends ServiceEntityRepository
             ->andWhere('st.subSystem = :subSystem')
             ->andWhere('r.term = :term')
             ->andWhere('r.moyenne >= 12.5')
-            ->andWhere('st.supprime = 0')
+            
             ->setParameters([
                 'schoolYear' => $schoolYear,
                 'subSystem' => $subSystem,
@@ -267,7 +267,7 @@ class ReportRepository extends ServiceEntityRepository
             ->addSelect('st')
             ->andWhere('st.classroom = :classroom')
             ->andWhere('r.term = :term')
-            ->andWhere('st.supprime = 0')
+            
             ->setParameters([
                 'classroom' => $classroom,
                 'term' => $term
@@ -294,7 +294,7 @@ class ReportRepository extends ServiceEntityRepository
             ->andWhere('st.classroom = :classroom')
             ->andWhere('r.term = :term')
             ->andWhere('r.moyenne >= :moyenne')
-            ->andWhere('st.supprime = 0')
+            
             ->setParameters([
                 'classroom' => $classroom,
                 'term' => $term,
@@ -320,7 +320,7 @@ class ReportRepository extends ServiceEntityRepository
             ->innerJoin('r.student', 'st')
             ->addSelect('st')
             ->andWhere('st.classroom = :classroom')
-            ->andWhere('st.supprime = 0')
+            
             ->setParameter('classroom', $classroom);
         
             if($term)
@@ -349,7 +349,7 @@ class ReportRepository extends ServiceEntityRepository
             ->innerJoin('r.term', 'tm')
             ->addSelect('tm')
             ->andWhere('st.classroom = :classroom')
-            ->andWhere('st.supprime = 0')
+            
             ->setParameter('classroom', $classroom)
             ->orderBy('r.student')
             ->getQuery()
@@ -376,7 +376,7 @@ class ReportRepository extends ServiceEntityRepository
             ->where('t.term = :term')
             ->andWhere('st.classroom = :classroom')
             ->andWhere('st.decision = :decision')
-            ->andWhere('st.supprime = 0')
+            
             // ->leftJoin('st.nextClassroom', 'ncl')
             // ->addSelect('ncl')
             ->setParameters([
@@ -406,7 +406,7 @@ class ReportRepository extends ServiceEntityRepository
             ->where('r.term = :term')
             ->andWhere('st.classroom = :classroom')
             ->andWhere('r.moyenne != :moyenne')
-            ->andWhere('st.supprime = 0')
+            
             ->setParameters([
                 'term' => $term,
                 'classroom' => $classroom,
@@ -433,7 +433,7 @@ class ReportRepository extends ServiceEntityRepository
             ->andWhere('r.term = :term')
             ->andWhere('st.classroom = :classroom')
             ->andWhere('r.moyenne != :moyenne')
-            ->andWhere('st.supprime = 0')
+            
             ->setParameters([
                 'term' => 4,
                 'classroom' => $classroom,
@@ -465,7 +465,7 @@ class ReportRepository extends ServiceEntityRepository
             ->andWhere('st.classroom = :classroom')
             ->andWhere('r.moyenne != :moyenne')
             ->andWhere('d.decision = :decision')
-            ->andWhere('st.supprime = 0')
+            
             ->setParameters([
                 'decision' => ConstantsClass::DECISION_PASSED,
                 'term' => ConstantsClass::ANNUEL_TERM,
@@ -499,7 +499,7 @@ class ReportRepository extends ServiceEntityRepository
             ->andWhere('st.classroom = :classroom')
             ->andWhere('r.moyenne != :moyenne')
             ->andWhere('d.decision = :decision')
-            ->andWhere('st.supprime = 0')
+            
             ->setParameters([
                 'decision' => ConstantsClass::DECISION_REAPETED,
                 'term' => ConstantsClass::ANNUEL_TERM,
@@ -533,7 +533,7 @@ class ReportRepository extends ServiceEntityRepository
             ->andWhere('st.classroom = :classroom')
             ->andWhere('r.moyenne != :moyenne')
             ->andWhere('d.decision = :decision')
-            ->andWhere('st.supprime = 0')
+            
             ->setParameters([
                 'decision' => ConstantsClass::DECISION_EXPELLED,
                 'term' => ConstantsClass::ANNUEL_TERM,
@@ -567,7 +567,7 @@ class ReportRepository extends ServiceEntityRepository
             ->andWhere('st.classroom = :classroom')
             // ->andWhere('r.moyenne != :moyenne')
             ->andWhere('d.decision = :decision')
-            ->andWhere('st.supprime = 0')
+            
             ->setParameters([
                 'decision' => ConstantsClass::DECISION_RESIGNED,
                 'term' => ConstantsClass::ANNUEL_TERM,
@@ -601,7 +601,7 @@ class ReportRepository extends ServiceEntityRepository
             ->andWhere('st.classroom = :classroom')
             ->andWhere('r.moyenne != :moyenne')
             ->andWhere('d.decision = :decision')
-            ->andWhere('st.supprime = 0')
+            
             ->setParameters([
                 'decision' => ConstantsClass::DECISION_REAPETED_IF_FAILED,
                 'term' => ConstantsClass::ANNUEL_TERM,
@@ -635,7 +635,7 @@ class ReportRepository extends ServiceEntityRepository
             ->andWhere('st.classroom = :classroom')
             ->andWhere('r.moyenne != :moyenne')
             ->andWhere('d.decision = :decision')
-            ->andWhere('st.supprime = 0')
+            
             ->setParameters([
                 'decision' => ConstantsClass::DECISION_EXPELLED_IF_FAILED,
                 'term' => ConstantsClass::ANNUEL_TERM,
@@ -669,7 +669,7 @@ class ReportRepository extends ServiceEntityRepository
             ->andWhere('st.classroom = :classroom')
             ->andWhere('r.moyenne != :moyenne')
             ->andWhere('d.decision = :decision')
-            ->andWhere('st.supprime = 0')
+            
             ->setParameters([
                 'decision' => ConstantsClass::DECISION_CATCHUPPED,
                 'term' => ConstantsClass::ANNUEL_TERM,
@@ -702,7 +702,7 @@ class ReportRepository extends ServiceEntityRepository
             ->andWhere('st.classroom = :classroom')
             ->andWhere('r.moyenne != :moyenne')
             ->andWhere('d.decision = :decision')
-            ->andWhere('st.supprime = 0')
+            
             ->setParameters([
                 'decision' => ConstantsClass::DECISION_FINISHED,
                 'term' => ConstantsClass::ANNUEL_TERM,
@@ -731,7 +731,7 @@ class ReportRepository extends ServiceEntityRepository
             ->innerJoin('r.term', 'tm')
             ->where('tm.term = :term')
             ->andWhere('st.classroom = :classroom')
-            ->andWhere('st.supprime = 0')
+            
             ->setParameters([
                 'term' => ConstantsClass::ANNUEL_TERM,
                 'classroom' => $classroom,
@@ -758,7 +758,7 @@ class ReportRepository extends ServiceEntityRepository
             ->addSelect('t')
             ->where('t.term = :term')
             ->andWhere('st.classroom = :classroom')
-            ->andWhere('st.supprime = 0')
+            
             ->setParameters([
                 'term' => ConstantsClass::ANNUEL_TERM,
                 'classroom' => $classroom,
@@ -779,7 +779,7 @@ class ReportRepository extends ServiceEntityRepository
             ->andWhere('s.classroom = :classroom')
             ->andWhere('s.schoolYear = :schoolYear')
             ->andWhere('r.moyenne != :moyenne')
-            ->andWhere('st.supprime = 0')
+            
             ->setParameters([
                 'term' => $term,
                 'classroom' => $classroom,

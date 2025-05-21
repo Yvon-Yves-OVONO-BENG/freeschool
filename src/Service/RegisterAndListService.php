@@ -375,19 +375,19 @@ class RegisterAndListService
                 
                 foreach($students as $student)
                 {
-                    if($student->getSex()->getSex() == "F" && $student->getRepeater()->getRepeater() == 'Oui' && $student->isSupprime() == 0)
+                    if($student->getSex()->getSex() == "F" && $student->getRepeater()->getRepeater() == 'Oui')
                     {
                         $redoublantsFilles1 = $redoublantsFilles1 + 1 ;
 
-                    }elseif($student->getSex()->getSex() == "F" && $student->getRepeater()->getRepeater() == 'Non' && $student->isSupprime() == 0)
+                    }elseif($student->getSex()->getSex() == "F" && $student->getRepeater()->getRepeater() == 'Non')
                     {
                         $nouveauxFilles1 = $nouveauxFilles1 + 1;
 
-                    }elseif($student->getSex()->getSex() == "M" && $student->getRepeater()->getRepeater() == 'Oui' && $student->isSupprime() == 0)
+                    }elseif($student->getSex()->getSex() == "M" && $student->getRepeater()->getRepeater() == 'Oui')
                     {
                         $redoublantsGarcons1 = $redoublantsGarcons1 + 1 ;
 
-                    }elseif($student->getSex()->getSex() == "M" && $student->getRepeater()->getRepeater() == 'Non' && $student->isSupprime() == 0)
+                    }elseif($student->getSex()->getSex() == "M" && $student->getRepeater()->getRepeater() == 'Non')
                     {
                         $nouveauxGarcons1 = $nouveauxGarcons1 + 1;
                     }
@@ -530,19 +530,19 @@ class RegisterAndListService
                 
                 foreach($students as $student)
                 {
-                    if($student->getSex()->getSex() == "F" && $student->getRepeater()->getRepeater() == 'Oui' && $student->isSupprime() == 0)
+                    if($student->getSex()->getSex() == "F" && $student->getRepeater()->getRepeater() == 'Oui')
                     {
                         $redoublantsFilles2 = $redoublantsFilles2 + 1 ;
 
-                    }elseif($student->getSex()->getSex() == "F" && $student->getRepeater()->getRepeater() == 'Non' && $student->isSupprime() == 0)
+                    }elseif($student->getSex()->getSex() == "F" && $student->getRepeater()->getRepeater() == 'Non')
                     {
                         $nouveauxFilles2 = $nouveauxFilles2 + 1;
 
-                    }elseif($student->getSex()->getSex() == "M" && $student->getRepeater()->getRepeater() == 'Oui' && $student->isSupprime() == 0)
+                    }elseif($student->getSex()->getSex() == "M" && $student->getRepeater()->getRepeater() == 'Oui')
                     {
                         $redoublantsGarcons2 = $redoublantsGarcons2 + 1 ;
 
-                    }elseif($student->getSex()->getSex() == "M" && $student->getRepeater()->getRepeater() == 'Non' && $student->isSupprime() == 0)
+                    }elseif($student->getSex()->getSex() == "M" && $student->getRepeater()->getRepeater() == 'Non')
                     {
                         $nouveauxGarcons2 = $nouveauxGarcons2 + 1;
                     }
@@ -1039,15 +1039,7 @@ class RegisterAndListService
             
             //$effectif = count($classroom->getStudents());
             $students = $classroom->getStudents();
-            $effectif = 0;
-
-            foreach($students as $student)
-            {
-                if($student->isSupprime() == 0)
-                {
-                    $effectif = $effectif + 1;
-                }
-            }
+            $effectif = count($classroom->getStudents());
 
 
             $girls = 0;
@@ -1058,20 +1050,20 @@ class RegisterAndListService
 
             foreach($students as $student)
             {
-                if($student->getSex()->getSex() == constantsClass::SEX_F && $student->isSupprime() == 0)
+                if($student->getSex()->getSex() == constantsClass::SEX_F)
                 {
                     $girls = $girls + 1;
                 }
-                elseif($student->getSex()->getSex() == constantsClass::SEX_M && $student->isSupprime() == 0)
+                elseif($student->getSex()->getSex() == constantsClass::SEX_M)
                 {
                     $boys = $boys + 1;
                 }
 
-                if($student->getSex()->getSex() == ConstantsClass::SEX_F && $student->getRepeater()->getRepeater() == ConstantsClass::REPEATER_YES && $student->isSupprime() == 0)
+                if($student->getSex()->getSex() == ConstantsClass::SEX_F && $student->getRepeater()->getRepeater() == ConstantsClass::REPEATER_YES)
                 {
                     $girlsRepeat = $girlsRepeat + 1;
                 }
-                elseif($student->getSex()->getSex() == ConstantsClass::SEX_M && $student->getRepeater()->getRepeater() == ConstantsClass::REPEATER_YES && $student->isSupprime() == 0)
+                elseif($student->getSex()->getSex() == ConstantsClass::SEX_M && $student->getRepeater()->getRepeater() == ConstantsClass::REPEATER_YES)
                 {
                     $boysRepeat = $boysRepeat + 1;
                 }
@@ -1116,15 +1108,7 @@ class RegisterAndListService
             //$effectif = count($classroom->getStudents());
             $students = $classroom->getStudents();
 
-            $effectif = 0;
-
-            foreach($students as $student)
-            {
-                if($student->isSupprime() == 0)
-                {
-                    $effectif = $effectif + 1;
-                }
-            }
+            $effectif = count($classroom->getStudents());
 
             $girls = 0;
             $boys = 0;
@@ -1134,19 +1118,19 @@ class RegisterAndListService
 
             foreach($students as $student)
             {
-                if($student->getSex()->getSex() == constantsClass::SEX_F && $student->isSupprime() == 0)
+                if($student->getSex()->getSex() == constantsClass::SEX_F)
                 {
                     $girls = $girls + 1;
                 }
-                elseif($student->getSex()->getSex() == constantsClass::SEX_M && $student->isSupprime() == 0)
+                elseif($student->getSex()->getSex() == constantsClass::SEX_M)
                 {
                     $boys = $boys + 1;
                 }
 
-                if($student->getSex()->getSex() == ConstantsClass::SEX_F && $student->getRepeater()->getRepeater() == ConstantsClass::REPEATER_YES && $student->isSupprime() == 0)
+                if($student->getSex()->getSex() == ConstantsClass::SEX_F && $student->getRepeater()->getRepeater() == ConstantsClass::REPEATER_YES)
                 {
                     $girlsRepeat = $girlsRepeat + 1;
-                }elseif($student->getSex()->getSex() == ConstantsClass::SEX_M && $student->getRepeater()->getRepeater() == ConstantsClass::REPEATER_YES && $student->isSupprime() == 0)
+                }elseif($student->getSex()->getSex() == ConstantsClass::SEX_M && $student->getRepeater()->getRepeater() == ConstantsClass::REPEATER_YES)
                 {
                     $boysRepeat = $boysRepeat + 1;
                 }
@@ -2390,7 +2374,6 @@ class RegisterAndListService
             // $students = $markReport->getClassroom()->getStudents();
 
             $students = $this->studentRepository->findBy([
-                'supprime' => 0,
                 'classroom' => $markReport->getClassroom(),
             ]);
 
@@ -2555,7 +2538,6 @@ class RegisterAndListService
             // $students = $markReport->getClassroom()->getStudents();
 
             $students = $this->studentRepository->findBy([
-                'supprime' => 0,
                 'classroom' => $markReport->getClassroom()
             ]);
             

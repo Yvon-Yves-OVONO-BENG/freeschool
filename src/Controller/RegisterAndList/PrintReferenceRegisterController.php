@@ -78,7 +78,6 @@ class PrintReferenceRegisterController extends AbstractController
 
             $students = $this->studentRepository->findBy([
                 'classroom' => $choosedClassroom,
-                'supprime' =>0
             ]);
             
             
@@ -111,7 +110,6 @@ class PrintReferenceRegisterController extends AbstractController
 
                 foreach ($oneClassroom->getStudents() as $studentInOneClassroom) 
                 {
-                    if($studentInOneClassroom->isSupprime() == 0)
                     $studentsInOneClassroom = $studentInOneClassroom;
                 }
 
@@ -126,7 +124,6 @@ class PrintReferenceRegisterController extends AbstractController
         {
             $students = $this->studentRepository->findBy([
                 'classroom' => $choosedClassroom,
-                'supprime' =>0
             ]);
 
             $numberOfStudents = count($students);

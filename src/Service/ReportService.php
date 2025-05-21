@@ -265,27 +265,31 @@ class ReportService
                             'term' => 3
                         ])->getMoyenne();
 
-                        if($moyenneTerm1 == -1)
-                        {
-                            $moyenneTerm1 = 0;
-                        }
+                            // CALCUL DE LA MOYENNE ANNUELLE
+                        $moyenne  = $this->calculerMoyenneAnnuelle($moyenneTerm1, $moyenneTerm2, $moyenneTerm3);
+                        
+                        // if($moyenneTerm1 == -1)
+                        // {
+                        //     $moyenneTerm1 = 0;
+                        // }
 
-                        if($moyenneTerm2 == -1)
-                        {
-                            $moyenneTerm2 = 0;
-                        }
+                        // if($moyenneTerm2 == -1)
+                        // {
+                        //     $moyenneTerm2 = 0;
+                        // }
 
-                        if($moyenneTerm3 == -1)
-                        {
-                            $moyenneTerm3 = 0;
-                        }
+                        // if($moyenneTerm3 == -1)
+                        // {
+                        //     $moyenneTerm3 = 0;
+                        // }
+                        
 
                         // $moyenne = $this->generalService->getRatio($totalStudentMark, $totalStudentCoefficient);
-                        $moyenne = number_format((
-                            number_format($moyenneTerm1, 2, ".", "") + 
-                            number_format($moyenneTerm2, 2, ".", "") + 
-                            number_format($moyenneTerm3, 2, ".", "")
-                            )/3, 2, ".", "");
+                        // $moyenne = number_format((
+                        //     number_format($moyenneTerm1, 2, ".", "") + 
+                        //     number_format($moyenneTerm2, 2, ".", "") + 
+                        //     number_format($moyenneTerm3, 2, ".", "")
+                        //     )/3, 2, ".", "");
 
                     }
 
@@ -1169,11 +1173,11 @@ class ReportService
         // on construit la partie des résultats de l'élève
         // dd($studentResults);
         $reportResult = new StudentResult();
+        
         $reportResult->setTotalStudentCoefficient($studentResults['totalStudentCoefficient'])
             ->setTotalClassroomCoefficient($studentResults['totalClassroomCoefficient'])
             ->setTotalMark($studentResults['totalMark'])
             ->setMoyenne($studentResults['moyenne'])
-            // ->setRang(1)
             ->setRang($studentResults['rang'])
             ;
 
@@ -1351,6 +1355,40 @@ class ReportService
     {
         return ($absence >= ConstantsClass::WARNING_BAHAVIOUR) ? 'X' : '';
     }
+
+    /**
+     * fonction qui Calcul de la moyenne annuelle
+     *
+     * @param float|null $moyT1
+     * @param float|null $moyT2
+     * @param float|null $moyT3
+     * @return float|null
+     */
+    public function calculerMoyenneAnnuelle(?float $moyT1, ?float $moyT2, ?float $moyT3): ?float
+    {
+        $trimestres = [$moyT1, $moyT2, $moyT3];
+        $somme = 0;
+        $compteur = 0;
+
+        foreach($trimestres as $moyenne)
+        {
+            if ($moyenne !== -1)
+            {
+                $somme += $moyenne;
+                $compteur++;
+            }
+        }
+
+        if ($compteur === 0) 
+        {
+            //aucun trimestre valide
+            return null;
+        }
+
+        //moyenne arrondi à 2
+        return round($somme / $compteur, 2);
+    }
+
 
     /**
      * Détermine s'il y a blâme conduite

@@ -185,7 +185,8 @@ class PrintReferenceRegisterController extends AbstractController
                 $studentMarkTerm3 = $this->generalService->getStudentMarkTerm($studentMarkSequence5, $studentMarkSequence6);
 
                 // Notes annuelles des élèves
-                $studentMarkTerm = $this->generalService->getAnnualMarks( $studentMarkTerm1, $studentMarkTerm2, $studentMarkTerm3);
+                $studentMarkTerm = $this->generalService->getAnnualMarks($studentMarkTerm1, $studentMarkTerm2, $studentMarkTerm3);
+                
             }
 
             // Moyennes trimestrielles des élèves classés et moyennes par groupe et classement par order de mérite trimestriel
@@ -217,12 +218,10 @@ class PrintReferenceRegisterController extends AbstractController
                         
                     // On set le header, le body et le footer du bulletin
                     $studentReport = new StudentReport();
-
-                    // On set le header, le body et le footer du bulletin
-                    $studentReport = new StudentReport();
+                    
                     $studentReport->setReportHeader($this->reportService->getStudentReportHeader($school, $selectedClassroom, $student, $selectedTerm, $subSystem))
                         ->setReportFooter($this->reportService->getStudentReportFooter($rankedStudents[$index], $classroomProfile, $selectedTerm));
-
+                        
                         if($firstPeriodLetter === 't')
                         {
                             //    bulletins trimestriels

@@ -277,29 +277,29 @@
                                                         {% trans %}NC{% endtrans %}
                                                         {% set nc1 = 1 %}
                                                         
-                                                    {% else %}
-                                                    {{ deliberation.moyenneTerm1 }}
+                                                        {% else %}
+                                                        {{ deliberation.moyenneTerm1 }}
                                                     {% endif %}
                                                 </td> 
                                                 <td style="text-align:center;">
                                                     {% if deliberation.moyenneTerm2 == unrankedAverage %}
                                                         {% trans %}NC{% endtrans %}
                                                         {% set nc2 = 1 %}
-                                                    {% else %}
-                                                    {{ deliberation.moyenneTerm2 }}
+                                                        {% else %}
+                                                        {{ deliberation.moyenneTerm2 }}
                                                     {% endif %}
                                                 </td> 
                                                 <td style="text-align:center;">
                                                     {% if deliberation.moyenneTerm3 == unrankedAverage %}
                                                         {% trans %}NC{% endtrans %}
                                                         {% set nc3 = 1 %}
-                                                    {% else %}
-                                                    {{ deliberation.moyenneTerm3 }}
+                                                        {% else %}
+                                                        {{ deliberation.moyenneTerm3 }}
                                                     {% endif %}
                                                 </td>
                                                 <td style="text-align:center;">
                                                 
-                                                    {% if deliberation.moyenneTerm0 == unrankedAverage or nc1 + nc2 + nc3 >= 2 %}
+                                                    {% if deliberation.moyenneTerm0 == unrankedAverage %}
                                                         <button type="button" class="btn btn-danger"><i class="fe fe-x-circle me-2"></i>{% trans %}NC{% endtrans %}</button>
                                                         
                                                         {% else %}
@@ -464,7 +464,7 @@
                                                     {% endif %}
                                                 </td>
                                                 <td style="text-align:center;">
-                                                    {% if deliberation.moyenneTerm0 == unrankedAverage or nc1 + nc2 + nc3 >= 2 %}
+                                                    {% if deliberation.moyenneTerm0 == unrankedAverage %}
                                                         <button type="button" class="btn btn-danger"><i class="fe fe-x-circle me-2"></i>
                                                         {% trans %}NC{% endtrans %}
                                                         </button>

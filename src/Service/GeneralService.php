@@ -438,7 +438,7 @@ class GeneralService
     }
 
      /**
-     * Calcule et retourne la note annuelle à partie des notes trimestrielles
+     * Calcule et retourne la note annuelle à partir des notes trimestrielles
      *
      * @param array $studentMarkTerm1
      * @param array $studentMarkTerm2
@@ -482,16 +482,16 @@ class GeneralService
                     if($mark1 == ConstantsClass::UNRANKED_MARK)
                     {
                         $termMark = $this->getMarkTerm($mark2, $mark3);
-
-                    }elseif($mark2 == ConstantsClass::UNRANKED_MARK )
+                    }
+                    elseif($mark2 == ConstantsClass::UNRANKED_MARK )
                     {
                         $termMark = $this->getMarkTerm($mark1, $mark3);
-
-                    }elseif($mark3 == ConstantsClass::UNRANKED_MARK)
+                    }
+                    elseif($mark3 == ConstantsClass::UNRANKED_MARK)
                     {
                         $termMark = $this->getMarkTerm($mark1, $mark2);
-
-                    }else
+                    }
+                    elseif(($mark1 != ConstantsClass::UNRANKED_MARK) && ($mark2 != ConstantsClass::UNRANKED_MARK) && ($mark3 != ConstantsClass::UNRANKED_MARK))
                     {
                         $termMark = ($mark1 + $mark2 + $mark3)/3;
                     }
@@ -1038,7 +1038,6 @@ class GeneralService
         return $pdf;
 
     }
-
 
 
     /**

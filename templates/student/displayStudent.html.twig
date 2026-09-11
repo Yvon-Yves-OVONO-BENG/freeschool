@@ -20,7 +20,7 @@
 {% endblock %}
 
 {% block body %}
-	{% set studentWriteBlocked = ('ROLE_ADMIN' in app.user.roles) and app.user.studentManagementBlocked %}
+	{% set studentWriteBlocked = (('ROLE_ADMIN' in app.user.roles) or ('ROLE_SUPER_ADMIN' in app.user.roles)) and app.user.studentManagementBlocked %}
 	{% set canManageStudents = false %}
 	{% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_INTENDANT') %}
 		{% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}

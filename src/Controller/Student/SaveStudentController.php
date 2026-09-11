@@ -57,7 +57,10 @@ class SaveStudentController extends AbstractController
         $currentUser = $this->getUser();
         if (
             $currentUser instanceof User
-            && in_array(ConstantsClass::ROLE_ADMIN, $currentUser->getRoles(), true)
+            && (
+                in_array(ConstantsClass::ROLE_ADMIN, $currentUser->getRoles(), true)
+                || in_array(ConstantsClass::ROLE_SUPER_ADMIN, $currentUser->getRoles(), true)
+            )
             && $currentUser->isStudentManagementBlocked()
         ) {
             $this->addFlash('error', $this->translator->trans(

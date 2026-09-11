@@ -28,7 +28,11 @@ class ToggleStudentManagementController extends AbstractController
 
         $administrator = $this->userRepository->find($id);
 
-        if (!$administrator || !in_array(ConstantsClass::ROLE_ADMIN, $administrator->getRoles(), true)) {
+        $administratorRoles = $administrator?->getRoles() ?? [];
+        $isAdministrator = in_array(ConstantsClass::ROLE_ADMIN, $administratorRoles, true)
+            || in_array(ConstantsClass::ROLE_SUPER_ADMIN, $administratorRoles, true);
+
+        if (!$administrator || !$isAdministrator) {
             return $this->json(['success' => false, 'message' => 'Administrateur introuvable.'], 404);
         }
 

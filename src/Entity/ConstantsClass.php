@@ -11,9 +11,15 @@ class ConstantsClass
     public const DEFAULT_TEACHER_PASSWORD = 'ens';
 
     // Les groupes des matières pour l'enseignement général
-    public const CATEGORY1 = 'Scientifique';
-    public const CATEGORY2 = 'Littéraire';
-    public const CATEGORY3 = 'Humaine';
+    public const CATEGORY_1 = 'Scientifique';
+    public const CATEGORY_2 = 'Littéraire';
+    public const CATEGORY_3 = 'Humaine';
+
+    // Les groupes des matières pour l'enseignement Technique
+    public const CATEGORY_1_TECH = 'Généraux';
+    public const CATEGORY_2_TECH  = 'Professionnels Pratiques';
+    public const CATEGORY_3_TECH  = 'Professionnels Théoriques';
+    public const CATEGORY_4_TECH  = 'Complémentaires';
 
     // // Les differents niveaux de l'enseignament général
     public const LEVEL_1 = '6ème';
@@ -32,19 +38,15 @@ class ConstantsClass
     public const LOWER_6 = 'Lower 6';
     public const UPPER_6 = 'Upper 6';
     
-    // Les groupes des matières pour l'enseignement TECHNIQUE
-    // public const CATEGORY1 = 'Professionnelle';
-    // public const CATEGORY2 = 'Générale';
-    // public const CATEGORY3 = 'Complémentaire';
     
     //Les differents niveaux de l'enseignament Technique
-    // public const LEVEL_1 = '1ère année';
-    // public const LEVEL_2 = '2ème année';
-    // public const LEVEL_3 = '3ème année';
-    // public const LEVEL_4 = '4ème année';
-    // public const LEVEL_5 = '2nde';
-    // public const LEVEL_6 = '1ère';
-    // public const LEVEL_7 = 'Tle';
+    public const LEVEL_1_TECH = '1ère année';
+    public const LEVEL_2_TECH = '2ème année';
+    public const LEVEL_3_TECH = '3ème année';
+    public const LEVEL_4_TECH = '4ème année';
+    public const LEVEL_5_TECH = '2nde';
+    public const LEVEL_6_TECH = '1ère';
+    public const LEVEL_7_TECH = 'Tle';
 
     // Les différentes poste ou responsabilités
     public const TEACHER_DUTY = 'ENSEIGNANT';

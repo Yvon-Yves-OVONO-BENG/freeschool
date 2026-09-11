@@ -88,25 +88,27 @@ class ReportRepository extends ServiceEntityRepository
      * @param Term $term
      * @return array
      */
-    public function findTopFiveStudentsByCycle(SchoolYear $schoolYear, SubSystem $subSystem, Cycle $cycle, Term $term): array 
+    public function findTopFiveStudentsByCycle(int $schoolYear, int $subSystemId, int $cycleId, int $termId): array 
     {
         return $this->createQueryBuilder('r')
-            ->innerJoin('r.student', 'st')
-            ->addSelect('st')
-            ->andWhere('st.id = r.student')
-            ->innerJoin('st.classroom', 'cl')
+            ->select('DISTINCT s.fullName, sx.sex, r.moyenne, cl.classroom, s.birthday')
+            ->innerJoin('r.student', 's')
+            ->innerJoin('s.sex', 'sx')
+            ->innerJoin('s.schoolYear', 'sc')
+            ->innerJoin('s.subSystem', 'sb')
+            ->innerJoin('s.classroom', 'cl')
             ->innerJoin('cl.level', 'lv')
             ->innerJoin('lv.cycle', 'cy')
-            ->andWhere('lv.cycle = :cycle')
-            ->andWhere('st.schoolYear = :schoolYear')
-            ->andWhere('st.subSystem = :subSystem')
-            
-            ->andWhere('r.term = :term')
+
+            ->where('sc.id = :schoolYear')
+            ->andWhere('sb.id = :subSystemId')
+            ->andWhere('cy.id = :cycleId')
+            ->andWhere('r.term = :termId')
             ->setParameters([
                 'schoolYear' => $schoolYear,
-                'subSystem' => $subSystem,
-                'cycle' => $cycle,
-                'term' => $term,
+                'subSystemId' => $subSystemId,
+                'cycleId' => $cycleId,
+                'termId' => $termId,
             ])
             ->orderBy('r.moyenne', 'DESC')
             ->setMaxResults(5)

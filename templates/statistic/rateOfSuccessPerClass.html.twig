@@ -2,123 +2,201 @@
 
 {% block title %}{% trans %}Statistics{% endtrans %}{% endblock %}
 
+{% block subTitle %}
+	{% trans %}STATISTICS{% endtrans %}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-statistics-dashboard-premium.css') }}">
+{% endblock %}
+
 {% block body %}
-<!-- App-Content -->
-	<div class="hor-content main-content">
+	<div class="hor-content main-content fs-stat-page">
 		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary"><i class="fa fa-percent me-2"></i> {% trans %}Statistics{% endtrans %}</h4>
-                </div>
-                <div class="page-rightheader">
-                    <div class="btn-list">
-                        
-                    </div>
-                </div>
-            </div>
-            <!--End Page header-->
+			<div class="fs-stat-menu-safe-space" aria-hidden="true"></div>
 
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card border-primary">
-                        <div class="card-header">
-                            <span class="page-title mb-0 text-primary">
-                                <i class="fa fa-percent me-2"></i>{% trans %}Rate of success per classe{% endtrans %}
-                            </span>
-                        </div>
-                        <div class="card-body ">
-                            <form action="{{ path('statistic_printRateOfSuccessPerClass') }}" method="post" target="_blank">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <select name="period" id="period" class="form-control select2-show-search" data-placeholder="Choose a period" required>
-                                                <option label="Choose a period">{% trans %}Choose a period{% endtrans %}</option>
-                                                <optgroup label="Evaluations">
-                                                    {% for sequence in sequences %}
-                                                        <option value="s{{ sequence.id }}">{% trans %}Evaluation{% endtrans %} {{ sequence.sequence }}</option>
-                                                    {% endfor %}
-                                                </optgroup>
-                                                <optgroup label="Trimestres">
-                                                    {% for term in terms %}
-                                                        {% if term.term != annualTerm %}
-                                                            <option value="t{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                </optgroup>
-                                                    {% for term in terms %}
-                                                        {% if term.term == annualTerm %}
-                                                            <option value="a{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printRateOfSuccessPerClass">
-                                                <i class="fa fa-print"></i>
-                                                {% trans %}Print{% endtrans %}</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card border-primary">
-                        <div class="card-header">
-                            <span class="page-title mb-0 text-primary">
-                                <i class="fa fa-percent me-2"></i>{% trans %}Student performance by class{% endtrans %}
-                            </span>
-                        </div>
-                        <div class="card-body ">
-                            <form action="{{ path('statistic_printFicheSyntheseDePerformanceDesElevesParClasse') }}" method="post" target="_blank">
-                                <div class="row">
-                                    
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <select name="period" id="period" class="form-control select2-show-search" data-placeholder="Choose a period" required>
-                                                <option label="Choose a period">{% trans %}Choose a period{% endtrans %}</option>
-                                                <optgroup label="Evaluations">
-                                                    {% for sequence in sequences %}
-                                                        <option value="s{{ sequence.id }}">{% trans %}Evaluation{% endtrans %} {{ sequence.sequence }}</option>
-                                                    {% endfor %}
-                                                </optgroup>
-                                                <optgroup label="Trimestres">
-                                                    {% for term in terms %}
-                                                        {% if term.term != annualTerm %}
-                                                            <option value="t{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                </optgroup>
-                                                    {% for term in terms %}
-                                                        {% if term.term == annualTerm %}
-                                                            <option value="a{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printRateOfSuccessPerClass">
-                                                <i class="fa fa-print"></i>
-                                                {% trans %}Print{% endtrans %}</button>
-                                        </div>
-                                    </div>
-                                    
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-        </div>
-    </div>
-</div>
+			<section class="fs-stat-hero">
+				<div class="fs-stat-hero__content">
+					<div>
+						<span class="fs-stat-eyebrow">
+							<i class="fa fa-percent"></i>
+							{% trans %}Statistics workspace{% endtrans %}
+						</span>
 
+						<h1 class="fs-stat-title">
+							{% trans %}Statistics{% endtrans %}
+						</h1>
+
+						<p class="fs-stat-subtitle">
+							{% trans %}Print success rates and student performance synthesis by class using a clean, responsive and premium workspace.{% endtrans %}
+						</p>
+					</div>
+
+					<div class="fs-stat-hero__actions">
+						<div class="fs-stat-hero-stat">
+							<span class="fs-stat-hero-stat__icon">
+								<i class="fe fe-printer"></i>
+							</span>
+							<span class="fs-stat-hero-stat__label">{% trans %}Output{% endtrans %}</span>
+							<strong class="fs-stat-hero-stat__value">{% trans %}PDF{% endtrans %}</strong>
+						</div>
+
+						<div class="fs-stat-hero-stat fs-stat-hero-stat--soft">
+							<span class="fs-stat-hero-stat__icon">
+								<i class="fe fe-bar-chart-2"></i>
+							</span>
+							<span class="fs-stat-hero-stat__label">{% trans %}Reports{% endtrans %}</span>
+							<strong class="fs-stat-hero-stat__value">2</strong>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<div class="fs-stat-grid">
+				<section class="fs-stat-card">
+					<div class="fs-stat-card__header">
+						<div>
+							<span class="fs-stat-chip">
+								<i class="fa fa-percent"></i>
+								{% trans %}Success rate{% endtrans %}
+							</span>
+
+							<h2 class="fs-stat-card__title">
+								{% trans %}Success rate per class{% endtrans %}
+							</h2>
+
+							<p class="fs-stat-card__subtitle">
+								{% trans %}Choose a period to print the success rate by class.{% endtrans %}
+							</p>
+						</div>
+
+						<span class="fs-stat-card__icon">
+							<i class="fa fa-percent"></i>
+						</span>
+					</div>
+
+					<div class="fs-stat-card__body">
+						<form action="{{ path('statistic_printRateOfSuccessPerClass') }}" method="post" target="_blank" class="fs-stat-form needs-validation" novalidate data-no-spinner="1">
+							<div class="fs-floating-field fs-required-field">
+								<select name="period" id="periodSuccess" class="form-control select2-show-search fs-floating-control" data-placeholder="" required>
+									<option value="" label=""></option>
+
+									<optgroup label="{% trans %}Evaluations{% endtrans %}">
+										{% for sequence in sequences %}
+											<option value="s{{ sequence.id }}">{% trans %}Evaluation{% endtrans %} {{ sequence.sequence }}</option>
+										{% endfor %}
+									</optgroup>
+
+									<optgroup label="{% trans %}Trimestres{% endtrans %}">
+										{% for term in terms %}
+											{% if term.term != annualTerm %}
+												<option value="t{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
+											{% endif %}
+										{% endfor %}
+									</optgroup>
+
+									{% for term in terms %}
+										{% if term.term == annualTerm %}
+											<option value="a{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
+										{% endif %}
+									{% endfor %}
+								</select>
+
+								<label class="fs-floating-label" for="periodSuccess">
+									<i class="fe fe-calendar"></i>
+									{% trans %}Period{% endtrans %}
+								</label>
+
+								<div class="invalid-feedback">
+									{% trans %}Please choose a period !{% endtrans %}
+								</div>
+							</div>
+
+							<div class="fs-stat-form__actions">
+								<button class="fs-stat-btn fs-stat-btn--primary fs-stat-submit-btn" type="submit" name="printRateOfSuccessPerClass">
+									<i class="fa fa-print fs-stat-submit-icon"></i>
+									<span>{% trans %}Print{% endtrans %}</span>
+								</button>
+							</div>
+						</form>
+					</div>
+				</section>
+
+				<section class="fs-stat-card">
+					<div class="fs-stat-card__header">
+						<div>
+							<span class="fs-stat-chip fs-stat-chip--violet">
+								<i class="fa fa-line-chart"></i>
+								{% trans %}Performance{% endtrans %}
+							</span>
+
+							<h2 class="fs-stat-card__title">
+								{% trans %}Student performance by class{% endtrans %}
+							</h2>
+
+							<p class="fs-stat-card__subtitle">
+								{% trans %}Choose a period to print the student performance synthesis by class.{% endtrans %}
+							</p>
+						</div>
+
+						<span class="fs-stat-card__icon fs-stat-card__icon--violet">
+							<i class="fa fa-line-chart"></i>
+						</span>
+					</div>
+
+					<div class="fs-stat-card__body">
+						<form action="{{ path('statistic_printFicheSyntheseDePerformanceDesElevesParClasse') }}" method="post" target="_blank" class="fs-stat-form needs-validation" novalidate data-no-spinner="1">
+							<div class="fs-floating-field fs-required-field">
+								<select name="period" id="periodPerformance" class="form-control select2-show-search fs-floating-control" data-placeholder="" required>
+									<option value="" label=""></option>
+
+									<optgroup label="{% trans %}Evaluations{% endtrans %}">
+										{% for sequence in sequences %}
+											<option value="s{{ sequence.id }}">{% trans %}Evaluation{% endtrans %} {{ sequence.sequence }}</option>
+										{% endfor %}
+									</optgroup>
+
+									<optgroup label="{% trans %}Trimestres{% endtrans %}">
+										{% for term in terms %}
+											{% if term.term != annualTerm %}
+												<option value="t{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
+											{% endif %}
+										{% endfor %}
+									</optgroup>
+
+									{% for term in terms %}
+										{% if term.term == annualTerm %}
+											<option value="a{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
+										{% endif %}
+									{% endfor %}
+								</select>
+
+								<label class="fs-floating-label" for="periodPerformance">
+									<i class="fe fe-calendar"></i>
+									{% trans %}Period{% endtrans %}
+								</label>
+
+								<div class="invalid-feedback">
+									{% trans %}Please choose a period !{% endtrans %}
+								</div>
+							</div>
+
+							<div class="fs-stat-form__actions">
+								<button class="fs-stat-btn fs-stat-btn--primary fs-stat-submit-btn" type="submit" name="printRateOfSuccessPerClass">
+									<i class="fa fa-print fs-stat-submit-icon"></i>
+									<span>{% trans %}Print{% endtrans %}</span>
+								</button>
+							</div>
+						</form>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-statistics-dashboard-premium.js') }}"></script>
 {% endblock %}

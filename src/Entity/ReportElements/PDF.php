@@ -14,12 +14,22 @@ class PDF extends Fpdf
 		$this->AliasNbPages('{totalPages}');
 		$this->SetFont('Arial','BI',5);
 		// Page number
-		// $this->Cell(0, 5, utf8_decode("L.B NGUELEMENDOUKA / G.B.H.S NGUELEMENDOUKA"), 0, 0, 'R');
-		// $this->Cell(0, 5, utf8_decode("C.E.S. Ankom / G.H.S Ankom"), 0, 0, 'R');
-		// $this->Cell(0, 5, utf8_decode("Lycée Bilingue d'Odza / G.B.H.S ODZA"), 0, 0, 'R');
-		$this->Cell(0, 5, utf8_decode("Lycée Technique d'Ayos / G.T.H.S Ayos"), 0, 0, 'R');
-		// $this->Cell(0, 5, utf8_decode("Lycée de Martap / G.H.S Martap"), 0, 0, 'R');
+		// $this->Cell(0, 5, utf8_decode("Collège MVOM NAM / MVOM NAM College"), 0, 0, 'R');
+		// $this->Cell(0, 5, utf8_decode("Collège Bilingue EEJ / Bilingual College EEJ"), 0, 0, 'R');
+		// $this->Cell(0, 5, utf8_decode("Lycée de Yaoundé / G.H.S Yaoundé"), 0, 0, 'R');
+		// $this->Cell(0, 5, utf8_decode("Lycée d'Odza / G.H.S ODZA"), 0, 0, 'R');
+		$this->Cell(0, 5, utf8_decode("Lycée Bilingue d'Odza / G.B.H.S ODZA"), 0, 0, 'R');
+		// $this->Cell(0, 5, utf8_decode("Lycée de Libongo / G.H.S Libongo"), 0, 0, 'R');
+		// $this->Cell(0, 5, utf8_decode("Lycée de Ndemba I / G.H.S Ndemba I"), 0, 0, 'R');
 		// $this->Cell(0, 5, utf8_decode("Lycée Technique d'Akonolinga / G.T.H.S Akonolinga"), 0, 0, 'R');
+		
+        // $this->Cell(0, 5, utf8_decode("Lycée Bilingue Nguelemendouka / G.B.H.S Nguelemendouka"), 0, 0, 'R');
+        // $this->Cell(0, 5, utf8_decode("Lycée de Bouli / G.H.S Bouli"), 0, 0, 'R');
+		// $this->Cell(0, 5, utf8_decode("C.E.S. Ankom / G.H.S Ankom"), 0, 0, 'R');
+		// $this->Cell(0, 5, utf8_decode("Collège La Madonne / La Madonne College"), 0, 0, 'R');
+		// $this->Cell(0, 5, utf8_decode("Lycée Technique d'Ayos / G.T.H.S Ayos"), 0, 0, 'R');
+		// $this->Cell(0, 5, utf8_decode("Lycée de Martap / G.H.S Martap"), 0, 0, 'R');
+		// $this->Cell(0, 5, utf8_decode("Lycée de Mboma / G.H.S Mboma"), 0, 0, 'R');
     }
 
     public function RotatedText($x,$y,$txt,$angle)

@@ -134,6 +134,7 @@ class AbsenceManagerService
                     ->setAbsenceTeacher($absence)
                     ->setCreatedBy($this->security->getUser())
                     ->setCreatedAt($now)
+                    ->setSupprime(0)
                     ->setSlug($slug)
                     ;
                     

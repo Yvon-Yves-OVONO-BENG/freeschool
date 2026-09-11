@@ -49,7 +49,7 @@
 										{% set currentTeacherId = currentUser ? (currentUser.teacher ? currentUser.teacher.id : 0 ) : 0 %}
 											
 										<div class="expanel-body text-center">
-											<form action="{{ path ('printMarkReportLesson', {'slug': currentUser.teacher.slug })}}" method="post" target="_blank">
+											<form action="{{ path ('printMarkReportLesson', {'slug': currentUser.teacher.slug })}}" method="post" target="_blank" data-no-spinner="1">
 												<div class="row">
 													<div class="col-md-6">
 														

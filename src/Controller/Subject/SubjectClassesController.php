@@ -66,7 +66,12 @@ class SubjectClassesController extends AbstractController
         
         $subjects = $this->subjectRepository->findToDisplay($schoolYear, $subSystem);
         
-        $subject = $this->subjectRepository->findOneBySlug(['slug' => $slug]);
+        $subject = $this->subjectRepository->findOneBy(['slug' => $slug]);
+
+        if (!$subject) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
 
         #Lessons où la matière st dispensée
         $lessons = $subject->getLessons();

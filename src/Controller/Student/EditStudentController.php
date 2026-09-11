@@ -2,15 +2,15 @@
 
 namespace App\Controller\Student;
 
-use Imagine\Image\Box;
-use Imagine\Gd\Imagine;
 use App\Entity\Classroom;
+use App\Entity\User;
 use App\Form\StudentType;
 use App\Entity\Evaluation;
 use App\Service\StrService;
 use App\Entity\ConstantsClass;
 use App\Service\QrcodeService;
 use App\Service\StudentService;
+use App\Service\ImageOptimizerService;
 use App\Service\SchoolYearService;
 use App\Repository\SchoolRepository;
 use App\Repository\StudentRepository;
@@ -28,11 +28,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/student")]
 class EditStudentController extends AbstractController
 {
@@ -51,6 +47,7 @@ class EditStudentController extends AbstractController
         protected SchoolYearRepository $schoolYearRepository, 
         protected RegistrationRepository $registrationRepository, 
         protected RegistrationHistoryRepository $registrationHistoryRepository, 
+        protected ImageOptimizerService $imageOptimizerService,
         )
     {}
 
@@ -58,6 +55,25 @@ class EditStudentController extends AbstractController
     public function editStudent(Request $request, string $slug): Response
     {
         $mySession = $request->getSession();
+
+        $currentUser = $this->getUser();
+        if (
+            $currentUser instanceof User
+            && in_array(ConstantsClass::ROLE_ADMIN, $currentUser->getRoles(), true)
+            && $currentUser->isStudentManagementBlocked()
+        ) {
+            $this->addFlash('error', $this->translator->trans(
+                "Le proviseur a désactivé votre autorisation d'ajouter ou de modifier un élève."
+            ));
+
+            return $this->redirectToRoute('student_displayStudent', [
+                'headmasterFees' => 0,
+                'id' => 0,
+                'a' => 0,
+                'm' => 0,
+                's' => 0,
+            ]);
+        }
 
         $mySession->set('ajout',null);
         $mySession->set('suppression', null);
@@ -87,8 +103,6 @@ class EditStudentController extends AbstractController
             return $this->redirectToRoute("app_logout");
         }
 
-        $imagine = new Imagine;
-        
         if(!$this->schoolYearService->getAccess($verrou))
         {
             return $this->redirectToRoute('home_mainMenu');
@@ -98,16 +112,21 @@ class EditStudentController extends AbstractController
         $schoolYear = $this->schoolYearRepository->find($mySession->get('schoolYear')->getId());
         $storedClassroom = new Classroom();
 
-        $school = $this->schoolRepository->findBy([
+        $school = $this->schoolRepository->findOneBy([
             'schoolYear' => $schoolYear
         ]);
 
-        $schoolName = $school[0]->getFrenchName()." / ".$school[0]->getEnglishName();
+        $schoolName = $school->getFrenchName()." / ".$school->getEnglishName();
 
         #je récupère l'elève que je veux modifier
-        $student = $this->studentRepository->findOneBySlug([
+        $student = $this->studentRepository->findOneBy([
             'slug' => $slug
         ]);
+
+        if (!$student) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
 
         $form = $this->createForm(StudentType::class, $student);
 
@@ -115,6 +134,7 @@ class EditStudentController extends AbstractController
         $oldStudentClassroom = $student->getClassroom();
 
         $form->handleRequest($request);
+        $hasNewPhoto = $student->getImageFile() !== null;
 
         if(isset($matricule))
         {
@@ -129,20 +149,20 @@ class EditStudentController extends AbstractController
 
             if ($subSystem->getSubSystem() == ConstantsClass::FRANCOPHONE) 
             {
-                $qrCode = $this->qrcodeService->qrcode($schoolName." : Ce bulletin appartient à l'élève : ".$data->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber())." Année Scolaire : ".$schoolYear->getSchoolYear()." Classe : ".$student->getClassroom()->getClassroom());
+                $qrCode = $this->qrcodeService->qrcode(($schoolName." : Ce bulletin appartient à l'élève : ".$data->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber())." Année Scolaire : ".$schoolYear->getSchoolYear()." Classe : ".$student->getClassroom()->getClassroom()), $student->getSlug(), $school);
 
-                $qrCodeFiche = $this->qrcodeService->qrcode($schoolName." : Cette fiche appartient à l'élève : ".$data->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber())." Année Scolaire : ".$schoolYear->getSchoolYear()." Classe : ".$student->getClassroom()->getClassroom());
+                $qrCodeFiche = $this->qrcodeService->qrcode(($schoolName." : Cette fiche appartient à l'élève : ".$data->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber())." Année Scolaire : ".$schoolYear->getSchoolYear()." Classe : ".$student->getClassroom()->getClassroom()), $student->getSlug(), $school);
                 
-                $qrCodeRollOfHonor = $this->qrcodeService->qrcode($schoolName." : Ce TABLEAU D'HONNEUR appartient à l'élève : ".$data->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber())." Année Scolaire : ".$schoolYear->getSchoolYear()." Classe : ".$student->getClassroom()->getClassroom());
+                $qrCodeRollOfHonor = $this->qrcodeService->qrcode(($schoolName." : Ce TABLEAU D'HONNEUR appartient à l'élève : ".$data->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber())." Année Scolaire : ".$schoolYear->getSchoolYear()." Classe : ".$student->getClassroom()->getClassroom()), $student->getSlug(), $school);
 
             } 
             else 
             {
-                $qrCode = $this->qrcodeService->qrcode($schoolName." : This report belongs to the student : ".$data->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber())." School Year : ".$schoolYear->getSchoolYear()." Classroom : ".$student->getClassroom()->getClassroom());
+                $qrCode = $this->qrcodeService->qrcode(($schoolName." : This report belongs to the student : ".$data->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber())." School Year : ".$schoolYear->getSchoolYear()." Classroom : ".$student->getClassroom()->getClassroom()), $student->getSlug(), $school);
 
-                $qrCodeFiche = $this->qrcodeService->qrcode($schoolName." : This sheet belongs to the student : ".$data->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber())." School Year  : ".$schoolYear->getSchoolYear()." Classroom : ".$student->getClassroom()->getClassroom());
+                $qrCodeFiche = $this->qrcodeService->qrcode(($schoolName." : This sheet belongs to the student : ".$data->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber())." School Year  : ".$schoolYear->getSchoolYear()." Classroom : ".$student->getClassroom()->getClassroom()), $student->getSlug(), $school);
             
-                $qrCodeRollOfHonor = $this->qrcodeService->qrcode($schoolName." : This roll of honor belongs to the student: ".$data->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber())." School Year  : ".$schoolYear->getSchoolYear()." Classroom : ".$student->getClassroom()->getClassroom());
+                $qrCodeRollOfHonor = $this->qrcodeService->qrcode(($schoolName." : This roll of honor belongs to the student: ".$data->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber())." School Year  : ".$schoolYear->getSchoolYear()." Classroom : ".$student->getClassroom()->getClassroom()), $student->getSlug(), $school);
 
             }
 
@@ -229,20 +249,20 @@ class EditStudentController extends AbstractController
 
                     if ($subSystem->getSubSystem() == ConstantsClass::FRANCOPHONE) 
                     {
-                        $qrCode = $this->qrcodeService->qrcode($schoolName." : Ce bulletin appartient à l'élève : ".$data->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber())." Année Scolaire : ".$schoolYear->getSchoolYear()." Classe : ".$student->getClassroom()->getClassroom());
+                        $qrCode = $this->qrcodeService->qrcode(($schoolName." : Ce bulletin appartient à l'élève : ".$data->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber())." Année Scolaire : ".$schoolYear->getSchoolYear()." Classe : ".$student->getClassroom()->getClassroom()), $student->getSlug(), $school);
 
-                        $qrCodeFiche = $this->qrcodeService->qrcode($schoolName." : Cette fiche appartient à l'élève : ".$data->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber())." Année Scolaire : ".$schoolYear->getSchoolYear()." Classe : ".$student->getClassroom()->getClassroom());
+                        $qrCodeFiche = $this->qrcodeService->qrcode(($schoolName." : Cette fiche appartient à l'élève : ".$data->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber())." Année Scolaire : ".$schoolYear->getSchoolYear()." Classe : ".$student->getClassroom()->getClassroom()), $student->getSlug(), $school);
                         
-                        $qrCodeRollOfHonor = $this->qrcodeService->qrcode($schoolName." : Ce TABLEAU D'HONNEUR appartient à l'élève : ".$data->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber())." Année Scolaire : ".$schoolYear->getSchoolYear()." Classe : ".$student->getClassroom()->getClassroom());
+                        $qrCodeRollOfHonor = $this->qrcodeService->qrcode(($schoolName." : Ce TABLEAU D'HONNEUR appartient à l'élève : ".$data->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber())." Année Scolaire : ".$schoolYear->getSchoolYear()." Classe : ".$student->getClassroom()->getClassroom()), $student->getSlug(), $school);
 
                     } 
                     else 
                     {
-                        $qrCode = $this->qrcodeService->qrcode($schoolName." : This report belongs to the student : ".$data->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber())." School Year : ".$schoolYear->getSchoolYear()." Classroom : ".$student->getClassroom()->getClassroom());
+                        $qrCode = $this->qrcodeService->qrcode(($schoolName." : This report belongs to the student : ".$data->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber())." School Year : ".$schoolYear->getSchoolYear()." Classroom : ".$student->getClassroom()->getClassroom()), $student->getSlug(), $school);
 
-                        $qrCodeFiche = $this->qrcodeService->qrcode($schoolName." : This sheet belongs to the student : ".$data->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber())." School Year  : ".$schoolYear->getSchoolYear()." Classroom : ".$student->getClassroom()->getClassroom());
+                        $qrCodeFiche = $this->qrcodeService->qrcode(($schoolName." : This sheet belongs to the student : ".$data->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber())." School Year  : ".$schoolYear->getSchoolYear()." Classroom : ".$student->getClassroom()->getClassroom()), $student->getSlug(), $school);
                     
-                        $qrCodeRollOfHonor = $this->qrcodeService->qrcode($schoolName." : This roll of honor belongs to the student: ".$data->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber())." School Year  : ".$schoolYear->getSchoolYear()." Classroom : ".$student->getClassroom()->getClassroom());
+                        $qrCodeRollOfHonor = $this->qrcodeService->qrcode(($schoolName." : This roll of honor belongs to the student: ".$data->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber())." School Year  : ".$schoolYear->getSchoolYear()." Classroom : ".$student->getClassroom()->getClassroom()), $student->getSlug(), $school);
                     }
 
                     $student->setUpdatedBy($this->getUser())
@@ -383,11 +403,10 @@ class EditStudentController extends AbstractController
                 $this->addFlash('info', $this->translator->trans('Student updated with success !'));
                 
                 $mySession->set('miseAjour', 1);
-                // On redimensionne la photo au cas où elle a été modifiée
-                // $imageOptimizerService->resize('images/students/'.$student->getPhoto());
-                if($student->getPhoto())
-                {
-                    $imagine->open(getcwd().'/images/students/'.$student->getPhoto())->resize(new Box(150, 200))->save(getcwd().'/images/students/'.$student->getPhoto());
+                if ($hasNewPhoto && $student->getPhoto()) {
+                    $this->imageOptimizerService->resize(
+                        getcwd().'/images/students/'.$student->getPhoto()
+                    );
                 }
 
                 // On se redirige sur la page d'affichage des élèves
@@ -411,7 +430,7 @@ class EditStudentController extends AbstractController
             'slug' => $slug,
             'student' => $student,
             'numberOfStudentInSchool' => $numberOfStudentInSchool,
-            'school' => $school[0],
+            'school' => $school,
             ]);
     }
 }

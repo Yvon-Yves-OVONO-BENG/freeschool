@@ -16,11 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/statistic")]
 class PrintFicheSyntheseDePerformanceDesElevesParClasseController extends AbstractController
 {
@@ -135,7 +131,7 @@ class PrintFicheSyntheseDePerformanceDesElevesParClasseController extends Abstra
 
                 // dump($studentMarkTerm);
                  // Moyennes trimestrielles des élèves classés et moyennes par groupe et classement par order de mérite trimestriel
-                 $allRankedStudents = $this->reportService->getRankedStudents($studentMarkTerm, $selectedClassroom, $selectedTerm);
+                 $allRankedStudents = $this->reportService->getRankedStudents($studentMarkTerm, $selectedClassroom, $selectedTerm, $school);
 
                  // On reupère le classement trimetriel
                  $rankedStudents = $allRankedStudents['rankedTerm'];

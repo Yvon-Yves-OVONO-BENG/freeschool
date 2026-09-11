@@ -207,9 +207,19 @@ class CouncilEndYearService
             $pdf->Cell(10, 5, utf8_decode($numberOfBoys), 0, 0, 'C');
 
             $pdf->SetFont('Times', '', 12);
-            $pdf->Cell(30, 5, utf8_decode('Redoublablants : '), 0, 0, 'L');
+            $pdf->Cell(30, 5, utf8_decode('Redoublants : '), 0, 0, 'L');
             $pdf->SetFont('Times', 'B', 12);
-            $pdf->Cell(10, 5, utf8_decode($numberOfRepeaters), 0, 1, 'C');
+
+            $studentsRepeaterEndYear = 0;
+
+            foreach ($classroom->getStudents() as $student) 
+            {
+                if ($student->getDecision()->getDecision() == ConstantsClass::DECISION_REAPETED ) 
+                {
+                    $studentsRepeaterEndYear = $studentsRepeaterEndYear + 1;
+                }
+            }
+            $pdf->Cell(10, 5, utf8_decode($studentsRepeaterEndYear), 0, 1, 'C');
             $pdf->Ln(10);
             
             $pdf->SetFont('Times', 'B', 12);
@@ -1310,7 +1320,17 @@ class CouncilEndYearService
             $pdf->SetFont('Times', '', 12);
             $pdf->Cell(30, 5, utf8_decode('Repeaters : '), 0, 0, 'L');
             $pdf->SetFont('Times', 'B', 12);
-            $pdf->Cell(10, 5, utf8_decode($numberOfRepeaters), 0, 1, 'C');
+            
+            $studentsRepeaterEndYear = 0;
+
+            foreach ($classroom->getStudents() as $student) 
+            {
+                if ($student->getDecision()->getDecision() == ConstantsClass::DECISION_REAPETED ) 
+                {
+                    $studentsRepeaterEndYear = $studentsRepeaterEndYear + 1;
+                }
+            }
+            
             $pdf->Ln(10);
             
             $pdf->SetFont('Times', 'B', 12);

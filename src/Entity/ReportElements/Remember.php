@@ -5,12 +5,12 @@ namespace App\Entity\ReportElements;
 class Remember
 {
     protected  $name = 'Rappels';
-    protected $moyenneTerm1;
-    protected $rank1;
-    protected $moyenneTerm2;
-    protected $rank2;
-    protected $moyenneTerm3;
-    protected $rank3;
+    protected $moyenneTerm1 = 0.0;
+    protected $rank1 = 0;
+    protected $moyenneTerm2 = 0.0;
+    protected $rank2 = 0;
+    protected $moyenneTerm3 = 0.0;
+    protected $rank3 = 0;
 
     public function getName(): string
     {

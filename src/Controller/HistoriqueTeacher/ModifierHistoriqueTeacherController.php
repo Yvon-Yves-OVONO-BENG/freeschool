@@ -15,10 +15,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route('/historiqueTeacher')]
 class ModifierHistoriqueTeacherController extends AbstractController
 {
@@ -58,9 +55,14 @@ class ModifierHistoriqueTeacherController extends AbstractController
             return $this->redirectToRoute('home_mainMenu');
         }
 
-        $historiqueTeacher = $this->historiqueTeacherRepository->findOneBySlug([
+        $historiqueTeacher = $this->historiqueTeacherRepository->findOneBy([
             'slug' => $slug
         ]);
+
+        if (!$historiqueTeacher) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
 
         $nombreHeureCourante = $historiqueTeacher->getNombreHeure();
 

@@ -2,7 +2,10 @@
 
 namespace App\Controller;
 
+use App\Repository\NextYearRepository;
 use App\Repository\SchoolRepository;
+use App\Repository\SchoolYearRepository;
+use App\Repository\SubSystemRepository;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,59 +17,38 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class SecurityController extends AbstractController
 {
     public function __construct(
-        protected UserRepository $userRepository, 
-        protected SchoolRepository $schoolRepository
-        )
+        protected UserRepository $userRepository,
+        protected SchoolRepository $schoolRepository,
+        protected NextYearRepository $nextYearRepository,
+        protected SchoolYearRepository $schoolYearRepository,
+        protected SubSystemRepository $subSystemRepository,
+    )
     {}
 
-    #[Route(path: '/login/{duty}', name: 'login')]
+    #[Route(path: '/login/{duty}', name: 'login', defaults: ['duty' => ''])]
     public function login(Request $request, AuthenticationUtils $authenticationUtils, string $duty = ''): Response
     {
-        #si l'utilisateur est connecté
-        if ($this->getUser()) 
-        {
+        if ($this->getUser()) {
             return $this->redirectToRoute('home_dashboard');
         }
 
-        $mySession = $request->getSession();
-        
-        if($mySession)
-        {   
+        $nextYears = $this->nextYearRepository->findAll();
+        $nextYear = $nextYears[0] ?? null;
+        $schoolYears = $nextYear ? $this->schoolYearRepository->findSchoolYears($nextYear) : $this->schoolYearRepository->findBy([], ['schoolYear' => 'DESC']);
+        $subSystems = $this->subSystemRepository->findAll();
 
-            $schoolYear = $mySession->get('schoolYear');
-            $subSystem = $mySession->get('subSystem');
-
-            $school = $this->schoolRepository->findBy([
-                "schoolYear" => $schoolYear
-            ]);
-        }else 
-        {
-            return $this->redirectToRoute('app_logout');
-        }
-
-        if ($this->getUser()) 
-        {
-            return $this->redirectToRoute('app_logout');
-        }
-
-        if (!$schoolYear) 
-        {
-            return $this->redirectToRoute('app_logout');
-        }
-
-        // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
-        // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
-        
-        $users = $this->userRepository->findUserByUserType($duty, $schoolYear, $subSystem);
-        
-        return $this->render('security/login.html.twig', [
-            'last_username' => $lastUsername, 
+
+        return $this->render('home/chooseSchoolYear.html.twig', [
+            'schoolYears' => $schoolYears,
+            'subSystems' => $subSystems,
+            'users' => $this->userRepository->findAllForLoginSelector(),
+            'last_username' => $lastUsername,
             'error' => $error,
-            'users' => $users,
-            'school' => $school,
             'home' => true,
+            'motDePasse' => 0,
+            'chooseSchoolYear' => 'choose',
         ]);
     }
 

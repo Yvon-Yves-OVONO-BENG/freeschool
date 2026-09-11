@@ -636,21 +636,23 @@ class TeacherService
                 $pdf->Cell($cell8+$cell10, $cellHeaderHeight5, utf8_decode('In testimonial where of this certificate of assumption/resumption of duty has been issued to duty service its purpose '), 0, 1, 'L');
                 $pdf->Ln();
                 $pdf->Ln();
-    
+                
+                $pdf->SetFont('Times', 'B', $fontSize11);
                 $pdf->Cell($cell10, $cellHeaderHeight5, '', 0, 0, 'L');
-                $pdf->Cell($cell8, $cellHeaderHeight5, utf8_decode('Fait à '.$school->getPlace().' le __________'), 0, 1, 'L');
+                $pdf->Cell($cell8, $cellHeaderHeight5, utf8_decode('Fait à '.$school->getPlace().' le _ _ _ _ _ _ _ _ _ _'), 0, 1, 'L');
     
-                $pdf->SetFont('Times', 'I', $fontSize11);
+                $pdf->SetFont('Times', 'BI', $fontSize11);
                 $pdf->Cell($cell10, $cellHeaderHeight5, '', 0, 0, 'L');
                 $pdf->Cell($cell8, $cellHeaderHeight5, utf8_decode('Done in '.$school->getPlace().' on '), 0, 1, 'L');
                 $pdf->Ln($space);
     
+                $pdf->SetFont('Times', 'B', $fontSize11);
                 $pdf->Cell($cell10, $cellHeaderHeight5, '', 0, 0, 'L');
-                $pdf->Cell($cell8, $cellHeaderHeight5, utf8_decode('Le '.$school->getHeadmaster()->getDuty()->getDuty()), 0, 1, 'R');
+                $pdf->Cell($cell8, $cellHeaderHeight5, utf8_decode('Le '.$school->getHeadmaster()->getDuty()->getDuty()), 0, 1, 'L');
                 
-                $pdf->SetFont('Times', 'I', $fontSize11);
+                $pdf->SetFont('Times', 'BI', $fontSize11);
                 $pdf->Cell($cell10, $cellHeaderHeight5, '', 0, 0, 'L');
-                $pdf->Cell($cell8, $cellHeaderHeight5, utf8_decode('The principal '), 0, 1, 'R');
+                $pdf->Cell($cell8, $cellHeaderHeight5, utf8_decode('The principal '), 0, 1, 'L');
                 $pdf->Ln($space);
     
     
@@ -667,7 +669,7 @@ class TeacherService
                 // entête de la fiche
                 $pdf->Ln($cellHeaderHeight5);
                 $pdf->SetFont('Times', 'B', $fontSize);
-                $pdf->Cell(0, $cellHeaderHeight5, utf8_decode('N°__________/'.$schoolYear->getSchoolYear().'/'.ConstantsClass::SERVICE_NOTE), 0, 1, 'C');
+                $pdf->Cell(0, $cellHeaderHeight5, utf8_decode('N°__________/'.$schoolYear->getSchoolYear().'/'.$school->getServiceNote()), 0, 1, 'C');
                 $pdf->Ln();
                 $pdf->SetFont('Times', 'B', $fontSize15);
                 $pdf->Cell(0, $cellHeaderHeight7, utf8_decode('ATTESTATION DE PRESENCE EFFECTIVE'), 0, 1, 'C');
@@ -805,20 +807,22 @@ class TeacherService
                 $pdf->Ln();
                 $pdf->Ln();
     
+                $pdf->SetFont('Times', 'B', $fontSize11);
                 $pdf->Cell($cell10, $cellHeaderHeight5, '', 0, 0, 'L');
-                $pdf->Cell($cell8, $cellHeaderHeight5, utf8_decode('Fait à '.$school->getPlace().' le __________'), 0, 1, 'L');
+                $pdf->Cell($cell8, $cellHeaderHeight5, utf8_decode('Fait à '.$school->getPlace().' le _ _ _ _ _ _ _ _ _ _'), 0, 1, 'L');
     
-                $pdf->SetFont('Times', 'I', $fontSize11);
+                $pdf->SetFont('Times', 'BI', $fontSize11);
                 $pdf->Cell($cell10, $cellHeaderHeight5, '', 0, 0, 'L');
                 $pdf->Cell($cell8, $cellHeaderHeight5, utf8_decode('Done in '.$school->getPlace().' on '), 0, 1, 'L');
                 $pdf->Ln($space);
     
+                $pdf->SetFont('Times', 'B', $fontSize11);
                 $pdf->Cell($cell10, $cellHeaderHeight5, '', 0, 0, 'L');
-                $pdf->Cell($cell8, $cellHeaderHeight5, utf8_decode('Le '.$school->getHeadmaster()->getDuty()->getDuty()), 0, 1, 'R');
+                $pdf->Cell($cell8, $cellHeaderHeight5, utf8_decode('Le '.$school->getHeadmaster()->getDuty()->getDuty()), 0, 1, 'L');
                 
-                $pdf->SetFont('Times', 'I', $fontSize11);
+                $pdf->SetFont('Times', 'BI', $fontSize11);
                 $pdf->Cell($cell10, $cellHeaderHeight5, '', 0, 0, 'L');
-                $pdf->Cell($cell8, $cellHeaderHeight5, utf8_decode('The principal '), 0, 1, 'R');
+                $pdf->Cell($cell8, $cellHeaderHeight5, utf8_decode('The principal '), 0, 1, 'L');
                 $pdf->Ln($space);
     
     

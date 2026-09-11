@@ -13,12 +13,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
- #[Route("/teacher")]
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
+#[Route("/teacher")]
 class PrintLessonTeacherController extends AbstractController
 {
     public function __construct(
@@ -58,9 +54,14 @@ class PrintLessonTeacherController extends AbstractController
             return $this->redirectToRoute('home_mainMenu');
         }
 
-        $teacher = $this->teacherRepository->findOneBySlug([
+        $teacher = $this->teacherRepository->findOneBy([
             'slug' => $slug
         ]);
+
+        if (!$teacher) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
 
         $lessons = $teacher->getLessons();
         

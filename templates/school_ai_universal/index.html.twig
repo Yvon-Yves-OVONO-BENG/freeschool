@@ -1,0 +1,924 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Universal AI Assistant{% endtrans %}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-ai-universal-premium.css') }}">
+    <style>
+        .fs-ai-page,
+        .fs-ai-page * { box-sizing: border-box; }
+
+        .fs-ai-page {
+            --ai-primary: #1856a5;
+            --ai-primary-dark: #103b73;
+            --ai-text: #17233d;
+            --ai-muted: #67758d;
+            --ai-line: #dfe7f2;
+            --ai-soft: #f4f7fb;
+            padding: 22px 0 42px;
+            color: var(--ai-text);
+        }
+
+        .fs-ai-wrap {
+            max-width: 1240px;
+            margin: 0 auto;
+        }
+
+        .fs-ai-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            padding: 20px 22px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(24, 86, 165, .13);
+            border-radius: 20px;
+            background:
+                radial-gradient(circle at 92% 18%, rgba(37, 138, 226, .16), transparent 28%),
+                linear-gradient(135deg, #ffffff 0%, #f5f9ff 100%);
+            box-shadow: 0 16px 42px rgba(24, 54, 94, .08);
+        }
+
+        .fs-ai-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-width: 0;
+        }
+
+        .fs-ai-logo {
+            width: 52px;
+            height: 52px;
+            flex: 0 0 52px;
+            display: grid;
+            place-items: center;
+            border-radius: 16px;
+            color: #fff;
+            background: linear-gradient(145deg, #1d74cf, #123f7a);
+            box-shadow: 0 10px 25px rgba(24, 86, 165, .24);
+            font-size: 22px;
+        }
+
+        .fs-ai-brand h1 {
+            margin: 0 0 4px;
+            font-size: clamp(1.25rem, 2.1vw, 1.7rem);
+            font-weight: 650;
+            letter-spacing: -.02em;
+        }
+
+        .fs-ai-brand p {
+            max-width: 720px;
+            margin: 0;
+            color: var(--ai-muted);
+            font-size: .94rem;
+            line-height: 1.5;
+        }
+
+        .fs-ai-context {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .fs-ai-context-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            min-height: 34px;
+            padding: 7px 11px;
+            border: 1px solid #d9e5f4;
+            border-radius: 999px;
+            color: #36516f;
+            background: rgba(255, 255, 255, .82);
+            font-size: .82rem;
+            white-space: nowrap;
+        }
+
+        .fs-ai-context-pill.is-online .fs-ai-status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #19a76b;
+            box-shadow: 0 0 0 4px rgba(25, 167, 107, .12);
+        }
+
+        .fs-ai-context-pill.is-limited {
+            color: #875d17;
+            border-color: #f1d99b;
+            background: #fff9e8;
+        }
+
+        .fs-ai-chat-card {
+            overflow: hidden;
+            border: 1px solid var(--ai-line);
+            border-radius: 22px;
+            background: #fff;
+            box-shadow: 0 22px 60px rgba(20, 48, 88, .09);
+        }
+
+        .fs-ai-chat-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 17px 20px;
+            border-bottom: 1px solid var(--ai-line);
+            background: rgba(250, 252, 255, .96);
+        }
+
+        .fs-ai-chat-head-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .fs-ai-orb {
+            width: 40px;
+            height: 40px;
+            flex: 0 0 40px;
+            display: grid;
+            place-items: center;
+            border-radius: 13px;
+            color: var(--ai-primary);
+            background: #eaf3ff;
+        }
+
+        .fs-ai-chat-head h2 {
+            margin: 0 0 2px;
+            font-size: 1rem;
+            font-weight: 650;
+        }
+
+        .fs-ai-chat-head p {
+            margin: 0;
+            color: var(--ai-muted);
+            font-size: .82rem;
+        }
+
+        .fs-ai-head-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--ai-muted);
+            font-size: .8rem;
+        }
+
+        #fs-ai-loader {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            color: var(--ai-primary);
+        }
+
+        #fs-ai-loader.d-none { display: none !important; }
+
+        .fs-ai-mode-pill {
+            padding: 6px 9px;
+            border: 1px solid var(--ai-line);
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        .fs-ai-config-warning {
+            display: flex;
+            gap: 10px;
+            margin: 14px 18px 0;
+            padding: 11px 13px;
+            border: 1px solid #f0d794;
+            border-radius: 12px;
+            color: #755319;
+            background: #fff9e8;
+            font-size: .86rem;
+            line-height: 1.45;
+        }
+
+        .fs-ai-chat-window {
+            min-height: 420px;
+            max-height: 62vh;
+            overflow-y: auto;
+            padding: 20px;
+            background:
+                linear-gradient(rgba(255, 255, 255, .92), rgba(255, 255, 255, .92)),
+                radial-gradient(circle at 20% 20%, #dcecff, transparent 42%);
+            scroll-behavior: smooth;
+        }
+
+        .fs-ai-empty {
+            min-height: 370px;
+            display: grid;
+            place-items: center;
+        }
+
+        .fs-ai-empty-card {
+            max-width: 720px;
+            text-align: center;
+        }
+
+        .fs-ai-empty-icon {
+            width: 62px;
+            height: 62px;
+            display: grid;
+            place-items: center;
+            margin: 0 auto 14px;
+            border-radius: 20px;
+            color: #fff;
+            background: linear-gradient(145deg, #2384dc, #153f78);
+            box-shadow: 0 14px 34px rgba(24, 86, 165, .2);
+            font-size: 26px;
+        }
+
+        .fs-ai-empty strong {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 1.15rem;
+            font-weight: 650;
+        }
+
+        .fs-ai-empty p {
+            max-width: 620px;
+            margin: 0 auto 16px;
+            color: var(--ai-muted);
+            line-height: 1.55;
+        }
+
+        .fs-ai-suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .fs-ai-suggestion {
+            padding: 8px 11px;
+            border: 1px solid #d8e5f5;
+            border-radius: 999px;
+            color: #2d5079;
+            background: #f8fbff;
+            font: inherit;
+            font-size: .82rem;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .fs-ai-suggestion:hover {
+            border-color: #92bce9;
+            background: #edf6ff;
+            transform: translateY(-1px);
+        }
+
+        .fs-ai-message {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 17px;
+        }
+
+        .fs-ai-message.is-user {
+            justify-content: flex-end;
+        }
+
+        .fs-ai-message-avatar {
+            width: 34px;
+            height: 34px;
+            flex: 0 0 34px;
+            display: grid;
+            place-items: center;
+            border-radius: 11px;
+            color: var(--ai-primary);
+            background: #eaf3ff;
+        }
+
+        .fs-ai-message-body {
+            max-width: min(900px, 88%);
+            padding: 12px 14px;
+            border: 1px solid var(--ai-line);
+            border-radius: 16px;
+            background: #fff;
+            box-shadow: 0 8px 24px rgba(28, 58, 95, .06);
+        }
+
+        .fs-ai-message.is-user .fs-ai-message-body {
+            color: #fff;
+            border-color: transparent;
+            border-bottom-right-radius: 5px;
+            background: linear-gradient(145deg, #236ebd, #174b86);
+        }
+
+        .fs-ai-answer-title {
+            margin: 0 0 5px;
+            font-size: 1rem;
+            font-weight: 650;
+        }
+
+        .fs-ai-answer-summary {
+            margin: 0;
+            color: #43536a;
+            line-height: 1.55;
+        }
+
+        .fs-ai-message.is-error .fs-ai-message-body {
+            border-color: #f1c6c6;
+            background: #fff6f6;
+        }
+
+        .fs-ai-result-table-wrap {
+            max-width: 100%;
+            max-height: 360px;
+            overflow: auto;
+            margin-top: 13px;
+            border: 1px solid var(--ai-line);
+            border-radius: 12px;
+        }
+
+        .fs-ai-result-table {
+            width: 100%;
+            min-width: 620px;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: .82rem;
+        }
+
+        .fs-ai-result-table th,
+        .fs-ai-result-table td {
+            padding: 9px 10px;
+            border-bottom: 1px solid #e8edf4;
+            text-align: left;
+            vertical-align: top;
+            white-space: nowrap;
+        }
+
+        .fs-ai-result-table th {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            color: #fff;
+            background: #183f72;
+            font-weight: 600;
+        }
+
+        .fs-ai-result-table tr:last-child td { border-bottom: 0; }
+        .fs-ai-result-table tbody tr:nth-child(even) td { background: #f8fafd; }
+
+        .fs-ai-download {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            padding: 9px 12px;
+            border-radius: 10px;
+            color: #fff !important;
+            background: #17725a;
+            text-decoration: none !important;
+            font-size: .84rem;
+            transition: .2s ease;
+        }
+
+        .fs-ai-download:hover { background: #115b48; transform: translateY(-1px); }
+
+        .fs-ai-composer-wrap {
+            padding: 14px 16px 16px;
+            border-top: 1px solid var(--ai-line);
+            background: #fff;
+        }
+
+        .fs-ai-composer {
+            padding: 10px;
+            border: 1px solid #cfdbea;
+            border-radius: 16px;
+            background: #fbfdff;
+            box-shadow: 0 7px 22px rgba(28, 58, 95, .05);
+            transition: .2s ease;
+        }
+
+        .fs-ai-composer:focus-within {
+            border-color: #6aa2df;
+            box-shadow: 0 0 0 4px rgba(37, 116, 200, .1);
+        }
+
+        .fs-ai-input-row {
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+        }
+
+        #ai-question {
+            width: 100%;
+            min-height: 46px;
+            max-height: 150px;
+            padding: 11px 12px;
+            resize: none;
+            border: 0;
+            outline: 0;
+            color: var(--ai-text);
+            background: transparent;
+            font: inherit;
+            line-height: 1.5;
+        }
+
+        .fs-ai-send {
+            min-height: 43px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 9px 15px;
+            border: 0;
+            border-radius: 12px;
+            color: #fff;
+            background: linear-gradient(145deg, #2477c9, #17477f);
+            font: inherit;
+            font-size: .88rem;
+            cursor: pointer;
+            box-shadow: 0 8px 18px rgba(24, 86, 165, .2);
+        }
+
+        .fs-ai-send:disabled {
+            opacity: .62;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .fs-ai-composer-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 7px 5px 0;
+            color: var(--ai-muted);
+            font-size: .77rem;
+        }
+
+        .fs-ai-format {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        #ai-format {
+            min-height: 31px;
+            padding: 4px 26px 4px 8px;
+            border: 1px solid var(--ai-line);
+            border-radius: 8px;
+            color: #40536c;
+            background: #fff;
+            font: inherit;
+        }
+
+        @media (max-width: 767px) {
+            .fs-ai-page { padding-top: 12px; }
+            .fs-ai-topbar { align-items: flex-start; padding: 16px; border-radius: 16px; }
+            .fs-ai-context { display: none; }
+            .fs-ai-brand p { font-size: .82rem; }
+            .fs-ai-chat-card { border-radius: 16px; }
+            .fs-ai-chat-head { padding: 13px 14px; }
+            .fs-ai-chat-head p, .fs-ai-mode-pill { display: none; }
+            .fs-ai-chat-window { min-height: 380px; max-height: 58vh; padding: 14px; }
+            .fs-ai-empty { min-height: 330px; }
+            .fs-ai-message-body { max-width: 92%; }
+            .fs-ai-composer-wrap { padding: 10px; }
+            .fs-ai-input-row { align-items: stretch; flex-direction: column; }
+            .fs-ai-send { width: 100%; }
+            .fs-ai-composer-bottom { align-items: flex-start; flex-direction: column; }
+            .fs-ai-hint { display: none; }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="hor-content main-content">
+    <div class="container">
+        <section class="fs-ai-page">
+            <div class="fs-ai-wrap">
+                <header class="fs-ai-topbar">
+                    <div class="fs-ai-brand">
+                        <div class="fs-ai-logo" aria-hidden="true">
+                            <i class="fa fa-robot"></i>
+                        </div>
+                        <div>
+                            <h1>FreeSchool AI</h1>
+                            <p>
+                                {% trans %}Professional assistant connected securely to school data. Ask naturally and get precise answers, tables or export files.{% endtrans %}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="fs-ai-context">
+                        <span class="fs-ai-context-pill">
+                            <i class="fa fa-calendar-alt"></i>
+                            {{ selectedSchoolYear }}
+                        </span>
+                        {% if aiConfigured %}
+                            <span class="fs-ai-context-pill is-online">
+                                <span class="fs-ai-status-dot"></span>
+                                {% trans %}Full AI active{% endtrans %}
+                            </span>
+                        {% else %}
+                            <span class="fs-ai-context-pill is-limited">
+                                <i class="fa fa-exclamation-triangle"></i>
+                                {% trans %}Local mode{% endtrans %}
+                            </span>
+                        {% endif %}
+                    </div>
+                </header>
+
+                <div class="fs-ai-shell">
+                    <main class="fs-ai-chat-card">
+                        <div class="fs-ai-chat-head">
+                            <div class="fs-ai-chat-head-left">
+                                <div class="fs-ai-orb" aria-hidden="true">
+                                    <i class="fa fa-comments"></i>
+                                </div>
+                                <div>
+                                    <h2>{% trans %}Conversation with the assistant{% endtrans %}</h2>
+                                    <p>
+                                        {% trans %}All database results are automatically limited to the school year selected at login.{% endtrans %}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="fs-ai-head-actions">
+                                <div id="fs-ai-loader" class="d-none" role="status">
+                                    <i class="fa fa-circle-notch fa-spin" aria-hidden="true"></i>
+                                    <span>{% trans %}Analyzing{% endtrans %}</span>
+                                </div>
+                                <div class="fs-ai-mode-pill">Ctrl + Enter</div>
+                            </div>
+                        </div>
+
+                        {% if not aiConfigured %}
+                            <div class="fs-ai-config-warning" role="alert">
+                                <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                <span>
+                                    {% trans %}The assistant can answer common questions in local mode. To understand any database question, configure OPENAI_API_KEY in .env.local.{% endtrans %}
+                                </span>
+                            </div>
+                        {% endif %}
+
+                        <div id="ai-result" class="fs-ai-chat-window" aria-live="polite">
+                            <div class="fs-ai-empty" id="fs-ai-empty">
+                                <div class="fs-ai-empty-card">
+                                    <div class="fs-ai-empty-icon" aria-hidden="true">
+                                        <i class="fa fa-robot"></i>
+                                    </div>
+                                    <strong>{% trans %}What would you like to know?{% endtrans %}</strong>
+                                    <p>
+                                        {% trans %}Ask about students, classes, teachers, grades, averages, absences, payments, expenses or any other information recorded in FreeSchool.{% endtrans %}
+                                    </p>
+                                    <div class="fs-ai-suggestions">
+                                        <button type="button" class="fs-ai-suggestion" data-question="Quel est l'effectif des élèves par classe ?">
+                                            {% trans %}Students per class{% endtrans %}
+                                        </button>
+                                        <button type="button" class="fs-ai-suggestion" data-question="Donne le top 10 des élèves par moyenne générale.">
+                                            {% trans %}Top 10 averages{% endtrans %}
+                                        </button>
+                                        <button type="button" class="fs-ai-suggestion" data-question="Quel est le montant total des paiements scolaires ?">
+                                            {% trans %}Total payments{% endtrans %}
+                                        </button>
+                                        <button type="button" class="fs-ai-suggestion" data-question="Affiche les absences des élèves par classe.">
+                                            {% trans %}Absences by class{% endtrans %}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="fs-ai-composer-wrap">
+                            <div class="fs-ai-composer">
+                                <div class="fs-ai-input-row">
+                                    <textarea
+                                        id="ai-question"
+                                        rows="1"
+                                        maxlength="2000"
+                                        autocomplete="off"
+                                        placeholder="{% trans %}Ask FreeSchool AI a question...{% endtrans %}"
+                                        aria-label="{% trans %}Question for FreeSchool AI{% endtrans %}"
+                                    ></textarea>
+
+                                    <button id="ai-send" class="fs-ai-send" type="button">
+                                        <i class="fa fa-paper-plane me-2" aria-hidden="true"></i>
+                                        <span>{% trans %}Send{% endtrans %}</span>
+                                    </button>
+                                </div>
+
+                                <div class="fs-ai-composer-bottom">
+                                    <div class="fs-ai-format">
+                                        <label for="ai-format">{% trans %}Response{% endtrans %}</label>
+                                        <select id="ai-format">
+                                            <option value="auto">{% trans %}Automatic{% endtrans %}</option>
+                                            <option value="html">{% trans %}On-screen response{% endtrans %}</option>
+                                            <option value="pdf">PDF</option>
+                                            <option value="xlsx">Excel</option>
+                                            <option value="docx">Word</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="fs-ai-hint">
+                                        <i class="fa fa-shield-alt me-1" aria-hidden="true"></i>
+                                        {% trans %}Read-only access · Selected school year only{% endtrans %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        window.FreeSchoolAiConfig = Object.freeze({
+            askUrl: "{{ path('school_ai_universal_ask')|e('js') }}",
+            csrfToken: "{{ csrf_token('school_ai_ask')|e('js') }}",
+            schoolYear: "{{ selectedSchoolYear|e('js') }}"
+        });
+
+        (() => {
+            'use strict';
+
+            const initializeFreeSchoolAi = () => {
+            const config = window.FreeSchoolAiConfig;
+            const result = document.getElementById('ai-result');
+            const question = document.getElementById('ai-question');
+            const format = document.getElementById('ai-format');
+            const send = document.getElementById('ai-send');
+            const loader = document.getElementById('fs-ai-loader');
+            let pending = false;
+
+            if (!result || !question || !format || !send) {
+                return;
+            }
+
+            const text = {
+                waiting: "{{ 'FreeSchool AI is analyzing your question…'|trans|e('js') }}",
+                network: "{{ 'Unable to contact the assistant. Check your connection and try again.'|trans|e('js') }}",
+                timeout: "{{ 'The analysis took too long. Please try again.'|trans|e('js') }}",
+                empty: "{{ 'Please enter a question.'|trans|e('js') }}",
+                download: "{{ 'Download the generated file'|trans|e('js') }}",
+                errorTitle: "{{ 'Unable to answer'|trans|e('js') }}"
+            };
+
+            const clearWelcome = () => {
+                const empty = document.getElementById('fs-ai-empty');
+                if (empty) {
+                    empty.remove();
+                }
+            };
+
+            const scrollToBottom = () => {
+                result.scrollTop = result.scrollHeight;
+            };
+
+            const setPending = (state) => {
+                pending = state;
+                send.disabled = state;
+                question.disabled = state;
+                format.disabled = state;
+                loader.classList.toggle('d-none', !state);
+            };
+
+            const autoResize = () => {
+                question.style.height = 'auto';
+                question.style.height = Math.min(question.scrollHeight, 150) + 'px';
+            };
+
+            const safeValue = (value) => {
+                if (value === null || value === undefined || value === '') {
+                    return '—';
+                }
+                if (typeof value === 'object') {
+                    try {
+                        return JSON.stringify(value);
+                    } catch (error) {
+                        return String(value);
+                    }
+                }
+                return String(value);
+            };
+
+            const createMessage = (kind) => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'fs-ai-message ' + kind;
+
+                if (kind !== 'is-user') {
+                    const avatar = document.createElement('div');
+                    avatar.className = 'fs-ai-message-avatar';
+                    avatar.setAttribute('aria-hidden', 'true');
+                    const icon = document.createElement('i');
+                    icon.className = kind === 'is-error' ? 'fa fa-exclamation-circle' : 'fa fa-robot';
+                    avatar.appendChild(icon);
+                    wrapper.appendChild(avatar);
+                }
+
+                const body = document.createElement('div');
+                body.className = 'fs-ai-message-body';
+                wrapper.appendChild(body);
+
+                return { wrapper, body };
+            };
+
+            const appendUserMessage = (value) => {
+                clearWelcome();
+                const message = createMessage('is-user');
+                const paragraph = document.createElement('div');
+                paragraph.textContent = value;
+                message.body.appendChild(paragraph);
+                result.appendChild(message.wrapper);
+                scrollToBottom();
+            };
+
+            const appendThinking = () => {
+                const message = createMessage('is-assistant');
+                message.wrapper.dataset.thinking = 'true';
+                const paragraph = document.createElement('p');
+                paragraph.className = 'fs-ai-answer-summary';
+                paragraph.textContent = text.waiting;
+                message.body.appendChild(paragraph);
+                result.appendChild(message.wrapper);
+                scrollToBottom();
+                return message.wrapper;
+            };
+
+            const appendError = (messageText) => {
+                const message = createMessage('is-error');
+                const title = document.createElement('h3');
+                title.className = 'fs-ai-answer-title';
+                title.textContent = text.errorTitle;
+                const paragraph = document.createElement('p');
+                paragraph.className = 'fs-ai-answer-summary';
+                paragraph.textContent = messageText;
+                message.body.append(title, paragraph);
+                result.appendChild(message.wrapper);
+                scrollToBottom();
+            };
+
+            const buildTable = (answer) => {
+                const columns = Array.isArray(answer.columns) ? answer.columns : [];
+                const rows = Array.isArray(answer.rows) ? answer.rows : [];
+                if (!columns.length || !rows.length) {
+                    return null;
+                }
+
+                const wrap = document.createElement('div');
+                wrap.className = 'fs-ai-result-table-wrap';
+                const table = document.createElement('table');
+                table.className = 'fs-ai-result-table';
+                const head = document.createElement('thead');
+                const headRow = document.createElement('tr');
+                const labels = answer.columnLabels && typeof answer.columnLabels === 'object'
+                    ? answer.columnLabels
+                    : {};
+
+                columns.forEach((column) => {
+                    const cell = document.createElement('th');
+                    cell.scope = 'col';
+                    cell.textContent = labels[column] || column;
+                    headRow.appendChild(cell);
+                });
+                head.appendChild(headRow);
+                table.appendChild(head);
+
+                const body = document.createElement('tbody');
+                rows.forEach((row) => {
+                    const tableRow = document.createElement('tr');
+                    columns.forEach((column) => {
+                        const cell = document.createElement('td');
+                        cell.textContent = safeValue(row ? row[column] : null);
+                        tableRow.appendChild(cell);
+                    });
+                    body.appendChild(tableRow);
+                });
+                table.appendChild(body);
+                wrap.appendChild(table);
+
+                return wrap;
+            };
+
+            const appendAnswer = (data) => {
+                const answer = data.answer || {};
+                const message = createMessage('is-assistant');
+                const title = document.createElement('h3');
+                title.className = 'fs-ai-answer-title';
+                title.textContent = answer.title || 'FreeSchool AI';
+
+                const summary = document.createElement('p');
+                summary.className = 'fs-ai-answer-summary';
+                summary.textContent = answer.summary || '';
+                message.body.append(title, summary);
+
+                const table = buildTable(answer);
+                if (table) {
+                    message.body.appendChild(table);
+                }
+
+                if (data.file) {
+                    const link = document.createElement('a');
+                    link.className = 'fs-ai-download';
+                    link.href = data.file;
+                    link.download = data.fileName || '';
+                    const icon = document.createElement('i');
+                    icon.className = 'fa fa-download';
+                    icon.setAttribute('aria-hidden', 'true');
+                    const label = document.createElement('span');
+                    label.textContent = text.download;
+                    link.append(icon, label);
+                    message.body.appendChild(link);
+                }
+
+                result.appendChild(message.wrapper);
+                scrollToBottom();
+            };
+
+            const sendQuestion = async () => {
+                if (pending) {
+                    return;
+                }
+
+                const value = question.value.trim();
+                if (!value) {
+                    question.focus();
+                    appendError(text.empty);
+                    return;
+                }
+
+                appendUserMessage(value);
+                const thinking = appendThinking();
+                setPending(true);
+
+                const controller = new AbortController();
+                const timeout = window.setTimeout(() => controller.abort(), 60000);
+
+                try {
+                    const response = await fetch(config.askUrl, {
+                        method: 'POST',
+                        credentials: 'same-origin',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': config.csrfToken,
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify({
+                            question: value,
+                            format: format.value
+                        }),
+                        signal: controller.signal
+                    });
+
+                    let data = {};
+                    try {
+                        data = await response.json();
+                    } catch (error) {
+                        data = {};
+                    }
+
+                    thinking.remove();
+                    if (!response.ok || !data.success) {
+                        appendError(data.message || text.network);
+                        return;
+                    }
+
+                    appendAnswer(data);
+                    question.value = '';
+                    autoResize();
+                } catch (error) {
+                    thinking.remove();
+                    appendError(error && error.name === 'AbortError' ? text.timeout : text.network);
+                } finally {
+                    window.clearTimeout(timeout);
+                    setPending(false);
+                    question.focus();
+                }
+            };
+
+            send.addEventListener('click', sendQuestion);
+            question.addEventListener('input', autoResize);
+            question.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
+                    event.preventDefault();
+                    sendQuestion();
+                }
+            });
+
+            document.querySelectorAll('.fs-ai-suggestion').forEach((button) => {
+                button.addEventListener('click', () => {
+                    question.value = button.dataset.question || '';
+                    autoResize();
+                    question.focus();
+                });
+            });
+
+            autoResize();
+            };
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initializeFreeSchoolAi, { once: true });
+            } else {
+                initializeFreeSchoolAi();
+            }
+        })();
+    </script>
+{% endblock %}

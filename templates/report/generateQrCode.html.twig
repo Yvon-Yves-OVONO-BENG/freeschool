@@ -3,99 +3,172 @@
 {% block title %}{% trans %}Generate QR Code{% endtrans %}{% endblock %}
 
 {% block stylesheets %}
-	<style>
-		th,
-		tfoot {
-			font-size: 15px !important;
-			text-align: center !important;
-			font-weight: bold !important;
-			background-color: #F1F1F1 !important;
-		}
-
-		tr:hover {
-			background-color: rgba(62, 128, 235, 0.2) !important;
-			color: #3e80eb !important;
-		}
-	</style>
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-generate-qr-code-premium.css') }}">
 {% endblock %}
 
 {% block body %}
-<!-- App-Content -->
-	<div class="hor-content main-content">
+	<div class="hor-content main-content fs-qr-page">
 		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary">
-                        <i class="fa fa-qrcode me-2"></i> {% trans %}GENERATE QR CODE{% endtrans %}
-                    </h4>
-                </div>
-                <div class="page-rightheader">
-                    <div class="btn-list">
-                        <a href="{{ path('report_defineUnrankedCoefficient') }}" class="btn btn-outline-primary">
-                            <i class="fe fe-activity me-2"></i> 
-                            {% trans %}Update limits coefficients{% endtrans %}
-                        </a>
-                    </div>
+			<div class="fs-qr-menu-safe-space" aria-hidden="true"></div>
 
-                </div>
-            </div>
-            <!--End Page header-->
+			{% for message in app.flashes('info') %}
+				<script>
+					Swal.fire({
+						toast: true,
+						icon: 'success',
+						title: "<b>{{ message }}</b>",
+						position: 'top-end',
+						showConfirmButton: false,
+						timer: 6000,
+						timerProgressBar: true,
+						customClass: {
+							popup: 'miseAjourSwal'
+						}
+					});
+				</script>
+			{% endfor %}
 
-            <!-- Row -->
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="expanel expanel-primary border-primary">
-                        <div class="expanel-heading">
-                            <h3 class="expanel-title">{% trans %}Choose a class{% endtrans %}</h3>
-                        </div>
-                        <div class="expanel-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <form action="{{ path('generation_qr_code') }}" method="post">
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <select class="form-control select2-show-search" data-placeholder="Choose a classroom" name="classroomId" id="classroom" required style="border: 1px solid #0f0;">
-                                                        <option label="Choose a classroom">{% trans %}Choose a class{% endtrans %}</option>
-                                                        
-                                                        {% if subSystem == 'Francophone / French Speaker' %}
-                                                            {% if school.education.education == 'Général' %}
-                                                                {% include "includes/_selectClassrooms.html.twig" %}
-                                                                {% else %}
-                                                                    {% include "includes/_selectClassroomsTech.html.twig" %}
-                                                            {% endif %}
-                                                            {% else %}
-                                                                {% include "includes/_selectClassroomsEn.html.twig" %}
-                                                        {% endif %}
+			<section class="fs-qr-hero">
+				<div class="fs-qr-hero__content">
+					<div>
+						<span class="fs-qr-eyebrow">
+							<i class="fa fa-qrcode"></i>
+							{% trans %}QR Code workspace{% endtrans %}
+						</span>
 
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="displayStudents">
-                                                        <i class="fa fa-qrcode me-2"></i>
-                                                        {% trans %}Generate{% endtrans %}
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                    </form>
-                                </div>
-                               
-                            </div>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-			
-        </div>
-    </div>
-</div>
+						<h1 class="fs-qr-title">
+							{% trans %}GENERATE QR CODE{% endtrans %}
+						</h1>
 
+						<p class="fs-qr-subtitle">
+							{% trans %}Generate students QR codes by classroom through a clean, refined and responsive premium workspace.{% endtrans %}
+						</p>
+					</div>
+
+					<div class="fs-qr-hero__actions">
+						<a href="{{ path('report_defineUnrankedCoefficient') }}" class="fs-qr-btn fs-qr-btn--light">
+							<i class="fe fe-activity"></i>
+							<span>{% trans %}Update limits coefficients{% endtrans %}</span>
+						</a>
+
+						<div class="fs-qr-hero-stat">
+							<span class="fs-qr-hero-stat__icon">
+								<i class="fe fe-shield"></i>
+							</span>
+							<span class="fs-qr-hero-stat__label">{% trans %}Secure{% endtrans %}</span>
+							<strong class="fs-qr-hero-stat__value">{% trans %}QR{% endtrans %}</strong>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="fs-qr-grid">
+				<div class="fs-qr-card">
+					<div class="fs-qr-card__header">
+						<div>
+							<span class="fs-qr-chip">
+								<i class="fe fe-filter"></i>
+								{% trans %}Classroom selection{% endtrans %}
+							</span>
+
+							<h2>{% trans %}Choose a class{% endtrans %}</h2>
+
+							<p>
+								{% trans %}Select the classroom for which you want to generate student QR codes.{% endtrans %}
+							</p>
+						</div>
+					</div>
+
+					<form action="{{ path('generation_qr_code') }}" method="post" class="fs-qr-form needs-validation" novalidate>
+						<div class="fs-floating-field fs-required-field">
+							<select class="form-control select2-show-search fs-floating-control" data-placeholder="" name="classroomId" id="classroom" required>
+								<option value="" label="">
+									{% trans %}Choose a class{% endtrans %}
+								</option>
+
+								{% if subSystem == 'Francophone / French Speaker' %}
+									{% if school.education.education == 'Général' %}
+										{% include "includes/_selectClassrooms.html.twig" %}
+									{% else %}
+										{% include "includes/_selectClassroomsTech.html.twig" %}
+									{% endif %}
+								{% else %}
+									{% include "includes/_selectClassroomsEn.html.twig" %}
+								{% endif %}
+							</select>
+
+							<label class="fs-floating-label" for="classroom">
+								<i class="fe fe-home"></i>
+								{% trans %}Classroom{% endtrans %}
+							</label>
+
+							<div class="invalid-feedback">
+								{% trans %}Please choose a classroom !{% endtrans %}
+							</div>
+						</div>
+
+						<div class="fs-qr-form__actions">
+							<button class="fs-qr-btn fs-qr-btn--primary fs-qr-submit-btn" type="submit" name="displayStudents">
+								<span class="fs-qr-submit-spinner" aria-hidden="true"></span>
+								<i class="fa fa-qrcode fs-qr-submit-icon"></i>
+								<span>{% trans %}Generate{% endtrans %}</span>
+							</button>
+						</div>
+					</form>
+				</div>
+
+				<aside class="fs-qr-preview-card">
+					<div class="fs-qr-preview-card__visual">
+						<div class="fs-qr-preview">
+							<span></span>
+							<span></span>
+							<span></span>
+							<span></span>
+							<span></span>
+							<span></span>
+							<span></span>
+							<span></span>
+							<span></span>
+						</div>
+					</div>
+
+					<div class="fs-qr-preview-card__content">
+						<span class="fs-qr-chip fs-qr-chip--soft">
+							<i class="fa fa-qrcode"></i>
+							{% trans %}Fast generation{% endtrans %}
+						</span>
+
+						<h3>{% trans %}Ready to generate{% endtrans %}</h3>
+
+						<p>
+							{% trans %}Once the classroom is selected, the system will generate QR codes using your existing route and controller logic.{% endtrans %}
+						</p>
+
+						<div class="fs-qr-benefits">
+							<div class="fs-qr-benefit">
+								<i class="fe fe-check-circle"></i>
+								<span>{% trans %}Existing includes preserved{% endtrans %}</span>
+							</div>
+
+							<div class="fs-qr-benefit">
+								<i class="fe fe-check-circle"></i>
+								<span>{% trans %}Responsive interface{% endtrans %}</span>
+							</div>
+
+							<div class="fs-qr-benefit">
+								<i class="fe fe-check-circle"></i>
+								<span>{% trans %}No controller change required{% endtrans %}</span>
+							</div>
+						</div>
+					</div>
+				</aside>
+			</section>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-generate-qr-code-premium.js') }}"></script>
 {% endblock %}

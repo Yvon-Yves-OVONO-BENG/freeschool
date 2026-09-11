@@ -12,11 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/register_and_list")]
 class PrintMarkReportLessonController extends AbstractController
 {
@@ -57,7 +53,12 @@ class PrintMarkReportLessonController extends AbstractController
 
         if ($slugTeacher != null) 
         {
-            $teachers[] = $this->teacherRepository->findOneBySlug(['slug' => $slugTeacher]);
+            $teachers[] = $this->teacherRepository->findOneBy(['slug' => $slugTeacher]);
+
+            if (!$teachers) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
         }
 		elseif($teacherId != 0)
 		{

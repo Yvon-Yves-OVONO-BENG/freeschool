@@ -11,14 +11,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
-/**
- * @Route("/transcripts")
- */
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
+#[Route('/transcripts')]
 class MyTranscriptsController extends AbstractController
 {
     public function __construct(
@@ -51,8 +45,13 @@ class MyTranscriptsController extends AbstractController
         
         $school = $this->schoolRepository->findOneBySchoolYear(['schoolYear' => $schoolYear]);
 
-        $teacher = $this->teacherRepository->findOneBySlug(['slug' => $slug]);
+        $teacher = $this->teacherRepository->findOneBy(['slug' => $slug]);
 
+        if (!$teacher) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
+        
         // on recupère tous les cours de l'enseignant
         $lessons = $this->lessonRepository->findTeacherLessons($teacher);
 

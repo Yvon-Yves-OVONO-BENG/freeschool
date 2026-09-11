@@ -3,84 +3,174 @@
 {% block title %}{% trans %}Deliberation List{% endtrans %}{% endblock %}
 
 {% block subTitle %}
-    {% trans %}MANAGEMENT OF LISTS AFTER DELIBERATION{% endtrans %}
+	{% trans %}MANAGEMENT OF LISTS AFTER DELIBERATION{% endtrans %}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-deliberation-list-premium.css') }}">
 {% endblock %}
 
 {% block body %}
-    <!-- App-Content -->
-	<div class="hor-content main-content">
+	<div class="hor-content main-content fs-delib-list-page">
 		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary"></h4>
-                </div>
-                <div class="page-rightheader">
-                    <div class="btn-list">
-                        
-                    </div>
-                </div>
-            </div>
-            <!--End Page header-->
+			<div class="fs-delib-list-menu-safe-space" aria-hidden="true"></div>
 
-            <div class="card border-primary">
-                <div class="card-header">
-                    <span class="page-title mb-0 text-primary"><i class="fa fa-file-pdf-o me-2"></i> {% trans %}List of deliberations{% endtrans %}</span>
-                
-                </div>
-                <div class="card-body pt-5 ">
-                    <form action="{{ path('deliberation_printDeliberationList') }}" method="post" target="_blank" >
-                        <div class="row">
-                            <div class="col-md-2"></div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <select name="classroom" id="classroom" class="form-control select2-show-search"  data-placeholder="Choose a classroom" required style="border: 1px solid #0f0;">
-                                        <option value="" label="Choose a classroom">
-                                            {% trans %}Choose a classroom{% endtrans %}
-                                        </option>
+			<section class="fs-delib-list-hero">
+				<div class="fs-delib-list-hero__content">
+					<div>
+						<span class="fs-delib-list-eyebrow">
+							<i class="fa fa-file-pdf-o"></i>
+							{% trans %}Deliberation workspace{% endtrans %}
+						</span>
 
-                                        {% if is_granted('ROLE_PROVISEUR') or is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') %}
-                                        <option value="0">{% trans %}All Classes{% endtrans %}</option>
-                                        {% endif %}
+						<h1 class="fs-delib-list-title">
+							{% trans %}List of deliberations{% endtrans %}
+						</h1>
 
-                                        {% if subSystem == 'Francophone / French Speaker' %}
-                                            {% if school.education.education == 'Général' %}
-                                                {% include "includes/_selectClassroomsWithoutSelected.html.twig" %}
-                                                {% else %}
-                                                    {% include "includes/_selectClassroomsWithoutSelectedTech.html.twig" %}
-                                            {% endif %}
-                                            {% else %}
-                                                {% include "includes/_selectClassroomsWithoutSelectedEn.html.twig" %}
-                                        {% endif %}
+						<p class="fs-delib-list-subtitle">
+							{% trans %}Generate and print deliberation lists by classroom and decision through a clean, refined and responsive premium workspace.{% endtrans %}
+						</p>
+					</div>
 
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                    <div class="form-group">
-                                    <select name="decision" id="decision" class="form-control select2 custom-select" required>
-                                        <option value="" label="Choose a type">{% trans %}-- Choose decision --{% endtrans %}</option>
-                                        {# <option>{% trans %}-- Choose decision --{% endtrans %}</option> #}
-                                        {% for decision in decisions %}
-                                            <option value="{{ decision.id }}">{{ decision.decision }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printDeliberationList">
-                                        <i class="fa fa-print"></i>
-                                        {% trans %}Print{% endtrans %}</button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+					<div class="fs-delib-list-hero__actions">
+						<div class="fs-delib-list-hero-stat">
+							<span class="fs-delib-list-hero-stat__icon">
+								<i class="fe fe-check-circle"></i>
+							</span>
+							<span class="fs-delib-list-hero-stat__label">{% trans %}Decisions{% endtrans %}</span>
+							<strong class="fs-delib-list-hero-stat__value">{{ decisions|length }}</strong>
+						</div>
+
+						<div class="fs-delib-list-hero-stat fs-delib-list-hero-stat--soft">
+							<span class="fs-delib-list-hero-stat__icon">
+								<i class="fe fe-printer"></i>
+							</span>
+							<span class="fs-delib-list-hero-stat__label">{% trans %}Output{% endtrans %}</span>
+							<strong class="fs-delib-list-hero-stat__value">{% trans %}PDF{% endtrans %}</strong>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="fs-delib-list-card">
+				<div class="fs-delib-list-card__header">
+					<div>
+						<span class="fs-delib-list-chip">
+							<i class="fe fe-filter"></i>
+							{% trans %}Printing filters{% endtrans %}
+						</span>
+
+						<h2>{% trans %}Choose classroom and decision{% endtrans %}</h2>
+
+						<p>
+							{% trans %}Select the classroom and the deliberation decision to print the corresponding list in a new tab.{% endtrans %}
+						</p>
+					</div>
+
+					<span class="fs-delib-list-card__icon">
+						<i class="fa fa-file-pdf-o"></i>
+					</span>
+				</div>
+
+				<form action="{{ path('deliberation_printDeliberationList') }}" method="post" target="_blank" class="fs-delib-list-form needs-validation" novalidate data-no-spinner="1">
+					<div class="fs-floating-field fs-required-field">
+						<select name="classroom" id="classroom" class="form-control select2-show-search fs-floating-control" data-placeholder="" required>
+							<option value="" label="">
+								
+							</option>
+
+							{% if is_granted('ROLE_PROVISEUR') or is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') %}
+								<option value="0">{% trans %}All Classs{% endtrans %}</option>
+							{% endif %}
+
+							{% if subSystem == 'Francophone / French Speaker' %}
+								{% if school.education.education == 'Général' %}
+									{% include "includes/_selectClassroomsWithoutSelected.html.twig" %}
+								{% else %}
+									{% include "includes/_selectClassroomsWithoutSelectedTech.html.twig" %}
+								{% endif %}
+							{% else %}
+								{% include "includes/_selectClassroomsWithoutSelectedEn.html.twig" %}
+							{% endif %}
+						</select>
+
+						<label class="fs-floating-label" for="classroom">
+							<i class="fe fe-home"></i>
+							{% trans %}Classroom{% endtrans %}
+						</label>
+
+						<div class="invalid-feedback">
+							{% trans %}Please choose a classroom !{% endtrans %}
+						</div>
+					</div>
+
+					<div class="fs-floating-field fs-required-field">
+						<select name="decision" id="decision" class="form-control select2 custom-select fs-floating-control" data-placeholder="" required>
+							<option value="" label="{% trans %}Choose a type{% endtrans %}">
+								{% trans %}-- Choose decision --{% endtrans %}
+							</option>
+
+							{% for decision in decisions %}
+								<option value="{{ decision.id }}">{{ decision.decision }}</option>
+							{% endfor %}
+						</select>
+
+						<label class="fs-floating-label" for="decision">
+							<i class="fe fe-check-circle"></i>
+							{% trans %}Decision{% endtrans %}
+						</label>
+
+						<div class="invalid-feedback">
+							{% trans %}Please choose a decision !{% endtrans %}
+						</div>
+					</div>
+
+					<div class="fs-delib-list-form__actions">
+						<button class="fs-delib-list-btn fs-delib-list-btn--primary fs-delib-list-submit-btn" type="submit" name="printDeliberationList">
+							<i class="fa fa-print fs-delib-list-submit-icon"></i>
+							<span>{% trans %}Print{% endtrans %}</span>
+						</button>
+					</div>
+				</form>
+			</section>
+
+			<section class="fs-delib-list-info-grid">
+				<div class="fs-delib-list-info-card">
+					<span class="fs-delib-list-info-card__icon">
+						<i class="fe fe-shield"></i>
+					</span>
+					<div>
+						<span>{% trans %}Role-based access{% endtrans %}</span>
+						<strong>{% trans %}All Classs option is preserved for authorized roles.{% endtrans %}</strong>
+					</div>
+				</div>
+
+				<div class="fs-delib-list-info-card">
+					<span class="fs-delib-list-info-card__icon fs-delib-list-info-card__icon--cyan">
+						<i class="fe fe-layers"></i>
+					</span>
+					<div>
+						<span>{% trans %}Subsystem support{% endtrans %}</span>
+						<strong>{% trans %}French, technical and English classroom includes are preserved.{% endtrans %}</strong>
+					</div>
+				</div>
+
+				<div class="fs-delib-list-info-card">
+					<span class="fs-delib-list-info-card__icon fs-delib-list-info-card__icon--gold">
+						<i class="fe fe-printer"></i>
+					</span>
+					<div>
+						<span>{% trans %}Print output{% endtrans %}</span>
+						<strong>{% trans %}The form still opens the generated list in a new tab.{% endtrans %}</strong>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
 {% endblock %}
 
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-deliberation-list-premium.js') }}"></script>
+{% endblock %}

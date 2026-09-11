@@ -17,69 +17,338 @@
 {% endblock %}
 
 {% block stylesheets %}
-    <style>
-        input{
-            background-color: rgba(62, 128, 235, 0.2) !important;
-            color: #3e80eb !important;
-        }
-        th{
-            text-align: center !important;
-            font-weight : bold !important;
-            background-color: rgba(200,200, 200, 0.2) !important;
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-mark-recorder-premium-clean.css') }}?v=20260724-3">
+
+    <style id="fs-mobile-mark-recorder-final-fix">
+        .fs-mark-edit-label {
+            display: none;
         }
 
-        th,
-		tfoot {
-			font-size: 15px !important;
-			text-align: center !important;
-			font-weight: bold !important;
-			background-color: #F1F1F1 !important;
-		}
+        @media (max-width: 767.98px) {
+            .fs-mark-page .dataTables_wrapper,
+            .fs-mark-page .dataTables_scroll,
+            .fs-mark-page .dataTables_scrollBody,
+            .fs-mark-page .col-md-12 {
+                width: 100% !important;
+                max-width: 100% !important;
+                overflow: visible !important;
+            }
 
-		tr:hover {
-			background-color: rgba(62, 128, 235, 0.2) !important;
-			color: #3e80eb !important;
-		}
+            .fs-mark-page .fs-existing-marks-table,
+            .fs-mark-page .fs-existing-marks-table tbody,
+            .fs-mark-page .fs-new-marks-table,
+            .fs-mark-page .fs-new-marks-table tbody {
+                display: block !important;
+                width: 100% !important;
+                min-width: 0 !important;
+                max-width: 100% !important;
+                overflow: visible !important;
+                white-space: normal !important;
+            }
 
-        td {
-			font-size: 12px !important;
-			text-align: center !important;
-		}
+            .fs-mark-page .fs-existing-marks-table thead,
+            .fs-mark-page .fs-existing-marks-table tfoot,
+            .fs-mark-page .fs-new-marks-table thead,
+            .fs-mark-page .fs-new-marks-table tfoot {
+                display: none !important;
+            }
 
-        .intitule {
-            font-weight: bold !important;
-            background-color: rgba(200, 200, 200) !important;
+            .fs-mark-page .fs-existing-marks-table tbody tr {
+                display: grid !important;
+                grid-template-columns: 34px minmax(0, 1fr) 68px !important;
+                grid-template-areas:
+                    "number fullname mark"
+                    "action action action" !important;
+                align-items: center !important;
+                gap: 10px !important;
+                width: 100% !important;
+                min-width: 0 !important;
+                max-width: 100% !important;
+                margin: 0 0 11px !important;
+                padding: 12px !important;
+                border: 1px solid #dfe7f2 !important;
+                border-radius: 14px !important;
+                background: #fff !important;
+                box-shadow: 0 5px 16px rgba(30, 49, 84, .07) !important;
+                overflow: visible !important;
+                box-sizing: border-box !important;
+            }
+
+            .fs-mark-page .fs-existing-marks-table tbody tr > td,
+            .fs-mark-page .fs-new-marks-table tbody tr > td {
+                width: auto !important;
+                min-width: 0 !important;
+                max-width: none !important;
+                height: auto !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                border: 0 !important;
+                background: transparent !important;
+                white-space: normal !important;
+                box-sizing: border-box !important;
+            }
+
+            .fs-mark-page .fs-mark-col-index {
+                grid-area: number !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                white-space: nowrap !important;
+                word-break: keep-all !important;
+                overflow-wrap: normal !important;
+                font-size: 12px !important;
+                color: #64748b !important;
+            }
+
+            .fs-mark-page .fs-mark-col-name {
+                grid-area: fullname !important;
+                display: block !important;
+                min-width: 0 !important;
+                white-space: normal !important;
+                word-break: normal !important;
+                overflow-wrap: break-word !important;
+                hyphens: none !important;
+                line-height: 1.25 !important;
+                font-size: 12px !important;
+                font-weight: 800 !important;
+                color: #10213d !important;
+            }
+
+            .fs-mark-page .fs-mark-col-sex,
+            .fs-mark-page .fs-mark-col-audit,
+            .fs-mark-page .fs-mark-col-hidden {
+                display: none !important;
+            }
+
+            .fs-mark-page .fs-mark-col-note {
+                grid-area: mark !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+
+            .fs-mark-page .fs-mark-col-note .form-control {
+                display: block !important;
+                width: 62px !important;
+                min-width: 62px !important;
+                max-width: 62px !important;
+                height: 44px !important;
+                margin: 0 !important;
+                padding: 6px !important;
+                border: 1px solid #d6e0ed !important;
+                border-radius: 12px !important;
+                text-align: center !important;
+                font-size: 15px !important;
+                font-weight: 900 !important;
+                line-height: 1 !important;
+                color: #0f1f38 !important;
+                background: #fff !important;
+                box-shadow: none !important;
+            }
+
+            .fs-mark-page .fs-mark-col-action {
+                grid-area: action !important;
+                display: flex !important;
+                width: 100% !important;
+                min-width: 0 !important;
+                max-width: 100% !important;
+                align-items: center !important;
+                justify-content: stretch !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                overflow: visible !important;
+                position: static !important;
+                transform: none !important;
+            }
+
+            .fs-mark-page .fs-mark-col-action form {
+                display: block !important;
+                width: 100% !important;
+                margin: 0 !important;
+            }
+
+            .fs-mark-page .fs-mark-edit-button {
+                display: inline-flex !important;
+                width: 100% !important;
+                min-width: 0 !important;
+                min-height: 42px !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 7px !important;
+                margin: 0 !important;
+                padding: 10px 14px !important;
+                border: 1px solid #4f46e5 !important;
+                border-radius: 11px !important;
+                background: #4f46e5 !important;
+                color: #fff !important;
+                font-size: 12px !important;
+                font-weight: 800 !important;
+                line-height: 1 !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: static !important;
+                transform: none !important;
+                z-index: 20 !important;
+            }
+
+            .fs-mark-page .fs-mark-edit-button i,
+            .fs-mark-page .fs-mark-edit-label {
+                display: inline-block !important;
+                color: inherit !important;
+            }
+
+            .fs-mark-page .fs-new-marks-table tbody tr {
+                display: grid !important;
+                grid-template-columns: 34px minmax(0, 1fr) 72px !important;
+                grid-template-areas: "number fullname mark" !important;
+                align-items: center !important;
+                gap: 10px !important;
+                width: 100% !important;
+                min-width: 0 !important;
+                max-width: 100% !important;
+                margin: 0 0 11px !important;
+                padding: 12px !important;
+                border: 1px solid #dfe7f2 !important;
+                border-radius: 14px !important;
+                background: #fff !important;
+                box-shadow: 0 5px 16px rgba(30, 49, 84, .07) !important;
+                box-sizing: border-box !important;
+            }
+
+            .fs-mark-page .fs-single-mark-update-form .row {
+                display: grid !important;
+                grid-template-columns: minmax(0, 1fr) 78px !important;
+                gap: 10px !important;
+                align-items: center !important;
+                margin: 16px 0 !important;
+            }
+
+            .fs-mark-page .fs-single-mark-update-form .row > div {
+                width: auto !important;
+                max-width: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                text-align: left !important;
+            }
+
+            .fs-mark-page .fs-single-mark-update-form .row > div:nth-child(3) {
+                grid-column: 1 / -1 !important;
+            }
+
+            .fs-mark-page .fs-single-mark-update-form input[name="mark"] {
+                width: 100% !important;
+                height: 44px !important;
+                text-align: center !important;
+                font-weight: 900 !important;
+            }
+
+            .fs-mark-page .fs-single-mark-update-form button[name="updateMark"] {
+                width: 100% !important;
+                min-height: 44px !important;
+            }
         }
     </style>
+
 {% endblock %}
 
 
 {% block body %}
   <!-- App-Content -->
-	<div class="hor-content main-content">
+	<div class="hor-content main-content fs-mark-page mt-5">
 		<div class="container">
         
             <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary"><i class="fe fe-edit me-2"></i> {% trans %}Mark recorder{% endtrans %} - {{ teacher.fullName }}</h4>
-                </div>
-                <div class="page-rightheader">
-                    <div class="btn-list">
-                        
+            {# <div class="fs-mark-hero mt-5">
+                <div class="fs-mark-hero-content">
+                    <div class="fs-mark-title">
+                        <div class="fs-mark-title-icon">
+                            <i class="fe fe-edit-3"></i>
+                        </div>
+
+                        <div>
+                            <h4>{% trans %}Mark recorder{% endtrans %}</h4>
+                            <p>
+                                {{ teacher.fullName }}
+                                {% if selectedLesson is defined %}
+                                    · {{ selectedLesson.subject.subject }} — {{ selectedLesson.classroom.classroom }}
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="fs-mark-context">
+                        {% if selectedSequence is defined %}
+                            <span class="fs-mark-pill">
+                                <i class="fa fa-calendar-check-o"></i>
+                                {% trans %}Evaluation{% endtrans %} {{ selectedSequence.sequence }}
+                            </span>
+                        {% endif %}
+
+                        {% if selectedLesson is defined %}
+                            <span class="fs-mark-pill">
+                                <i class="fa fa-book"></i>
+                                {{ selectedLesson.classroom.classroom }}
+                            </span>
+                        {% endif %}
+
+                        <span class="fs-mark-pill">
+                            <i class="fe fe-user"></i>
+                            {{ teacher.fullName }}
+                        </span>
                     </div>
                 </div>
-            </div>
+            </div> #}
             <!--End Page header-->
-            <div class="card border-primary">
-                <div class="card-header pt-5">
+
+            {# IMPORTATION #}
+            {# <div class="card border-primary">
+                <div class="card-header">
+                    <form action="{{ path('export_student', {'parametre': 'notes' }) }}" method="post" class="row g-3 needs-validation" novalidate>
+                        
+                        <div class="col-md-8">
+                            <div class="form-group" >
+                                <select name="slugClassroom" id="exportClassroom" class="form-control select2 custom-select" data-placeholder="Choisir un cours" required>
+                                    <option label="Choisir un cours"></option>
+                                        {% for lesson in lessons %}
+                                            <option value="{{ lesson.classroom.slug }}"
+                                            {% if selectedLesson is defined %}
+                                                {% if selectedLesson.id == lesson.id %}
+                                                    selected
+                                                {% endif %}
+                                            {% endif %}
+                                            >
+                                                {{lesson.classroom.classroom}}
+                                            </option>
+                                        {% endfor %}
+                                </select>
+                                <div class="invalid-feedback">
+                                    {% trans %}Please choose class{% endtrans %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <button class="btn btn-outline-primary btn-medium br-10" type="submit" name="studentsList">
+                                    {% trans %}Export students to import grades{% endtrans %}
+                                </button>
+                            </div>
+                        </div>
+                       
+                    </form>
+                </div>
+                <div class="card-body pt-5">
                     <div class="col-md-12">
-                        <form action="{{ path('evaluation_markRecorder', {'slugTeacher': teacher.slug}) }}" method="post">
+                        <form action="{{ path('import_note', {'slugTeacher': teacher.slug}) }}" method="post" enctype="multipart/form-data" class="row g-3 needs-validation" novalidate>
                             <div class="row">
                                 <div class="col-md-2">
                                     <div class="form-group">
-                                        <select name="sequence" id="sequence" class="form-control select2 custom-select" data-placeholder="Choisir une période" required="required">
-                                            <option label="Choisir une période"></option>
+                                        <label for="">
+                                            <i class="fa fa-calendar-check-o me-2"></i>
+                                            {% trans %}Choose period{% endtrans %}
+                                        </label>
+                                        <select name="sequence" id="importSequence" class="form-control select2 custom-select" data-placeholder="Choose period" required>
+                                            <option label="Choose period"></option>
                                             {% for sequence in sequences %}
                                                 <option value="{{ sequence.id }}" 
                                                 {% if selectedSequence is defined %}
@@ -92,11 +361,18 @@
                                                 </option>
                                             {% endfor %}
                                         </select>
+                                        <div class="invalid-feedback">
+											{% trans %}Please choose period.{% endtrans %}
+										</div>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group" >
-                                        <select name="lesson" id="lesson" class="form-control select2 custom-select" data-placeholder="Choisir un cours" required="required">
+                                        <label for="">
+                                            <i class="fa fa-book me-2"></i>
+                                            {% trans %}Choose lesson{% endtrans %}
+                                        </label>
+                                        <select name="lesson" id="importLesson" class="form-control select2 custom-select" data-placeholder="Choisir un cours" required>
                                             <option label="Choisir un cours"></option>
                                                 {% for lesson in lessons %}
                                                     <option value="{{lesson.id}}"
@@ -110,10 +386,93 @@
                                                     </option>
                                                 {% endfor %}
                                         </select>
+                                        <div class="invalid-feedback">
+											{% trans %}Please choose lesson.{% endtrans %}
+										</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 position-relative">
+                                    <label for="">
+                                        <i class="fa fa-file-excel-o me-2"></i>
+                                        {% trans %}Load excel file{% endtrans %}
+                                    </label>
+                                    <input type="file" class="form-control" id="excel_file" name="excelfile" required>
+                                    <div class="invalid-feedback">
+                                        {% trans %}Please choose a file.{% endtrans %}
                                     </div>
                                 </div>
                                 <div class="col-md-2">
+                                    <div class="form-group mt-5">
+                                        <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="importNotes">
+                                            <i class="fa fa-upload me-2"></i>
+                                            {% trans %}Import{% endtrans %}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div> #}
+
+            <div class="fs-mark-hero">
+                {# <div class="card-header pt-5"> #}
+                    <div class="col-md-12">
+                        <form action="{{ path('evaluation_markRecorder', {'slugTeacher': teacher.slug}) }}" method="post" class="row g-3 needs-validation" novalidate>
+                            <div class="row">
+                                <div class="col-md-2">
                                     <div class="form-group">
+                                        <label for="">
+                                            {# <i class="fa fa-calendar-check-o me-2"></i> #}
+                                            {# {% trans %}Choose period{% endtrans %} #}
+                                        </label>
+                                        <select name="sequence" id="displaySequence" class="form-control select2 custom-select" data-placeholder="{% trans %}Choose a period{% endtrans %}" required="required">
+                                        <option label="{% trans %}Choose a period{% endtrans %}"></option>
+                                            {% for sequence in sequences %}
+                                                <option value="{{ sequence.id }}" 
+                                                    {% if selectedSequence is defined %}
+                                                        {% if selectedSequence.id == sequence.id %}
+                                                            selected
+                                                        {% endif %}
+                                                    {% endif %}
+                                                >
+                                                {% trans %}Evaluation{% endtrans %} {{sequence.sequence}}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                        <div class="invalid-feedback">
+											{% trans %}Please choose period.{% endtrans %}
+										</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group" >
+                                        <label for="">
+                                            {# <i class="fa fa-book me-2"></i> #}
+                                            {# {% trans %}Choose lesson{% endtrans %} #}
+                                        </label>
+                                        <select name="lesson" id="displayLesson" class="form-control select2 custom-select" data-placeholder="{% trans %}Choose a course{% endtrans %}" required="required">
+                                        <option label="{% trans %}Choose a course{% endtrans %}"></option>
+                                                {% for lesson in lessons %}
+                                                    <option value="{{lesson.id}}"
+                                                    {% if selectedLesson is defined %}
+                                                        {% if selectedLesson.id == lesson.id %}
+                                                            selected
+                                                        {% endif %}
+                                                    {% endif %}
+                                                    >
+                                                        {{lesson.subject.subject}} --- {{lesson.classroom.classroom}}
+                                                    </option>
+                                                {% endfor %}
+                                        </select>
+                                        <div class="invalid-feedback">
+											{% trans %}Please choose lesson.{% endtrans %}
+										</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group mt-5">
                                         <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="displayMarkRecorder">
                                             <i class="fa fa-eye me-2"></i>
                                             {% trans %}Display{% endtrans %}
@@ -124,34 +483,24 @@
                                 {% if selectedSequence is defined %}
                                     {% if not is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') %}
                                         {% if evaluations|length == 0  and evaluationToUpdate == null and skillToUpdate == null %}
-                                            {# Si les notes sont déjà saisies #}
+                                            <div class="col-md-3 text-right mt-5">
+                                                <input type="hidden" name="numberOfStudents" value="{{ students|length }}">
+
+                                                <button type="submit"
+                                                        class="btn btn-outline-danger btn-medium w-100 br-7"
+                                                        name="saveNotEvaluatedMark"
+                                                        onclick="return confirm('{% trans %}Do you want to mark this evaluation as not assessed ?{% endtrans %}')">
+                                                    <i class="si si-close"></i> {% trans %}Not assessed{% endtrans %}
+                                                </button>
+                                            </div>
+                                            {# Si les notes sont dÃ©jÃ  saisies #}
                                             {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
-                                                {# Si le verrou n'est pas activé #}
-                                            
-                                                <div class="col-md-2 text-right">
-                                                    <form action="{{ path('evaluation_markRecorder', {'slugTeacher': teacher.slug}) }}" method="POST" onreset="return confirm('{% trans %}Do you want to reset all typed marks ?{% endtrans %}')">  
-                                                        <input type="hidden" name="numberOfStudents" value="{{ students|length }}">
-
-                                                        <input type="hidden" name="sequence" value="{{ selectedSequence.id }}">
-
-                                                        <input type="hidden" name="lesson" value="{{ selectedLesson.id }}">
-
-                                                        <button type="submit" class="btn btn-outline-danger btn-medium w-100 br-7" name="saveNotEvaluatedMark">
-                                                            <i class="si si-close"></i> {% trans %}Not assessed{% endtrans %}
-                                                        </button>
-                                                    </form>
-                                                </div>
-
-                                                <div class="col-md-2">
-                                                    <button type="button" class="btn btn-primary mb-1 me-3">
-                                                        <span>{% trans %}Effective{% endtrans %}</span>
-                                                        <span class="badge bg-white text-dark rounded-pill">{{ students|length }}</span>
-                                                    </button>
-                                                </div>
+                                                {# Si le verrou n'est pas activÃ© #}
                                                 
                                             {% endif %}
+
                                             {% else %}
-                                            <div class="col-md-4" style="vertical-align:middle;">
+                                            <div class="col-md-4 mt-5" style="vertical-align:middle;">
 
                                                 <a class="btn btn-outline-danger btn-medium w-100 br-7" href="javascript:void(0);" 
                                                     onclick="swal({
@@ -177,14 +526,15 @@
                             </div>
                         </form>
                     </div>
-                </div>
+                {# </div> #}
             </div>
+
             {% if selectedSequence is defined %}
                 {% if not is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') %}
                     {% if evaluations|length > 0  and evaluationToUpdate == null and skillToUpdate == null %}
-                        {# Si les notes sont déjà saisies #}
+                        {# Si les notes sont dÃ©jÃ  saisies #}
                         {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
-                            {# Si le verrou n'est pas activé #}
+                            {# Si le verrou n'est pas activÃ© #}
                             <div class="card border-primary">
                                 <div class="card-body pt-5 text-center">
                                     <div class="row">
@@ -212,7 +562,7 @@
                                                         </button>
                                                     </div>
                                                     <div class="col-md-3">
-                                                        <select name="newSequence" id="sequence" class="form-control select2 custom-select" required="required">
+                                                        <select name="newSequence" id="renewSequence" class="form-control select2 custom-select" required="required">
                                                             <option value="">{% trans %}Choose{% endtrans %}</option>
 
                                                             {% for sequence in sequences %}
@@ -247,10 +597,10 @@
                     <div class="card-body">
                         {% if selectedSequence is defined %}
                             {% if students|length > 0 %}
-                                {# affichage de la liste des elèves #}
+                                {# affichage de la liste des elÃ¨ves #}
                                 {% if evaluationToUpdate == null and skillToUpdate == null %}
                                     {% if evaluations|length > 0 %}
-                                        {# affichage de la liste des elèves si les notes existent déjà #}
+                                        {# affichage de la liste des elÃ¨ves si les notes existent dÃ©jÃ  #}
                                         {% set filles = 0 %}
                                         {% set garcons = 0 %}
 
@@ -261,131 +611,107 @@
                                                 {% set garcons = garcons + 1 %}
                                             {% endif %}
                                         {% endfor %}
-                                         <table border="1" class="table table-bordered text-nowrap key-buttons" id="example" width="100%" cellspacing="0">
-                                            <thead>
-                                                <tr>
-                                                    <td class="intitule"></td>
-                                                    <td class="intitule">{% trans %}Smaller note{% endtrans %}</td>
-                                                    <td class="intitule">{% trans %}Highest note{% endtrans %}</td>
-                                                    <td class="intitule">{% trans %}Number of sub-average{% endtrans %}</td>
-                                                    <td class="intitule">{% trans %}Number of average{% endtrans %}</td>
-                                                    <td class="intitule">{% trans %}Effective{% endtrans %}</td>
-                                                    <td class="intitule">{% trans %}Classified{% endtrans %}</td>
-                                                    <td class="intitule">{% trans %}Success rate{% endtrans %}</td>
-                                                </tr>
-                                            </thead>
-                                            {% if (nombreSousMoyenneFille + nombreMoyenneFille != 0) or (nombreSousMoyenneGarcon + nombreMoyenneGarcon != 0) %}
-                                                <tbody>
-                                                    <tr>
-                                                        <td class="intitule">1.{% trans %}Girls{% endtrans %}</td>
-                                                        <td>{{ noteMinMax['minMarkGirls'] }}</td>
-                                                        <td>{{ noteMinMax['maxMarkGirls'] }}</td>
-                                                        <td>{{ nombreSousMoyenneFille }}</td>
-                                                        <td>{{ nombreMoyenneFille }}</td>
-                                                        <td>{{ filles }}</td>
-                                                        <td>{{ nombreSousMoyenneFille + nombreMoyenneFille }}</td>
-                                                        
-                                                        <td class="intitule">
-                                                            {% if (nombreSousMoyenneFille + nombreMoyenneFille) == 0 %}
-                                                                // <br>
-                                                                {% else %}
-                                                                {{ ((nombreMoyenneFille / (nombreSousMoyenneFille + nombreMoyenneFille)) * 100)|number_format(2, ',', '')   }} % <br>
-                                                                {% set pourcentage = ((nombreMoyenneFille / (nombreSousMoyenneFille + nombreMoyenneFille)) * 100)|number_format(2, ',', '') %}
-                                                            
-                                                                {# {% include "includes/_pourcentage.html.twig" %} #}
-                                                            {% endif %}
-                                                            
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="intitule">2. {% trans %}Boys{% endtrans %}</td>
-                                                        <td>{{ noteMinMax['minMarkBoys'] }}</td>
-                                                        <td>{{ noteMinMax['maxMarkBoys'] }}</td>
-                                                        <td>{{ nombreSousMoyenneGarcon }}</td>
-                                                        <td>{{ nombreMoyenneGarcon }}</td>
-                                                        <td>{{ garcons }}</td>
-                                                        <td>{{ nombreSousMoyenneGarcon + nombreMoyenneGarcon }}</td>
-                                                        <td class="intitule">
-                                                            {% if (nombreSousMoyenneGarcon + nombreMoyenneGarcon) == 0 %}
-                                                                //
-                                                                {% else %}
-                                                                {{ ((nombreMoyenneGarcon / (nombreSousMoyenneGarcon + nombreMoyenneGarcon)) * 100)|number_format(2, ',', '')}} % <br>
-                                                                {% set pourcentage = ((nombreMoyenneGarcon / (nombreSousMoyenneGarcon + nombreMoyenneGarcon)) * 100)|number_format(2, ',', '') %}
-                                                                {# {% include "includes/_pourcentage.html.twig" %} #}
-                                                            {% endif %}
-                                                            
+                                         
+                                        {# ============================================================
+   CALCULS SÉCURISÉS POUR LES GRAPHIQUES
+   ============================================================ #}
 
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="intitule">3. {% trans %}Classroom{% endtrans %}</td>
-                                                        {% if noteMinMax['minMarkBoys'] < noteMinMax['minMarkGirls'] %}
-                                                            <td class="intitule">{{ noteMinMax['minMarkBoys'] }}</td>
-                                                            {% else %}
-                                                            <td class="intitule">{{ noteMinMax['minMarkGirls'] }}</td>
-                                                        {% endif %}
+{% set sousMoyenneFilles = nombreSousMoyenneFille|default(0) %}
+{% set moyenneFilles = nombreMoyenneFille|default(0) %}
 
-                                                        <td class="intitule">{{ noteMinMax['maxMarkClass'] }}</td>
-                                                        <td class="intitule">{{ nombreSousMoyenneFille + nombreSousMoyenneGarcon }}</td>
-                                                        <td class="intitule">{{ nombreMoyenneFille + nombreMoyenneGarcon }}</td>
-                                                        <td class="intitule">{{ filles + garcons }}</td>
-                                                        <td class="intitule">{{ nombreSousMoyenneFille + nombreSousMoyenneGarcon + nombreMoyenneFille + nombreMoyenneGarcon  }}</td>
-                                                        
-                                                        <td class="intitule">
-                                                            {% if (nombreSousMoyenneFille + nombreMoyenneFille + nombreSousMoyenneGarcon + nombreMoyenneGarcon) == 0 %}
-                                                                //
-                                                                {% else %}
-                                                                {{ (((nombreMoyenneFille + nombreMoyenneGarcon) / (nombreSousMoyenneFille + nombreMoyenneFille + nombreSousMoyenneGarcon + nombreMoyenneGarcon)) * 100)|number_format(2, ',', '') }} % <br>
-                                                                {% set pourcentage = (((nombreMoyenneFille + nombreMoyenneGarcon) / (nombreSousMoyenneFille + nombreMoyenneFille + nombreSousMoyenneGarcon + nombreMoyenneGarcon)) * 100)|number_format(2, ',', '') %}
-                                                            
-                                                                {# {% include "includes/_pourcentage.html.twig" %} #}
-                                                            {% endif %}
-                                                            
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                                {% else %}
-                                                <tbody>
-                                                    <tr>
-                                                        <td class="intitule">1.{% trans %}Girls{% endtrans %}</td>
-                                                        <td>//</td>
-                                                        <td>//</td>
-                                                        <td>//</td>
-                                                        <td>//</td>
-                                                        <td>{{ filles }}</td>
-                                                        <td>//</td>
-                                                        
-                                                        <td class="intitule">//</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="intitule">2. {% trans %}Boys{% endtrans %}</td>
-                                                        <td>//</td>
-                                                        <td>//</td>
-                                                        <td>//</td>
-                                                        <td>//</td>
-                                                        <td>{{ garcons }}</td>
-                                                        <td>//</td>
-                                                        <td class="intitule">//</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="intitule">3. {% trans %}Classroom{% endtrans %}</td>
-                                                        <td class="intitule">//</td>
-                                                        <td class="intitule">//</td>
-                                                        <td class="intitule">//</td>
-                                                        <td class="intitule">//</td>
-                                                        <td class="intitule">{{ filles + garcons }}</td>
-                                                        <td class="intitule">//</td>
-                                                        
-                                                        <td class="intitule">//</td>
-                                                    </tr>
-                                                </tbody>
-                                            {% endif %}
-                                            
-                                        </table>
-                                        <div class="row mb-5">
-                                            
-                                            
-                                        </div>
+{% set sousMoyenneGarcons = nombreSousMoyenneGarcon|default(0) %}
+{% set moyenneGarcons = nombreMoyenneGarcon|default(0) %}
+
+{% set fillesClassees = sousMoyenneFilles + moyenneFilles %}
+{% set garconsClasses = sousMoyenneGarcons + moyenneGarcons %}
+{% set totalClasses = fillesClassees + garconsClasses %}
+
+{% set tauxFilles = fillesClassees > 0
+    ? (moyenneFilles / fillesClassees) * 100
+    : 0
+%}
+
+{% set tauxGarcons = garconsClasses > 0
+    ? (moyenneGarcons / garconsClasses) * 100
+    : 0
+%}
+
+{% set tauxClasse = totalClasses > 0
+    ? ((moyenneFilles + moyenneGarcons) / totalClasses) * 100
+    : 0
+%}
+
+{% set noteMinFilles = noteMinMax['minMarkGirls']|default(0) %}
+{% set noteMaxFilles = noteMinMax['maxMarkGirls']|default(0) %}
+{% set noteMinGarcons = noteMinMax['minMarkBoys']|default(0) %}
+{% set noteMaxGarcons = noteMinMax['maxMarkBoys']|default(0) %}
+{% set noteMaxClasse = noteMinMax['maxMarkClass']|default(0) %}
+
+{% set noteMinClasse = noteMinFilles < noteMinGarcons
+    ? noteMinFilles
+    : noteMinGarcons
+%}
+<div class="fs-stats-modern">
+    <div class="fs-stats-header">
+        <h3>{% trans %}Visual statistics{% endtrans %}</h3>
+        <p>{% trans %}A clearer and more visual overview of classroom performance.{% endtrans %}</p>
+    </div>
+
+    <div class="fs-kpi-grid">
+        <div class="fs-kpi-card">
+            <span class="fs-kpi-label">{% trans %}Girls{% endtrans %}</span>
+            <strong class="fs-kpi-value">{{ filles }}</strong>
+        </div>
+
+        <div class="fs-kpi-card">
+            <span class="fs-kpi-label">{% trans %}Boys{% endtrans %}</span>
+            <strong class="fs-kpi-value">{{ garcons }}</strong>
+        </div>
+
+        <div class="fs-kpi-card">
+            <span class="fs-kpi-label">{% trans %}Classroom effective{% endtrans %}</span>
+            <strong class="fs-kpi-value">{{ filles + garcons }}</strong>
+        </div>
+
+        <div class="fs-kpi-card">
+            <span class="fs-kpi-label">{% trans %}Classified{% endtrans %}</span>
+            <strong class="fs-kpi-value">{{ totalClasses }}</strong>
+        </div>
+
+        <div class="fs-kpi-card">
+            <span class="fs-kpi-label">{% trans %}Success rate{% endtrans %}</span>
+            <strong class="fs-kpi-value">{{ tauxClasse|number_format(2, ',', '') }} %</strong>
+        </div>
+
+        <div class="fs-kpi-card">
+            <span class="fs-kpi-label">{% trans %}Highest note in class{% endtrans %}</span>
+            <strong class="fs-kpi-value">{{ noteMinMax['maxMarkClass'] }}</strong>
+        </div>
+    </div>
+
+    <div class="fs-chart-grid">
+        <div class="fs-chart-card">
+            <div class="fs-chart-title">{% trans %}Success rate by group{% endtrans %}</div>
+            <div class="fs-chart-canvas">
+    <canvas id="successRateChart"></canvas>
+</div>
+        </div>
+
+        <div class="fs-chart-card">
+            <div class="fs-chart-title">{% trans %}Average vs sub-average{% endtrans %}</div>
+            <div class="fs-chart-canvas">
+    <canvas id="distributionChart"></canvas>
+</div>
+        </div>
+
+        <div class="fs-chart-card fs-chart-card-large">
+            <div class="fs-chart-title">{% trans %}Minimum and maximum notes{% endtrans %}</div>
+            <div class="fs-chart-canvas">
+                <canvas id="notesChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
                                         <div class="row mb-5">
                                             <div class="col-md-2 text-right mt-1">
                                                 <h3 class="text-blue"><span class="badge bg-primary"><b>{% trans %}Target skill{% endtrans %}</b> </span></h3>
@@ -401,7 +727,7 @@
                                                         <input type="hidden" name="lesson" value="{{ selectedLesson.id }}">
                                                         <input type="hidden" name="oldSkill" value="{{ skill ? skill.skill : "//" }}">
 
-                                                        <button type="submit" class="btn btn-outline-primary" data-bs-toggle="tooltip" title="Modifier la compétence visée" name="skillToUpdate">
+                                                        <button type="submit" class="btn btn-outline-primary" data-bs-toggle="tooltip" title="{% trans %}Edit the targeted skill{% endtrans %}" name="skillToUpdate">
                                                             <i class="fa fa-pencil-square-o"></i>
                                                         </button>
                                                 </form>
@@ -410,7 +736,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <table border="1" class="table table-striped" border="2" id="dataTable" width="100%" cellspacing="0">
+                                                <table border="1" class="table table-striped card-table table-vcenter fs-existing-marks-table" border="2" id="dataTable" width="100%" cellspacing="0">
                                                     <thead>
                                                         <tr>
                                                             <th class="border-bottom-0 indigo-gradient">{% trans %}N°{% endtrans %}</th>
@@ -427,7 +753,7 @@
                                                     </thead>
                                                     <tfoot>
                                                         <tr>
-                                                            <th class="border-bottom-0 indigo-gradient">{% trans %}N°{% endtrans %}</th>
+                                                            <th class="border-bottom-0 indigo-gradient">{% trans %}No.{% endtrans %}</th>
                                                             <th class="border-bottom-0 green-gradient">{% trans %}Full name{% endtrans %}</th>
                                                             <th class="border-bottom-0 green-gradient">{% trans %}Gender{% endtrans %}</th>
                                                             <th class="border-bottom-0 orange-gradient">{% trans %}Note/20{% endtrans %}</th>
@@ -444,14 +770,14 @@
                                                             {# <td>
                                                                 <input type="hidden" name="student{{i}}" value="{{ evaluation.student.id }}">
                                                             </td> #}
-                                                            <td style="text-align: center; vertical-align:middle;">{{ i }}</td>
-                                                            <td style="text-align:left !important; vertical-align:middle;">
+                                                            <td class="fs-mark-col-index" style="text-align: center; vertical-align:middle;">{{ i }}</td>
+                                                            <td class="fs-mark-col-name" style="text-align:left !important; vertical-align:middle;">
                                                                 {{ evaluation.student.fullName }}
                                                             </td>
-                                                            <td style="text-align:left !important; vertical-align:middle;">
+                                                            <td class="fs-mark-col-sex" style="text-align:left !important; vertical-align:middle;">
                                                                 {{ evaluation.student.sex.sex }}
                                                             </td>
-                                                            <td>
+                                                            <td class="fs-mark-col-note">
                                                                 <input type="text" name="mark{{i}}" readonly="readonly" class="form-control"
                                                                     {% if evaluation.mark == unrankedMark %}
                                                                         value="/"
@@ -462,23 +788,24 @@
                                                             </td>
                                                           
                                                             {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') %}
-                                                                <td class="border-bottom-0 blue-gradient">{{ evaluation.createdBy.fullName }} <br>
+                                                                <td class="border-bottom-0 blue-gradient fs-mark-col-audit">{{ evaluation.createdBy.fullName }} <br>
                                                                     {% trans %}At{% endtrans %} : {{ evaluation.createdAt|date('d/m/Y') }} - {{ evaluation.createdAt|date('H:i:s') }}
                                                                 </td>
-                                                                <td class="border-bottom-0 blue-gradient">{{ evaluation.updatedBy ? evaluation.updatedBy.fullName : "//" }} <br>
+                                                                <td class="border-bottom-0 blue-gradient fs-mark-col-audit">{{ evaluation.updatedBy ? evaluation.updatedBy.fullName : "//" }} <br>
                                                                     {% trans %}At{% endtrans %} : {{ evaluation.updatedBy ? evaluation.updatedAt|date('d/m/Y') : "//"}} - {{ evaluation.updatedBy ? evaluation.updatedAt|date('H:i:s'): "//"}}
                                                                 </td>
                                                             {% endif %}
                                                             
                                                             {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
-                                                                <td style="text-align: center; vertical-align:middle;">
+                                                                <td class="fs-mark-col-action" style="text-align: center; vertical-align:middle;">
                                                                     <form action="{{ path('evaluation_markRecorder', {'slugTeacher': teacher.slug}) }}" method="post">
                                                                         <input type="hidden" name="evaluation" value="{{ evaluation.id }}">
                                                                         <input type="hidden" name="lesson" value="{{ selectedLesson.id }}">
                                                                         <input type="hidden" name="sequence" value="{{ selectedSequence.id }}">
 
-                                                                        <button type="submit" class="btn btn-outline-primary" data-bs-toggle="tooltip" title="Modifier la note de {{ evaluation.student.fullName }}" name="markToUpdate">
+                                                                        <button type="submit" class="btn btn-outline-primary fs-mark-edit-button" data-bs-toggle="tooltip" title="{% trans %}Edit the grade for{% endtrans %}  {{ evaluation.student.fullName }}" name="markToUpdate">
                                                                             <i class="fa fa-pencil-square-o"></i>
+                                                                            <span class="fs-mark-edit-label">{% trans %}Edit{% endtrans %}</span>
                                                                         </button>
 
                                                                     </form>
@@ -492,106 +819,141 @@
                                         </div>
                                         {# fin affichage de la liste des elèves si les notes existent deja #}
                                     {% else %}
+                                    
                                         {# affichage de la liste des elèves si les notes n'existent pas encore #}
-                                        {% if not is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') %}
+                                        {% if not (is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN')) %}
                                             <div class="row">
                                                 <div class="col-md-12">
                                                 {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
-                                                    <form action="{{ path('evaluation_markRecorder', {'slugTeacher': teacher.slug}) }}" method="POST" onreset="return confirm('Do you want to reset all typed marks ?')">  
+                                                    
+                                                    <form action="{{ path('evaluation_markRecorder', {'slugTeacher': teacher.slug}) }}" 
+                                                        method="POST" 
+                                                        class="row g-3 needs-validation" 
+                                                        novalidate 
+                                                        onreset="return confirm('Do you want to reset all typed marks ?')">  
+
                                                         <input type="hidden" name="numberOfStudents" value="{{ students|length }}">
                                                         <input type="hidden" name="sequence" value="{{ selectedSequence.id }}">
                                                         <input type="hidden" name="lesson" value="{{ selectedLesson.id }}">
+                                                        
                                                         <div class="row mb-5">
                                                             {% if skill is not null %}
                                                                 <div class="col-md-2 text-left mt-1">
-                                                                    <h3 class="text-blue"><span class="badge bg-primary"><b>{% trans %}Target skill{% endtrans %}</b> </span></h3>
+                                                                    <h3 class="text-blue">
+                                                                        <span class="badge bg-primary"><b>{% trans %}Target skill{% endtrans %}</b></span>
+                                                                    </h3>
                                                                 </div>
                                                                 <div class="col-md-10">
-                                                                    {# {{ skill.skill }}  #}
-                                                                    <input type="text" readonly="readonly" value="{{ skill.skill }}"  class="form-control" >
+                                                                    <input type="text" readonly value="{{ skill.skill }}" class="form-control">
                                                                 </div>
-                                                                {% else %}
+                                                            {% else %}
                                                                 <div class="col-md-2 text-left mt-1">
                                                                     <label for="skill">
-                                                                        <h3 class="text-blue"><span class="badge bg-primary"><b>{% trans %}Evaluation :{% endtrans %} {{ selectedSequence.sequence }}</b> </span></h3>
+                                                                        <h3 class="text-blue">
+                                                                            <span class="badge bg-primary">
+                                                                                <b>{% trans %}Evaluation :{% endtrans %} {{ selectedSequence.sequence }}</b>
+                                                                            </span>
+                                                                        </h3>
                                                                     </label>
                                                                 </div>
                                                                 <div class="col-md-4 text-left mt-1">
                                                                     <label for="skill">
-                                                                        <h3 class="text-blue"><span class="badge bg-primary"><b>{% trans %}Lesson : {% endtrans %} {{ selectedLesson.subject.subject}} --- {{selectedLesson.classroom.classroom}}</b> </span></h3>
+                                                                        <h3 class="text-blue">
+                                                                            <span class="badge bg-primary">
+                                                                                <b>{% trans %}Lesson : {% endtrans %} {{ selectedLesson.subject.subject }} --- {{ selectedLesson.classroom.classroom }}</b>
+                                                                            </span>
+                                                                        </h3>
                                                                     </label>
                                                                 </div>
                                                                 <div class="col-md-2 text-right mt-1">
                                                                     <label for="skill">
-                                                                        <h3 class="text-blue"><span class="badge bg-primary"><b>{% trans %}Target skill{% endtrans %}</b> </span></h3>
+                                                                        <h3 class="text-blue">
+                                                                            <span class="badge bg-primary">
+                                                                                <b>{% trans %}Target skill{% endtrans %}</b>
+                                                                            </span>
+                                                                        </h3>
                                                                     </label>
                                                                 </div>
                                                                 <div class="col-md-4">
                                                                     <input type="text" name="skill" id="skill" maxlength="47" class="form-control" required autofocus>
                                                                 </div>
-                                                                
                                                             {% endif %}
-
                                                         </div>
+
                                                         <div class="row">
                                                             <div class="col-md-12">
-                                                                <table border="1" class="table table-striped text-left" border="2">
+                                                                <table border="1" class="table table-striped text-left fs-new-marks-table" border="2">
                                                                     <thead>
-                                                                    <tr>
-                                                                        <th class="border-bottom-0 indigo-gradient">{% trans %}N°{% endtrans %}</th>
-                                                                        <th class="border-bottom-0 green-gradient" colspan="2">{% trans %}Full name{% endtrans %}</th>
-                                                                        <th class="border-bottom-0 orange-gradient">{% trans %}Note/20{% endtrans %}</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tfoot>
-                                                                    <tr>
-                                                                        <th class="border-bottom-0 indigo-gradient">{% trans %}N°{% endtrans %}</th>
-                                                                        <th class="border-bottom-0 green-gradient" colspan="2">{% trans %}Full name{% endtrans %}</th>
-                                                                        <th class="border-bottom-0 orange-gradient">{% trans %}Note/20{% endtrans %}</th>
-                                                                    </tr>
-                                                                </tfoot>
-                                                                {% set i = 1 %}
-                                                                {% for student in students %}
-                                                                    <tr class="table-row">
-                                                                        <td style="text-align:center !important; vertical-align: middle !important;">{{ i }}</td>
-                                                                        <td style="text-align:center !important; vertical-align: middle !important;">
-                                                                            <input type="hidden" name="student{{i}}" value="{{ student.id }}">
-                                                                        </td>
-                                                                        <td style="vertical-align: middle !important;">
-                                                                            {{ student.fullName }}
-                                                                        </td>
-                                                                        <td style="text-align:center !important; vertical-align: middle !important;">
-                                                                            <input type="number" name="mark{{i}}" required="required" min="0" max="20" step="0.01" class="form-control">
-                                                                        </td>
-                                                                    </tr>
-                                                                    {% set i = i+1 %}
-                                                                {% endfor %}
+                                                                        <tr>
+                                                                            <th>{% trans %}N°{% endtrans %}</th>
+                                                                            <th colspan="2">{% trans %}Full name{% endtrans %}</th>
+                                                                            <th>{% trans %}Gender{% endtrans %}</th>
+                                                                            <th>{% trans %}Note/20{% endtrans %}</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tfoot>
+                                                                        <tr>
+                                                                            <th>{% trans %}N°{% endtrans %}</th>
+                                                                            <th colspan="2">{% trans %}Full name{% endtrans %}</th>
+                                                                            <th>{% trans %}Gender{% endtrans %}</th>
+                                                                            <th>{% trans %}Note/20{% endtrans %}</th>
+                                                                        </tr>
+                                                                    </tfoot>
+
+                                                                    {% set i = 1 %}
+                                                                    {% for student in students %}
+                                                                        <tr>
+                                                                            <td class="fs-mark-col-index" style="text-align:center;">{{ i }}</td>
+                                                                            <td class="fs-mark-col-hidden" style="text-align:center;">
+                                                                                <input type="hidden" name="student{{ i }}" value="{{ student.id }}">
+                                                                            </td>
+                                                                            <td class="fs-mark-col-name">{{ student.fullName }}</td>
+                                                                            <td class="fs-mark-col-sex" style="text-align:center;">{{ student.sex.sex }}</td>
+                                                                            <td class="fs-mark-col-note" style="text-align:center;">
+                                                                                <input type="number" 
+                                                                                    name="mark{{ i }}" 
+                                                                                    required 
+                                                                                    min="0" 
+                                                                                    max="20" 
+                                                                                    step="0.01" 
+                                                                                    class="form-control mark-input note-input">
+                                                                            </td>
+                                                                        </tr>
+                                                                        {% set i = i + 1 %}
+                                                                    {% endfor %}
                                                                 </table>
                                                             </div>
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-md-3">
-                                                                <button type="reset" class="btn btn-outline-danger btn-medium w-100 br-7">
-                                                                    <i class="fa fa-eraser"></i>
-                                                                    {% trans %}Erase everything{% endtrans %}
-                                                                </button>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                            </div>
-                                                            <div class="col-md-3">
-                                                                <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="saveMark" id="soumission" onclick='btnSoumission(soumission)'>
-                                                                    <i class="fe fe-save"></i> {% trans %}Save{% endtrans %}
-                                                                </button>
+
+                                                        <div class="fs-action-zone">
+                                                            <div class="row align-items-center">
+                                                                <div class="col-md-3">
+                                                                    <button type="reset" class="btn btn-outline-danger w-100 br-7">
+                                                                        <i class="fa fa-eraser me-1"></i> {% trans %}Erase everything{% endtrans %}
+                                                                    </button>
+                                                                </div>
+
+                                                                <div class="col-md-6 text-center text-muted fw-bold">
+                                                                    {% trans %}Check all marks before saving.{% endtrans %}
+                                                                </div>
+
+                                                                <div class="col-md-3">
+                                                                    <button type="submit" class="btn btn-outline-primary w-100 br-7" name="saveMark" id="save-button">
+                                                                        <i class="fe fe-save me-1"></i> {% trans %}Save{% endtrans %}
+                                                                    </button>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </form>
+
+                                                    
                                                     {% else %}
                                                     {% trans %}Access denied. The entry of grades counting for this quarter is locked{% endtrans %}
                                                 {% endif %}
                                                 
                                                 </div>
                                             </div>
-                                        {% else %}
+                                            {% else %}
                                             <div class="row">
                                                 <div class="col-md-12 text-center">
                                                     {% trans %}These notes are not yet entered by the teacher{% endtrans %}
@@ -600,9 +962,9 @@
                                         {% endif %}
                                         
                                     {% endif %}
-                                    {# fin affichage de la liste des elèves si les notes n'existent pas encore #}
+                                    {# fin affichage de la liste des elÃ¨ves si les notes n'existent pas encore #}
                                 {% elseif skillToUpdate != null %}
-                                    {# affichage du formulaire de modification de la compétence #}
+                                    {# affichage du formulaire de modification de la compÃ©tence #}
                                     {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
                                         <form action="{{ path('evaluation_markRecorder', {'slugTeacher': teacher.slug}) }}" method="post">
                                             <input type="hidden" name="sequence" value="{{ selectedSequence.id }}">
@@ -625,11 +987,11 @@
                                             </div>
                                         </form>
                                     {% endif %}
-                                    {# fin affichage du formulaire de modification de la compétence #}
+                                    {# fin affichage du formulaire de modification de la compÃ©tence #}
                                 {% else %}
                                     {# affichage du formulaire de modification d'une note #}
                                     {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
-                                        <form action="{{ path('evaluation_markRecorder', {'slugTeacher': teacher.slug}) }}" method="post">
+                                        <form action="{{ path('evaluation_markRecorder', {'slugTeacher': teacher.slug}) }}" method="post" class="fs-single-mark-update-form">
                                             <input type="hidden" name="lesson" value="{{ selectedLesson.id }}">
                                             <input type="hidden" name="sequence" value="{{ selectedSequence.id }}">
                                             <input type="hidden" name="evaluationToUpdate" value="{{ evaluationToUpdate.id }}">
@@ -661,4 +1023,566 @@
     </div>
 </div>
 
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('build/custom/js/freeschool-mark-recorder-premium-clean.js') }}"></script>
+   
+    <script id="fs-mobile-mark-recorder-final-script">
+        (function () {
+            'use strict';
+
+            function applyMobileFix() {
+                if (!window.matchMedia('(max-width: 767.98px)').matches) {
+                    return;
+                }
+
+                document.querySelectorAll('.fs-existing-marks-table tbody tr').forEach(function (row) {
+                    var sexCell = row.querySelector('.fs-mark-col-sex');
+                    var actionCell = row.querySelector('.fs-mark-col-action');
+                    var actionButton = row.querySelector('button[name="markToUpdate"]');
+
+                    if (sexCell) {
+                        sexCell.style.setProperty('display', 'none', 'important');
+                    }
+
+                    row.querySelectorAll('.fs-mark-col-audit').forEach(function (cell) {
+                        cell.style.setProperty('display', 'none', 'important');
+                    });
+
+                    if (actionCell) {
+                        actionCell.classList.remove('d-none', 'dtr-hidden');
+                        actionCell.style.setProperty('display', 'flex', 'important');
+                        actionCell.style.setProperty('visibility', 'visible', 'important');
+                        actionCell.style.setProperty('opacity', '1', 'important');
+                    }
+
+                    if (actionButton) {
+                        actionButton.classList.remove('d-none', 'dtr-hidden');
+                        actionButton.style.setProperty('display', 'inline-flex', 'important');
+                        actionButton.style.setProperty('visibility', 'visible', 'important');
+                        actionButton.style.setProperty('opacity', '1', 'important');
+                    }
+                });
+
+                document.querySelectorAll('.fs-new-marks-table .fs-mark-col-sex, .fs-new-marks-table .fs-mark-col-hidden')
+                    .forEach(function (cell) {
+                        cell.style.setProperty('display', 'none', 'important');
+                    });
+            }
+
+            function runSeveralTimes() {
+                applyMobileFix();
+                window.setTimeout(applyMobileFix, 150);
+                window.setTimeout(applyMobileFix, 500);
+                window.setTimeout(applyMobileFix, 1200);
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', runSeveralTimes);
+            } else {
+                runSeveralTimes();
+            }
+
+            window.addEventListener('pageshow', runSeveralTimes);
+            window.addEventListener('resize', runSeveralTimes);
+
+            new MutationObserver(function () {
+                window.requestAnimationFrame(applyMobileFix);
+            }).observe(document.documentElement, {
+                childList: true,
+                subtree: true
+            });
+        })();
+    </script>
+
+
+    <script>
+document.addEventListener('DOMContentLoaded', function () {
+    if (typeof Chart === 'undefined') {
+        console.error('{% trans %}Chart.js is not loaded.{% endtrans %}');
+        return;
+    }
+
+    const successRateCanvas = document.getElementById('successRateChart');
+    const distributionCanvas = document.getElementById('distributionChart');
+    const notesCanvas = document.getElementById('notesChart');
+
+    if (!successRateCanvas || !distributionCanvas || !notesCanvas) {
+        return;
+    }
+
+    /*
+     * json_encode génère directement des nombres JavaScript valides.
+     * Il ne faut pas utiliser number_format ici, car number_format
+     * transforme les valeurs en chaînes de caractères.
+     */
+    
+
+    const sousMoyenneFilles =
+    {{ nombreSousMoyenneFille|default(0)|json_encode|raw }};
+
+const moyenneFilles =
+    {{ nombreMoyenneFille|default(0)|json_encode|raw }};
+
+const sousMoyenneGarcons =
+    {{ nombreSousMoyenneGarcon|default(0)|json_encode|raw }};
+
+const moyenneGarcons =
+    {{ nombreMoyenneGarcon|default(0)|json_encode|raw }};
+
+
+/* Élèves classés */
+
+const fillesClassees =
+    sousMoyenneFilles + moyenneFilles;
+
+const garconsClasses =
+    sousMoyenneGarcons + moyenneGarcons;
+
+const totalClasses =
+    fillesClassees + garconsClasses;
+
+
+/* Calcul sécurisé des taux */
+
+const tauxFilles = fillesClassees > 0
+    ? (moyenneFilles / fillesClassees) * 100
+    : 0;
+
+const tauxGarcons = garconsClasses > 0
+    ? (moyenneGarcons / garconsClasses) * 100
+    : 0;
+
+const tauxClasse = totalClasses > 0
+    ? ((moyenneFilles + moyenneGarcons) / totalClasses) * 100
+    : 0;
+
+
+/* Notes */
+
+const noteMinFilles =
+    {{ noteMinMax['minMarkGirls']|default(0)|json_encode|raw }};
+
+const noteMaxFilles =
+    {{ noteMinMax['maxMarkGirls']|default(0)|json_encode|raw }};
+
+const noteMinGarcons =
+    {{ noteMinMax['minMarkBoys']|default(0)|json_encode|raw }};
+
+const noteMaxGarcons =
+    {{ noteMinMax['maxMarkBoys']|default(0)|json_encode|raw }};
+
+const noteMaxClasse =
+    {{ noteMinMax['maxMarkClass']|default(0)|json_encode|raw }};
+
+const noteMinClasse = Math.min(
+    noteMinFilles,
+    noteMinGarcons
+);
+
+
+/*
+ * Affiche la valeur de chaque barre directement sur le graphique.
+ * Une valeur égale à zéro reste donc visible au-dessus de l'axe.
+ */
+const fsValueLabelsPlugin = {
+    id: 'fsValueLabels',
+
+    afterDatasetsDraw: function (chart) {
+        const ctx = chart.ctx;
+
+        chart.data.datasets.forEach(function (dataset, datasetIndex) {
+            const meta = chart.getDatasetMeta(datasetIndex);
+
+            if (!meta || meta.hidden) {
+                return;
+            }
+
+            meta.data.forEach(function (element, index) {
+                const numericValue = Number(dataset.data[index]);
+
+                if (!Number.isFinite(numericValue)) {
+                    return;
+                }
+
+                let position = null;
+
+                if (element && typeof element.tooltipPosition === 'function') {
+                    position = element.tooltipPosition();
+                } else if (element && element._model) {
+                    position = {
+                        x: element._model.x,
+                        y: element._model.y
+                    };
+                }
+
+                if (!position) {
+                    return;
+                }
+
+                const displayValue = Number.isInteger(numericValue)
+                    ? String(numericValue)
+                    : numericValue.toFixed(2).replace('.', ',');
+
+                ctx.save();
+                ctx.fillStyle = dataset.valueLabelColor || '#0f172a';
+                ctx.font = '700 12px Arial, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'bottom';
+                ctx.fillText(
+                    displayValue,
+                    position.x,
+                    numericValue === 0 ? position.y - 5 : position.y - 7
+                );
+                ctx.restore();
+            });
+        });
+    }
+};
+
+
+/*
+ * Le projet peut charger Chart.js 2.x ou 3/4.x.
+ * La syntaxe des axes n'est pas la même selon la version.
+ * On force ici l'axe des notes à partir de 0 pour que la barre 14
+ * ne soit plus confondue avec la ligne de base.
+ */
+const fsChartMajorVersion = parseInt(
+    String(Chart.version || '2').split('.')[0],
+    10
+);
+
+const fsNotesScales = fsChartMajorVersion >= 3
+    ? {
+        x: {
+            stacked: false,
+            grid: {
+                display: false
+            },
+            ticks: {
+                color: '#334155',
+                font: {
+                    weight: '700'
+                }
+            }
+        },
+        y: {
+            stacked: false,
+            beginAtZero: true,
+            min: 0,
+            max: 20,
+            grace: '8%',
+            grid: {
+                color: 'rgba(148, 163, 184, 0.18)',
+                drawBorder: false
+            },
+            ticks: {
+                color: '#64748b',
+                stepSize: 2
+            }
+        }
+    }
+    : {
+        xAxes: [{
+            stacked: false,
+            gridLines: {
+                display: false
+            },
+            ticks: {
+                fontColor: '#334155',
+                fontStyle: 'bold'
+            }
+        }],
+        yAxes: [{
+            stacked: false,
+            ticks: {
+                beginAtZero: true,
+                min: 0,
+                max: 20,
+                stepSize: 2,
+                fontColor: '#64748b'
+            },
+            gridLines: {
+                color: 'rgba(148, 163, 184, 0.18)',
+                drawBorder: false
+            }
+        }]
+    };
+
+if (window.fsSuccessRateChart) {
+    window.fsSuccessRateChart.destroy();
+}
+
+if (window.fsDistributionChart) {
+    window.fsDistributionChart.destroy();
+}
+
+if (window.fsNotesChart) {
+    window.fsNotesChart.destroy();
+}
+
+    window.fsSuccessRateChart = new Chart(successRateCanvas, {
+        type: 'bar',
+        data: {
+            labels: [
+                '{{ "Girls"|trans|e("js") }}',
+                '{{ "Boys"|trans|e("js") }}',
+                '{{ "Classroom"|trans|e("js") }}'
+            ],
+            datasets: [{
+                label: '{{ "Success rate"|trans|e("js") }} (%)',
+                data: [
+                    tauxFilles,
+                    tauxGarcons,
+                    tauxClasse
+                ],
+                backgroundColor: [
+                    'rgba(236, 72, 153, 0.82)',
+                    'rgba(37, 99, 235, 0.82)',
+                    'rgba(16, 185, 129, 0.82)'
+                ],
+                borderColor: [
+                    'rgb(190, 24, 93)',
+                    'rgb(29, 78, 216)',
+                    'rgb(5, 150, 105)'
+                ],
+                hoverBackgroundColor: [
+                    'rgba(219, 39, 119, 0.95)',
+                    'rgba(29, 78, 216, 0.95)',
+                    'rgba(5, 150, 105, 0.95)'
+                ],
+                hoverBorderColor: [
+                    'rgb(157, 23, 77)',
+                    'rgb(30, 64, 175)',
+                    'rgb(4, 120, 87)'
+                ],
+                borderWidth: 2,
+                borderRadius: 12,
+                borderSkipped: false
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function (context) {
+                            return context.raw.toFixed(2) + ' %';
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        color: '#334155',
+                        font: {
+                            weight: '700'
+                        }
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    grid: {
+                        color: 'rgba(148, 163, 184, 0.18)',
+                        drawBorder: false
+                    },
+                    ticks: {
+                        color: '#64748b',
+                        font: {
+                            weight: '600'
+                        },
+                        callback: function (value) {
+                            return value + ' %';
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    window.fsDistributionChart = new Chart(distributionCanvas, {
+        type: 'bar',
+        plugins: [fsValueLabelsPlugin],
+        data: {
+            labels: [
+                '{{ "Girls"|trans|e("js") }}',
+                '{{ "Boys"|trans|e("js") }}'
+            ],
+            datasets: [
+                {
+                    label: '{{ "Number of sub-average"|trans|e("js") }}',
+                    data: [
+                        sousMoyenneFilles,
+                        sousMoyenneGarcons
+                    ],
+                    backgroundColor: 'rgba(239, 68, 68, 0.82)',
+                    borderColor: 'rgb(185, 28, 28)',
+                    hoverBackgroundColor: 'rgba(220, 38, 38, 0.95)',
+                    hoverBorderColor: 'rgb(153, 27, 27)',
+                    grouped: true,
+                    barPercentage: 0.82,
+                    categoryPercentage: 0.78,
+                    maxBarThickness: 78,
+                    minBarLength: 5,
+                    valueLabelColor: '#991b1b',
+                    borderWidth: 2,
+                    borderRadius: 12,
+                    borderSkipped: false
+                },
+                {
+                    label: '{{ "Number of average"|trans|e("js") }}',
+                    data: [
+                        moyenneFilles,
+                        moyenneGarcons
+                    ],
+                    backgroundColor: 'rgba(34, 197, 94, 0.82)',
+                    borderColor: 'rgb(21, 128, 61)',
+                    hoverBackgroundColor: 'rgba(22, 163, 74, 0.95)',
+                    hoverBorderColor: 'rgb(22, 101, 52)',
+                    grouped: true,
+                    barPercentage: 0.72,
+                    categoryPercentage: 0.72,
+                    maxBarThickness: 72,
+                    minBarLength: 5,
+                    valueLabelColor: '#166534',
+                    borderWidth: 2,
+                    borderRadius: 12,
+                    borderSkipped: false
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        color: '#334155',
+                        usePointStyle: true,
+                        pointStyle: 'circle',
+                        boxWidth: 10,
+                        font: {
+                            weight: '700'
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    stacked: false,
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        color: '#334155',
+                        font: {
+                            weight: '700'
+                        }
+                    }
+                },
+                y: {
+                    stacked: false,
+                    beginAtZero: true,
+                    grace: '12%',
+                    grid: {
+                        color: 'rgba(148, 163, 184, 0.18)',
+                        drawBorder: false
+                    },
+                    ticks: {
+                        color: '#64748b',
+                        precision: 0
+                    }
+                }
+            }
+        }
+    });
+
+    window.fsNotesChart = new Chart(notesCanvas, {
+        type: 'bar',
+        plugins: [fsValueLabelsPlugin],
+        data: {
+            labels: [
+                '{{ "Girls"|trans|e("js") }}',
+                '{{ "Boys"|trans|e("js") }}',
+                '{{ "Classroom"|trans|e("js") }}'
+            ],
+            datasets: [
+                {
+                    label: '{{ "Smaller note"|trans|e("js") }}',
+                    data: [
+                        noteMinFilles,
+                        noteMinGarcons,
+                        noteMinClasse
+                    ],
+                    backgroundColor: 'rgba(124, 58, 237, 0.88)',
+                    borderColor: 'rgb(91, 33, 182)',
+                    hoverBackgroundColor: 'rgba(124, 58, 237, 0.95)',
+                    hoverBorderColor: 'rgb(91, 33, 182)',
+                    grouped: true,
+                    barPercentage: 0.72,
+                    categoryPercentage: 0.72,
+                    maxBarThickness: 72,
+                    minBarLength: 5,
+                    valueLabelColor: '#5b21b6',
+                    borderWidth: 2,
+                    borderRadius: 12,
+                    borderSkipped: false
+                },
+                {
+                    label: '{{ "Highest note"|trans|e("js") }}',
+                    data: [
+                        noteMaxFilles,
+                        noteMaxGarcons,
+                        noteMaxClasse
+                    ],
+                    backgroundColor: 'rgba(245, 158, 11, 0.85)',
+                    borderColor: 'rgb(180, 83, 9)',
+                    hoverBackgroundColor: 'rgba(217, 119, 6, 0.96)',
+                    hoverBorderColor: 'rgb(146, 64, 14)',
+                    grouped: true,
+                    barPercentage: 0.72,
+                    categoryPercentage: 0.72,
+                    maxBarThickness: 72,
+                    minBarLength: 5,
+                    valueLabelColor: '#92400e',
+                    borderWidth: 2,
+                    borderRadius: 12,
+                    borderSkipped: false
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        color: '#334155',
+                        usePointStyle: true,
+                        pointStyle: 'circle',
+                        boxWidth: 10,
+                        font: {
+                            weight: '700'
+                        }
+                    }
+                }
+            },
+            scales: fsNotesScales
+        }
+    });
+});
+</script>
 {% endblock %}

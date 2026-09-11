@@ -17,11 +17,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/student")]
 class DisplayStudentController extends AbstractController
 {
@@ -44,6 +40,7 @@ class DisplayStudentController extends AbstractController
         {
             #mes variables témoin pour afficher les sweetAlert
             $mySession->set('ajout',null);
+            $mySession->set('saisiNotes',null);
             $mySession->set('suppression', null);
             $mySession->set('miseAjour', null);
 
@@ -54,6 +51,7 @@ class DisplayStudentController extends AbstractController
         {
             #mes variables témoin pour afficher les sweetAlert
             $mySession->set('ajout', null);
+            $mySession->set('saisiNotes',null);
             $mySession->set('suppression', null);
             $mySession->set('miseAjour', 1);
         }
@@ -62,6 +60,7 @@ class DisplayStudentController extends AbstractController
         if ($s == 1) 
         {
             $mySession->set('ajout',null);
+            $mySession->set('saisiNotes',null);
             $mySession->set('suppression', 1);
             $mySession->set('miseAjour', null);
         }
@@ -125,9 +124,8 @@ class DisplayStudentController extends AbstractController
         
         if (!$fees) 
         {
-            $this->addFlash('info', $this->translator->trans('The fees is empty. Please save fees'));
+            $this->addFlash('error', $this->translator->trans('The fees is empty. Please save fees'));
             return $this->redirectToRoute('fees_updateFees');
-
         }
 
         $medicalBookletFees = $fees->getMedicalBookletFees();
@@ -159,10 +157,8 @@ class DisplayStudentController extends AbstractController
         }else 
         {
             $classrooms = $this->classroomRepository->findForSelect($schoolYear, $subSystem);
-            
         }
 
-        
         $classrooms = $this->classroomService->splitClassrooms($classrooms);
 
         $numberOfStudentInSchool = count($this->studentRepository->findBy(['schoolYear' => $schoolYear, 'subSystem' => $subSystem]));
@@ -173,7 +169,7 @@ class DisplayStudentController extends AbstractController
             //  et non le formulaire de choix de la classe
             $mySession->set('classroom', $id);
             $selectedClassroom = $this->classroomRepository->find($id);
-
+            
             $students = $this->studentRepository->findBy([
                 'classroom' => $selectedClassroom,
             ], ['fullName' => 'ASC' ]);

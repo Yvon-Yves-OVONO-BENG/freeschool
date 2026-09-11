@@ -18,11 +18,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/subject")]
 class SaveSubjectController extends AbstractController
 {
@@ -71,8 +67,8 @@ class SaveSubjectController extends AbstractController
         $schoolYear = $this->schoolYearRepository->find($mySession->get('schoolYear')->getId());
 
         $subject = new Subject();       
-        
-        $form = $this->createForm(SubjectType::class, $subject);
+
+        $form = $this->createForm(SubjectType::class, $subject, ['school' => $school]);
 
         // on set le schoolYear pour qu'il soit pris en compte dans la validation du formulaire
         $subject->setSchoolYear($schoolYear); 

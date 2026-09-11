@@ -56,9 +56,9 @@
                                         'type': 'warning', 
                                         'text': '{% trans %}Do you want to restore all students ?{% endtrans %}', 
                                         'showCancelButton': true, 
-                                        'confirmButtonText': 'Oui', 
+                                        'confirmButtonText': '{% trans %}Yes{% endtrans %}', 
                                         'confirmButtonColor': '#f00', 
-                                        'cancelButtonText': 'Non', 
+                                        'cancelButtonText': '{% trans %}No{% endtrans %}', 
                                         'cancelButtonColor': '#186106', 
                                         'confirmButtonPath': '{{ path('restore_all_student_trash') }} '});">
                                     <i class="fe fe-rotate-ccw me-2"></i> {% trans %}Restore All{% endtrans %}
@@ -70,9 +70,9 @@
                                         'type': 'warning', 
                                         'text': '{% trans %}Do you want to delete all students ?{% endtrans %}', 
                                         'showCancelButton': true, 
-                                        'confirmButtonText': 'Oui', 
+                                        'confirmButtonText': '{% trans %}Yes{% endtrans %}', 
                                         'confirmButtonColor': '#f00', 
-                                        'cancelButtonText': 'Non', 
+                                        'cancelButtonText': '{% trans %}No{% endtrans %}', 
                                         'cancelButtonColor': '#186106', 
                                         'confirmButtonPath': '{{ path('delete_all_student_trash') }} '});">
                                     <i class="fa fa-trash me-2"></i> {% trans %}Delete All{% endtrans %}
@@ -85,9 +85,9 @@
                                         'type': 'warning', 
                                         'text': '{% trans %}Do you want to restore all students ?{% endtrans %}', 
                                         'showCancelButton': true, 
-                                        'confirmButtonText': 'Oui', 
+                                        'confirmButtonText': '{% trans %}Yes{% endtrans %}', 
                                         'confirmButtonColor': '#f00', 
-                                        'cancelButtonText': 'Non', 
+                                        'cancelButtonText': '{% trans %}No{% endtrans %}', 
                                         'cancelButtonColor': '#186106';">
                                     <i class="fe fe-rotate-ccw  me-2"></i> {% trans %}Restore All{% endtrans %}
                                 </a>
@@ -98,9 +98,9 @@
                                         'type': 'warning', 
                                         'text': '{% trans %}Do you want to restore all students ?{% endtrans %}', 
                                         'showCancelButton': true, 
-                                        'confirmButtonText': 'Oui', 
+                                        'confirmButtonText': '{% trans %}Yes{% endtrans %}', 
                                         'confirmButtonColor': '#f00', 
-                                        'cancelButtonText': 'Non', 
+                                        'cancelButtonText': '{% trans %}No{% endtrans %}', 
                                         'cancelButtonColor': '#186106';">
                                     <i class="fe fe-corner-up-left  me-2"></i> {% trans %}Delete All{% endtrans %}
                                 </a>
@@ -180,13 +180,13 @@
                                                 
                                                 {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
                                                     <br> <span class="badge badge-gradient-primary mt-2">{% trans %}Delete by : {% endtrans %}</span>
-                                                    <span class="badge badge-gradient-danger mt-2">{{ studentTrash.deletedBy.fullName }}</span>
+                                                    {# <span class="badge badge-gradient-danger mt-2">{{ studentTrash.deletedBy.fullName }}</span> #}
                                                     <span class="badge badge-gradient-primary mt-2">{% trans %}at {% endtrans %}</span>
                                                     <span class="badge badge-gradient-danger mt-2">{{ studentTrash.deletedAt ? studentTrash.deletedAt|date('d-m-Y H:i:s'): "//" }}</span>
                                                 {% endif %}
                                                 
                                             </td>
-                                            <td style="vertical-align: middle;">{{ studentTrash.birthday|date('d-m-Y') }} à {{ studentTrash.birthplace }}</td>
+                                            <td style="vertical-align: middle;">{{ studentTrash.birthday|date('d-m-Y') }} {% trans %}in{% endtrans %} {{ studentTrash.birthplace }}</td>
                                             <td style="vertical-align: middle;">{{ studentTrash.sex.sex }}</td>
                                             <td style="vertical-align: middle;">{{ studentTrash.classroom.classroom }}</td>
                                             <td style="vertical-align: middle;">{{ studentTrash.telephonePere }}</td>
@@ -196,7 +196,7 @@
                                                     <td style="text-align: center !important; vertical-align: middle !important;">
 
                                                         <div class="btn-group">
-                                                            <a href="javascript:void(0);" class="btn btn-light btn-sm" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options <i class="fa fa-angle-down"></i></a>
+                                                            <a href="javascript:void(0);" class="btn btn-light btn-sm" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{% trans %}Options{% endtrans %} <i class="fa fa-angle-down"></i></a>
                                                             <div class="dropdown-menu" style="margin-top: auto !important; margin-bottom: auto !important; margin-left: auto !important; margin-right: auto !important;">
                                                                 
 
@@ -206,9 +206,9 @@
                                                                         'type': 'warning', 
                                                                         'text': '{% trans %}You really want to retore the student{% endtrans %} --- {{ studentTrash.fullName }}', 
                                                                         'showCancelButton': true, 
-                                                                        'confirmButtonText': 'Oui', 
+                                                                        'confirmButtonText': '{% trans %}Yes{% endtrans %}', 
                                                                         'confirmButtonColor': '#f00', 
-                                                                        'cancelButtonText': 'Non', 
+                                                                        'cancelButtonText': '{% trans %}No{% endtrans %}', 
                                                                         'cancelButtonColor': '#186106', 
                                                                         'confirmButtonPath': '{{ path('restore_student_trash', {'slug': studentTrash.slug}) }} '});">
                                                                     <i class="fe fe-rotate-ccw me-2"></i>  {% trans %}Restore{% endtrans %}
@@ -220,9 +220,9 @@
                                                                         'type': 'warning', 
                                                                         'text': '{% trans %}You really want to remove the student{% endtrans %} --- {{ studentTrash.fullName }}', 
                                                                         'showCancelButton': true, 
-                                                                        'confirmButtonText': 'Oui', 
+                                                                        'confirmButtonText': '{% trans %}Yes{% endtrans %}', 
                                                                         'confirmButtonColor': '#f00', 
-                                                                        'cancelButtonText': 'Non', 
+                                                                        'cancelButtonText': '{% trans %}No{% endtrans %}', 
                                                                         'cancelButtonColor': '#186106', 
                                                                         'confirmButtonPath': '{{ path('delete_student_trash', {'slug': studentTrash.slug, 'trash': 1}) }} '});">
                                                                     <i class="fa fa-trash me-2"></i> {% trans %}Delete definitely{% endtrans %}

@@ -30,6 +30,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -87,6 +88,11 @@ class TeacherType extends AbstractType
             ])
             ->add('phoneNumber', TextType::class, [
                 'label' => $this->translator->trans('Phone number')
+            ])
+            ->add('email', EmailType::class, [
+                'label' => $this->translator->trans('Email'),
+                'mapped' => false,
+                'required' => false,
             ])
             
         ;

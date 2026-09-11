@@ -73,8 +73,8 @@
                                                 <div class="row">
                                                     <div class="col-md-3">
                                                         <div class="form-group">
-                                                            <select name="term" id="term" class="form-control select2 custom-select" data-placeholder="Choisir une période" required="required">
-                                                                <option label="Choisir une période">
+                                                            <select name="term" id="term" class="form-control select2 custom-select" data-placeholder="{% trans %}Choose a period{% endtrans %}" required="required">
+                                                                <option label="{% trans %}Choose a period{% endtrans %}">
                                                                     {% trans %}Choose a period
                                                                     {% endtrans %}
                                                                 </option>
@@ -96,8 +96,8 @@
                                                     </div>
                                                     <div class="col-md-3">
                                                         <div class="form-group" >
-                                                            <select name="classroom" id="classroom" class="form-control select2-show-search" data-placeholder="Choisir une classe" required="required">
-                                                                <option label="Choisir une classe">
+                                                            <select name="classroom" id="classroom" class="form-control select2-show-search" data-placeholder="{% trans %}Choose a class{% endtrans %}" required="required">
+                                                                <option label="{% trans %}Choose a class{% endtrans %}">
                                                                     {% trans %}Choose a classroom{% endtrans %}
                                                                 </option>
                                                                 {% for classroom in classrooms %}
@@ -144,7 +144,7 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <button type="button" class="btn btn-primary  mt-1 mb-1 me-3">
-                                            <span>{% trans %}Term{% endtrans %} N°</span>
+                                            <span>{% trans %}Term{% endtrans %} {% trans %}N°{% endtrans %}</span>
                                             <span class="badge bg-white text-dark rounded-pill">{{ selectedTerm.term  }}</span>
                                         </button>
                                     </div>
@@ -250,7 +250,7 @@
                                                                                 <input type="text" name="decision{{i}}" class="form-control" placeholder="{% trans %}Enter decision{% endtrans %}"> 
                                                                             </td>
                                                                             <td>
-                                                                                <input type="text" name="motif{{i}}" class="form-control" placeholder="{% trans %}Enter motif{% endtrans %}"> 
+                                                                                <input type="text" name="motif{{i}}" class="form-control" placeholder="{% trans %}Enter reason{% endtrans %}"> 
                                                                             </td>
                                                                         </tr>
                                                                     {% set i = i+1 %}

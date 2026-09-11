@@ -3,160 +3,299 @@
 {% block title %}{% trans %}Display Diploma{% endtrans %}{% endblock %}
 
 {% block subTitle %}
-    {% trans %}DIPLOMAS MANAGMENT{% endtrans %}
+	{% trans %}DIPLOMAS MANAGMENT{% endtrans %}
 {% endblock %}
+
 {% block infoMessage %}
-    {% include "includes/_info_message.html.twig" %}
+	{% include "includes/_info_message.html.twig" %}
 {% endblock %}
 
 {% block stylesheets %}
-	<style>
-		th,
-		tfoot {
-			font-size: 15px !important;
-			text-align: center !important;
-			font-weight: bold !important;
-			background-color: #F1F1F1 !important;
-		}
-
-		tr:hover {
-			background-color: rgba(62, 128, 235, 0.2) !important;
-			color: #3e80eb !important;
-		}
-	</style>
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-diploma-display-premium.css') }}">
 {% endblock %}
 
 {% block body %}
-<!-- App-Content -->
-	<div class="hor-content main-content">
-		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary">
-                        <i class="fa fa-mortar-board me-2"></i> {% trans %}DIPLOMAS MANAGMENT{% endtrans %}
-                    </h4>
-                </div>
-                <div class="page-rightheader">
-                    <div class="btn-list">
-                        {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
-                            {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
-                                <form action="{{ path('diploma_saveDiploma') }}" method="post">
-                                    <div class="form-group">
-                                        <button type="submit" class="btn btn-outline-primary mt-2" name="addNewDiploma">
-                                            <i class="fa fa-plus"></i>
-                                            {% trans %}Add new diploma{% endtrans %}
-                                        </button>
-                                    </div>
-                                </form>
-                            {% endif %}
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-            <!--End Page header-->
-        
-            <div class="card border-primary">
-                <div class="card-header">
-                        <div class="col-md-8 text-left">
-                            <button type="button" class="btn btn-primary mt-1 mb-1 me-3 form-control-sm">
-                                <span>{% trans %}Number of registered diplomas{% endtrans %}</span>
-                                <span class="badge bg-white text-dark rounded-pill">{{ diplomas|length }}</span>
-                            </button>
-                        </div>
-                        <div class="col-md-4 text-right">
-                            
-                                <a href="javascript:void(0);" class="btn btn-outline-primary mt-2">
-                                    <i class="fe fe-printer me-2"></i>
-                                    {% trans %}Print{% endtrans %}
-                                </a>
-                                
-                        </div>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table border="1" id="example-1" class="table table-striped table-bordered text-nowrap">
-                            <thead>
-                                <tr>
-                                    <th class="border-bottom-0 indigo-gradient"> {% trans %}Diploma{% endtrans %}</th>
-                                    <th class="border-bottom-0 indigo-gradient">{% trans %}Effective{% endtrans %}</th>
-                                    {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
-                                        {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
-                                            <th class="border-bottom-0 green-gradient">{% trans %}Actions{% endtrans %}</th>
-                                        {% endif %}
-                                    {% endif %}
-                                </tr>
-                            </thead>
-                            <tfoot>
-                                <tr>
-                                    <th class="border-bottom-0 indigo-gradient">{% trans %}Diploma{% endtrans %}</th>
-                                    <th class="border-bottom-0 indigo-gradient">{% trans %}Effective{% endtrans %}</th>
-                                        {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
-                                        {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
-                                            <th class="border-bottom-0 green-gradient">{% trans %}Actions{% endtrans %}</th>
-                                        {% endif %}
-                                    {% endif %}
-                                </tr>
-                            </tfoot>
-                            <tbody>
-                                {% for diploma in diplomas %}
-                                <tr>
-                                    <td style="vertical-align:middle ;">{{ diploma.diploma }}</td>
-                                    <td style="vertical-align:middle ;" class="text-center">{{ diploma.teachers|length }}</td>
-                                    {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
-                                        {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
-                                            <td style="text-align: center; vertical-align:middle;">
-                                                <form action="{{ path('diploma_editDiploma', {'slug': diploma.slug}) }}" method="post" style="display: inline-block;">
-                                                    <div class="form-group">
-                                                        <button type="submit"  class="btn btn-outline-primary" name="diplomaToUpdate" data-bs-toggle="tooltip" title="Modifier le diplôme {{ diploma.diploma }}">
-                                                                <i class="fa fa-pencil me-2"></i>{% trans %}Edit{% endtrans %}
-                                                        </button>
-                                                    </div>
-                                                </form>
+	{% set canManageDiplomas = false %}
+	{% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+		{% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+			{% set canManageDiplomas = true %}
+		{% endif %}
+	{% endif %}
 
-                                                
-                                                {% if diploma.teachers|length > 0 %}
-                                                    <a class="btn btn-outline-danger" href="javascript:void(0);" 
-                                                        onclick="swal({
-                                                            'title': '{% trans %}Danger{% endtrans %}',
-                                                            'text': '{% trans %}Delete denied. This diploma is allowed to teacher !{% endtrans %}',
-                                                            'type': 'error',
-                                                            'showCancelButton': true,
-                                                            'showConfirmButton': false,
-                                                            'confirmButtonText': false,
-                                                            'cancelButtonText': 'OK',
-                                                            'cancelButtonColor': '#088318', 
-                                                        })">
-                                                        <i class="fa fa-trash me-2"></i>{% trans %}Delete{% endtrans %}
-                                                    </a>
-                                                    {% else %}
-                                                    <a class="btn btn-outline-danger" href="javascript:void(0);" 
-                                                        onclick="swal({
-                                                            'title': '{% trans %}Warning !{% endtrans %}', 
-                                                            'type': 'warning', 
-                                                            'text': '{% trans %}Do you want to delete this diploma ?{% endtrans %}', 
-                                                            'showCancelButton': true, 
-                                                            'confirmButtonText': 'Oui', 
-                                                            'confirmButtonColor': '#f00', 
-                                                            'cancelButtonText': 'Non', 
-                                                            'cancelButtonColor': '#186106', 
-                                                            'confirmButtonPath': '{{ path('diploma_deleteDiploma', {'slug': diploma.slug}) }} '});" title="{% trans %}Delete {% endtrans %} {{ diploma.diploma }}">
-                                                        <i class="fa fa-trash me-2"></i>{% trans %}Delete{% endtrans %}
-                                                    </a>
-                                                {% endif %}
-                                            </td>
-                                        {% endif %}
-                                    {% endif %}
-                                    
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+	<div class="hor-content main-content fs-diplomas-page">
+		<div class="container">
+			<div class="fs-diplomas-menu-safe-space" aria-hidden="true"></div>
+
+			<section class="fs-diplomas-hero fs-diplomas-hero--executive">
+				<div class="fs-diplomas-hero__content">
+					<span class="fs-diplomas-eyebrow">
+						<i class="fe fe-award"></i>
+						{% trans %}School configuration{% endtrans %}
+					</span>
+
+					<h1 class="fs-diplomas-title">
+						{% trans %}DIPLOMAS MANAGMENT{% endtrans %}
+					</h1>
+
+					<p class="fs-diplomas-subtitle">
+						{% trans %}Manage diplomas, monitor their usage and keep staff profiles consistent.{% endtrans %}
+					</p>
+				</div>
+
+				<div class="fs-diplomas-hero__right">
+					<div class="fs-diplomas-hero-stats">
+						<div class="fs-diplomas-hero-stat">
+							<span class="fs-diplomas-hero-stat__icon">
+								<i class="fe fe-list"></i>
+							</span>
+							<span class="fs-diplomas-hero-stat__label">{% trans %}Number of registered diplomas{% endtrans %}</span>
+							<strong class="fs-diplomas-hero-stat__value">{{ diplomas|length }}</strong>
+						</div>
+
+						<div class="fs-diplomas-hero-stat">
+							<span class="fs-diplomas-hero-stat__icon">
+								<i class="fe fe-lock"></i>
+							</span>
+							<span class="fs-diplomas-hero-stat__label">{% trans %}Management status{% endtrans %}</span>
+							<strong class="fs-diplomas-hero-stat__value fs-diplomas-hero-stat__value--status">
+								{% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+									{% trans %}Unlocked{% endtrans %}
+								{% else %}
+									{% trans %}Locked{% endtrans %}
+								{% endif %}
+							</strong>
+						</div>
+					</div>
+
+					{% if canManageDiplomas %}
+						<form action="{{ path('diploma_saveDiploma') }}" method="post" class="fs-diplomas-inline-form" data-fs-modal-form="true" data-fs-preserve-action="true" data-modal-title="{% trans %}Add new diploma{% endtrans %}" data-modal-size="md">
+							<button type="submit" class="fs-diplomas-btn fs-diplomas-btn--hero" name="addNewDiploma">
+								<i class="fe fe-plus"></i>
+								<span>{% trans %}Add new diploma{% endtrans %}</span>
+							</button>
+						</form>
+					{% endif %}
+				</div>
+			</section>
+
+			{% if canManageDiplomas %}
+				<form action="{{ path('diploma_bulkDeleteDiploma') }}" method="post" id="fsDiplomasBulkDeleteForm">
+					<input type="hidden" name="_token" value="{{ csrf_token('bulk_delete_diploma') }}">
+				</form>
+			{% endif %}
+
+			<section class="fs-diplomas-card">
+				<div class="fs-diplomas-card__header">
+					<div>
+						<span class="fs-diplomas-card__badge">
+							<i class="fe fe-list"></i>
+							{% trans %}Dynamic table{% endtrans %}
+						</span>
+
+						<h2 class="fs-diplomas-card__title">
+							{% trans %}Registered diplomas{% endtrans %}
+						</h2>
+					</div>
+
+					<div class="fs-diplomas-card__tools">
+						<div class="fs-diplomas-search">
+							<i class="fe fe-search"></i>
+							<input type="text" id="fsDiplomasSearch" placeholder="{% trans %}Search diploma...{% endtrans %}">
+						</div>
+
+						<button type="button" class="fs-diplomas-btn fs-diplomas-btn--ghost" id="fsDiplomasPrint">
+							<i class="fe fe-printer"></i>
+							<span>{% trans %}Print{% endtrans %}</span>
+						</button>
+					</div>
+				</div>
+
+				{% if canManageDiplomas %}
+					<div class="fs-diplomas-bulkbar" id="fsDiplomasBulkbar">
+						<div class="fs-diplomas-bulkbar__left">
+							<span class="fs-diplomas-bulkbar__icon">
+								<i class="fe fe-check"></i>
+							</span>
+							<strong id="fsDiplomasSelectedCount">{% trans %}0 diplomas selected{% endtrans %}</strong>
+							<span class="fs-diplomas-bulkbar__hint">{% trans %}Select diplomas to apply a grouped action.{% endtrans %}</span>
+						</div>
+
+						<div class="fs-diplomas-bulkbar__actions">
+							<button type="button" class="fs-diplomas-bulkbar__btn fs-diplomas-bulkbar__btn--ghost" id="fsDiplomasClearSelection">
+								<i class="fe fe-x"></i>
+								<span>{% trans %}Clear{% endtrans %}</span>
+							</button>
+
+							<button type="button" class="fs-diplomas-bulkbar__btn fs-diplomas-bulkbar__btn--danger" id="fsDiplomasBulkDelete">
+								<i class="fe fe-trash"></i>
+								<span>{% trans %}Delete selected diplomas{% endtrans %}</span>
+							</button>
+						</div>
+					</div>
+				{% endif %}
+
+				<div class="fs-diplomas-card__body">
+					<div class="fs-diplomas-table-wrap">
+						<table class="table fs-diplomas-table" id="fsDiplomasTable">
+							<thead>
+								<tr>
+									{% if canManageDiplomas %}
+										<th class="fs-diplomas-check-col">
+											<label class="fs-diplomas-check" title="{% trans %}Select all visible diplomas{% endtrans %}">
+												<input type="checkbox" id="fsDiplomasSelectAll">
+												<span></span>
+											</label>
+										</th>
+									{% endif %}
+
+									<th>
+										<button type="button" class="fs-diplomas-sort" data-sort-index="{% if canManageDiplomas %}1{% else %}0{% endif %}">
+											<span>{% trans %}Diploma{% endtrans %}</span>
+											<i class="fe fe-chevron-down"></i>
+										</button>
+									</th>
+
+									<th class="text-center">
+										<button type="button" class="fs-diplomas-sort" data-sort-index="{% if canManageDiplomas %}2{% else %}1{% endif %}">
+											<span>{% trans %}Effective{% endtrans %}</span>
+											<i class="fe fe-chevron-down"></i>
+										</button>
+									</th>
+
+									{% if canManageDiplomas %}
+										<th class="text-center">{% trans %}Actions{% endtrans %}</th>
+									{% endif %}
+								</tr>
+							</thead>
+
+							<tbody>
+								{% for diploma in diplomas %}
+									<tr data-diploma-slug="{{ diploma.slug }}" data-diploma-name="{{ diploma.diploma }}" data-can-delete="{% if diploma.teachers|length > 0 %}0{% else %}1{% endif %}">
+										{% if canManageDiplomas %}
+											<td class="fs-diplomas-check-col" data-label="{% trans %}Select{% endtrans %}">
+												<label class="fs-diplomas-check">
+													<input
+														type="checkbox"
+														class="fs-diplomas-row-check"
+														name="diplomaSlugs[]"
+														value="{{ diploma.slug }}"
+														form="fsDiplomasBulkDeleteForm"
+														data-diploma-name="{{ diploma.diploma }}"
+														{% if diploma.teachers|length > 0 %}
+															data-locked="1"
+														{% else %}
+															data-locked="0"
+														{% endif %}
+													>
+													<span></span>
+												</label>
+											</td>
+										{% endif %}
+
+										<td data-label="{% trans %}Diploma{% endtrans %}">
+											<div class="fs-diplomas-diploma-cell">
+												<span class="fs-diplomas-diploma-icon">
+													<i class="fe fe-award"></i>
+												</span>
+												<strong>{{ diploma.diploma }}</strong>
+											</div>
+										</td>
+
+										<td class="text-center" data-label="{% trans %}Effective{% endtrans %}">
+											<span class="fs-diplomas-count-badge {% if diploma.teachers|length > 0 %}fs-diplomas-count-badge--active{% endif %}">
+												{{ diploma.teachers|length }}
+											</span>
+										</td>
+
+										{% if canManageDiplomas %}
+											<td class="text-center" data-label="{% trans %}Actions{% endtrans %}">
+												<div class="fs-diplomas-actions">
+													<form action="{{ path('diploma_editDiploma', {'slug': diploma.slug}) }}" method="post" class="fs-diplomas-action-form" data-fs-modal-form="true" data-modal-size="md" data-modal-title="{% trans %}Edit diploma{% endtrans %}">
+														<button type="submit" class="fs-diplomas-action fs-diplomas-action--edit" data-fs-modal="true" data-modal-size="md" name="diplomaToUpdate" data-bs-toggle="tooltip" title="{% trans %}Edit the diploma {{ diploma.diploma }}{% endtrans %}">
+															<i class="fe fe-edit"></i>
+															<span>{% trans %}Edit{% endtrans %}</span>
+														</button>
+													</form>
+
+													{% if diploma.teachers|length > 0 %}
+														<a class="fs-diplomas-action fs-diplomas-action--delete" href="javascript:void(0);"
+															onclick="swal({
+																'title': '{% trans %}Danger{% endtrans %}',
+																'text': '{% trans %}Delete denied. This diploma is allowed to teacher !{% endtrans %}',
+																'type': 'error',
+																'showCancelButton': true,
+																'showConfirmButton': false,
+																'confirmButtonText': false,
+																'cancelButtonText': 'OK',
+																'cancelButtonColor': '#088318'
+															})">
+															<i class="fe fe-trash"></i>
+															<span>{% trans %}Delete{% endtrans %}</span>
+														</a>
+													{% else %}
+														<a class="fs-diplomas-action fs-diplomas-action--delete" href="javascript:void(0);"
+															onclick="swal({
+																'title': '{% trans %}Warning !{% endtrans %}',
+																'type': 'warning',
+																'text': '{% trans %}Do you want to delete this diploma ?{% endtrans %}',
+																'showCancelButton': true,
+																'confirmButtonText': '{% trans %}Yes{% endtrans %}',
+																'confirmButtonColor': '#f00',
+																'cancelButtonText': '{% trans %}No{% endtrans %}',
+																'cancelButtonColor': '#186106',
+																'confirmButtonPath': '{{ path('diploma_deleteDiploma', {'slug': diploma.slug}) }} '
+															});" title="{% trans %}Delete {% endtrans %} {{ diploma.diploma }}">
+															<i class="fe fe-trash"></i>
+															<span>{% trans %}Delete{% endtrans %}</span>
+														</a>
+													{% endif %}
+												</div>
+											</td>
+										{% endif %}
+									</tr>
+								{% else %}
+									<tr>
+										<td colspan="{% if canManageDiplomas %}4{% else %}2{% endif %}">
+											<div class="fs-diplomas-empty">
+												<i class="fe fe-folder"></i>
+												<strong>{% trans %}No diploma found{% endtrans %}</strong>
+												<span>{% trans %}Start by creating a new diploma.{% endtrans %}</span>
+											</div>
+										</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+
+					<div class="fs-diplomas-table-footer">
+						<div class="fs-diplomas-table-footer__left">
+							<span id="fsDiplomasResultCount"></span>
+						</div>
+
+						<div class="fs-diplomas-footer-controls">
+							<label class="fs-diplomas-page-size">
+								<span>{% trans %}Rows{% endtrans %}</span>
+								<select id="fsDiplomasRowsPerPage">
+									<option value="5">5</option>
+									<option value="10" selected>10</option>
+									<option value="25">25</option>
+									<option value="50">50</option>
+								</select>
+							</label>
+
+							<div class="fs-diplomas-pagination" id="fsDiplomasPagination" aria-label="{% trans %}Pagination{% endtrans %}"></div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-diploma-display-premium.js') }}"></script>
 {% endblock %}

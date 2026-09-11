@@ -3,438 +3,537 @@
 {% block title %}{% trans %}Display Student{% endtrans %}{% endblock %}
 
 {% block subTitle %}
-     {% if is_granted('ROLE_INTENDANT') or headmasterFees == 1 %}
-        {% trans %}STUDENTS REGISTRATION MANAGMENT{% endtrans %}
-     {% else %}
-        {% trans %}STUDENTS MANAGMENT{% endtrans %}
-     {% endif %}
+	{% if is_granted('ROLE_INTENDANT') or headmasterFees == 1 %}
+		{% trans %}STUDENTS REGISTRATION MANAGMENT{% endtrans %}
+	{% else %}
+		{% trans %}STUDENTS MANAGMENT{% endtrans %}
+	{% endif %}
 {% endblock %}
 
-
 {% block infoMessage %}
-    {% include "includes/_info_message.html.twig" %}
-
-    <form action="{{ path('registration_printSchoolFeesStatement') }}" method="post"  target="_blank">
-        <div class="form-group">
-            <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="printSchoolFeesStatement">
-                <i class="fa fa-print"></i>
-            {% trans %}Print financial statements of all classes{% endtrans %}
-            </button>
-        </div>
-    </form>
+	{% include "includes/_info_message.html.twig" %}
 {% endblock %}
 
 {% block stylesheets %}
-	<style>
-		th,
-		tfoot {
-			font-size: 15px !important;
-			text-align: center !important;
-			font-weight: bold !important;
-			background-color: #F1F1F1 !important;
-		}
-
-		tr:hover {
-			background-color: rgba(62, 128, 235, 0.2) !important;
-			color: #3e80eb !important;
-		}
-
-        td {
-			font-size: 12px !important;
-			text-align: center !important;
-		}
-	</style>
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-student-display-premium.css') }}">
 {% endblock %}
 
 {% block body %}
-<!-- App-Content -->
-	<div class="hor-content main-content">
+	{% set studentWriteBlocked = ('ROLE_ADMIN' in app.user.roles) and app.user.studentManagementBlocked %}
+	{% set canManageStudents = false %}
+	{% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_INTENDANT') %}
+		{% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+			{% if headmasterFees == 0 %}
+				{% set canManageStudents = true %}
+			{% endif %}
+		{% endif %}
+	{% endif %}
+
+	<div class="hor-content main-content fs-students-page">
 		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary"> 
-                        {% if is_granted('ROLE_INTENDANT') or headmasterFees == 1 %}
-                            <i class="fa fa-users me-2"></i> {% trans %}STUDENTS REGISTRATION MANAGMENT{% endtrans %}
-                        {% else %}
-                            <i class="fa fa-users me-2"></i> {% trans %}STUDENTS MANAGMENT{% endtrans %}
-                        {% endif %}
-                    </h4>
-                </div>
-                <div class="page-rightheader">
-                    <div class="btn-list">
-                        <button type="button" class="btn btn-primary form-control-sm">
-                            <span><i class="fa fa-users me-2"></i> {% trans %}Total effective{% endtrans %}</span>
-                            <span class="badge bg-white text-dark rounded-pill">{{ numberOfStudentInSchool }}</span>
-                        </button>
-                        {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
-                            {# <a href="{{ path('display_all_students') }}" class="btn btn-outline-primary" name="addNewStudent"> #}
-                            {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_INTENDANT') %}
-                                <a href="{{ path('student_saveStudent') }}" class="btn btn-outline-primary" name="addNewStudent">
-                                    <i class="fa fa-user-plus me-2"></i> {% trans %}Add new student{% endtrans %}
-                                </a>
-                            {% endif %}
-                                    
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-            <!--End Page header-->
+			<div class="fs-students-menu-safe-space" aria-hidden="true"></div>
 
-            <div class="card border-primary">
-                <div class="card-header">
-                    <div class="col-md-4">
-                        <form action="{{ path('student_displayStudent', {'headmasterFees': headmasterFees}) }}" method="post" class="row g-3 needs-validation" novalidate>
-                            <fieldset>
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <div class="form-group">
-                                            <select class="form-control select2-show-search" data-placeholder="Choose a classroom" name="classroom" id="classroom" required style="border: 1px solid #0f0;">
-                                                <option label="Choose a classroom">
-                                                    {% trans %}Choose a classroom{% endtrans %}
-                                                </option>
-                                                {% if subSystem == 'Francophone / French Speaker' %}
-                                                    {% if school.education.education == 'Général' %}
-                                                        {% include "includes/_selectClassrooms.html.twig" %}
-                                                        {% else %}
-                                                            {% include "includes/_selectClassroomsTech.html.twig" %}
-                                                    {% endif %}
-                                                    {% else %}
-                                                        {% include "includes/_selectClassroomsEn.html.twig" %}
-                                                {% endif %}
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="displayStudents">
-                                                <i class="fa fa-eye"></i>
-                                                {% trans %}Display{% endtrans %}
-                                            </button>
-                                        </div>
-                                    </div>
+			<section class="fs-students-hero">
+				<div class="fs-students-hero__content">
+					<span class="fs-students-eyebrow">
+						<i class="fe fe-users"></i>
+						{% trans %}Student workspace{% endtrans %}
+					</span>
+
+					<h1 class="fs-students-title">
+						{% if is_granted('ROLE_INTENDANT') or headmasterFees == 1 %}
+							{% trans %}STUDENTS REGISTRATION MANAGMENT{% endtrans %}
+						{% else %}
+							{% trans %}STUDENTS MANAGMENT{% endtrans %}
+						{% endif %}
+					</h1>
+
+					<p class="fs-students-subtitle">
+						{% trans %}Filter, manage, export and print student records through a clean premium workspace.{% endtrans %}
+					</p>
+				</div>
+
+				<div class="fs-students-hero__right">
+					<div class="fs-students-hero-stat">
+						<span class="fs-students-hero-stat__icon">
+							<i class="fe fe-users"></i>
+						</span>
+						<span class="fs-students-hero-stat__label">{% trans %}Total effective{% endtrans %}</span>
+						<strong class="fs-students-hero-stat__value">{{ numberOfStudentInSchool }}</strong>
+					</div>
+
+                    {% if not studentWriteBlocked and mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+                        {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_INTENDANT') %}
+                            <a href="{{ path('student_saveStudent') }}" class="fs-students-btn fs-students-btn--hero-add">
+                                <i class="fe fe-user-plus"></i>
+                                <span>{% trans %}Add student{% endtrans %}</span>
+                            </a>
+                        {% endif %}
+                    {% endif %}
+
+					<form action="{{ path('registration_printSchoolFeesStatement') }}" method="post" target="_blank" class="fs-students-inline-form" data-no-spinner="1">
+						<button type="submit" class="fs-students-btn fs-students-btn--hero" name="printSchoolFeesStatement">
+							<i class="fe fe-printer"></i>
+							<span>{% trans %}Financial statements{% endtrans %}</span>
+						</button>
+					</form>
+				</div>
+			</section>
+
+			{% if studentWriteBlocked %}
+				<div class="alert alert-warning d-flex align-items-center" role="alert">
+					<i class="fe fe-lock me-2"></i>
+					<span>{% trans %}The headmaster has disabled your permission to add or edit students.{% endtrans %}</span>
+				</div>
+			{% endif %}
+
+			<section class="fs-students-tools-card">
+				<div class="fs-students-tools-card__header">
+					<div>
+						<span class="fs-students-card-badge">
+							<i class="fe fe-filter"></i>
+							{% trans %}Filters and actions{% endtrans %}
+						</span>
+						<h2 class="fs-students-card-title">{% trans %}Select a classroom{% endtrans %}</h2>
+					</div>
+
+					<div class="fs-students-top-actions">
+						{% if not studentWriteBlocked %}
+							<a href="{{ path('importation_student') }}" class="fs-students-btn fs-students-btn--soft">
+								<i class="fe fe-download"></i>
+								<span>{% trans %}Import students{% endtrans %}</span>
+							</a>
+						{% endif %}
+
+						<a href="{{ path('export_eleves_download') }}" class="fs-students-btn fs-students-btn--soft">
+							<i class="fe fe-upload"></i>
+							<span>{% trans %}Export students per classroom{% endtrans %}</span>
+						</a>
+
+						<a href="{{ path('export_exam_level_students') }}" class="fs-students-btn fs-students-btn--success">
+							<i class="fe fe-file-text"></i>
+							<span>{% trans %}Export SPIDER{% endtrans %}</span>
+						</a>
+
+						{% if methodIsPost %}
+							{% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+								{% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_INTENDANT') %}
+									<a class="fs-students-btn fs-students-btn--primary" data-bs-target="#modaldemo3" data-bs-toggle="modal" href="">
+										<i class="fe fe-book"></i>
+										<span>{% trans %}Class details{% endtrans %}</span>
+									</a>
+								{% endif %}
+							{% endif %}
+						{% endif %}
+					</div>
+				</div>
+
+				<div class="fs-students-tools-card__body">
+					<div class="fs-students-filters-grid">
+						<form action="{{ path('student_displayStudent', {'headmasterFees': headmasterFees}) }}" method="post" class="fs-students-filter-form needs-validation" novalidate>
+                            <div class="fs-select-field">
+                                <label class="fs-select-label">{% trans %}Classroom{% endtrans %}</label>
+
+                                <select class="form-control select2-show-search fs-select-control" data-placeholder="{% trans %}Choose a classroom{% endtrans %}" name="classroom" id="classroom" required>
+                                    <option value="" label="{% trans %}Choose a classroom{% endtrans %}">
+                                        {% trans %}Choose a classroom{% endtrans %}
+                                    </option>
+
+                                    {% if subSystem == 'Francophone / French Speaker' %}
+                                        {% if school.education.education == 'Général' %}
+                                            {% include "includes/_selectClassrooms.html.twig" %}
+                                        {% else %}
+                                            {% include "includes/_selectClassroomsTech.html.twig" %}
+                                        {% endif %}
+                                    {% else %}
+                                        {% include "includes/_selectClassroomsEn.html.twig" %}
+                                    {% endif %}
+                                </select>
+
+                                <div class="invalid-feedback">
+                                    {% trans %}Please choose a classroom !{% endtrans %}
                                 </div>
-                            </fieldset>
+                            </div>
+
+                            <button class="fs-students-btn fs-students-btn--primary" type="submit" name="displayStudents">
+                                <i class="fe fe-eye"></i>
+                                <span>{% trans %}Display{% endtrans %}</span>
+                            </button>
                         </form>
-                    </div>
-                    
-                    <div class="col-md-3">
-                        {% if students|length > 0 %}
-                            <form action="{{ path('registration_printSchoolFeesStatement', {'slug': selectedClassroom.slug}) }}" method="post" target="_blank">
-                                <div class="form-group">
-                                    <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="printSchoolFeesStatement"><i class="fa fa-print"></i> 
-                                    {% trans %}Financial statement{% endtrans %}
-                                    </button>
+
+						<form action="{{ path('supprimer_doublons') }}" method="post" class="fs-students-filter-form needs-validation" novalidate>
+                            <div class="fs-select-field">
+                                <label class="fs-select-label">{% trans %}Classroom{% endtrans %}</label>
+
+                                <select class="form-control select2-show-search fs-select-control" data-placeholder="{% trans %}Choose a classroom{% endtrans %}" name="classroom" id="classroomDuplicate" required>
+                                    <option value="" label="{% trans %}Choose a classroom{% endtrans %}">
+                                        {% trans %}Choose a classroom{% endtrans %}
+                                    </option>
+
+                                    {% if subSystem == 'Francophone / French Speaker' %}
+                                        {% if school.education.education == 'Général' %}
+                                            {% include "includes/_selectClassrooms.html.twig" %}
+                                        {% else %}
+                                            {% include "includes/_selectClassroomsTech.html.twig" %}
+                                        {% endif %}
+                                    {% else %}
+                                        {% include "includes/_selectClassroomsEn.html.twig" %}
+                                    {% endif %}
+                                </select>
+
+                                <div class="invalid-feedback">
+                                    {% trans %}Please choose a classroom !{% endtrans %}
                                 </div>
-                            </form>
-                        {% endif %}
-                    </div>
-                        
-                    {% if methodIsPost %}
-                        
+                            </div>
 
-                        <div class="col-md-2 position-relative me-5 ">
-                            <form action="{{ path('repertory_classroom', {'slug': selectedClassroom.slug}) }}" method="post" target="_blank">
-                                <div class="form-group">
-                                    <button type="submit" class="btn btn-outline-primary">
-                                        <i class="fe fe-printer me-2"></i>{% trans %}Repertory of classroom{% endtrans %}
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+                            <button class="fs-students-btn fs-students-btn--danger-soft" type="submit" name="displayStudents">
+                                <i class="fe fe-trash"></i>
+                                <span>{% trans %}Delete duplicate{% endtrans %}</span>
+                            </button>
+                        </form>
+					</div>
+				</div>
+			</section>
 
-                        <div class="col-md-2">
-                            <form action="{{ path('repertory_parent_classroom', {'slug': selectedClassroom.slug}) }}" method="post" target="_blank">
-                                <div class="form-group">
-                                    <button type="submit" class="btn btn-outline-primary">
-                                        <i class="fe fe-printer me-2"></i>{% trans %}Repertory of parents{% endtrans %}
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                        
-                    {% endif %}
-                </div>
-            </div>
-            {% if methodIsPost %}
-                {% set numberOfGirls = 0 %}
-                {% set numberOfBoys = 0 %}
-                {% set numberNewOfGirls = 0 %}
-                {% set numberNewOfBoys = 0 %}
-                {% set numberRepeaterOfGirls = 0 %}
-                {% set numberRepeaterOfBoys = 0 %}
+			{% if methodIsPost %}
+				<div class="modal fade fs-students-modal" id="modaldemo3">
+					<div class="modal-dialog modal-lg" role="document">
+						<div class="modal-content modal-content-demo">
+							<div class="modal-header">
+								<h6 class="modal-title">
+									<b>{% trans %}Class details{% endtrans %} {{ selectedClassroom.classroom }}</b>
+								</h6>
+								<button aria-label="{% trans %}Close{% endtrans %}" class="btn-close" data-bs-dismiss="modal" type="button"><span aria-hidden="true">{% trans %}&times;{% endtrans %}</span></button>
+							</div>
 
-                {% for student in students %}
-                    {% if student.sex.sex == "F" %}
-                        {% set numberOfGirls = numberOfGirls + 1 %}
-                        {% elseif student.sex.sex == "M" %}
-                            {% set numberOfBoys = numberOfBoys + 1 %}
-                    {% endif %}
+							<div class="modal-body">
+								<div class="fs-class-actions-grid">
+									<div class="fs-class-pill">
+										<span>{% trans %}Class{% endtrans %}</span>
+										<strong>{{ selectedClassroom.classroom }}</strong>
+									</div>
 
-                    {% if student.sex.sex == "F" and student.repeater.repeater == "Non" %}
-                        {% set numberNewOfGirls = numberNewOfGirls + 1 %}
-                        {% elseif student.sex.sex == "M" and student.repeater.repeater == "Non" %}
-                            {% set numberNewOfBoys = numberNewOfBoys + 1 %}
-                    {% endif %}
+									<a href="{{ path('export_student', {'slugClassroom': selectedClassroom.slug, 'parametre': 'list'}) }}" class="fs-students-btn fs-students-btn--soft" name="addNewStudent">
+										<i class="fe fe-upload"></i>
+										<span>{% trans %}Export class students{% endtrans %}</span>
+									</a>
 
-                    {% if student.sex.sex == "F" and student.repeater.repeater == "Oui" %}
-                        {% set numberRepeaterOfGirls = numberRepeaterOfGirls + 1 %}
-                        {% elseif student.sex.sex == "M" and student.repeater.repeater == "Oui" %}
-                            {% set numberRepeaterOfBoys = numberRepeaterOfBoys + 1 %}
-                    {% endif %}
+									<a href="{{ path('export_student', {'slugClassroom': selectedClassroom.slug, 'parametre': 'notes'}) }}" class="fs-students-btn fs-students-btn--soft" name="addNewStudent">
+										<i class="fe fe-upload"></i>
+										<span>{% trans %}Export students to import grades{% endtrans %}</span>
+									</a>
 
-                {% endfor %}
+									{% if students|length > 0 %}
+										<form action="{{ path('registration_printSchoolFeesStatement', {'slug': selectedClassroom.slug}) }}" method="post" target="_blank" data-no-spinner="1">
+											<button type="submit" class="fs-students-btn fs-students-btn--soft" name="printSchoolFeesStatement">
+												<i class="fe fe-printer"></i>
+												<span>{% trans %}Financial statement{% endtrans %}</span>
+											</button>
+										</form>
+									{% endif %}
 
+									<form action="{{ path('repertory_classroom', {'slug': selectedClassroom.slug}) }}" method="post" target="_blank" data-no-spinner="1">
+										<button type="submit" class="fs-students-btn fs-students-btn--soft">
+											<i class="fe fe-printer"></i>
+											<span>{% trans %}Repertory of classroom{% endtrans %}</span>
+										</button>
+									</form>
 
-                <div class="card border-primary">
-                    <div class="card-header mt-2">
-                        
-                        <button type="button" class="btn btn-primary position-relative me-5 mb-2">
-                            <span>{% trans %}Class{% endtrans %}</span>
-                            <span class="badge bg-white text-dark rounded-pill">{{ selectedClassroom.classroom }}</span>
-                        </button>
-                                
-                        <button type="button" class="btn btn-primary position-relative me-5 mb-2">
-                            {% trans %}Girls{% endtrans %}
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                {{ numberOfGirls }}
-                                <span class="visually-hidden">unread messages</span>
-                            </span>
-                        </button>
-                        <button type="button" class="btn btn-primary position-relative me-5 mb-2">
-                            {% trans %}Boys{% endtrans %}
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                {{ numberOfBoys }}
-                                <span class="visually-hidden">unread messages</span>
-                            </span>
-                        </button>
-                        <button type="button" class="btn btn-primary position-relative me-5 mb-2">
-                            Total
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                {{ numberOfGirls + numberOfBoys }}
-                                <span class="visually-hidden">unread messages</span>
-                            </span>
-                        </button>
-                        <button type="button" class="btn btn-teal position-relative me-5 mb-2">
-                            {% trans %}Eff. New Girls{% endtrans %}
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                {{ numberNewOfGirls }}
-                                <span class="visually-hidden">unread messages</span>
-                            </span>
-                        </button>
-                        <button type="button" class="btn btn-teal position-relative me-5 mb-2">
-                            {% trans %}Eff. New Boys{% endtrans %}
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                {{ numberNewOfBoys }}
-                                <span class="visually-hidden">unread messages</span>
-                            </span>
-                        </button>
-                        <button type="button" class="btn btn-teal position-relative me-5 mb-2">
-                            Total
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                {{ numberNewOfGirls + numberNewOfBoys }}
-                                <span class="visually-hidden">unread messages</span>
-                            </span>
-                        </button>
+									<form action="{{ path('repertory_parent_classroom', {'slug': selectedClassroom.slug}) }}" method="post" target="_blank" data-no-spinner="1">
+										<button type="submit" class="fs-students-btn fs-students-btn--soft">
+											<i class="fe fe-printer"></i>
+											<span>{% trans %}Repertory of parents{% endtrans %}</span>
+										</button>
+									</form>
+								</div>
 
+								{% set numberOfGirls = 0 %}
+								{% set numberOfBoys = 0 %}
+								{% set numberNewOfGirls = 0 %}
+								{% set numberNewOfBoys = 0 %}
+								{% set numberRepeaterOfGirls = 0 %}
+								{% set numberRepeaterOfBoys = 0 %}
 
-                        <button type="button" class="btn btn-info position-relative me-5 mb-2">
-                            {% trans %}Eff. Repeat Girls{% endtrans %}
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                {{ numberRepeaterOfGirls }}
-                                <span class="visually-hidden">unread messages</span>
-                            </span>
-                        </button>
-                        <button type="button" class="btn btn-info position-relative me-5 mb-2">
-                            {% trans %}Eff. Repeat Boys{% endtrans %}
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                {{ numberRepeaterOfBoys }}
-                                <span class="visually-hidden">unread messages</span>
-                            </span>
-                        </button>
-                        <button type="button" class="btn btn-info position-relative me-5 mb-2">
-                            Total
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                {{ numberRepeaterOfGirls + numberRepeaterOfBoys }}
-                                <span class="visually-hidden">unread messages</span>
-                            </span>
-                        </button>
-                            
-                    </div>
-                    
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            {% if methodIsPost %}
-                                <table border="1" class="table table-bordered text-nowrap key-buttons" id="example" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th class="border-bottom-0 green-gradient">{% trans %}N°{% endtrans %}</th>
-                                            <th class="border-bottom-0 green-gradient">{% trans %}Photo{% endtrans %}</th>
-                                            <th class="border-bottom-0 indigo-gradient">{% trans %}Full name{% endtrans %}</th>
-                                            <th class="border-bottom-0 green-gradient">{% trans %}Birth{% endtrans %}</th>
-                                            <th class="border-bottom-0 orange-gradient">{% trans %}Phone{% endtrans %}</th>
-                                            {# si c'est l'admin qui est connecté #}
-                                                {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_INTENDANT') and headmasterFees == 0 %}
-                                                {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
-                                                    <th class="border-bottom-0 blue-gradient">{% trans %}Actions{% endtrans %}</th>
-                                                {% endif %}
-                                            {% endif %}
-                                                
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th class="border-bottom-0 green-gradient">{% trans %}N°{% endtrans %}</th>
-                                            <th class="border-bottom-0 green-gradient">{% trans %}Photo{% endtrans %}</th>
-                                            <th class="border-bottom-0 indigo-gradient">{% trans %}Full name{% endtrans %}</th>
-                                            <th class="border-bottom-0 green-gradient">{% trans %}Birth{% endtrans %}</th>
-                                            <th class="border-bottom-0 orange-gradient">{% trans %}Phone{% endtrans %}</th>
-                                            {# si c'est l'admin qui est connecté #}
-                                                {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_INTENDANT') and headmasterFees == 0 %}
-                                                {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
-                                                    <th class="border-bottom-0 blue-gradient">{% trans %}Actions{% endtrans %}</th>
-                                                {% endif %}
-                                            {% endif %}
-                                        </tr>
-                                    </tfoot>
-                                    <tbody>
-                                        {% set i = 1 %}
-                                        {% for student in students %}
-                                            {# {% set registration = student.registration %} #}
-                                            <tr>
-                                                <td ><span class="badge bg-primary">{{ i }}</span></td>
-                                                <td style="vertical-align: middle; text-align:center;">
-                                                    <div class="box-widget widget-user text-center">
-                                                        <div class="widget-user-image mx-auto">
-                                                            {% if student.sex.sex == 'F' %}
-                                                                <img alt="{{ student.fullName }}" class="rounded-circle" src="{{ student.photo ? asset('images/students/' ~ student.photo) : asset('images/students/fille.jpg')}}" width="100" height="100">
-                                                                {% else %} 
-                                                                <img alt="{{ student.fullName }}" class="rounded-circle" src="{{ student.photo ? asset('images/students/' ~ student.photo) : asset('images/students/garcon.jpg')}}" width="100" height="100">
-                                                            {% endif %}
+								{% for student in students %}
+									{% if student.sex.sex == "F" %}
+										{% set numberOfGirls = numberOfGirls + 1 %}
+									{% elseif student.sex.sex == "M" %}
+										{% set numberOfBoys = numberOfBoys + 1 %}
+									{% endif %}
 
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                
-                                                <td style="vertical-align: middle;">{{ student.fullName }} 
-                                                    
-                                                    <br> <span class="badge bg-primary mt-2">{{ student.registrationNumber }}</span>
+									{% if student.sex.sex == "F" and student.repeater.repeater == "Non" %}
+										{% set numberNewOfGirls = numberNewOfGirls + 1 %}
+									{% elseif student.sex.sex == "M" and student.repeater.repeater == "Non" %}
+										{% set numberNewOfBoys = numberNewOfBoys + 1 %}
+									{% endif %}
 
-                                                    {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
-                                                        <br> <span class="badge badge-gradient-primary mt-2">{% trans %}Saved by : {% endtrans %}</span>
-                                                        <span class="badge badge-gradient-danger mt-2">{{ student.createdBy ? student.createdBy.fullName: "//" }}</span>
-                                                        <span class="badge badge-gradient-primary mt-2">{% trans %}at {% endtrans %}</span>
-                                                        <span class="badge badge-gradient-danger mt-2">{{ student.createdAt ? student.createdAt|date('d-m-Y H:i:s'): "//" }}</span>
-                                                    {% endif %}
-                                                    
-                                                </td>
-                                                <td style="vertical-align: middle;">
-                                                    {{ student.birthday|date('d-m-Y') }} à {{ student.birthplace }} <br>
-                                                    {% trans %}Sex :{% endtrans %}
-                                                    {% if student.sex.sex == "F" %}
-                                                        <span class="badge bg-primary mt-2">{{ student.sex.sex }}</span>
-                                                        {% else %}
-                                                            <span class="badge badge-default mt-2">{{ student.sex.sex }}</span>
-                                                    {% endif %}
-                                                    <br>
-                                                    {% trans %}Repeat :{% endtrans %}
-                                                    {% if student.repeater.repeater == "Oui" %}
-                                                        <span class="badge bg-danger mt-2">{{ student.repeater.repeater }}</span>
-                                                        {% else %}
-                                                        <span class="badge bg-success mt-2">{{ student.repeater.repeater }}</span>
-                                                    {% endif %}
-                                                </td>
-                                                
+									{% if student.sex.sex == "F" and student.repeater.repeater == "Oui" %}
+										{% set numberRepeaterOfGirls = numberRepeaterOfGirls + 1 %}
+									{% elseif student.sex.sex == "M" and student.repeater.repeater == "Oui" %}
+										{% set numberRepeaterOfBoys = numberRepeaterOfBoys + 1 %}
+									{% endif %}
+								{% endfor %}
 
-                                                <td style="vertical-align: middle; text-align: center !important;">{{ student.personneAContacterEnCasUergence }}</td>
-                                                    {# si c'est l'admin qui est conncté #}
-                                                    {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_INTENDANT') and headmasterFees == 0 %}
-                                                    {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
-                                                        <td style="text-align: center !important; vertical-align: middle !important;">
+								<div class="fs-class-stats-table-wrap">
+									<table class="table fs-class-stats-table">
+										<thead>
+											<tr>
+												<th></th>
+												<th><i class="fe fe-user me-2"></i>{% trans %}Boys{% endtrans %}</th>
+												<th><i class="fe fe-user me-2"></i>{% trans %}Girls{% endtrans %}</th>
+												<th>{% trans %}Total{% endtrans %}</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<th scope="row">{% trans %}Eff. New{% endtrans %}</th>
+												<td>{{ numberNewOfBoys }}</td>
+												<td>{{ numberNewOfGirls }}</td>
+												<td>{{ numberNewOfBoys + numberNewOfGirls }}</td>
+											</tr>
+											<tr>
+												<th scope="row">{% trans %}Eff. Repeat{% endtrans %}</th>
+												<td>{{ numberRepeaterOfBoys }}</td>
+												<td>{{ numberRepeaterOfGirls }}</td>
+												<td>{{ numberRepeaterOfGirls + numberRepeaterOfBoys }}</td>
+											</tr>
+											<tr>
+												<th scope="row">{% trans %}Total{% endtrans %}</th>
+												<td>{{ numberOfBoys }}</td>
+												<td>{{ numberOfGirls }}</td>
+												<td>{{ numberOfBoys + numberOfGirls }}</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
 
-                                                            <div class="btn-group">
-                                                                <a href="javascript:void(0);" class="btn btn-light btn-sm" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options <i class="fa fa-angle-down"></i></a>
-                                                                <div class="dropdown-menu" style="margin-top: auto !important; margin-bottom: auto !important; margin-left: auto !important; margin-right: auto !important;">
-                                                                    <a class="dropdown-item"  href="{{ path('fiche_eleve', {'slug': student.slug}) }}" target="_blank">
-                                                                        <i class="fe fe-printer me-2"></i> 
-                                                                        {% trans %}Student sheet{% endtrans %}
-                                                                    </a>
+							<div class="modal-footer">
+								<button class="fs-students-btn fs-students-btn--danger-soft" data-bs-dismiss="modal" type="button">
+									<i class="fe fe-x"></i>
+									<span>{% trans %}Close{% endtrans %}</span>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endif %}
 
-                                                                    <a class="dropdown-item" href="{{ path('print_school_attendance_certificate', {'slug': student.slug}) }}" target="_blank">
-                                                                        <i class="fe fe-printer me-2"></i> 
-                                                                        {% trans %}School certificate{% endtrans %}
-                                                                    </a>
+			{% if methodIsPost %}
+				<section class="fs-students-table-card">
+					<div class="fs-students-table-card__header">
+						<div>
+							<span class="fs-students-card-badge">
+								<i class="fe fe-list"></i>
+								{% trans %}Dynamic table{% endtrans %}
+							</span>
 
-                                                                    <a class="dropdown-item" href="{{ path('student_editStudent', {'slug': student.slug}) }}"> 
-                                                                        <i class="fe fe-edit me-2"></i> {% trans %}Edit{% endtrans %}
-                                                                    </a>
+							<h2 class="fs-students-card-title">
+								{% trans %}Registered students{% endtrans %}
+								{% if selectedClassroom is defined and selectedClassroom %}
+									<span>{{ selectedClassroom.classroom }}</span>
+								{% endif %}
+							</h2>
+						</div>
 
-                                                                    {# <a class="dropdown-item"> #}
-                                                                        {# <form action="{{ path('student_deleteStudent', {'slug': student.slug}) }}" 
-                                                                            method="post" style="display: inline-block;" 
-                                                                            onsubmit="return confirm('{% trans %}-You really want to remove the student{% endtrans %} --- {{ student.fullName }} --- {% trans %}of the class of{% endtrans %} --- {{ selectedClassroom.classroom }} --- {% trans %}with all his notes, his hours of absence and his expenses ?{% endtrans %}');">
-                                                                            <button type="submit" name="deleteStudent" class="dropdown-item">
-                                                                                <i class="fe fe-trash me-2"></i> {% trans %}Delete{% endtrans %}
-                                                                            </button>
-                                                                        </form> #}
-                                                                    {# </a> #}
+						<div class="fs-students-table-tools">
+							<div class="fs-students-search">
+								<i class="fe fe-search"></i>
+								<input type="text" id="fsStudentsSearch" placeholder="{% trans %}Search student...{% endtrans %}">
+							</div>
 
-                                                                    <a class="dropdown-item" href="javascript:void(0);" 
-                                                                        onclick="swal({
-                                                                            'title': 'Danger', 
-                                                                            'type': 'error', 
-                                                                            'text': 'Do you want to delete the student ' + ' {{ student.fullName }} ?', 
-                                                                            'showCancelButton': true, 
-                                                                            'confirmButtonText': 'Yes', 
-                                                                            'confirmButtonColor': '#f00', 
-                                                                            'cancelButtonText': 'No', 
-                                                                            'cancelButtonColor': '#186106', 
-                                                                            'confirmButtonPath': '{{ path('student_deleteStudent', {'slug': student.slug}) }} '});">
-                                                                        <i class="fa fa-trash me-2"></i> {% trans %}Delete{% endtrans %}
-                                                                    </a>
-                                                                    
-                                                                </div>
-                                                            </div>
+							<button type="button" class="fs-students-btn fs-students-btn--ghost" id="fsStudentsPrint">
+								<i class="fe fe-printer"></i>
+								<span>{% trans %}Print{% endtrans %}</span>
+							</button>
+						</div>
+					</div>
 
-                                                            {# <div class="row" style="margin-top: 10px;">
-                                                                <div class="col-6" style="vertical-align: middle;">
-                                                                    <form action="{{ path('student_editStudent', {'slug': student.slug}) }}" method="post" style="display: inline-block;">
-                                                                        <div class="form-group">
-                                                                            <button type="submit" class="btn btn-outline-primary" name="updateStudent" data-bs-toggle="tooltip" title="Modifier {{ student.fullName }}">
-                                                                                <i class="fa fa-pencil-square-o"></i>
-                                                                            </button>
-                                                                        </div>
-                                                                    </form>
-                                                                </div>
-                                                                <div class="col-6" style="vertical-align: middle;">
-                                                                    <form action="{{ path('student_deleteStudent', {'slug': student.slug}) }}" method="post" style="display: inline-block;" onsubmit="return confirm('{% trans %}-You really want to remove the student{% endtrans %} --- {{ student.fullName }} --- {% trans %}of the class of{% endtrans %} --- {{ selectedClassroom.classroom }} --- {% trans %}with all his notes, his hours of absence and his expenses ?{% endtrans %}');">
-                                                                        <button type="submit" class="btn btn-outline-danger" name="deleteStudent" data-bs-toggle="tooltip" title="Supprimer {{ student.fullName }}">
-                                                                            <i class="fa fa-trash"></i>
-                                                                        </button>
-                                                                    </form>
-                                                                </div>
-                                                            </div> #}
-                                                            
-                                                            
-                                                        </td>
-                                                    {% endif %}
-                                                {% endif %}
-                                                
-                                            </tr>
-                                            
-                                            {% set i = i + 1 %}
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
+					<div class="fs-students-table-wrap">
+						<table class="table fs-students-table" id="fsStudentsTable">
+							<thead>
+								<tr>
+									<th>
+										<button type="button" class="fs-students-sort" data-sort-index="0">
+											<span>{% trans %}N°{% endtrans %}</span>
+											<i class="fe fe-chevron-down"></i>
+										</button>
+									</th>
+									<th>{% trans %}Photo{% endtrans %}</th>
+									<th>
+										<button type="button" class="fs-students-sort" data-sort-index="2">
+											<span>{% trans %}Full name{% endtrans %}</span>
+											<i class="fe fe-chevron-down"></i>
+										</button>
+									</th>
+									<th>
+										<button type="button" class="fs-students-sort" data-sort-index="3">
+											<span>{% trans %}Birth{% endtrans %}</span>
+											<i class="fe fe-chevron-down"></i>
+										</button>
+									</th>
+									<th>
+										<button type="button" class="fs-students-sort" data-sort-index="4">
+											<span>{% trans %}Phone{% endtrans %}</span>
+											<i class="fe fe-chevron-down"></i>
+										</button>
+									</th>
+									{% if canManageStudents %}
+										<th>{% trans %}Actions{% endtrans %}</th>
+									{% endif %}
+								</tr>
+							</thead>
 
-        </div>
-    </div>
-</div>
+							<tbody>
+								{% set i = 1 %}
+								{% for student in students %}
+									<tr>
+										<td data-label="{% trans %}N°{% endtrans %}">
+											<span class="fs-row-number">{{ i }}</span>
+										</td>
 
+										<td data-label="{% trans %}Photo{% endtrans %}">
+											<div class="fs-student-avatar">
+												{% if student.sex.sex == 'F' %}
+													<img alt="{{ student.fullName }}" src="{{ student.photo ? asset('images/students/' ~ student.photo) : asset('images/students/fille.jpg')}}">
+												{% else %}
+													<img alt="{{ student.fullName }}" src="{{ student.photo ? asset('images/students/' ~ student.photo) : asset('images/students/garcon.jpg')}}">
+												{% endif %}
+											</div>
+										</td>
+
+										<td data-label="{% trans %}Full name{% endtrans %}">
+											<div class="fs-student-name-cell">
+												<strong>{{ student.fullName }}</strong>
+												<span class="fs-student-registration">{{ student.registrationNumber }}</span>
+
+												{% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+													<div class="fs-student-meta">
+														<span>{% trans %}Saved by : {% endtrans %}</span>
+														<b>{{ student.createdBy ? student.createdBy.fullName: "//" }}</b>
+														<span>{% trans %}at {% endtrans %}</span>
+														<b>{{ student.createdAt ? student.createdAt|date('d-m-Y H:i:s'): "//" }}</b>
+													</div>
+												{% endif %}
+											</div>
+										</td>
+
+										<td data-label="{% trans %}Birth{% endtrans %}">
+											<div class="fs-student-birth-cell">
+												<strong>{{ student.birthday|date('d-m-Y') }}</strong>
+												<span>{{ student.birthplace }}</span>
+
+												<div class="fs-student-tags">
+													{% if student.sex.sex == "F" %}
+														<span class="fs-tag fs-tag--primary">{{ student.sex.sex }}</span>
+													{% else %}
+														<span class="fs-tag fs-tag--dark">{{ student.sex.sex }}</span>
+													{% endif %}
+
+													{% if student.repeater.repeater == "Oui" %}
+														<span class="fs-tag fs-tag--danger">{{ student.repeater.repeater }}</span>
+													{% else %}
+														<span class="fs-tag fs-tag--success">{{ student.repeater.repeater }}</span>
+													{% endif %}
+												</div>
+											</div>
+										</td>
+
+										<td data-label="{% trans %}Phone{% endtrans %}">
+											<span class="fs-student-contact">{{ student.personneAContacterEnCasUergence }}</span>
+										</td>
+
+										{% if canManageStudents %}
+											<td data-label="{% trans %}Actions{% endtrans %}">
+												<div class="fs-students-actions">
+													<div class="dropdown">
+														<button class="fs-students-action fs-students-action--options" data-bs-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false">
+															<span>{% trans %}Options{% endtrans %}</span>
+															<i class="fe fe-chevron-down"></i>
+														</button>
+
+														<div class="dropdown-menu fs-students-dropdown">
+															<a class="dropdown-item" href="{{ path('fiche_eleve', {'slug': student.slug}) }}" target="_blank">
+																<i class="fe fe-printer me-2"></i>
+																{% trans %}Student sheet{% endtrans %}
+															</a>
+
+															<a class="dropdown-item" href="{{ path('print_school_attendance_certificate', {'slug': student.slug}) }}" target="_blank">
+																<i class="fe fe-printer me-2"></i>
+																{% trans %}School certificate{% endtrans %}
+															</a>
+
+													{% if not studentWriteBlocked %}
+														<a class="dropdown-item" href="{{ path('student_editStudent', {'slug': student.slug}) }}">
+															<i class="fe fe-edit me-2"></i>
+															{% trans %}Edit{% endtrans %}
+														</a>
+													{% endif %}
+
+															<a class="dropdown-item text-danger" href="javascript:void(0);"
+																onclick="swal({
+																	'title': 'Danger',
+																	'type': 'error',
+																	'text': 'Do you want to delete the student ' + ' {{ student.fullName }} ?',
+																	'showCancelButton': true,
+																	'confirmButtonText': 'Yes',
+																	'confirmButtonColor': '#f00',
+																	'cancelButtonText': 'No',
+																	'cancelButtonColor': '#186106',
+																	'confirmButtonPath': '{{ path('student_deleteStudent', {'slug': student.slug}) }} '});">
+																<i class="fe fe-trash me-2"></i>
+																{% trans %}Delete{% endtrans %}
+															</a>
+														</div>
+													</div>
+												</div>
+											</td>
+										{% endif %}
+									</tr>
+
+									{% set i = i + 1 %}
+								{% else %}
+									<tr>
+										<td colspan="{% if canManageStudents %}6{% else %}5{% endif %}">
+											<div class="fs-students-empty">
+												<i class="fe fe-folder"></i>
+												<strong>{% trans %}No student found{% endtrans %}</strong>
+												<span>{% trans %}Choose another classroom or import students.{% endtrans %}</span>
+											</div>
+										</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+
+					<div class="fs-students-table-footer">
+						<div class="fs-students-table-footer__left">
+							<span id="fsStudentsResultCount"></span>
+						</div>
+
+						<div class="fs-students-footer-controls">
+							<label class="fs-students-page-size">
+								<span>{% trans %}Rows{% endtrans %}</span>
+								<select id="fsStudentsRowsPerPage">
+									<option value="5">5</option>
+									<option value="10" selected>10</option>
+									<option value="25">25</option>
+									<option value="50">50</option>
+								</select>
+							</label>
+
+							<div class="fs-students-pagination" id="fsStudentsPagination" aria-label="{% trans %}Pagination{% endtrans %}"></div>
+						</div>
+					</div>
+				</section>
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-student-display-premium.js') }}"></script>
 {% endblock %}

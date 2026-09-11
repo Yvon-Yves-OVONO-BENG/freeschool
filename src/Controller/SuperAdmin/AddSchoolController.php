@@ -12,23 +12,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
-/**
- * @Route("/super-admin")
- */
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
+#[Route("/super-admin")]
 class AddSchoolController extends AbstractController
 {
-    public function __construct(protected EntityManagerInterface $em, protected TranslatorInterface $translator)
-    {
-    }
+    public function __construct(
+        protected EntityManagerInterface $em, 
+        protected TranslatorInterface $translator)
+    {}
 
-    /**
-     * @Route("/add-school/{id<[0-9]+>}", name="super_admin_addSchool")
-     */
+    #[Route("/add-school/{id<[0-9]+>}", name:"super_admin_addSchool")]
     public function addSchool(Request $request, int $id = 0): Response
     {
         $school = new School();

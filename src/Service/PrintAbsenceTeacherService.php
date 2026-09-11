@@ -34,7 +34,8 @@ class PrintAbsenceTeacherService
      * @param School $school
      * @return PDF
      */
-    public function printAbsenceTeachersReports(array $allAbsencesTeachers, School $school, SchoolYear $schoolYear): PDF
+    public function printAbsenceTeachersReports(array $allAbsencesTeachers, 
+    School $school, SchoolYear $schoolYear): PDF
     {
         $fontSize = 10;
         $cellHeaderHeight = 3;

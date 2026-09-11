@@ -19,11 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/problems")]
 class DetailsEvaluationsSequenceEleveController extends AbstractController
 {
@@ -68,42 +64,48 @@ class DetailsEvaluationsSequenceEleveController extends AbstractController
         #je récupère las classe
         $classroom = $this->classroomRepository->findOneBy(['slug' => $slugClassroom]);
 
-        // Récupérer toutes les matières attribuées à la classe
-        $subjects = $this->lessonRepository->findBy(['classroom' => $classroom]);
-
-        #je récupère l'lève
+        #je récupère l'élève
         $student = $this->studentRepository->findOneBy(['slug' => $slugStudent ]);
 
         #les sequences
         $sequence = $this->sequenceRepository->find($sequenceId);
 
-        // Récupérer les évaluations de l'élève pour le trimestre
-        $evaluations = $this->evaluationRepository->getEvaluationsByEleveAndSequence($student, $sequence);
+        if (!$classroom || !$student || !$sequence) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
 
+        // Récupérer toutes les matières attribuées à la classe
+        $subjects = $this->lessonRepository->findBy(['classroom' => $classroom]);
+
+
+        // Récupérer les évaluations de l'élève pour la séquence
+        $resultats = $this->evaluationRepository->getEvaluationsByEleveAndSequence($student, $sequence);
+        // dd($resultats);
         // Associer les matières aux évaluations
-        $resultats = [];
+        // $resultats = [];
 
-        foreach ($subjects as $subject) 
-        {
-            $subjectId = $subject->getSubject()->getId();
+        // foreach ($subjects as $subject) 
+        // {
+        //     $subjectId = $subject->getSubject()->getId();
 
-            $resultats[$subjectId] = [
-                'nomSubject' => $subject->getSubject()->getSubject(),
-                'evaluations' => []
-            ];
-        }
+        //     $resultats[$subjectId] = [
+        //         'nomSubject' => $subject->getSubject()->getSubject(),
+        //         'evaluations' => []
+        //     ];
+        // }
 
-        foreach ($evaluations as $evaluation) 
-        {
-            $subjectId = $evaluation['subjectId'];
-            $sequenceId = $evaluation['sequenceId'];
+        // foreach ($evaluations as $evaluation) 
+        // {
+        //     $subjectId = $evaluation['subjectId'];
+        //     $sequenceId = $evaluation['sequenceId'];
 
-            if (isset($resultats[$subjectId])) 
-            {
-                $resultats[$subjectId]['evaluations'][$sequenceId] = $evaluation['mark']; // ou autre info
-                $resultats[$subjectId]['evaluations']['evaluationId'] = $evaluation['evaluationId']; // ou autre info
-            }
-        }
+        //     if (isset($resultats[$subjectId])) 
+        //     {
+        //         $resultats[$subjectId]['evaluations'][$sequenceId] = $evaluation['mark']; // ou autre info
+        //         $resultats[$subjectId]['evaluations']['evaluationId'] = $evaluation['evaluationId']; // ou autre info
+        //     }
+        // }
         // dd($resultats);
         return $this->render('problems/details_eleve.html.twig', [
             'studentId' => $student->getId(),
@@ -111,7 +113,7 @@ class DetailsEvaluationsSequenceEleveController extends AbstractController
             'resultats' => $resultats,
             'sequence' => $sequence,
             'school' => $school,
-            'term' => "",
+            'term' => 0,
         ]);
     }
 }

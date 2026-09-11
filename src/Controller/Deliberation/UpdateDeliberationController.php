@@ -2,39 +2,45 @@
 
 namespace App\Controller\Deliberation;
 
-use App\Entity\ConstantsClass;
 use App\Entity\Student;
+use App\Service\StrService;
+use App\Entity\ConstantsClass;
+use App\Service\QrcodeService;
+use App\Service\SchoolYearService;
+use App\Repository\SchoolRepository;
+use App\Repository\StudentRepository;
+use App\Repository\DecisionRepository;
+use App\Repository\RepeaterRepository;
 use App\Repository\ClassroomRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use App\Repository\DecisionRepository;
-use App\Repository\RepeaterRepository;
-use App\Repository\StudentRepository;
-use App\Service\SchoolYearService;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
-/**
- * @Route("/deliberation")
- */
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
+#[Route('/deliberation')]
 class UpdateDeliberationController extends AbstractController
 {
-    public function __construct(protected ClassroomRepository $classroomRepository,  protected DecisionRepository $decisionRepository, protected StudentRepository $studentRepository, protected RepeaterRepository $repeaterRepository, protected Security $security, protected EntityManagerInterface $em,  protected SchoolYearService $schoolYearService, protected TranslatorInterface $translator)
-    {
-    }
+    public function __construct(
+        private Security $security, 
+        private StrService $strService,
+        private EntityManagerInterface $em, 
+        private QrcodeService $qrcodeService,  
+        private TranslatorInterface $translator,
+        private SchoolRepository $schoolRepository,
+        private StudentRepository $studentRepository, 
+        private SchoolYearService $schoolYearService, 
+        private DecisionRepository $decisionRepository, 
+        private RepeaterRepository $repeaterRepository, 
+        private ClassroomRepository $classroomRepository,  
+        )
+    {}
 
-    /**
-     * @Route("/updateDeliberation/{idS<[0-9]+>}/{idC<[0-9]+>}", name="deliberation_updateDeliberation")
-     */
+    #[Route('/updateDeliberation/{idS<[0-9]+>}/{idC<[0-9]+>}', name: 'deliberation_updateDeliberation')]
     public function updateDeliberation(Request $request, int $idS, int $idC): Response
     {
         $mySession = $request->getSession();
@@ -54,6 +60,12 @@ class UpdateDeliberationController extends AbstractController
         {
             return $this->redirectToRoute('home_mainMenu');
         }
+
+        $school = $this->schoolRepository->findOneBy([
+            'schoolYear' => $schoolYear
+        ]);
+
+        $schoolName = $school->getFrenchName()." / ".$school->getEnglishName();
 
         // On recupère le next year
         $nextSchoolYear = $this->schoolYearService->getNextSchoolYear();
@@ -231,6 +243,24 @@ class UpdateDeliberationController extends AbstractController
                         $student->setDecision($newDecision)
                                 ->setNextClassroomName($passedClassroom->getClassroom())
                                 ->setMotif(null);
+                        
+                        if ($subSystem->getSubSystem() == ConstantsClass::FRANCOPHONE) 
+                        {
+                            $qrCode = $this->qrcodeService->qrcode(($schoolName." : Ce bulletin appartient à l'élève : ".$student->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber()).", Année Scolaire : ".$schoolYear->getSchoolYear().", Classe : ".$passedClassroom->getClassroom()), $student->getSlug(), $school);
+
+                            $qrCodeFiche = $this->qrcodeService->qrcode(($schoolName." : Cette fiche appartient à l'élève : ".$student->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber())." Année Scolaire : ".$schoolYear->getSchoolYear().", Classe : ".$passedClassroom->getClassroom()), $student->getSlug(), $school);
+                            
+                            $qrCodeRollOfHonor = $this->qrcodeService->qrcode(($schoolName." : Ce TABLEAU D'HONNEUR appartient à l'élève : ".$student->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber()).", Année Scolaire : ".$schoolYear->getSchoolYear().", Classe : ".$passedClassroom->getClassroom()), $student->getSlug(), $school);
+
+                        } else 
+                        {
+                            $qrCode = $this->qrcodeService->qrcode(($schoolName." : This report belongs to the student : ".$student->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber()).", School Year : ".$schoolYear->getSchoolYear().", Classroom : ".$passedClassroom->getClassroom()), $student->getSlug(), $school);
+
+                            $qrCodeFiche = $this->qrcodeService->qrcode(($schoolName." : This sheet belongs to the student : ".$student->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber()).", School Year  : ".$schoolYear->getSchoolYear().", Classroom : ".$passedClassroom->getClassroom()), $student->getSlug(), $school);
+                        
+                            $qrCodeRollOfHonor = $this->qrcodeService->qrcode(($schoolName." : This roll of honor belongs to the student: ".$student->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber()).", School Year  : ".$schoolYear->getSchoolYear().", Classroom : ".$passedClassroom->getClassroom()), $student->getSlug(), $school);
+
+                        }
                             
                         // on construit le new student pour le next school year et on met à jour le current student
                         $newStudent->setFullName($student->getFullName())
@@ -244,7 +274,10 @@ class UpdateDeliberationController extends AbstractController
                             ->setPrevId($student->getId())
                             ->setSchoolYear($nextSchoolYear)
                             ->setClassroom($passedClassroom)
-                            ->setRepeater($repeaterNo);
+                            ->setRepeater($repeaterNo)
+                            ->setQrCode($qrCode)
+                            ->setQrCodeFiche($qrCodeFiche)
+                            ->setQrCodeRollOfHonor($qrCodeRollOfHonor);
                         
                     break;
 
@@ -252,6 +285,24 @@ class UpdateDeliberationController extends AbstractController
                         $student->setDecision($newDecision)
                                 ->setNextClassroomName($repeatedClassroom->getClassroom())
                                 ->setMotif(null);
+                        
+                        if ($subSystem->getSubSystem() == ConstantsClass::FRANCOPHONE) 
+                        {
+                            $qrCode = $this->qrcodeService->qrcode(($schoolName." : Ce bulletin appartient à l'élève : ".$student->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber()).", Année Scolaire : ".$schoolYear->getSchoolYear().", Classe : ".$repeatedClassroom->getClassroom()), $student->getSlug(), $school);
+
+                            $qrCodeFiche = $this->qrcodeService->qrcode(($schoolName." : Cette fiche appartient à l'élève : ".$student->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber())." Année Scolaire : ".$schoolYear->getSchoolYear().", Classe : ".$repeatedClassroom->getClassroom()), $student->getSlug(), $school);
+                            
+                            $qrCodeRollOfHonor = $this->qrcodeService->qrcode(($schoolName." : Ce TABLEAU D'HONNEUR appartient à l'élève : ".$student->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber()).", Année Scolaire : ".$schoolYear->getSchoolYear().", Classe : ".$repeatedClassroom->getClassroom()), $student->getSlug(), $school);
+
+                        } else 
+                        {
+                            $qrCode = $this->qrcodeService->qrcode(($schoolName." : This report belongs to the student : ".$student->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber()).", School Year : ".$schoolYear->getSchoolYear().", Classroom : ".$repeatedClassroom->getClassroom()), $student->getSlug(), $school);
+
+                            $qrCodeFiche = $this->qrcodeService->qrcode(($schoolName." : This sheet belongs to the student : ".$student->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber()).", School Year  : ".$schoolYear->getSchoolYear().", Classroom : ".$repeatedClassroom->getClassroom()), $student->getSlug(), $school);
+                        
+                            $qrCodeRollOfHonor = $this->qrcodeService->qrcode(($schoolName." : This roll of honor belongs to the student: ".$student->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber()).", School Year  : ".$schoolYear->getSchoolYear().", Classroom : ".$repeatedClassroom->getClassroom()), $student->getSlug(), $school);
+
+                        }
 
                         // on construit le new student pour le next school year et on met à jour le current student
                         $newStudent = new Student();
@@ -266,7 +317,10 @@ class UpdateDeliberationController extends AbstractController
                             ->setPrevId($student->getId())
                             ->setSchoolYear($nextSchoolYear)
                             ->setClassroom($repeatedClassroom)
-                            ->setRepeater($repeaterYes);
+                            ->setRepeater($repeaterYes)
+                            ->setQrCode($qrCode)
+                            ->setQrCodeFiche($qrCodeFiche)
+                            ->setQrCodeRollOfHonor($qrCodeRollOfHonor);
                     break;
 
                     case ConstantsClass::DECISION_RESIGNED:
@@ -295,7 +349,6 @@ class UpdateDeliberationController extends AbstractController
                         $student->setDecision($newDecision);
                         
                     break;
-
 
                     case ConstantsClass::DECISION_EXPELLED:
                         $student->setMotif($newMotif);
@@ -561,7 +614,25 @@ class UpdateDeliberationController extends AbstractController
                         $student->setDecision($newDecision)
                                 ->setNextClassroomName($passedClassroom->getClassroom())
                                 ->setMotif(null);
+                        
+                        if ($subSystem->getSubSystem() == ConstantsClass::FRANCOPHONE) 
+                        {
+                            $qrCode = $this->qrcodeService->qrcode(($schoolName." : Ce bulletin appartient à l'élève : ".$student->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber()).", Année Scolaire : ".$schoolYear->getSchoolYear().", Classe : ".$passedClassroom->getClassroom()), $student->getSlug(), $school);
+
+                            $qrCodeFiche = $this->qrcodeService->qrcode(($schoolName." : Cette fiche appartient à l'élève : ".$student->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber())." Année Scolaire : ".$schoolYear->getSchoolYear().", Classe : ".$passedClassroom->getClassroom()), $student->getSlug(), $school);
                             
+                            $qrCodeRollOfHonor = $this->qrcodeService->qrcode(($schoolName." : Ce TABLEAU D'HONNEUR appartient à l'élève : ".$student->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber()).", Année Scolaire : ".$schoolYear->getSchoolYear().", Classe : ".$passedClassroom->getClassroom()), $student->getSlug(), $school);
+
+                        } else 
+                        {
+                            $qrCode = $this->qrcodeService->qrcode(($schoolName." : This report belongs to the student : ".$student->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber()).", School Year : ".$schoolYear->getSchoolYear().", Classroom : ".$passedClassroom->getClassroom()), $student->getSlug(), $school);
+
+                            $qrCodeFiche = $this->qrcodeService->qrcode(($schoolName." : This sheet belongs to the student : ".$student->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber()).", School Year  : ".$schoolYear->getSchoolYear().", Classroom : ".$passedClassroom->getClassroom()), $student->getSlug(), $school);
+                        
+                            $qrCodeRollOfHonor = $this->qrcodeService->qrcode(($schoolName." : This roll of honor belongs to the student: ".$student->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber()).", School Year  : ".$schoolYear->getSchoolYear().", Classroom : ".$passedClassroom->getClassroom()), $student->getSlug(), $school);
+
+                        }
+
                         // on construit le new student pour le next school year et on met à jour le current student
                         $newStudent->setFullName($student->getFullName())
                             ->setBirthday($student->getBirthday())
@@ -574,7 +645,10 @@ class UpdateDeliberationController extends AbstractController
                             ->setPrevId($student->getId())
                             ->setSchoolYear($nextSchoolYear)
                             ->setClassroom($passedClassroom)
-                            ->setRepeater($repeaterNo);
+                            ->setRepeater($repeaterNo)
+                            ->setQrCode($qrCode)
+                            ->setQrCodeFiche($qrCodeFiche)
+                            ->setQrCodeRollOfHonor($qrCodeRollOfHonor);
                         
                     break;
 
@@ -774,6 +848,7 @@ class UpdateDeliberationController extends AbstractController
         $this->em->flush();
 
         $this->addFlash('info', $this->translator->trans('Deliberation updated with success !'));
+        $mySession->set('saisiNotes', 1);
 
         return $this->redirectToRoute('deliberation_displayDeliberation', [
             'idC' => $idC,

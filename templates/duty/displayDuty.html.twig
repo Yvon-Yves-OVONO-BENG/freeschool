@@ -102,7 +102,7 @@
                                             <td style="text-align: center; vertical-align:middle;">
                                                 <form action="{{ path('duty_editDuty', {'slug': duty.slug}) }}" method="post" style="display: inline-block;">
                                                     <div class="form-group">
-                                                        <button type="submit"  class="btn btn-outline-primary" name="dutyToUpdate" data-bs-toggle="tooltip" title="Modifier le diplôme {{ duty.duty }}">
+                                                        <button type="submit"  class="btn btn-outline-primary" name="dutyToUpdate" data-bs-toggle="tooltip" title="{% trans %}Edit the diploma {{ duty.duty }}{% endtrans %}">
                                                                 <i class="fa fa-pencil"></i>
                                                         </button>
                                                     </div>
@@ -130,9 +130,9 @@
                                                             'type': 'warning', 
                                                             'text': '{% trans %}Do you want to delete this duty ?{% endtrans %}', 
                                                             'showCancelButton': true, 
-                                                            'confirmButtonText': 'Oui', 
+                                                            'confirmButtonText': '{% trans %}Yes{% endtrans %}', 
                                                             'confirmButtonColor': '#f00', 
-                                                            'cancelButtonText': 'Non', 
+                                                            'cancelButtonText': '{% trans %}No{% endtrans %}', 
                                                             'cancelButtonColor': '#186106', 
                                                             'confirmButtonPath': '{{ path('duty_deleteDuty', {'slug': duty.slug}) }} '});" title="{% trans %}Delete {% endtrans %} {{ duty.duty }}">
                                                         <i class="fa fa-trash"></i>

@@ -57,7 +57,13 @@ class ClassCouncilEndYearController extends AbstractController
       
         // trimestre sélectionné
         // classe sélectionnée
-        $selectedClassroom = $this->classroomRepository->findOneBySlug(['slug' => $slug ]);
+        $selectedClassroom = $this->classroomRepository->findOneBy(['slug' => $slug ]);
+
+        if (!$selectedClassroom) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
+
         //Effectif de la classe
         $numberOfStudents = $this->generalService->getNumberOfStudents($selectedClassroom);
         // Effectif garçons

@@ -70,6 +70,30 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
      * @param SubSystem $subSystem
      * @return array
      */
+    /**
+     * Retourne tous les comptes disponibles sur l'écran de connexion unique.
+     *
+     * Les personnels sont ensuite filtrés côté interface par année scolaire et
+     * sous-système. Les administrateurs sans fiche enseignant restent visibles
+     * pour toutes les années afin de ne pas les bloquer à la connexion.
+     *
+     * @return User[]
+     */
+    public function findAllForLoginSelector(): array
+    {
+        return $this->createQueryBuilder('u')
+            ->leftJoin('u.teacher', 't')
+            ->addSelect('t')
+            ->leftJoin('t.schoolYear', 'sy')
+            ->addSelect('sy')
+            ->leftJoin('t.subSystem', 'ss')
+            ->addSelect('ss')
+            ->orderBy('u.fullName', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     public function findUserByUserType(string $duty, SchoolYear $schoolYear, SubSystem $subSystem): array 
     {
         if ($duty) 

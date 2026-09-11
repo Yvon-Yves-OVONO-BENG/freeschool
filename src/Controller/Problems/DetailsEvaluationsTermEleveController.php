@@ -26,11 +26,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/problems")]
 class DetailsEvaluationsTermEleveController extends AbstractController
 {
@@ -76,14 +72,20 @@ class DetailsEvaluationsTermEleveController extends AbstractController
         #je récupère las classe
         $classroom = $this->classroomRepository->findOneBy(['slug' => $slugClassroom]);
 
-        // Récupérer toutes les matières attribuées à la classe
-        $subjects = $this->lessonRepository->findBy(['classroom' => $classroom]);
-
+        
         #je récupère l'lève
         $student = $this->studentRepository->findOneBy(['slug' => $slugStudent ]);
-
+        
         #je récupère le trimestre
         $term = $this->termRepository->find($termId);
+
+        if (!$classroom || !$student || !$term) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
+
+        // Récupérer toutes les matières attribuées à la classe
+        $subjects = $this->lessonRepository->findBy(['classroom' => $classroom]);
 
         // Récupérer les évaluations de l'élève pour le trimestre
         $evaluations = $this->evaluationRepository->getEvaluationsByEleveAndTrimestre($student, $term->getTerm());

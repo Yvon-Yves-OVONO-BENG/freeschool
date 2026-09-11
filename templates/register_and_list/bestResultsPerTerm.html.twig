@@ -3,682 +3,812 @@
 {% block title %}{% trans %}Best results{% endtrans %}{% endblock %}
 
 {% block subTitle %}
-    {% trans %}BEST STUDENTS MANAGEMENT{% endtrans %}
+	{% trans %}BEST STUDENTS MANAGEMENT{% endtrans %}
 {% endblock %}
 
-{% block body %}    
-<!-- App-Content -->
-	<div class="hor-content main-content">
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-best-results-per-term-premium.css') }}">
+{% endblock %}
+
+{% block body %}
+	<div class="hor-content main-content fs-bt-page">
 		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary"></h4>
-                </div>
-                <div class="page-rightheader">
-                    <div class="btn-list">
-                        
-                    </div>
-                </div>
-            </div>
-            <!--End Page header-->
+			<div class="fs-bt-menu-safe-space" aria-hidden="true"></div>
 
-            <!-- Row -->
-            <div class="row">
-                <div class="col-md-12 col-lg-12">
-                    <div class="card border-primary">
-                        <div class="card-header">
-                            <div class="col-lg-6">
-                                <h3 class="card-title"><i class="si si-badge me-2"></i>{% trans %}Best results{% endtrans %}</h3>
-                            </div>
-                            <div class="col-lg-6 mt-2">
-                                <form action="{{ path('print_school_top_five_students_per_term') }}" method="post" target="_blank">
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <select name="term" id="term" class="form-control select2 custom-select" data-placeholder="{% trans %}Choose a period{% endtrans %}" required>
-                                                    <option label="{% trans %}Choose a period{% endtrans %}" value="">
-                                                        {% trans %}Choose a period{% endtrans %}
-                                                    </option>
-                                                    <optgroup label="{% trans %}Term{% endtrans %}">
-                                                        {% for term in terms %}
-                                                            {% if term.term != annualTerm %}
-                                                                <option value="{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                    </optgroup>
-                                                    {% for term in terms %}
-                                                        {% if term.term == annualTerm %}
-                                                            <option value="{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                   
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printBestStudentsPerClass">
-                                                    <i class="fa fa-print me-2"></i>{% trans %}The School's top five students{% endtrans %}
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                  
-                                </form>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="row mt-4">
-                                <div class="col-lg-6">
-                                    <div class="expanel expanel-primary border-primary">
-                                        <div class="expanel-heading">
-                                            <h3 class="expanel-title">
-                                                <i class="si si-badge me-2"></i> {% trans %}Printing of the list of first by class{% endtrans %}
-                                            </h3>
-                                        </div>
-                                        <div class="expanel-body">
-                                            <form action="{{ path('register_and_list_printBestStudentsPerClass') }}" method="post" target="_blank">
-                                                <div class="row">
-                                                    
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <select name="term" id="term" class="form-control select2 custom-select" data-placeholder="{% trans %}Choose a period{% endtrans %}" required>
-                                                                <option label="{% trans %}Choose a period{% endtrans %}" value="">
-                                                                    {% trans %}Choose a period{% endtrans %}
-                                                                </option>
-                                                            <optgroup label="{% trans %}Term{% endtrans %}">
-                                                                {% for term in terms %}
-                                                                    {% if term.term != annualTerm %}
-                                                                        <option value="{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
-                                                                    {% endif %}
-                                                                {% endfor %}
-                                                            </optgroup>
-                                                            {% for term in terms %}
-                                                                {% if term.term == annualTerm %}
-                                                                    <option value="{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
-                                                                {% endif %}
-                                                            {% endfor %}
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printBestStudentsPerClass">
-                                                                <i class="fa fa-print"></i>
-                                                                {% trans %}Print{% endtrans %}</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="expanel expanel-primary border-primary">
-                                        <div class="expanel-heading">
-                                            <h3 class="expanel-title"><i class="si si-badge me-2"></i> {% trans %}Top five by subjects{% endtrans %}</h3>
-                                        </div>
-                                        <div class="expanel-body">
-                                            <form action="{{ path('print_school_top_five_students_subject_term') }}" method="post" target="_blank">
-                                                <div class="row">
-                                                    <div class="col-md-4">
-                                                        <div class="form-group">
-                                                            <select name="term" id="term" class="form-control select2 custom-select" data-placeholder="{% trans %}Choose a period{% endtrans %}" required>
-                                                                <option label="{% trans %}Choose a period{% endtrans %}" value="">
-                                                                    {% trans %}Choose a period{% endtrans %}
-                                                                </option>
-                                                                <optgroup label="{% trans %}Term{% endtrans %}">
-                                                                    {% for term in terms %}
-                                                                        {% if term.term != annualTerm %}
-                                                                            <option value="{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
-                                                                        {% endif %}
-                                                                    {% endfor %}
-                                                                </optgroup>
-                                                                {% for term in terms %}
-                                                                    {% if term.term == annualTerm %}
-                                                                        <option value="{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
-                                                                    {% endif %}
-                                                                {% endfor %}
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="col-md-4">
-                                                        <div class="form-group">
-                                                            <select name="subject" id="subject" class="form-control select2-show-search" data-placeholder="Choose a subject" required>
-                                                                <option label="{% trans %}Choose a subject{% endtrans %}" value="">Choose a subject</option>
-                                                                {% for subject in subjects %}
-                                                                    <option value="{{ subject.id }}">{{ subject.subject }}</option>
-                                                                {% endfor %}
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div class="form-group">
-                                                            <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printBestStudentsPerClass">
-                                                                <i class="fa fa-print"></i>
-                                                                {% trans %}Print{% endtrans %}</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                
-                                <div class="col-lg-6">
-                                    <div class="expanel expanel-primary border-primary">
-                                        <div class="expanel-heading">
-                                            <h3 class="expanel-title"><i class="si si-badge me-2"></i> {% trans %}Top five students by cycle{% endtrans %}</h3>
-                                        </div>
-                                        <div class="expanel-body">
-                                            <form action="{{ path('top_five_students_by_cycle') }}" method="post" target="_blank">
-                                                <div class="row">
-                                                    <div class="col-md-4">
-                                                        <div class="form-group">
-                                                            <select name="term" id="term" class="form-control select2 custom-select" data-placeholder="{% trans %}Choose a period{% endtrans %}" required>
-                                                                <option label="{% trans %}Choose a period{% endtrans %}" value="">
-                                                                    {% trans %}Choose a period{% endtrans %}
-                                                                </option>
-                                                                <optgroup label="{% trans %}Term{% endtrans %}">
-                                                                    {% for term in terms %}
-                                                                        {% if term.term != annualTerm %}
-                                                                            <option value="{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
-                                                                        {% endif %}
-                                                                    {% endfor %}
-                                                                </optgroup>
-                                                                {% for term in terms %}
-                                                                    {% if term.term == annualTerm %}
-                                                                        <option value="{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
-                                                                    {% endif %}
-                                                                {% endfor %}
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="col-md-4">
-                                                        <div class="form-group">
-                                                            <select name="cycle" id="cycle" class="form-control select2-show-search" data-placeholder="Choose a cycle" required>
-                                                                <option value="" label="{% trans %}Choose a cycle{% endtrans %}">{% trans %}Choose a cycle{% endtrans %}</option>
-                                                                {% for cycle in cycles %}
-                                                                    <option value="{{ cycle.id }}">Cycle : {{ cycle.cycle }}</option>
-                                                                {% endfor %}
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div class="form-group">
-                                                            <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printBestStudentsPerClass">
-                                                                <i class="fa fa-print"></i>
-                                                                {% trans %}Print{% endtrans %}
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="expanel expanel-primary border-primary">
-                                        <div class="expanel-heading">
-                                            <h3 class="expanel-title"><i class="si si-badge me-2"></i> {% trans %}Top five students by cycle and discipline{% endtrans %}</h3>
-                                        </div>
-                                        <div class="expanel-body">
-                                            <form action="{{ path('top_five_students_by_cycle_and_subject') }}" method="post" target="_blank">
-                                                <div class="row">
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <select name="term" id="term" class="form-control select2 custom-select" data-placeholder="{% trans %}Choose a period{% endtrans %}" required>
-                                                                <option label="{% trans %}Choose a period{% endtrans %}" value="">
-                                                                    {% trans %}Choose a period{% endtrans %}
-                                                                </option>
-                                                                <optgroup label="{% trans %}Term{% endtrans %}">
-                                                                    {% for term in terms %}
-                                                                        {% if term.term != annualTerm %}
-                                                                            <option value="{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
-                                                                        {% endif %}
-                                                                    {% endfor %}
-                                                                </optgroup>
-                                                                {% for term in terms %}
-                                                                    {% if term.term == annualTerm %}
-                                                                        <option value="{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
-                                                                    {% endif %}
-                                                                {% endfor %}
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <select name="cycle" id="cycle" class="form-control select2-show-search" data-placeholder="{% trans %}Choose cycle{% endtrans %}" required>
-                                                                <option value="" label="Choose a cycle">{% trans %}Choose cycle{% endtrans %}</option>
-                                                                <option value="0" label="Choose a cycle">{% trans %}All cycle{% endtrans %}</option>
-                                                                {% for cycle in cycles %}
-                                                                    <option value="{{ cycle.id }}">Cycle  : {{ cycle.cycle }}</option>
-                                                                {% endfor %}
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <select name="subject" id="subject" class="form-control select2-show-search" data-placeholder="Choose a subject" required>
-                                                                <option value="" label="Choose a subject">Choose a subject</option>
-                                                                <option value="0" label="Choose a cycle">{% trans %}All subject{% endtrans %}</option>
-                                                                
-                                                                {% for subject in subjects %}
-                                                                    <option value="{{ subject.id }}">{{ subject.subject }}</option>
-                                                                {% endfor %}
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printBestStudentsPerClass">
-                                                                <i class="fa fa-print"></i>
-                                                                {% trans %}Print{% endtrans %}</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+			<section class="fs-bt-hero">
+				<div class="fs-bt-hero__content">
+					<div>
+						<span class="fs-bt-eyebrow">
+							<i class="si si-badge"></i>
+							{% trans %}Academic excellence workspace{% endtrans %}
+						</span>
 
+						<h1 class="fs-bt-title">
+							{% trans %}Best results{% endtrans %}
+						</h1>
 
+						<p class="fs-bt-subtitle">
+							{% trans %}Print and display the best student rankings by period, class, subject, cycle, level and science classroom through a premium responsive workspace.{% endtrans %}
+						</p>
+					</div>
 
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="expanel expanel-primary border-primary">
-                                        <div class="expanel-heading">
-                                            <h3 class="expanel-title"><i class="si si-badge me-2"></i> {% trans %}Top five students by level{% endtrans %}</h3>
-                                        </div>
-                                        <div class="expanel-body">
-                                            <form action="{{ path('top_five_students_by_level') }}" method="post" target="_blank">
-                                                <div class="row">
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <select name="term" id="term" class="form-control select2 custom-select" data-placeholder="{% trans %}Choose a period{% endtrans %}" required>
-                                                                <option label="{% trans %}Choose a period{% endtrans %}" value="">
-                                                                    {% trans %}Choose a period{% endtrans %}
-                                                                </option>
-                                                                <optgroup label="{% trans %}Term{% endtrans %}">
-                                                                    {% for term in terms %}
-                                                                        {% if term.term != annualTerm %}
-                                                                            <option value="{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
-                                                                        {% endif %}
-                                                                    {% endfor %}
-                                                                </optgroup>
-                                                                {% for term in terms %}
-                                                                    {% if term.term == annualTerm %}
-                                                                        <option value="{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
-                                                                    {% endif %}
-                                                                {% endfor %}
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div class="form-group">
-                                                            <select name="level" id="level" class="form-control select2-show-search" data-placeholder="{% trans %}Choose a level{% endtrans %}" required>
-                                                                <option value="" label="{% trans %}Choose a level{% endtrans %}">{% trans %}Choose a level{% endtrans %}</option>
-                                                                {% for level in levels %}
-                                                                    <option value="{{ level.id }}">{% trans %}Level{% endtrans %} : {{ level.level }}</option>
-                                                                {% endfor %}
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div class="form-group">
-                                                            <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printBestStudentsPerClass">
-                                                                <i class="fa fa-print"></i>
-                                                                {% trans %}Print{% endtrans %}</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
+					<div class="fs-bt-hero__actions">
+						<div class="fs-bt-hero-stat">
+							<span class="fs-bt-hero-stat__icon">
+								<i class="fe fe-award"></i>
+							</span>
+							<span class="fs-bt-hero-stat__label">{% trans %}Modules{% endtrans %}</span>
+							<strong class="fs-bt-hero-stat__value">10</strong>
+						</div>
 
-                                <div class="col-lg-6">
-                                    <div class="expanel expanel-primary border-primary">
-                                        <div class="expanel-heading">
-                                            <h3 class="expanel-title"><i class="si si-badge me-2"></i> {% trans %}Top five students by level and discipline{% endtrans %}</h3>
-                                        </div>
-                                        <div class="expanel-body">
-                                            <form action="{{ path('top_five_students_level_and_subject') }}" method="post" target="_blank">
-                                                <div class="row">
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <select name="term" id="term" class="form-control select2 custom-select" data-placeholder="{% trans %}Choose a period{% endtrans %}" required>
-                                                                <option label="{% trans %}Choose a period{% endtrans %}" value="">
-                                                                    {% trans %}Choose a period{% endtrans %}
-                                                                </option>
-                                                                <optgroup label="{% trans %}Term{% endtrans %}">
-                                                                    {% for term in terms %}
-                                                                        {% if term.term != annualTerm %}
-                                                                            <option value="{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
-                                                                        {% endif %}
-                                                                    {% endfor %}
-                                                                </optgroup>
-                                                                {% for term in terms %}
-                                                                    {% if term.term == annualTerm %}
-                                                                        <option value="{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
-                                                                    {% endif %}
-                                                                {% endfor %}
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <select name="level" id="level" class="form-control select2-show-search" data-placeholder="{% trans %}Choose a level{% endtrans %}" required>
-                                                                <option value="" label="Choose a level">{% trans %}Choose a level{% endtrans %}</option>
-                                                                {% for level in levels %}
-                                                                    <option value="{{ level.id }}">{% trans %}Level{% endtrans %} : {{ level.level }}</option>
-                                                                {% endfor %}
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <select name="subject" id="subject" class="form-control select2-show-search" data-placeholder="{% trans %}Choose a subject{% endtrans %}" required>
-                                                                <option value="" label="Choose a subject">{% trans %}Choose a subject{% endtrans %}</option>
-                                                                {% for subject in subjects %}
-                                                                    <option value="{{ subject.id }}">{{ subject.subject }}</option>
-                                                                {% endfor %}
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printBestStudentsPerClass">
-                                                                <i class="fa fa-print me-2"></i>
-                                                                {% trans %}Print{% endtrans %}</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+						<div class="fs-bt-hero-stat fs-bt-hero-stat--soft">
+							<span class="fs-bt-hero-stat__icon">
+								<i class="fe fe-calendar"></i>
+							</span>
+							<span class="fs-bt-hero-stat__label">{% trans %}Period{% endtrans %}</span>
+							<strong class="fs-bt-hero-stat__value">{% trans %}Term{% endtrans %}</strong>
+						</div>
+					</div>
+				</div>
+			</section>
 
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="expanel expanel-primary border-primary">
-                                        <div class="expanel-heading">
-                                            <h3 class="expanel-title"><i class="si si-badge me-2"></i> {% trans %}Top five students by classroom{% endtrans %}</h3>
-                                        </div>
-                                        <div class="expanel-body">
-                                            <form action="{{ path('top_five_students_by_classroom') }}" method="post" target="_blank">
-                                                <div class="row">
-                                                    <div class="col-md-4">
-                                                        <div class="form-group">
-                                                            <select name="term" id="term" class="form-control select2 custom-select" data-placeholder="{% trans %}Choose a period{% endtrans %}" required>
-                                                                <option label="{% trans %}Choose a period{% endtrans %}" value="">
-                                                                    {% trans %}Choose a period{% endtrans %}
-                                                                </option>
-                                                                <optgroup label="{% trans %}Term{% endtrans %}">
-                                                                    {% for term in terms %}
-                                                                        {% if term.term != annualTerm %}
-                                                                            <option value="{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
-                                                                        {% endif %}
-                                                                    {% endfor %}
-                                                                </optgroup>
-                                                                {% for term in terms %}
-                                                                    {% if term.term == annualTerm %}
-                                                                        <option value="{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
-                                                                    {% endif %}
-                                                                {% endfor %}
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div class="form-group">
-                                                            <select name="classroom" id="classroom" class="form-control select2-show-search" required>
-                                                                <option value="">{% trans %}All classrooms{% endtrans %}</option>
+			<section class="fs-bt-main-print">
+				<div>
+					<span class="fs-bt-chip">
+						<i class="fe fe-printer"></i>
+						{% trans %}School ranking{% endtrans %}
+					</span>
 
-                                                                {% if subSystem == 'Francophone / French Speaker' %}
-                                                                {% if school.education.education == 'Général' %}
-                                                                    {% include "includes/_selectClassrooms.html.twig" %}
-                                                                    {% else %}
-                                                                        {% include "includes/_selectClassroomsTech.html.twig" %}
-                                                                {% endif %}
-                                                                {% else %}
-                                                                    {% include "includes/_selectClassroomsEn.html.twig" %}
-                                                            {% endif %}
-                                                                
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div class="form-group">
-                                                            <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printBestStudentsPerClass">
-                                                                <i class="fa fa-print"></i>
-                                                                {% trans %}Print{% endtrans %}</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="expanel expanel-primary border-primary">
-                                        <div class="expanel-heading">
-                                            <h3 class="expanel-title"><i class="si si-badge me-2"></i> {% trans %}Top five students by classroom and discipline{% endtrans %}</h3>
-                                        </div>
-                                        <div class="expanel-body">
-                                            <form action="{{ path('print_school_top_five_students_classroom_and_subject') }}" method="post" target="_blank">
-                                                <div class="row">
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <select name="term" id="term" class="form-control select2 custom-select" data-placeholder="{% trans %}Choose a period{% endtrans %}" required>
-                                                                <option label="{% trans %}Choose a period{% endtrans %}" value="">
-                                                                    {% trans %}Choose a period{% endtrans %}
-                                                                </option>
-                                                                <optgroup label="{% trans %}Term{% endtrans %}">
-                                                                    {% for term in terms %}
-                                                                        {% if term.term != annualTerm %}
-                                                                            <option value="{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
-                                                                        {% endif %}
-                                                                    {% endfor %}
-                                                                </optgroup>
-                                                                {% for term in terms %}
-                                                                    {% if term.term == annualTerm %}
-                                                                        <option value="{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
-                                                                    {% endif %}
-                                                                {% endfor %}
-                                                            </select>
-                                                        </div>
-                                                    </div>
+					<h2>{% trans %}The School's top five students{% endtrans %}</h2>
 
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <select name="classroom" id="classroom" class="form-control select2-show-search" required>
-                                                                <option label="Choose classroom" value="">
-                                                                    ---
-                                                                </option>
+					<p>{% trans %}Choose a period and print the global school ranking for that period.{% endtrans %}</p>
+				</div>
 
-                                                                {% if subSystem == 'Francophone / French Speaker' %}
-                                                                {% if school.education.education == 'Général' %}
-                                                                    {% include "includes/_selectClassrooms.html.twig" %}
-                                                                    {% else %}
-                                                                        {% include "includes/_selectClassroomsTech.html.twig" %}
-                                                                {% endif %}
-                                                                {% else %}
-                                                                    {% include "includes/_selectClassroomsEn.html.twig" %}
-                                                            {% endif %}
-                                                                
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <select name="subject" id="subject" class="form-control select2-show-search" data-placeholder="{% trans %}Choose a subject{% endtrans %}" required>
-                                                                <option label="Choose a subject">{% trans %}Choose a subject{% endtrans %}</option>
-                                                                <option value="0">{% trans %}All Subjects{% endtrans %}</option>
-                                                                {% for subject in subjects %}
-                                                                    <option value="{{ subject.id }}">{{ subject.subject }}</option>
-                                                                {% endfor %}
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printBestStudentsPerClass">
-                                                                <i class="fa fa-print"></i>
-                                                                {% trans %}Print{% endtrans %}</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+				<form action="{{ path('print_school_top_five_students_per_term') }}" method="post" target="_blank" class="fs-bt-form fs-bt-form--hero needs-validation" novalidate data-no-spinner="1">
+					<div class="fs-floating-field fs-required-field">
+						<select name="term" id="termSchoolTopFive" class="form-control select2 custom-select fs-floating-control" data-placeholder="" required>
+							<option label="" value=""></option>
 
+							<optgroup label="{% trans %}Term{% endtrans %}">
+								{% for term in terms %}
+									{% if term.term != annualTerm %}
+										<option value="{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
+									{% endif %}
+								{% endfor %}
+							</optgroup>
 
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="expanel expanel-primary border-primary">
-                                        <div class="expanel-heading">
-                                            <h3 class="expanel-title"><i class="si si-badge me-2"></i> {% trans %}Best students per level{% endtrans %}</h3>
-                                        </div>
-                                        <div class="expanel-body">
-                                            <form action="{{ path('best_students_by_level') }}" method="post" target="_blank">
-                                                <div class="row">
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <select name="term" id="term" class="form-control select2 custom-select" data-placeholder="{% trans %}Choose a period{% endtrans %}" required>
-                                                                <option label="{% trans %}Choose a period{% endtrans %}" value="">
-                                                                    {% trans %}Choose a period{% endtrans %}
-                                                                </option>
-                                                                <optgroup label="{% trans %}Term{% endtrans %}">
-                                                                    {% for term in terms %}
-                                                                        {% if term.term != annualTerm %}
-                                                                            <option value="{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
-                                                                        {% endif %}
-                                                                    {% endfor %}
-                                                                </optgroup>
-                                                                {% for term in terms %}
-                                                                    {% if term.term == annualTerm %}
-                                                                        <option value="{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
-                                                                    {% endif %}
-                                                                {% endfor %}
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <select name="level" id="level" class="form-control select2-show-search" data-placeholder="Choose a level" required>
-                                                                <option value="" label="Choose a level">{% trans %}Choose a level{% endtrans %}</option>
-                                                                {% for level in levels %}
-                                                                    <option value="{{ level.id }}">{% trans %}Level{% endtrans %} : {{ level.level }}</option>
-                                                                {% endfor %}
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="display">
-                                                                <i class="fa fa-eye"></i>
-                                                                {% trans %}Display{% endtrans %}</button>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printBestStudentsPerClass">
-                                                                <i class="fa fa-print"></i>
-                                                                {% trans %}Print{% endtrans %}</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
+							{% for term in terms %}
+								{% if term.term == annualTerm %}
+									<option value="{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
+								{% endif %}
+							{% endfor %}
+						</select>
 
-                                <div class="col-lg-6">
-                                    <div class="expanel expanel-primary border-primary">
-                                        <div class="expanel-heading">
-                                            <h3 class="expanel-title"><i class="si si-badge me-2"></i> {% trans %}Top girls science classes{% endtrans %}</h3>
-                                        </div>
-                                        <div class="expanel-body">
-                                            <form action="{{ path('top_girls_students_by_science_classroom') }}" method="post" target="_blank">
-                                                <div class="row">
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <select name="term" id="term" class="form-control select2 custom-select" data-placeholder="{% trans %}Choose a period{% endtrans %}" required>
-                                                                <option label="{% trans %}Choose a period{% endtrans %}" value="">
-                                                                    {% trans %}Choose a period{% endtrans %}
-                                                                </option>
-                                                                <optgroup label="{% trans %}Term{% endtrans %}">
-                                                                    {% for term in terms %}
-                                                                        {% if term.term != annualTerm %}
-                                                                            <option value="{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
-                                                                        {% endif %}
-                                                                    {% endfor %}
-                                                                </optgroup>
-                                                                {% for term in terms %}
-                                                                    {% if term.term == annualTerm %}
-                                                                        <option value="{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
-                                                                    {% endif %}
-                                                                {% endfor %}
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <select name="classroom" id="classroom" class="form-control select2-show-search" required>
-                                                                <option value="">---</option>
+						<label class="fs-floating-label" for="termSchoolTopFive">
+							<i class="fe fe-calendar"></i>
+							{% trans %}Period{% endtrans %}
+						</label>
 
-                                                                {% if subSystem == 'Francophone / French Speaker' %}
-                                                                {% if school.education.education == 'Général' %}
-                                                                    {% include "includes/_selectClassrooms.html.twig" %}
-                                                                    {% else %}
-                                                                        {% include "includes/_selectClassroomsTech.html.twig" %}
-                                                                {% endif %}
-                                                                {% else %}
-                                                                    {% include "includes/_selectClassroomsEn.html.twig" %}
-                                                            {% endif %}
-                                                                
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="display">
-                                                                <i class="fa fa-eye"></i>
-                                                                {% trans %}Display{% endtrans %}</button>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <div class="form-group">
-                                                            <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printBestStudentsPerClass">
-                                                                <i class="fa fa-print"></i>
-                                                                {% trans %}Print{% endtrans %}</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--End Row -->
-        </div>
-    </div>
-</div>
+						<div class="invalid-feedback">{% trans %}Please choose a period !{% endtrans %}</div>
+					</div>
+
+					<div class="fs-bt-form__actions">
+						<button class="fs-bt-btn fs-bt-btn--primary fs-bt-submit-btn" type="submit" name="printBestStudentsPerClass">
+							<i class="fa fa-print fs-bt-submit-icon"></i>
+							<span>{% trans %}Print{% endtrans %}</span>
+						</button>
+					</div>
+				</form>
+			</section>
+
+			<section class="fs-bt-toolbar">
+				<div>
+					<span class="fs-bt-chip">
+						<i class="fe fe-grid"></i>
+						{% trans %}Ranking modules{% endtrans %}
+					</span>
+					<h2>{% trans %}Choose the ranking module{% endtrans %}</h2>
+				</div>
+
+				<div class="fs-bt-toolbar__search">
+					<i class="fe fe-search"></i>
+					<input type="text" class="fs-bt-module-search" placeholder="{% trans %}Search a module...{% endtrans %}">
+				</div>
+			</section>
+
+			<div class="fs-bt-grid">
+				<section class="fs-bt-card" data-module-card>
+					<div class="fs-bt-card__header">
+						<span class="fs-bt-card__icon">
+							<i class="si si-badge"></i>
+						</span>
+						<div>
+							<h3>{% trans %}Printing of the list of first by class{% endtrans %}</h3>
+							<p>{% trans %}Print first students by class for the selected period.{% endtrans %}</p>
+						</div>
+					</div>
+
+					<form action="{{ path('register_and_list_printBestStudentsPerClass') }}" method="post" target="_blank" class="fs-bt-form needs-validation" novalidate data-no-spinner="1">
+						<div class="fs-floating-field fs-required-field">
+							<select name="term" id="termFirstByClass" class="form-control select2 custom-select fs-floating-control" data-placeholder="" required>
+								<option label="" value=""></option>
+								<optgroup label="{% trans %}Term{% endtrans %}">
+									{% for term in terms %}
+										{% if term.term != annualTerm %}
+											<option value="{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
+										{% endif %}
+									{% endfor %}
+								</optgroup>
+								{% for term in terms %}
+									{% if term.term == annualTerm %}
+										<option value="{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
+									{% endif %}
+								{% endfor %}
+							</select>
+
+							<label class="fs-floating-label" for="termFirstByClass">
+								<i class="fe fe-calendar"></i>
+								{% trans %}Period{% endtrans %}
+							</label>
+
+							<div class="invalid-feedback">{% trans %}Please choose a period !{% endtrans %}</div>
+						</div>
+
+						<div class="fs-bt-form__actions">
+							<button class="fs-bt-btn fs-bt-btn--primary fs-bt-submit-btn" type="submit" name="printBestStudentsPerClass">
+								<i class="fa fa-print fs-bt-submit-icon"></i>
+								<span>{% trans %}Print{% endtrans %}</span>
+							</button>
+						</div>
+					</form>
+				</section>
+
+				<section class="fs-bt-card" data-module-card>
+					<div class="fs-bt-card__header">
+						<span class="fs-bt-card__icon fs-bt-card__icon--violet">
+							<i class="fe fe-book-open"></i>
+						</span>
+						<div>
+							<h3>{% trans %}Top five by subjects{% endtrans %}</h3>
+							<p>{% trans %}Print the top five students by subject and period.{% endtrans %}</p>
+						</div>
+					</div>
+
+					<form action="{{ path('print_school_top_five_students_subject_term') }}" method="post" target="_blank" class="fs-bt-form fs-bt-form--two needs-validation" novalidate data-no-spinner="1">
+						<div class="fs-floating-field fs-required-field">
+							<select name="term" id="termSubjectTopFive" class="form-control select2 custom-select fs-floating-control" data-placeholder="" required>
+								<option label="" value=""></option>
+								<optgroup label="{% trans %}Term{% endtrans %}">
+									{% for term in terms %}
+										{% if term.term != annualTerm %}
+											<option value="{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
+										{% endif %}
+									{% endfor %}
+								</optgroup>
+								{% for term in terms %}
+									{% if term.term == annualTerm %}
+										<option value="{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
+									{% endif %}
+								{% endfor %}
+							</select>
+
+							<label class="fs-floating-label" for="termSubjectTopFive">
+								<i class="fe fe-calendar"></i>
+								{% trans %}Period{% endtrans %}
+							</label>
+
+							<div class="invalid-feedback">{% trans %}Please choose a period !{% endtrans %}</div>
+						</div>
+
+						<div class="fs-floating-field fs-required-field">
+							<select name="subject" id="subjectTopFive" class="form-control select2-show-search fs-floating-control" data-placeholder="" required>
+								<option label="" value=""></option>
+								{% for subject in subjects %}
+									<option value="{{ subject.id }}">{{ subject.subject }}</option>
+								{% endfor %}
+							</select>
+
+							<label class="fs-floating-label" for="subjectTopFive">
+								<i class="fe fe-book"></i>
+								{% trans %}Subject{% endtrans %}
+							</label>
+
+							<div class="invalid-feedback">{% trans %}Please choose a subject !{% endtrans %}</div>
+						</div>
+
+						<div class="fs-bt-form__actions">
+							<button class="fs-bt-btn fs-bt-btn--primary fs-bt-submit-btn" type="submit" name="printBestStudentsPerClass">
+								<i class="fa fa-print fs-bt-submit-icon"></i>
+								<span>{% trans %}Print{% endtrans %}</span>
+							</button>
+						</div>
+					</form>
+				</section>
+
+				<section class="fs-bt-card" data-module-card>
+					<div class="fs-bt-card__header">
+						<span class="fs-bt-card__icon fs-bt-card__icon--cyan">
+							<i class="fe fe-refresh-cw"></i>
+						</span>
+						<div>
+							<h3>{% trans %}Top five students by cycle{% endtrans %}</h3>
+							<p>{% trans %}Print top five students by cycle and period.{% endtrans %}</p>
+						</div>
+					</div>
+
+					<form action="{{ path('top_five_students_by_cycle') }}" method="post" target="_blank" class="fs-bt-form fs-bt-form--two needs-validation" novalidate data-no-spinner="1">
+						<div class="fs-floating-field fs-required-field">
+							<select name="term" id="termCycleTopFive" class="form-control select2 custom-select fs-floating-control" data-placeholder="" required>
+								<option label="" value=""></option>
+								<optgroup label="{% trans %}Term{% endtrans %}">
+									{% for term in terms %}
+										{% if term.term != annualTerm %}
+											<option value="{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
+										{% endif %}
+									{% endfor %}
+								</optgroup>
+								{% for term in terms %}
+									{% if term.term == annualTerm %}
+										<option value="{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
+									{% endif %}
+								{% endfor %}
+							</select>
+
+							<label class="fs-floating-label" for="termCycleTopFive">
+								<i class="fe fe-calendar"></i>
+								{% trans %}Period{% endtrans %}
+							</label>
+
+							<div class="invalid-feedback">{% trans %}Please choose a period !{% endtrans %}</div>
+						</div>
+
+						<div class="fs-floating-field fs-required-field">
+							<select name="cycle" id="cycleTopFive" class="form-control select2-show-search fs-floating-control" data-placeholder="" required>
+								<option value="" label=""></option>
+								{% for cycle in cycles %}
+									<option value="{{ cycle.id }}">{% trans %}Cycle :{% endtrans %} {{ cycle.cycle }}</option>
+								{% endfor %}
+							</select>
+
+							<label class="fs-floating-label" for="cycleTopFive">
+								<i class="fe fe-refresh-cw"></i>
+								{% trans %}Cycle{% endtrans %}
+							</label>
+
+							<div class="invalid-feedback">{% trans %}Please choose a cycle !{% endtrans %}</div>
+						</div>
+
+						<div class="fs-bt-form__actions">
+							<button class="fs-bt-btn fs-bt-btn--primary fs-bt-submit-btn" type="submit" name="printBestStudentsPerClass">
+								<i class="fa fa-print fs-bt-submit-icon"></i>
+								<span>{% trans %}Print{% endtrans %}</span>
+							</button>
+						</div>
+					</form>
+				</section>
+
+				<section class="fs-bt-card" data-module-card>
+					<div class="fs-bt-card__header">
+						<span class="fs-bt-card__icon fs-bt-card__icon--gold">
+							<i class="fe fe-layers"></i>
+						</span>
+						<div>
+							<h3>{% trans %}Top five students by cycle and discipline{% endtrans %}</h3>
+							<p>{% trans %}Filter rankings by period, cycle and discipline.{% endtrans %}</p>
+						</div>
+					</div>
+
+					<form action="{{ path('top_five_students_by_cycle_and_subject') }}" method="post" target="_blank" class="fs-bt-form fs-bt-form--three needs-validation" novalidate data-no-spinner="1">
+						<div class="fs-floating-field fs-required-field">
+							<select name="term" id="termCycleSubjectTopFive" class="form-control select2 custom-select fs-floating-control" data-placeholder="" required>
+								<option label="" value=""></option>
+								<optgroup label="{% trans %}Term{% endtrans %}">
+									{% for term in terms %}
+										{% if term.term != annualTerm %}
+											<option value="{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
+										{% endif %}
+									{% endfor %}
+								</optgroup>
+								{% for term in terms %}
+									{% if term.term == annualTerm %}
+										<option value="{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
+									{% endif %}
+								{% endfor %}
+							</select>
+
+							<label class="fs-floating-label" for="termCycleSubjectTopFive">
+								<i class="fe fe-calendar"></i>
+								{% trans %}Period{% endtrans %}
+							</label>
+
+							<div class="invalid-feedback">{% trans %}Please choose a period !{% endtrans %}</div>
+						</div>
+
+						<div class="fs-floating-field fs-required-field">
+							<select name="cycle" id="cycleSubjectTopFive" class="form-control select2-show-search fs-floating-control" data-placeholder="" required>
+								<option value="" label=""></option>
+								<option value="0" label="">{% trans %}All cycle{% endtrans %}</option>
+								{% for cycle in cycles %}
+									<option value="{{ cycle.id }}">{% trans %}Cycle  :{% endtrans %} {{ cycle.cycle }}</option>
+								{% endfor %}
+							</select>
+
+							<label class="fs-floating-label" for="cycleSubjectTopFive">
+								<i class="fe fe-refresh-cw"></i>
+								{% trans %}Cycle{% endtrans %}
+							</label>
+
+							<div class="invalid-feedback">{% trans %}Please choose a cycle !{% endtrans %}</div>
+						</div>
+
+						<div class="fs-floating-field fs-required-field">
+							<select name="subject" id="subjectCycleTopFive" class="form-control select2-show-search fs-floating-control" data-placeholder="" required>
+								<option value="" label="{% trans %}Choose a subject{% endtrans %}"></option>
+								<option value="0" label="">{% trans %}All subject{% endtrans %}</option>
+								{% for subject in subjects %}
+									<option value="{{ subject.id }}">{{ subject.subject }}</option>
+								{% endfor %}
+							</select>
+
+							<label class="fs-floating-label" for="subjectCycleTopFive">
+								<i class="fe fe-book"></i>
+								{% trans %}Subject{% endtrans %}
+							</label>
+
+							<div class="invalid-feedback">{% trans %}Please choose a subject !{% endtrans %}</div>
+						</div>
+
+						<div class="fs-bt-form__actions">
+							<button class="fs-bt-btn fs-bt-btn--primary fs-bt-submit-btn" type="submit" name="printBestStudentsPerClass">
+								<i class="fa fa-print fs-bt-submit-icon"></i>
+								<span>{% trans %}Print{% endtrans %}</span>
+							</button>
+						</div>
+					</form>
+				</section>
+
+				<section class="fs-bt-card" data-module-card>
+					<div class="fs-bt-card__header">
+						<span class="fs-bt-card__icon">
+							<i class="fe fe-trending-up"></i>
+						</span>
+						<div>
+							<h3>{% trans %}Top five students by level{% endtrans %}</h3>
+							<p>{% trans %}Print top five students by period and level.{% endtrans %}</p>
+						</div>
+					</div>
+
+					<form action="{{ path('top_five_students_by_level') }}" method="post" target="_blank" class="fs-bt-form fs-bt-form--two needs-validation" novalidate data-no-spinner="1">
+						<div class="fs-floating-field fs-required-field">
+							<select name="term" id="termLevelTopFive" class="form-control select2 custom-select fs-floating-control" data-placeholder="" required>
+								<option label="" value=""></option>
+								<optgroup label="{% trans %}Term{% endtrans %}">
+									{% for term in terms %}
+										{% if term.term != annualTerm %}
+											<option value="{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
+										{% endif %}
+									{% endfor %}
+								</optgroup>
+								{% for term in terms %}
+									{% if term.term == annualTerm %}
+										<option value="{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
+									{% endif %}
+								{% endfor %}
+							</select>
+
+							<label class="fs-floating-label" for="termLevelTopFive">
+								<i class="fe fe-calendar"></i>
+								{% trans %}Period{% endtrans %}
+							</label>
+
+							<div class="invalid-feedback">{% trans %}Please choose a period !{% endtrans %}</div>
+						</div>
+
+						<div class="fs-floating-field fs-required-field">
+							<select name="level" id="levelTopFive" class="form-control select2-show-search fs-floating-control" data-placeholder="" required>
+								<option value="" label=""></option>
+								{% for level in levels %}
+									<option value="{{ level.id }}">{% trans %}Level{% endtrans %} : {{ level.level }}</option>
+								{% endfor %}
+							</select>
+
+							<label class="fs-floating-label" for="levelTopFive">
+								<i class="fe fe-trending-up"></i>
+								{% trans %}Level{% endtrans %}
+							</label>
+
+							<div class="invalid-feedback">{% trans %}Please choose a level !{% endtrans %}</div>
+						</div>
+
+						<div class="fs-bt-form__actions">
+							<button class="fs-bt-btn fs-bt-btn--primary fs-bt-submit-btn" type="submit" name="printBestStudentsPerClass">
+								<i class="fa fa-print fs-bt-submit-icon"></i>
+								<span>{% trans %}Print{% endtrans %}</span>
+							</button>
+						</div>
+					</form>
+				</section>
+
+				<section class="fs-bt-card" data-module-card>
+					<div class="fs-bt-card__header">
+						<span class="fs-bt-card__icon fs-bt-card__icon--violet">
+							<i class="fe fe-book"></i>
+						</span>
+						<div>
+							<h3>{% trans %}Top five students by level and discipline{% endtrans %}</h3>
+							<p>{% trans %}Filter rankings by period, level and discipline.{% endtrans %}</p>
+						</div>
+					</div>
+
+					<form action="{{ path('top_five_students_level_and_subject') }}" method="post" target="_blank" class="fs-bt-form fs-bt-form--three needs-validation" novalidate data-no-spinner="1">
+						<div class="fs-floating-field fs-required-field">
+							<select name="term" id="termLevelSubjectTopFive" class="form-control select2 custom-select fs-floating-control" data-placeholder="" required>
+								<option label="" value=""></option>
+								<optgroup label="{% trans %}Term{% endtrans %}">
+									{% for term in terms %}
+										{% if term.term != annualTerm %}
+											<option value="{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
+										{% endif %}
+									{% endfor %}
+								</optgroup>
+								{% for term in terms %}
+									{% if term.term == annualTerm %}
+										<option value="{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
+									{% endif %}
+								{% endfor %}
+							</select>
+
+							<label class="fs-floating-label" for="termLevelSubjectTopFive">
+								<i class="fe fe-calendar"></i>
+								{% trans %}Period{% endtrans %}
+							</label>
+
+							<div class="invalid-feedback">{% trans %}Please choose a period !{% endtrans %}</div>
+						</div>
+
+						<div class="fs-floating-field fs-required-field">
+							<select name="level" id="levelSubjectTopFive" class="form-control select2-show-search fs-floating-control" data-placeholder="" required>
+								<option value="" label=""></option>
+								{% for level in levels %}
+									<option value="{{ level.id }}">{% trans %}Level{% endtrans %} : {{ level.level }}</option>
+								{% endfor %}
+							</select>
+
+							<label class="fs-floating-label" for="levelSubjectTopFive">
+								<i class="fe fe-trending-up"></i>
+								{% trans %}Level{% endtrans %}
+							</label>
+
+							<div class="invalid-feedback">{% trans %}Please choose a level !{% endtrans %}</div>
+						</div>
+
+						<div class="fs-floating-field fs-required-field">
+							<select name="subject" id="subjectLevelTopFive" class="form-control select2-show-search fs-floating-control" data-placeholder="" required>
+								<option value="" label="{% trans %}Choose a subject{% endtrans %}"></option>
+								{% for subject in subjects %}
+									<option value="{{ subject.id }}">{{ subject.subject }}</option>
+								{% endfor %}
+							</select>
+
+							<label class="fs-floating-label" for="subjectLevelTopFive">
+								<i class="fe fe-book"></i>
+								{% trans %}Subject{% endtrans %}
+							</label>
+
+							<div class="invalid-feedback">{% trans %}Please choose a subject !{% endtrans %}</div>
+						</div>
+
+						<div class="fs-bt-form__actions">
+							<button class="fs-bt-btn fs-bt-btn--primary fs-bt-submit-btn" type="submit" name="printBestStudentsPerClass">
+								<i class="fa fa-print fs-bt-submit-icon"></i>
+								<span>{% trans %}Print{% endtrans %}</span>
+							</button>
+						</div>
+					</form>
+				</section>
+
+				<section class="fs-bt-card" data-module-card>
+					<div class="fs-bt-card__header">
+						<span class="fs-bt-card__icon fs-bt-card__icon--cyan">
+							<i class="fe fe-home"></i>
+						</span>
+						<div>
+							<h3>{% trans %}Top five students by classroom{% endtrans %}</h3>
+							<p>{% trans %}Print top five students by period and classroom.{% endtrans %}</p>
+						</div>
+					</div>
+
+					<form action="{{ path('top_five_students_by_classroom') }}" method="post" target="_blank" class="fs-bt-form fs-bt-form--two needs-validation" novalidate data-no-spinner="1">
+						<div class="fs-floating-field fs-required-field">
+							<select name="term" id="termClassroomTopFive" class="form-control select2 custom-select fs-floating-control" data-placeholder="" required>
+								<option label="" value=""></option>
+								<optgroup label="{% trans %}Term{% endtrans %}">
+									{% for term in terms %}
+										{% if term.term != annualTerm %}
+											<option value="{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
+										{% endif %}
+									{% endfor %}
+								</optgroup>
+								{% for term in terms %}
+									{% if term.term == annualTerm %}
+										<option value="{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
+									{% endif %}
+								{% endfor %}
+							</select>
+
+							<label class="fs-floating-label" for="termClassroomTopFive">
+								<i class="fe fe-calendar"></i>
+								{% trans %}Period{% endtrans %}
+							</label>
+
+							<div class="invalid-feedback">{% trans %}Please choose a period !{% endtrans %}</div>
+						</div>
+
+						<div class="fs-floating-field fs-required-field">
+							<select name="classroom" id="classroomTopFive" class="form-control select2-show-search fs-floating-control" data-placeholder="" required>
+								<option value="">{% trans %}All classrooms{% endtrans %}</option>
+
+								{% if subSystem == 'Francophone / French Speaker' %}
+									{% if school.education.education == 'Général' %}
+										{% include "includes/_selectClassrooms.html.twig" %}
+									{% else %}
+										{% include "includes/_selectClassroomsTech.html.twig" %}
+									{% endif %}
+								{% else %}
+									{% include "includes/_selectClassroomsEn.html.twig" %}
+								{% endif %}
+							</select>
+
+							<label class="fs-floating-label" for="classroomTopFive">
+								<i class="fe fe-home"></i>
+								{% trans %}Classroom{% endtrans %}
+							</label>
+
+							<div class="invalid-feedback">{% trans %}Please choose a classroom !{% endtrans %}</div>
+						</div>
+
+						<div class="fs-bt-form__actions">
+							<button class="fs-bt-btn fs-bt-btn--primary fs-bt-submit-btn" type="submit" name="printBestStudentsPerClass">
+								<i class="fa fa-print fs-bt-submit-icon"></i>
+								<span>{% trans %}Print{% endtrans %}</span>
+							</button>
+						</div>
+					</form>
+				</section>
+
+				<section class="fs-bt-card" data-module-card>
+					<div class="fs-bt-card__header">
+						<span class="fs-bt-card__icon fs-bt-card__icon--gold">
+							<i class="fe fe-layers"></i>
+						</span>
+						<div>
+							<h3>{% trans %}Top five students by classroom and discipline{% endtrans %}</h3>
+							<p>{% trans %}Filter rankings by period, classroom and discipline.{% endtrans %}</p>
+						</div>
+					</div>
+
+					<form action="{{ path('print_school_top_five_students_classroom_and_subject') }}" method="post" target="_blank" class="fs-bt-form fs-bt-form--three needs-validation" novalidate data-no-spinner="1">
+						<div class="fs-floating-field fs-required-field">
+							<select name="term" id="termClassroomSubjectTopFive" class="form-control select2 custom-select fs-floating-control" data-placeholder="" required>
+								<option label="" value=""></option>
+								<optgroup label="{% trans %}Term{% endtrans %}">
+									{% for term in terms %}
+										{% if term.term != annualTerm %}
+											<option value="{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
+										{% endif %}
+									{% endfor %}
+								</optgroup>
+								{% for term in terms %}
+									{% if term.term == annualTerm %}
+										<option value="{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
+									{% endif %}
+								{% endfor %}
+							</select>
+
+							<label class="fs-floating-label" for="termClassroomSubjectTopFive">
+								<i class="fe fe-calendar"></i>
+								{% trans %}Period{% endtrans %}
+							</label>
+
+							<div class="invalid-feedback">{% trans %}Please choose a period !{% endtrans %}</div>
+						</div>
+
+						<div class="fs-floating-field fs-required-field">
+							<select name="classroom" id="classroomSubjectTopFive" class="form-control select2-show-search fs-floating-control" data-placeholder="" required>
+								<option label="{% trans %}Choose classroom{% endtrans %}" value="">---</option>
+
+								{% if subSystem == 'Francophone / French Speaker' %}
+									{% if school.education.education == 'Général' %}
+										{% include "includes/_selectClassrooms.html.twig" %}
+									{% else %}
+										{% include "includes/_selectClassroomsTech.html.twig" %}
+									{% endif %}
+								{% else %}
+									{% include "includes/_selectClassroomsEn.html.twig" %}
+								{% endif %}
+							</select>
+
+							<label class="fs-floating-label" for="classroomSubjectTopFive">
+								<i class="fe fe-home"></i>
+								{% trans %}Classroom{% endtrans %}
+							</label>
+
+							<div class="invalid-feedback">{% trans %}Please choose a classroom !{% endtrans %}</div>
+						</div>
+
+						<div class="fs-floating-field fs-required-field">
+							<select name="subject" id="subjectClassroomTopFive" class="form-control select2-show-search fs-floating-control" data-placeholder="" required>
+								<option value="" label="{% trans %}Choose a subject{% endtrans %}"></option>
+								<option value="0">{% trans %}All Subjects{% endtrans %}</option>
+								{% for subject in subjects %}
+									<option value="{{ subject.id }}">{{ subject.subject }}</option>
+								{% endfor %}
+							</select>
+
+							<label class="fs-floating-label" for="subjectClassroomTopFive">
+								<i class="fe fe-book"></i>
+								{% trans %}Subject{% endtrans %}
+							</label>
+
+							<div class="invalid-feedback">{% trans %}Please choose a subject !{% endtrans %}</div>
+						</div>
+
+						<div class="fs-bt-form__actions">
+							<button class="fs-bt-btn fs-bt-btn--primary fs-bt-submit-btn" type="submit" name="printBestStudentsPerClass">
+								<i class="fa fa-print fs-bt-submit-icon"></i>
+								<span>{% trans %}Print{% endtrans %}</span>
+							</button>
+						</div>
+					</form>
+				</section>
+
+				<section class="fs-bt-card" data-module-card>
+					<div class="fs-bt-card__header">
+						<span class="fs-bt-card__icon">
+							<i class="fe fe-eye"></i>
+						</span>
+						<div>
+							<h3>{% trans %}Best students per level{% endtrans %}</h3>
+							<p>{% trans %}Display or print best students by period and level.{% endtrans %}</p>
+						</div>
+					</div>
+
+					<form action="{{ path('best_students_by_level') }}" method="post" target="_blank" class="fs-bt-form fs-bt-form--three fs-bt-form--actions-two needs-validation" novalidate data-no-spinner="1">
+						<div class="fs-floating-field fs-required-field">
+							<select name="term" id="termBestLevel" class="form-control select2 custom-select fs-floating-control" data-placeholder="" required>
+								<option label="" value=""></option>
+								<optgroup label="{% trans %}Term{% endtrans %}">
+									{% for term in terms %}
+										{% if term.term != annualTerm %}
+											<option value="{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
+										{% endif %}
+									{% endfor %}
+								</optgroup>
+								{% for term in terms %}
+									{% if term.term == annualTerm %}
+										<option value="{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
+									{% endif %}
+								{% endfor %}
+							</select>
+
+							<label class="fs-floating-label" for="termBestLevel">
+								<i class="fe fe-calendar"></i>
+								{% trans %}Period{% endtrans %}
+							</label>
+
+							<div class="invalid-feedback">{% trans %}Please choose a period !{% endtrans %}</div>
+						</div>
+
+						<div class="fs-floating-field fs-required-field">
+							<select name="level" id="bestLevel" class="form-control select2-show-search fs-floating-control" data-placeholder="" required>
+								<option value="" label=""></option>
+								{% for level in levels %}
+									<option value="{{ level.id }}">{% trans %}Level{% endtrans %} : {{ level.level }}</option>
+								{% endfor %}
+							</select>
+
+							<label class="fs-floating-label" for="bestLevel">
+								<i class="fe fe-trending-up"></i>
+								{% trans %}Level{% endtrans %}
+							</label>
+
+							<div class="invalid-feedback">{% trans %}Please choose a level !{% endtrans %}</div>
+						</div>
+
+						<div class="fs-bt-form__actions fs-bt-form__actions--two">
+							<button class="fs-bt-btn fs-bt-btn--ghost fs-bt-submit-btn" type="submit" name="display">
+								<i class="fa fa-eye fs-bt-submit-icon"></i>
+								<span>{% trans %}Display{% endtrans %}</span>
+							</button>
+
+							<button class="fs-bt-btn fs-bt-btn--primary fs-bt-submit-btn" type="submit" name="printBestStudentsPerClass">
+								<i class="fa fa-print fs-bt-submit-icon"></i>
+								<span>{% trans %}Print{% endtrans %}</span>
+							</button>
+						</div>
+					</form>
+				</section>
+
+				<section class="fs-bt-card" data-module-card>
+					<div class="fs-bt-card__header">
+						<span class="fs-bt-card__icon fs-bt-card__icon--rose">
+							<i class="fe fe-star"></i>
+						</span>
+						<div>
+							<h3>{% trans %}Top girls science classes{% endtrans %}</h3>
+							<p>{% trans %}Display or print top girls in science classrooms by period.{% endtrans %}</p>
+						</div>
+					</div>
+
+					<form action="{{ path('top_girls_students_by_science_classroom') }}" method="post" target="_blank" class="fs-bt-form fs-bt-form--three fs-bt-form--actions-two needs-validation" novalidate data-no-spinner="1">
+						<div class="fs-floating-field fs-required-field">
+							<select name="term" id="termScienceGirl" class="form-control select2 custom-select fs-floating-control" data-placeholder="" required>
+								<option label="" value=""></option>
+								<optgroup label="{% trans %}Term{% endtrans %}">
+									{% for term in terms %}
+										{% if term.term != annualTerm %}
+											<option value="{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
+										{% endif %}
+									{% endfor %}
+								</optgroup>
+								{% for term in terms %}
+									{% if term.term == annualTerm %}
+										<option value="{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
+									{% endif %}
+								{% endfor %}
+							</select>
+
+							<label class="fs-floating-label" for="termScienceGirl">
+								<i class="fe fe-calendar"></i>
+								{% trans %}Period{% endtrans %}
+							</label>
+
+							<div class="invalid-feedback">{% trans %}Please choose a period !{% endtrans %}</div>
+						</div>
+
+						<div class="fs-floating-field fs-required-field">
+							<select name="classroom" id="scienceGirlClassroom" class="form-control select2-show-search fs-floating-control" data-placeholder="" required>
+								<option value="">---</option>
+
+								{% if subSystem == 'Francophone / French Speaker' %}
+									{% if school.education.education == 'Général' %}
+										{% include "includes/_selectClassrooms.html.twig" %}
+									{% else %}
+										{% include "includes/_selectClassroomsTech.html.twig" %}
+									{% endif %}
+								{% else %}
+									{% include "includes/_selectClassroomsEn.html.twig" %}
+								{% endif %}
+							</select>
+
+							<label class="fs-floating-label" for="scienceGirlClassroom">
+								<i class="fe fe-home"></i>
+								{% trans %}Classroom{% endtrans %}
+							</label>
+
+							<div class="invalid-feedback">{% trans %}Please choose a classroom !{% endtrans %}</div>
+						</div>
+
+						<div class="fs-bt-form__actions fs-bt-form__actions--two">
+							<button class="fs-bt-btn fs-bt-btn--ghost fs-bt-submit-btn" type="submit" name="display">
+								<i class="fa fa-eye fs-bt-submit-icon"></i>
+								<span>{% trans %}Display{% endtrans %}</span>
+							</button>
+
+							<button class="fs-bt-btn fs-bt-btn--primary fs-bt-submit-btn" type="submit" name="printBestStudentsPerClass">
+								<i class="fa fa-print fs-bt-submit-icon"></i>
+								<span>{% trans %}Print{% endtrans %}</span>
+							</button>
+						</div>
+					</form>
+				</section>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-best-results-per-term-premium.js') }}"></script>
 {% endblock %}

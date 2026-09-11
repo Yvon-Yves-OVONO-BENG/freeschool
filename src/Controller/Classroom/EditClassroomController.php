@@ -19,11 +19,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/classroom")]
 class EditClassroomController extends AbstractController
 {
@@ -74,88 +70,97 @@ class EditClassroomController extends AbstractController
         // on recupère le schoolYear de la BD pour qu'il soit suivi par le EntityManager au moment du persist
         $schoolYear = $this->schoolYearRepository->find($mySession->get('schoolYear')->getId());
         
-        $classroom = $this->classroomRepository->findOneBySlug([
-            'slug' => $slug
+        $classroom = $this->classroomRepository->findOneBy([
+            'slug' => $slug,
+            'schoolYear' => $schoolYear
         ]);
 
-        $form = $this->createForm(ClassroomType::class, $classroom);
-
-        // on set le schoolYear pour qu'il soit pris en compte dans la validation du formulaire
-        $classroom->setSchoolYear($schoolYear); 
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) 
+        if ($classroom) 
         {
-            #je fabrique mon slug
-            $characts    = 'abcdefghijklmnopqrstuvwxyz#{};()';
-            $characts   .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#{};()';	
-            $characts   .= '1234567890'; 
-            $slug      = ''; 
-    
-            for($i=0;$i < 15;$i++) 
-            { 
-                $slug .= substr($characts,rand()%(strlen($characts)),1); 
-            }
+            $form = $this->createForm(ClassroomType::class, $classroom, ['school' => $school]);
 
-            //////j'extrait la derniere matiere de la table
-            $dernierClassroom = $this->classroomRepository->findBy([],['id' => 'DESC'],1,0);
+            // on set le schoolYear pour qu'il soit pris en compte dans la validation du formulaire
+            $classroom->setSchoolYear($schoolYear); 
 
-            /////je récupère l'id du sernier utilisateur
-            
-            if ($dernierClassroom) 
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) 
             {
-                $id = $dernierClassroom[0]->getId();
-            } 
-            else 
-            {
-                $id = 1;
+                #je fabrique mon slug
+                $characts    = 'abcdefghijklmnopqrstuvwxyz#{};()';
+                $characts   .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#{};()';	
+                $characts   .= '1234567890'; 
+                $slug      = ''; 
+        
+                for($i=0;$i < 15;$i++) 
+                { 
+                    $slug .= substr($characts,rand()%(strlen($characts)),1); 
+                }
+
+                //////j'extrait la derniere matiere de la table
+                $dernierClassroom = $this->classroomRepository->findBy([],['id' => 'DESC'],1,0);
+
+                /////je récupère l'id du sernier utilisateur
+                
+                if ($dernierClassroom) 
+                {
+                    $id = $dernierClassroom[0]->getId();
+                } 
+                else 
+                {
+                    $id = 1;
+                }
+                // if($classroom->getLevel()->getLevel() > 4)
+                // {
+                //     $forFirstGroup = true;
+                // }
+                
+                // On set les champs qui ne sont pas pris en compte par le formulaire
+                $classroom->setUpdatedBy($this->getUser())
+                            ->setSubSystem($subSyste)
+                            ->setSlug($slug.$id);
+                
+                $this->em->persist($classroom);
+                $this->em->flush(); // On modifie
+
+                // On Insère le coefficient/note limite par defaut si ça n'existe pas encore
+                $unrankedCoefficient = $this->unrankedCoefficientRepository->findOneByClassroom($classroom);
+                if(is_null($unrankedCoefficient))
+                {
+                    $unrankedCoefficient = new UnrankedCoefficient();
+                    $unrankedCoefficient->setClassroom($classroom)
+                        ->setUnrankedCoefficient(ConstantsClass::UNRANKED_COEFFICIENT)
+                        ->setForFirstGroup($forFirstGroup)
+                        ->setForMark($forMark);
+
+                    $this->em->persist($unrankedCoefficient);
+                    $this->em->flush();
+                }
+
+                $this->addFlash('info', $this->translator->trans('Classroom updated with success !'));
+                
+                $mySession->set('miseAjour', 1);
+                // On se redirige sur la page d'affichage des classes
+                return $this->redirectToRoute('classroom_displayClassroom',
+                [ 'm' => 1]);
             }
-            // if($classroom->getLevel()->getLevel() > 4)
-            // {
-            //     $forFirstGroup = true;
-            // }
-            
-            // On set les champs qui ne sont pas pris en compte par le formulaire
-            $classroom->setUpdatedBy($this->getUser())
-                        ->setSubSystem($subSyste)
-                        ->setSlug($slug.$id);
-            
-            $this->em->persist($classroom);
-            $this->em->flush(); // On modifie
+                
+            $classrooms = $this->classroomRepository->findAllToDisplay($schoolYear, $subSystem);
 
-            // On Insère le coefficient/note limite par defaut si ça n'existe pas encore
-            $unrankedCoefficient = $this->unrankedCoefficientRepository->findOneByClassroom($classroom);
-            if(is_null($unrankedCoefficient))
-            {
-                $unrankedCoefficient = new UnrankedCoefficient();
-                $unrankedCoefficient->setClassroom($classroom)
-                    ->setUnrankedCoefficient(ConstantsClass::UNRANKED_COEFFICIENT)
-                    ->setForFirstGroup($forFirstGroup)
-                    ->setForMark($forMark);
-
-                $this->em->persist($unrankedCoefficient);
-                $this->em->flush();
-            }
-
-            $this->addFlash('info', $this->translator->trans('Classroom updated with success !'));
-            
-            $mySession->set('miseAjour', 1);
-            // On se redirige sur la page d'affichage des classes
-            return $this->redirectToRoute('classroom_displayClassroom',
-            [ 'm' => 1]);
-        }
-            
-        $classrooms = $this->classroomRepository->findAllToDisplay($schoolYear, $subSystem);
-
-        return $this->render('classroom/saveClassroom.html.twig', [
-            'formClassroom' => $form->createView(),
-            'slug' => $slug,
-            'forNextYear' => $forNextYear,
-            'classrooms' => $classrooms,
-            'classroom' => $classroom,
-            'school' => $school
+            return $this->render('classroom/saveClassroom.html.twig', [
+                'formClassroom' => $form->createView(),
+                'slug' => $slug,
+                'forNextYear' => $forNextYear,
+                'classrooms' => $classrooms,
+                'classroom' => $classroom,
+                'school' => $school
             ]);
+        } 
+        else 
+        {
+            return $this->redirectToRoute('page_error');
+        }
+        
     }
 
 }

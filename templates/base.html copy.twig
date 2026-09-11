@@ -5,7 +5,7 @@
 		<meta charset="UTF-8">
 		<meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=0'>
 		<meta content="Azea - Admin Panel HTML template" name="description">
-		<meta content="Spruko Private Limited" name="author">
+		<meta content="Yvon Yves Noel OVONO BENG" name="author">
 		<meta name="keywords" content="admin, admin template, dashboard, admin dashboard, responsive, bootstrap, bootstrap 5, admin theme, admin themes, bootstrap admin template, scss, ui, crm, modern, flat">
 
 		<!-- Title -->
@@ -134,7 +134,7 @@
 
 	</head>
 
-	<body class="app">
+	<body class="app fs-saas-premium">
 		{# On recupère la session #}
 		{% set mySession = app.session.get('mySession') %}
 		{% set currentSchoolYear = "Since 2019" %}
@@ -191,7 +191,7 @@
 							</div>
 							<!-- SEARCH --><!-- SEARCH -->
 							<div class="d-flex order-lg-2 ms-auto main-header-end">
-								<button  class="navbar-toggler navresponsive-toggler d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent-4" aria-controls="navbarSupportedContent-4" aria-expanded="true" aria-label="Toggle navigation">
+								<button  class="navbar-toggler navresponsive-toggler d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent-4" aria-controls="navbarSupportedContent-4" aria-expanded="true" aria-label="{% trans %}Toggle navigation{% endtrans %}">
 									<i class="fe fe-more-vertical header-icons navbar-toggler-icon"></i>
 								</button>
 								<div class="navbar navbar-expand-lg navbar-collapse responsive-navbar p-0">
@@ -203,7 +203,7 @@
 												</a>
 												<div class="dropdown-menu header-search dropdown-menu-start">
 													<div class="input-group w-100 p-2">
-														<input type="text" class="form-control" placeholder="Search....">
+														<input type="text" class="form-control" placeholder="{% trans %}Search....{% endtrans %}">
 														<button class="btn btn-primary-color" type="submit">
 															<svg xmlns="http://www.w3.org/2000/svg" class="header-icon search-icon p-1 mt-1" width="24" height="24" viewBox="0 0 24 24"><path d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396 1.414-1.414-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z"/></svg>
 														</button>
@@ -237,7 +237,7 @@
 														{% if locale == 'fr' %}
 														<a class="dropdown-item d-flex" href="{{ path('translation_changeLocale', {'locale': locale}) }}">
 														<img src="{{asset('build/custom2/images/french_flag.jpg')}}" alt="img" class="me-2 country mt-1">
-														<span class="fs-13">{% trans %}Français{% endtrans %} </span>
+														<span class="fs-13">{% trans %}French{% endtrans %} </span>
 														</a>
 														{% endif %}
 
@@ -354,7 +354,7 @@
 
 																	<div class="col-lg-2 col-md-12 col-xs-12 link-list">
 																		<ul>
-																			<li aria-haspopup="true"><a href="{{ path('classroom_displayClassroom') }}"><i class="fa fa-building"></i>{% trans %}Classes{% endtrans %}</a></li>
+																			<li aria-haspopup="true"><a href="{{ path('classroom_displayClassroom') }}"><i class="fa fa-building"></i>{% trans %}Classs{% endtrans %}</a></li>
 
 																			<li aria-haspopup="true"><a href="{{ path('lesson_displayLesson') }}"><i class="fa fa-briefcase"></i>{% trans %}Courses{% endtrans %}</a></li>
 																		</ul>
@@ -497,7 +497,7 @@
 														</ul>
 													</li>
 													<li aria-haspopup="true" class="sub-menu-sub"><a href="javascript:void(0);">
-														<i class="fa fa-group"></i>Effective</a>
+														<i class="fa fa-group"></i>{% trans %}Effective{% endtrans %}</a>
 														<ul class="sub-menu">
 															<li aria-haspopup="true"><a href="{{ path('headmaster_countTeachers') }}" target="_blank">
 																<i class="fa fa-group"></i>{% trans %}Effective of staff{% endtrans %}</a></li>
@@ -802,7 +802,7 @@
 					<div class="container">
 						<div class="row align-items-center flex-row-reverse">
 							<div class="col-md-12 col-sm-12" style="text-align:center !important;">
-								Copyright © 2019 <a href="javascript:void(0);">www.freedomsftware.org</a>. From<a href="javascript:void(0);"> Freedom Software </a> All Rights Reserved <span class="fa fa-heart text-danger"></span> 
+								{% trans %}Copyright © 2019{% endtrans %} <a href="javascript:void(0);">{% trans %}www.freedomsftware.org{% endtrans %}</a>{% trans %}. From{% endtrans %}<a href="javascript:void(0);"> {% trans %}Freedom Software{% endtrans %} </a> {% trans %}All Rights Reserved{% endtrans %} <span class="fa fa-heart text-danger"></span> 
 							</div>
 						</div>
 					</div>
@@ -1142,5 +1142,7 @@
 		{% endif %}
 
 		{% block javascripts %}{% endblock %}
+		{% include "includes/_saas_premium_theme.html.twig" %}
+
 	</body>
 </html>

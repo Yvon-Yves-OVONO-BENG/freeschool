@@ -3,261 +3,337 @@
 {% block title %}{% trans %}Report management{% endtrans %}{% endblock %}
 
 {% block subTitle %}
-    {% trans %}REPORTS MANAGMENT{% endtrans %}
+	{% trans %}REPORTS MANAGMENT{% endtrans %}
 {% endblock %}
 
 {% block stylesheets %}
-	<style>
-		th,
-		tfoot {
-			font-size: 15px !important;
-			text-align: center !important;
-			font-weight: bold !important;
-			background-color: #F1F1F1 !important;
-		}
-
-		tr:hover {
-			background-color: rgba(62, 128, 235, 0.2) !important;
-			color: #3e80eb !important;
-		}
-	</style>
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-report-management-premium.css') }}">
 {% endblock %}
 
 {% block body %}
-<!-- App-Content -->
-	<div class="hor-content main-content">
+	<div class="hor-content main-content fs-report-page">
 		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary">
-                        <i class="fa fa-file-text-o"></i> {% trans %}REPORTS MANAGMENT{% endtrans %}
-                    </h4>
-                </div>
-                <div class="page-rightheader">
-                    <div class="btn-list">
-                        <a href="{{ path('report_defineUnrankedCoefficient') }}" class="btn btn-outline-primary">
-                            <i class="fe fe-activity me-2"></i> 
-                            {% trans %}Update limits coefficients{% endtrans %}
-                        </a>
+			<div class="fs-report-menu-safe-space" aria-hidden="true"></div>
 
-                        {% if verrouInsolvable %}
+			<section class="fs-report-hero">
+				<div class="fs-report-hero__content">
+					<div>
+						<span class="fs-report-eyebrow">
+							<i class="fe fe-file-text"></i>
+							{% trans %}Reports workspace{% endtrans %}
+						</span>
 
-                            <a href="{{ path('desactive_print_report_insolvable') }}" class="btn btn-outline-danger">
-                                <i class="fe fe-x-circle me-2"></i> 
-                                {% trans %}Uneable print report of insolvable{% endtrans %}
-                            </a>
-        
-                            {% else %}
-                                <a href="{{ path('activate_print_report_insolvable') }}" class="btn btn-outline-primary">
-                                    <i class="fe fe-check-circle me-2"></i> 
-                                    {% trans %}Eable print report of insolvable{% endtrans %}
-                                </a>
-                        
-                        {% endif %}
-                    </div>
+						<h1 class="fs-report-title">{% trans %}REPORTS MANAGMENT{% endtrans %}</h1>
 
-                </div>
-            </div>
-            <!--End Page header-->
+						<p class="fs-report-subtitle">
+							{% trans %}Generate, control and print student reports through a clean premium workspace with secure financial restrictions.{% endtrans %}
+						</p>
+					</div>
 
-            <!-- Row -->
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="expanel expanel-primary border-primary">
-                        <div class="expanel-heading">
-                            <h3 class="expanel-title">{% trans %}Choose a class and term{% endtrans %}</h3>
-                        </div>
-                        <div class="expanel-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <form action="{{ path('report_report') }}" method="post">
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <select class="form-control select2-show-search" data-placeholder="Choose a classroom" name="classroom" id="classroom" required style="border: 1px solid #0f0;">
-                                                        <option label="Choose a classroom">{% trans %}Choose a class{% endtrans %}</option>
-                                                        
-                                                        {% if subSystem == 'Francophone / French Speaker' %}
-                                                            {% if school.education.education == 'Général' %}
-                                                                {% include "includes/_selectClassrooms.html.twig" %}
-                                                                {% else %}
-                                                                    {% include "includes/_selectClassroomsTech.html.twig" %}
-                                                            {% endif %}
-                                                            {% else %}
-                                                                {% include "includes/_selectClassroomsEn.html.twig" %}
-                                                        {% endif %}
+					<div class="fs-report-hero__actions">
+						<a href="{{ path('report_defineUnrankedCoefficient') }}" class="fs-report-btn fs-report-btn--light">
+							<i class="fe fe-activity"></i>
+							<span>{% trans %}Update limits coefficients{% endtrans %}</span>
+						</a>
 
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <select name="term" id="term" class="form-control select2 custom-select" required>
-                                                        <option value="">{% trans %}Choose a period{% endtrans %}</option>
-                                                        {% for term in terms %}
-                                                            {% if term.term != annualTerm %}
-                                                                <option value="{{ term.id }}" 
-                                                                {% if selectedTerm.id == term.id %}
-                                                                    selected
-                                                                {% endif %}>
-                                                                    {% trans %}Term{% endtrans %} {{ term.term }}
-                                                                </option>
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                        {% for term in terms %}
-                                                            {% if term.term == annualTerm %}
-                                                                <option value="{{ term.id }}" 
-                                                                {% if selectedTerm.id == term.id %}
-                                                                    selected
-                                                                {% endif %}>
-                                                                    {% trans %}Annual{% endtrans %}
-                                                                </option>
-                                                            {% endif %}
-                                                        {% endfor %}
+						{% if verrouInsolvable %}
+							<a href="{{ path('desactive_print_report_insolvable') }}" class="fs-report-btn fs-report-btn--danger-soft">
+								<i class="fe fe-x-circle"></i>
+								<span>{% trans %}Uneable print report of insolvable{% endtrans %}</span>
+							</a>
+						{% else %}
+							<a href="{{ path('activate_print_report_insolvable') }}" class="fs-report-btn fs-report-btn--success-soft">
+								<i class="fe fe-check-circle"></i>
+								<span>{% trans %}Eable print report of insolvable{% endtrans %}</span>
+							</a>
+						{% endif %}
+					</div>
+				</div>
+			</section>
 
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="displayStudents">
-                                                        <i class="fa fa-list"></i>
-                                                        {% trans %}Display{% endtrans %}
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                    </form>
-                                </div>
-                                {% if methodIsPost %}
-                                    {% if selectedClassroom.id is not null %}
-                                        <div class="col-md-6 text-right">  
-                                            <button type="button" class="btn btn-primary mb-1 me-3">
-                                                <span>{% trans %}Number of students{% endtrans %}</span>
-                                                <span class="badge bg-white text-dark rounded-pill">{{ students|length }}</span>
-                                            </button>
-                                        </div>
+			<section class="fs-report-filter-card">
+				<div class="fs-report-filter-card__header">
+					<div>
+						<span class="fs-report-chip">
+							<i class="fe fe-filter"></i>
+							{% trans %}Filters and actions{% endtrans %}
+						</span>
+						<h2>{% trans %}Choose a class and term{% endtrans %}</h2>
+					</div>
 
-                                        
-                                    {% endif %}
-                                {% endif %}
-                            </div>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
-			<!--End Row -->
-            {% if methodIsPost %}
-                <div class="card border-primary">
-                    <div class="card-header">
-                        {% if selectedClassroom.id is not null %}
-                            
-                            <div class="col-md-8 text-left">
-                                {% if selectedTerm.term != annualTerm %}
-                                <button type="button" class="btn btn-primary">
-                                    <span>{% trans %}Reports term{% endtrans %} N° </span>
-                                    <span class="badge bg-white text-dark rounded-pill">0{{ selectedTerm.term }}</span>
-                                </button>
-                                {% else %}
-                                <button type="button" class="btn btn-primary">
-                                    <span>{% trans %}Annuals reports{% endtrans %}</span>
-                                    <span class="badge bg-white text-dark rounded-pill"></span>
-                                </button>
-                                {% endif %}
-                            </div>
+					{% if methodIsPost and selectedClassroom.id is not null %}
+						<div class="fs-report-stats">
+							<div class="fs-report-stat">
+								<span class="fs-report-stat__icon"><i class="fe fe-users"></i></span>
+								<span class="fs-report-stat__label">{% trans %}Number of students{% endtrans %}</span>
+								<strong class="fs-report-stat__value">{{ students|length }}</strong>
+							</div>
 
-                            {% if students|length > 0 %}
-                                <div class="card-options">
-                                    <form action="{{ path('report_printReport', {'slug': selectedClassroom.slug, 'slugTerm': selectedTerm.slug}) }}" method="post" target="_blank">
-                                        <div class="form-group">
-                                            <button type="submit" class="btn btn-outline-primary " name="printAllReports">
-                                                <i class="si si-printer"></i>
-                                                {% trans %}Print all reports{% endtrans %}
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
-                            {% endif %}
-                        {% endif %}
-                    </div>
+							<div class="fs-report-stat fs-report-stat--active">
+								<span class="fs-report-stat__icon"><i class="fe fe-home"></i></span>
+								<span class="fs-report-stat__label">{% trans %}Classroom{% endtrans %}</span>
+								<strong class="fs-report-stat__value fs-report-stat__value--small">{{ selectedClassroom.classroom }}</strong>
+							</div>
+						</div>
+					{% endif %}
+				</div>
 
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            
-                            <table border="1" class="table table-bordered text-nowrap" id="example2" width="100%" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                    <th class="border-bottom-0 indigo-gradient">{% trans %}N°{% endtrans %}</th>
-                                    <th class="border-bottom-0 indigo-gradient">{% trans %}Full name{% endtrans %}</th>
-                                    <th class="border-bottom-0 green-gradient">{% trans %}Report{% endtrans %}</th>
-                                    </tr>
-                                </thead>
-                                <tfoot>
-                                    <tr>
-                                    <th class="border-bottom-0 indigo-gradient">{% trans %}N°{% endtrans %}</th>
-                                    <th class="border-bottom-0 indigo-gradient">{% trans %}Full name{% endtrans %}</th>
-                                    <th class="border-bottom-0 green-gradient">{% trans %}Report{% endtrans %}</th>
-                                    </tr>
-                                </tfoot>
-                                {% set i = 1 %}
-                                {% for registrationHistory in registrationHistories %}
-                                    {% set student = registrationHistory.student %}
-                                    {% set history = registrationHistory.history %}
+				<form action="{{ path('report_report') }}" method="post" class="fs-report-filter-form needs-validation" novalidate>
+					<div class="fs-floating-field fs-required-field">
+						<select class="form-control select2-show-search fs-floating-control" data-placeholder="" name="classroom" id="classroom" required>
+							<option value="" label="">{% trans %}Choose a class{% endtrans %}</option>
 
-                                    {# {% set registration = student.registration ? student.registration : emptyRegistration %} #}
-                                    {% set totalApeeFees = 0 %}
-                                    {% set totalComputerFees = 0 %}
-                                    {% set totalMedicalBookletFees = 0 %}
-                                    {% set totalCleanSchoolFees = 0 %}
-                                    {% set totalPhotoFees = 0 %}
+							{% if subSystem == 'Francophone / French Speaker' %}
+								{% if school.education.education == 'Général' %}
+									{% include "includes/_selectClassrooms.html.twig" %}
+								{% else %}
+									{% include "includes/_selectClassroomsTech.html.twig" %}
+								{% endif %}
+							{% else %}
+								{% include "includes/_selectClassroomsEn.html.twig" %}
+							{% endif %}
+						</select>
 
-                                    {% for histor in history %}
-                                        {% set totalApeeFees = totalApeeFees + histor.apeeFees %}
+						<label class="fs-floating-label" for="classroom">
+							<i class="fe fe-home"></i>
+							{% trans %}Classroom{% endtrans %}
+						</label>
 
-                                        {% set totalComputerFees = totalComputerFees + histor.computerFees %}
+						<div class="invalid-feedback">
+							{% trans %}Please choose a classroom !{% endtrans %}
+						</div>
+					</div>
 
-                                        {% set totalMedicalBookletFees = totalMedicalBookletFees + histor.medicalBookletFees %}
+					<div class="fs-floating-field fs-required-field">
+						<select name="term" id="term" class="form-control select2 custom-select fs-floating-control" required>
+							<option value=""></option>
 
-                                        {% set totalCleanSchoolFees = totalCleanSchoolFees + histor.cleanSchoolFees %}
+							{% for term in terms %}
+								{% if term.term != annualTerm %}
+									<option value="{{ term.id }}" {% if selectedTerm.id == term.id %}selected{% endif %}>
+										{% trans %}Term{% endtrans %} {{ term.term }}
+									</option>
+								{% endif %}
+							{% endfor %}
 
-                                        {% set totalPhotoFees = totalPhotoFees + histor.photoFees %}
-                                    {% endfor %}
-                                    {# {% endfor %} #}
+							{% for term in terms %}
+								{% if term.term == annualTerm %}
+									<option value="{{ term.id }}" {% if selectedTerm.id == term.id %}selected{% endif %}>
+										{% trans %}Annual{% endtrans %}
+									</option>
+								{% endif %}
+							{% endfor %}
+						</select>
 
-                                    {% set totalAvance = totalApeeFees + totalComputerFees + totalMedicalBookletFees + totalCleanSchoolFees + totalPhotoFees %}
+						<label class="fs-floating-label" for="term">
+							<i class="fe fe-calendar"></i>
+							{% trans %}Period{% endtrans %}
+						</label>
 
-                                    {% set totalFees = feesTable.apeeFees + feesTable.computerFees + feesTable.medicalBookletFees + feesTable.cleanSchoolFees + feesTable.photoFees %}
+						<div class="invalid-feedback">
+							{% trans %}Please choose a term !{% endtrans %}
+						</div>
+					</div>
 
-                                    {# {% for student in students %} #}
-                                    <tr>
-                                        <td style="vertical-align: middle; text-align: center !important;">{{ i }}</td>
-                                        <td style="vertical-align: middle;">{{ student.fullName }}</td>
-                                        <td style="text-align: center; vertical-align:middle;"> 
-                                            {% if student.solvable %}
-                                                <a href="{{ path('report_printReport', {'slug': selectedClassroom.slug, 'slugTerm': selectedTerm.slug, 'slugStudent': student.slug}) }}" target="_blank" class="btn btn-outline-primary" data-bs-toggle="tooltip" title="{% trans %}Print report of {% endtrans %} {{ student.fullName }}">
-                                                    <i class="si si-printer"></i> {% trans %}Print report{% endtrans %}
-                                                </a>
-                                                {% else %}
-											    <a href="javascript:void(0);" class="btn btn-danger disabled"><i class="si si-printer me-2"></i> {% trans %}Printing not possible{% endtrans %}</a>
-                                            {% endif %}
+					<button class="fs-report-btn fs-report-btn--primary fs-report-submit-btn" type="submit" name="displayStudents">
+						<span class="fs-report-submit-spinner" aria-hidden="true"></span>
+						<i class="fe fe-list fs-report-submit-icon"></i>
+						<span>{% trans %}Display{% endtrans %}</span>
+					</button>
+				</form>
+			</section>
 
-                                        </td>
-                                    </tr>
-                                    {% set i = i + 1 %}
-                                {% endfor %}
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
+			{% if methodIsPost %}
+				<section class="fs-report-card">
+					<div class="fs-report-card__header">
+						<div>
+							<span class="fs-report-chip">
+								<i class="fe fe-grid"></i>
+								{% trans %}Dynamic table{% endtrans %}
+							</span>
 
-        </div>
-    </div>
-</div>
+							<h2 class="fs-report-card-title">
+								{% if selectedClassroom.id is not null %}
+									{% if selectedTerm.term != annualTerm %}
+										{% trans %}Reports term{% endtrans %} {% trans %}N° 0{% endtrans %}{{ selectedTerm.term }}
+									{% else %}
+										{% trans %}Annuals reports{% endtrans %}
+									{% endif %}
+								{% else %}
+									{% trans %}Reports{% endtrans %}
+								{% endif %}
+							</h2>
+						</div>
 
+						<div class="fs-report-card__actions">
+							<div class="fs-report-search">
+								<i class="fe fe-search"></i>
+								<input type="text" id="fsReportSearch" placeholder="{% trans %}Search student...{% endtrans %}">
+							</div>
+
+							<button type="button" class="fs-report-btn fs-report-btn--ghost" id="fsReportPrintTable">
+								<i class="fe fe-printer"></i>
+								<span>{% trans %}Print table{% endtrans %}</span>
+							</button>
+						</div>
+					</div>
+
+					{% if selectedClassroom.id is not null and students|length > 0 %}
+						<div class="fs-report-print-all-panel">
+							<form action="{{ path('report_printReport', {'slug': selectedClassroom.slug, 'slugTerm': selectedTerm.slug}) }}" method="post" target="_blank" class="fs-report-print-all-form" data-no-spinner="1">
+								<div class="fs-report-print-all-form__title">
+									<i class="fe fe-printer"></i>
+									<span>{% trans %}Ordre d'impression{% endtrans %}</span>
+								</div>
+
+								<div class="fs-report-radio-group">
+									<label class="fs-report-radio">
+										<input type="radio" name="printOrder" value="merit" checked>
+										<span>{% trans %}Order of merit{% endtrans %}</span>
+									</label>
+
+									<label class="fs-report-radio">
+										<input type="radio" name="printOrder" value="alphabetical">
+										<span>{% trans %}Alphabetical order{% endtrans %}</span>
+									</label>
+								</div>
+
+								<button type="submit" class="fs-report-btn fs-report-btn--primary" name="printAllReports">
+									<i class="fe fe-printer"></i>
+									<span>{% trans %}Print all reports{% endtrans %}</span>
+								</button>
+							</form>
+						</div>
+					{% endif %}
+
+					<div class="fs-report-table-wrap">
+						<table class="table fs-report-table" id="fsReportTable">
+							<thead>
+								<tr>
+									<th>
+										<button type="button" class="fs-report-sort" data-sort-index="0">
+											<span>{% trans %}N°{% endtrans %}</span>
+											<i class="fe fe-chevron-down"></i>
+										</button>
+									</th>
+									<th>
+										<button type="button" class="fs-report-sort" data-sort-index="1">
+											<span>{% trans %}Full name{% endtrans %}</span>
+											<i class="fe fe-chevron-down"></i>
+										</button>
+									</th>
+									<th class="text-center">{% trans %}Report{% endtrans %}</th>
+								</tr>
+							</thead>
+
+							<tbody>
+								{% set i = 1 %}
+								{% for registrationHistory in registrationHistories %}
+									{% set student = registrationHistory.student %}
+									{% set history = registrationHistory.history %}
+
+									{% set totalApeeFees = 0 %}
+									{% set totalComputerFees = 0 %}
+									{% set totalMedicalBookletFees = 0 %}
+									{% set totalCleanSchoolFees = 0 %}
+									{% set totalPhotoFees = 0 %}
+
+									{% for histor in history %}
+										{% set totalApeeFees = totalApeeFees + histor.apeeFees %}
+										{% set totalComputerFees = totalComputerFees + histor.computerFees %}
+										{% set totalMedicalBookletFees = totalMedicalBookletFees + histor.medicalBookletFees %}
+										{% set totalCleanSchoolFees = totalCleanSchoolFees + histor.cleanSchoolFees %}
+										{% set totalPhotoFees = totalPhotoFees + histor.photoFees %}
+									{% endfor %}
+
+									{% set totalAvance = totalApeeFees + totalComputerFees + totalMedicalBookletFees + totalCleanSchoolFees + totalPhotoFees %}
+									{% set totalFees = feesTable.apeeFees + feesTable.computerFees + feesTable.medicalBookletFees + feesTable.cleanSchoolFees + feesTable.photoFees %}
+
+									<tr>
+										<td data-label="{% trans %}N°{% endtrans %}">
+											<span class="fs-report-index">{{ i }}</span>
+										</td>
+
+										<td data-label="{% trans %}Full name{% endtrans %}">
+											<div class="fs-report-student-cell">
+												<span class="fs-report-student-avatar">
+													{{ student.fullName|slice(0, 1)|upper }}
+												</span>
+												<div>
+													<strong>{{ student.fullName }}</strong>
+													{% if student.solvable %}
+														<span class="fs-report-status fs-report-status--success">
+															<i class="fe fe-check-circle"></i>
+															{% trans %}Printable{% endtrans %}
+														</span>
+													{% else %}
+														<span class="fs-report-status fs-report-status--danger">
+															<i class="fe fe-lock"></i>
+															{% trans %}Printing not possible{% endtrans %}
+														</span>
+													{% endif %}
+												</div>
+											</div>
+										</td>
+
+										<td class="text-center" data-label="{% trans %}Report{% endtrans %}">
+											{% if student.solvable %}
+												<a href="{{ path('report_printReport', {'slug': selectedClassroom.slug, 'slugTerm': selectedTerm.slug, 'slugStudent': student.slug}) }}" target="_blank" class="fs-report-action fs-report-action--print" data-bs-toggle="tooltip" title="{% trans %}Print report of {% endtrans %} {{ student.fullName }}">
+													<i class="fe fe-printer"></i>
+													<span>{% trans %}Print report{% endtrans %}</span>
+												</a>
+											{% else %}
+												<span class="fs-report-action fs-report-action--disabled">
+													<i class="fe fe-lock"></i>
+													<span>{% trans %}Printing not possible{% endtrans %}</span>
+												</span>
+											{% endif %}
+										</td>
+									</tr>
+
+									{% set i = i + 1 %}
+								{% else %}
+									<tr>
+										<td colspan="3">
+											<div class="fs-report-empty">
+												<i class="fe fe-folder"></i>
+												<strong>{% trans %}No student found{% endtrans %}</strong>
+												<span>{% trans %}Choose another classroom or term to display reports.{% endtrans %}</span>
+											</div>
+										</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+
+					<div class="fs-report-table-footer">
+						<div class="fs-report-table-footer__left">
+							<span id="fsReportResultCount"></span>
+						</div>
+
+						<div class="fs-report-footer-controls">
+							<label class="fs-report-page-size">
+								<span>{% trans %}Rows{% endtrans %}</span>
+								<select id="fsReportRowsPerPage">
+									<option value="5">5</option>
+									<option value="10" selected>10</option>
+									<option value="25">25</option>
+									<option value="50">50</option>
+								</select>
+							</label>
+
+							<div class="fs-report-pagination" id="fsReportPagination" aria-label="{% trans %}Pagination{% endtrans %}"></div>
+						</div>
+					</div>
+				</section>
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-report-management-premium.js') }}"></script>
 {% endblock %}

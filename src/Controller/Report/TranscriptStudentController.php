@@ -25,11 +25,7 @@ use App\Service\SequenceService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/report")]
 class TranscriptStudentController extends AbstractController
 {
@@ -221,7 +217,6 @@ class TranscriptStudentController extends AbstractController
 
         $classrooms = $this->classroomService->splitClassrooms($classrooms);
         
-
         //////// On recupère les differents frais de l'année en cours
         $fees = $this->feesRepository->findOneBySchoolYear($schoolYear);
 

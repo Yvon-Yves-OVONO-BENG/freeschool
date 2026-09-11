@@ -7,147 +7,727 @@
 {% endblock %}
 
 {% block currentUser %}
-    {{teacher.fullName }}
+    {{ teacher.fullName }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <style>
+        .fs-plan-page {
+            padding-bottom: 2rem;
+        }
+
+        .fs-plan-hero {
+            position: relative;
+            overflow: hidden;
+            border-radius: 28px;
+            padding: 1.35rem;
+            margin-bottom: 1.25rem;
+            color: #fff;
+            background:
+                radial-gradient(circle at top right, rgba(255,255,255,.22), transparent 30%),
+                linear-gradient(135deg, #0f172a 0%, #1d4ed8 52%, #06b6d4 100%);
+            box-shadow: 0 22px 55px rgba(15, 23, 42, .18);
+        }
+
+        .fs-plan-hero::before {
+            content: "";
+            position: absolute;
+            width: 260px;
+            height: 260px;
+            right: -120px;
+            bottom: -140px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.16);
+        }
+
+        .fs-plan-hero-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .fs-plan-title {
+            display: flex;
+            align-items: center;
+            gap: .85rem;
+        }
+
+        .fs-plan-title-icon {
+            width: 54px;
+            height: 54px;
+            border-radius: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,.16);
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,.22);
+            backdrop-filter: blur(10px);
+            font-size: 1.35rem;
+        }
+
+        .fs-plan-title h4 {
+            margin: 0;
+            color: #fff;
+            font-weight: 900;
+        }
+
+        .fs-plan-title p {
+            margin: .25rem 0 0;
+            color: rgba(255,255,255,.82);
+            font-weight: 700;
+            font-size: .9rem;
+        }
+
+        .fs-plan-hero .btn {
+            border: 0;
+            border-radius: 999px;
+            font-weight: 900;
+            box-shadow: 0 14px 30px rgba(15, 23, 42, .22);
+        }
+
+        .fs-plan-card {
+            border: 0;
+            border-radius: 28px;
+            overflow: hidden;
+            background: #fff;
+            box-shadow: 0 18px 50px rgba(15, 23, 42, .09);
+        }
+
+        .fs-plan-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 1.15rem 1.25rem;
+            background:
+                radial-gradient(circle at top left, rgba(79, 70, 229, .08), transparent 34%),
+                #fff;
+            border-bottom: 1px solid #eef2f7;
+        }
+
+        .fs-plan-card-title {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+        }
+
+        .fs-plan-card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #eef2ff;
+            color: #4f46e5;
+            font-size: 1.05rem;
+        }
+
+        .fs-plan-card-title h5 {
+            margin: 0;
+            color: #0f172a;
+            font-weight: 900;
+        }
+
+        .fs-plan-card-title small {
+            display: block;
+            margin-top: .15rem;
+            color: #64748b;
+            font-weight: 700;
+        }
+
+        .fs-plan-card-body {
+            padding: 1.25rem;
+            background: linear-gradient(180deg, #f8fafc 0%, #fff 42%);
+        }
+
+        .fs-plan-table-wrap {
+            border-radius: 22px;
+            overflow: hidden;
+            background: #fff;
+            box-shadow: 0 14px 35px rgba(15, 23, 42, .07);
+        }
+
+        .fs-plan-table {
+            margin-bottom: 0 !important;
+            border-color: #eef2f7 !important;
+            width: 100%;
+        }
+
+        .fs-plan-table th {
+            border-top: 0 !important;
+            border-color: #eef2f7 !important;
+            color: #475569;
+            background: #f8fafc !important;
+            font-size: .72rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            text-align: center;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        .fs-plan-table td {
+            border-color: #eef2f7 !important;
+            color: #0f172a;
+            font-size: .82rem;
+            font-weight: 800;
+            vertical-align: middle;
+        }
+
+        .fs-plan-table tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .fs-main-cell {
+            min-width: 140px;
+            font-weight: 900;
+        }
+
+        .fs-sub-cell {
+            min-width: 150px;
+            color: #475569;
+        }
+
+        .fs-sequence-cell {
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .fs-seq-grid {
+            display: grid;
+            gap: .38rem;
+        }
+
+        .fs-seq-row {
+            display: flex;
+            justify-content: center;
+            gap: .35rem;
+            flex-wrap: wrap;
+        }
+
+        .fs-chip {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: .28rem;
+            min-height: 26px;
+            border-radius: 999px;
+            padding: .25rem .5rem;
+            font-size: .68rem;
+            font-weight: 900;
+            white-space: nowrap;
+        }
+
+        .fs-chip-theo {
+            background: #eef2ff;
+            color: #4f46e5;
+        }
+
+        .fs-chip-pra {
+            background: #ecfeff;
+            color: #0891b2;
+        }
+
+        .fs-chip-done {
+            background: #ecfdf5;
+            color: #16a34a;
+        }
+
+        .fs-action-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff !important;
+            border: 0 !important;
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            box-shadow: 0 12px 24px rgba(79, 70, 229, .2);
+        }
+
+        .fs-empty-card {
+            border-radius: 22px;
+            padding: 1.4rem;
+            background: #fff;
+            color: #64748b;
+            text-align: center;
+            font-weight: 800;
+            box-shadow: 0 12px 35px rgba(15, 23, 42, .08);
+        }
+
+        @media (max-width: 991px) {
+            .fs-plan-hero-content,
+            .fs-plan-card-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .fs-plan-hero .btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .hor-content.main-content.fs-plan-page {
+                padding-top: 8px !important;
+                margin-top: 0 !important;
+            }
+
+            .fs-plan-page .container {
+                padding-top: 0 !important;
+                margin-top: 0 !important;
+            }
+
+            .fs-plan-hero {
+                margin-top: 0 !important;
+                margin-bottom: 12px !important;
+                padding: 14px !important;
+                border-radius: 20px !important;
+            }
+
+            .fs-plan-title {
+                align-items: flex-start;
+            }
+
+            .fs-plan-title-icon {
+                width: 44px;
+                height: 44px;
+                border-radius: 14px;
+            }
+
+            .fs-plan-title h4 {
+                font-size: 17px;
+                line-height: 1.15;
+            }
+
+            .fs-plan-title p {
+                font-size: 12px;
+                line-height: 1.25;
+            }
+
+            .fs-plan-card {
+                border-radius: 20px;
+            }
+
+            .fs-plan-card-header,
+            .fs-plan-card-body {
+                padding: 1rem;
+            }
+
+            .fs-plan-table-wrap {
+                border-radius: 16px;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .fs-plan-table {
+                min-width: 980px;
+            }
+        }
+
+		/* New premium card layout for planned lessons */
+.fs-lesson-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+.fs-lesson-card {
+    border-radius: 24px;
+    padding: 1.1rem;
+    background:
+        radial-gradient(circle at top right, rgba(79, 70, 229, .08), transparent 34%),
+        #fff;
+    border: 1px solid #eef2f7;
+    box-shadow: 0 14px 36px rgba(15, 23, 42, .07);
+}
+
+.fs-lesson-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding-bottom: .9rem;
+    border-bottom: 1px solid #eef2f7;
+}
+
+.fs-classroom-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    border-radius: 999px;
+    padding: .42rem .72rem;
+    background: #eef2ff;
+    color: #1d4ed8;
+    font-size: .78rem;
+    font-weight: 900;
+}
+
+.fs-lesson-card-header h5 {
+    margin: .55rem 0 0;
+    color: #0f172a;
+    font-weight: 900;
+    letter-spacing: -.015em;
+}
+
+.fs-sequences-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: .85rem;
+}
+
+.fs-sequence-card {
+    border-radius: 18px;
+    padding: .85rem;
+    background: #f8fafc;
+    border: 1px solid #eef2f7;
+}
+
+.fs-sequence-title {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: .35rem .65rem;
+    margin-bottom: .7rem;
+    background: #0f172a;
+    color: #fff;
+    font-size: .72rem;
+    font-weight: 900;
+}
+
+.fs-sequence-block {
+    border-radius: 14px;
+    padding: .65rem;
+    margin-bottom: .55rem;
+    background: #fff;
+}
+
+.fs-sequence-block:last-child {
+    margin-bottom: 0;
+}
+
+.fs-mini-label {
+    display: block;
+    margin-bottom: .45rem;
+    color: #64748b;
+    font-size: .68rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+.fs-chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+}
+
+.fs-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    padding: .32rem .55rem;
+    min-height: 28px;
+    font-size: .72rem;
+    font-weight: 900;
+}
+
+.fs-chip-theo {
+    background: #eef2ff;
+    color: #4f46e5;
+}
+
+.fs-chip-pra {
+    background: #ecfeff;
+    color: #0891b2;
+}
+
+.fs-chip-done {
+    background: #ecfdf5;
+    color: #16a34a;
+}
+
+.fs-action-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 15px;
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff !important;
+    border: 0 !important;
+    background: linear-gradient(135deg, #4f46e5, #06b6d4);
+    box-shadow: 0 12px 24px rgba(79, 70, 229, .22);
+}
+
+.fs-action-btn:hover {
+    color: #fff !important;
+    transform: translateY(-1px);
+}
+
+@media (max-width: 1199px) {
+    .fs-sequences-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 767px) {
+    .fs-sequences-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .fs-lesson-card {
+        padding: .9rem;
+        border-radius: 20px;
+    }
+
+    .fs-lesson-card-header {
+        align-items: flex-start;
+    }
+
+    .fs-sequence-card {
+        border-radius: 16px;
+    }
+}
+
+/* Espace propre entre le menu horizontal et le contenu */
+@media (min-width: 768px) {
+    .hor-content.main-content.fs-plan-page {
+        padding-top: 22px !important;
+        margin-top: 0 !important;
+    }
+
+    .fs-plan-hero {
+        margin-top: 0 !important;
+    }
+}
+
+/* Mobile : garder compact, mais pas collé */
+@media (max-width: 767px) {
+    .hor-content.main-content.fs-plan-page {
+        padding-top: 10px !important;
+        margin-top: 0 !important;
+    }
+
+    .fs-plan-page .container {
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+    }
+
+    .fs-plan-hero {
+        margin-top: 0 !important;
+        margin-bottom: 12px !important;
+    }
+}
+    </style>
 {% endblock %}
 
 {% block body %}
-<!-- App-Content -->
-	<div class="hor-content main-content">
-		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary">
-                        <i class="fe fe-book me-2"></i> {% trans %}DISPLAY LESSON PLANNED{% endtrans %}
-                    </h4>
+<div class="hor-content main-content fs-plan-page">
+    <div class="container">
+
+        <div class="fs-plan-hero">
+            <div class="fs-plan-hero-content">
+                <div class="fs-plan-title">
+                    <div class="fs-plan-title-icon">
+                        <i class="fe fe-book-open"></i>
+                    </div>
+
+                    <div>
+                        <h4>{% trans %}DISPLAY LESSON PLANNED{% endtrans %}</h4>
+                        <p>
+                            {% trans %}Track planned and completed lessons by classroom, subject and sequence.{% endtrans %}
+                        </p>
+                    </div>
                 </div>
-				<div class="page-rightheader">
-                    <div class="btn-list">
-                        <a href="{{ path('print_progress_tracking_sheet', {'slugTeacher': app.user.teacher.slug}) }}" target="_blank" class="btn btn-outline-primary">
-							<i class="fa fa-print me-2"></i>
-							{% trans %}Print my progress tracking sheet{% endtrans %}
-						</a>
+
+                <a href="{{ path('print_progress_tracking_sheet', {'slugTeacher': app.user.teacher.slug}) }}"
+                   target="_blank"
+                   class="btn btn-light btn-sm">
+                    <i class="fa fa-print me-1"></i>
+                    {% trans %}Print my progress tracking sheet{% endtrans %}
+                </a>
+            </div>
+        </div>
+
+        <div class="fs-plan-card">
+            <div class="fs-plan-card-header">
+                <div class="fs-plan-card-title">
+                    <span class="fs-plan-card-icon">
+                        <i class="fe fe-book"></i>
+                    </span>
+
+                    <div>
+                        <h5>{% trans %}Number of planned lessons{% endtrans %}</h5>
+                        <small>{% trans %}Theory and practical lessons planned versus completed.{% endtrans %}</small>
                     </div>
                 </div>
             </div>
 
-					<!-- Row -->
-					<div class="row">
-						<div class="col-12">
-							<!--div-->
-							<div class="card border-primary">
-								<div class="card-header">
-									<div class="col-md-8">
-										<div class="card-title"><i class="fe fe-book-open me-2"></i> {% trans %}Number of planned lessons{% endtrans %}</div>
-									</div>
-									{# <div class="col-md-4 text-right">
-										<a href="{{ path('save_lesson_plain', {'slugTeacher': app.user.teacher.slug }) }}" class="btn btn-outline-primary">
-											<i class="fa fa-plus me-2"></i>
-											{% trans %}Add Number of lessons planned{% endtrans %}
-										</a>
-									</div> #}
-								</div>
-								<div class="card-body">
-									<div class="">
-										<div class="table-responsive">
-											<table border="1" class="table table-bordered text-nowrap table-striped" id="example2">
-												<thead>
-													<tr>
-														<th class="border-bottom-0">{% trans %}Classroom{% endtrans %}</th>
-														<th class="border-bottom-0">{% trans %}Subject{% endtrans %}</th>
-														<th class="border-bottom-0">Sequence 1 </th>
-														<th class="border-bottom-0">Sequence 2 </th>
-														<th class="border-bottom-0">Sequence 3 </th>
-														<th class="border-bottom-0">Sequence 4 </th>
-														<th class="border-bottom-0">Sequence 5 </th>
-														<th class="border-bottom-0">Sequence 6 </th>
-														<th class="border-bottom-0">{% trans %}Options{% endtrans %} </th>
-													</tr>
-												</thead>
-												<tfoot>
-													<tr>
-														<th class="border-bottom-0">{% trans %}Classroom{% endtrans %}</th>
-														<th class="border-bottom-0">{% trans %}Subject{% endtrans %}</th>
-														<th class="border-bottom-0">Sequence 1 </th>
-														<th class="border-bottom-0">Sequence 2 </th>
-														<th class="border-bottom-0">Sequence 3 </th>
-														<th class="border-bottom-0">Sequence 4 </th>
-														<th class="border-bottom-0">Sequence 5 </th>
-														<th class="border-bottom-0">Sequence 6 </th>
-														<th class="border-bottom-0">{% trans %}Options{% endtrans %} </th>
-													</tr>
-												</tfoot>
-												<tbody>
-													{% for lessonPrevu in lessonPrevus %}
-													<tr>
-														<td style="vertical-align: middle;">{{ lessonPrevu.classroom.classroom }}
-														</td>
-														<td style="vertical-align: middle;">{{ lessonPrevu.subject.subject }}</td>
-														<td style="text-align: center;">
-															<span class="badge badge-gradient-primary mt-2">{% trans %}Theo. :{% endtrans %} {{ lessonPrevu.nbreLessonTheoriquePrevueSeq1 }}</span>
-															<span class="badge badge-gradient-info mt-2">Pra. : {{ lessonPrevu.nbreLessonPratiquePrevueSeq1 }}</span>
-															<br>
-															<span class="badge badge-gradient-success mt-2">{% trans %}Theo. :{% endtrans %} {{ lessonPrevu.nbreLessonTheoriqueFaiteSeq1 + lessonPrevu.nbreLessonTheoriqueFaiteAvecRessourceSeq1 }}</span>
-															<span class="badge badge-gradient-success mt-2">Pra. : {{ lessonPrevu.nbreLessonPratiqueFaiteSeq1 + lessonPrevu.nbreLessonPratiqueFaiteAvecRessourceSeq1}}</span>
-														</td>
-														<td style="text-align: center;">
-															<span class="badge badge-gradient-primary mt-2">{% trans %}Theo. :{% endtrans %}{{ lessonPrevu.nbreLessonTheoriquePrevueSeq2 + lessonPrevu.nbreLessonTheoriqueFaiteAvecRessourceSeq2 }}</span>
-															<span class="badge badge-gradient-info mt-2">Pra. :{{ lessonPrevu.nbreLessonPratiquePrevueSeq2}}</span>
-															<br>
-															<span class="badge badge-gradient-success mt-2">{% trans %}Theo. :{% endtrans %} {{ lessonPrevu.nbreLessonTheoriqueFaiteSeq2  + lessonPrevu.nbreLessonTheoriqueFaiteAvecRessourceSeq2 }}</span>
-															<span class="badge badge-gradient-success mt-2">Pra. : {{ lessonPrevu.nbreLessonPratiqueFaiteSeq2  + lessonPrevu.nbreLessonPratiqueFaiteAvecRessourceSeq2 }}</span>
-														</td>
-														<td style="text-align: center;">
-															<span class="badge badge-gradient-primary mt-2">{% trans %}Theo. :{% endtrans %}{{ lessonPrevu.nbreLessonTheoriquePrevueSeq3 }}</span>
-															<span class="badge badge-gradient-info mt-2">Pra. :{{ lessonPrevu.nbreLessonPratiquePrevueSeq3 }}</span>
-															<br>
-															<span class="badge badge-gradient-success mt-2">{% trans %}Theo. :{% endtrans %} {{ lessonPrevu.nbreLessonTheoriqueFaiteSeq3  + lessonPrevu.nbreLessonTheoriqueFaiteAvecRessourceSeq3 }}</span>
-															<span class="badge badge-gradient-success mt-2">Pra. : {{ lessonPrevu.nbreLessonPratiqueFaiteSeq3  + lessonPrevu.nbreLessonPratiqueFaiteAvecRessourceSeq3 }}</span>
-														</td>
-														<td style="text-align: center;">
-															<span class="badge badge-gradient-primary mt-2">{% trans %}Theo. :{% endtrans %}{{ lessonPrevu.nbreLessonTheoriquePrevueSeq4 }}</span>
-															<span class="badge badge-gradient-info mt-2">Pra. :{{ lessonPrevu.nbreLessonPratiquePrevueSeq4 }}</span>
-															<br>
-															<span class="badge badge-gradient-success mt-2">{% trans %}Theo. :{% endtrans %} {{ lessonPrevu.nbreLessonTheoriqueFaiteSeq4  + lessonPrevu.nbreLessonTheoriqueFaiteAvecRessourceSeq4 }}</span>
-															<span class="badge badge-gradient-success mt-2">Pra. : {{ lessonPrevu.nbreLessonPratiqueFaiteSeq4  + lessonPrevu.nbreLessonPratiqueFaiteAvecRessourceSeq4 }}</span>
-														</td>
-														<td style="text-align: center;">
-															<span class="badge badge-gradient-primary mt-2">{% trans %}Theo. :{% endtrans %}{{ lessonPrevu.nbreLessonTheoriquePrevueSeq5 }}</span>
-															<span class="badge badge-gradient-info mt-2">Pra. :{{ lessonPrevu.nbreLessonPratiquePrevueSeq5 }}</span>
-															<br>
-															<span class="badge badge-gradient-success mt-2">{% trans %}Theo. :{% endtrans %} {{ lessonPrevu.nbreLessonTheoriqueFaiteSeq5 + lessonPrevu.nbreLessonTheoriqueFaiteAvecRessourceSeq5 }}</span>
-															<span class="badge badge-gradient-success mt-2">Pra. : {{ lessonPrevu.nbreLessonPratiqueFaiteSeq5 + lessonPrevu.nbreLessonPratiqueFaiteAvecRessourceSeq5 }}</span>
-														</td>
-														<td style="text-align: center;">
-															<span class="badge badge-gradient-primary mt-2">{% trans %}Theo. :{% endtrans %}{{ lessonPrevu.nbreLessonTheoriquePrevueSeq6 }}</span>
-															<span class="badge badge-gradient-info mt-2">Pra. :{{ lessonPrevu.nbreLessonPratiquePrevueSeq6 }}</span>
-															<br>
-															<span class="badge badge-gradient-success mt-2">{% trans %}Theo. :{% endtrans %} {{ lessonPrevu.nbreLessonTheoriqueFaiteSeq6 + lessonPrevu.nbreLessonTheoriqueFaiteAvecRessourceSeq6 }}</span>
-															<span class="badge badge-gradient-success mt-2">Pra. : {{ lessonPrevu.nbreLessonPratiqueFaiteSeq6 + lessonPrevu.nbreLessonPratiqueFaiteAvecRessourceSeq6 }}</span>
-														</td>
-														<td style="text-align: center; vertical-align:middle"> 
-															<a href="{{ path('edit_lesson_plain',{'slug': lessonPrevu.slug }) }}" type="button" class="btn btn-outline-primary"><i class="fe fe-edit"></i>
-														</td>
-													</tr>
-													{% endfor %}
-													
-												</tbody>
-											</table>
-										</div>
-									</div>
-								</div>
-							</div>
-							<!--/div-->
-						</div>
-					</div>
-					<!-- /Row -->
+            <div class="fs-plan-card-body">
+    {% if lessonPrevus|length > 0 %}
+        <div class="fs-lesson-grid">
+            {% for lessonPrevu in lessonPrevus %}
+                <div class="fs-lesson-card">
+                    <div class="fs-lesson-card-header">
+                        <div>
+                            <span class="fs-classroom-pill">
+                                <i class="fe fe-home"></i>
+                                {{ lessonPrevu.classroom.classroom }}
+                            </span>
 
-				</div>
-			</div><!-- right app-content-->
-		</div>
-		</div>
-	</div>
+                            <h5>{{ lessonPrevu.subject.subject }}</h5>
+                        </div>
+
+                        <a href="{{ path('edit_lesson_plain', {'slug': lessonPrevu.slug}) }}"
+                           class="fs-action-btn"
+                           title="{% trans %}Edit{% endtrans %}">
+                            <i class="fe fe-edit"></i>
+                        </a>
+                    </div>
+
+                    <div class="fs-sequences-grid">
+                        <div class="fs-sequence-card">
+                            <div class="fs-sequence-title">{% trans %}Sequence 1{% endtrans %}</div>
+
+                            <div class="fs-sequence-block">
+                                <span class="fs-mini-label">{% trans %}Planned{% endtrans %}</span>
+                                <div class="fs-chip-row">
+                                    <span class="fs-chip fs-chip-theo">{% trans %}Theo.{% endtrans %} {{ lessonPrevu.nbreLessonTheoriquePrevueSeq1 }}</span>
+                                    <span class="fs-chip fs-chip-pra">{% trans %}Pra.{% endtrans %} {{ lessonPrevu.nbreLessonPratiquePrevueSeq1 }}</span>
+                                </div>
+                            </div>
+
+                            <div class="fs-sequence-block">
+                                <span class="fs-mini-label">{% trans %}Done{% endtrans %}</span>
+                                <div class="fs-chip-row">
+                                    <span class="fs-chip fs-chip-done">{% trans %}Theo.{% endtrans %} {{ lessonPrevu.nbreLessonTheoriqueFaiteSeq1 + lessonPrevu.nbreLessonTheoriqueFaiteAvecRessourceSeq1 }}</span>
+                                    <span class="fs-chip fs-chip-done">{% trans %}Pra.{% endtrans %} {{ lessonPrevu.nbreLessonPratiqueFaiteSeq1 + lessonPrevu.nbreLessonPratiqueFaiteAvecRessourceSeq1 }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="fs-sequence-card">
+                            <div class="fs-sequence-title">{% trans %}Sequence 2{% endtrans %}</div>
+
+                            <div class="fs-sequence-block">
+                                <span class="fs-mini-label">{% trans %}Planned{% endtrans %}</span>
+                                <div class="fs-chip-row">
+                                    <span class="fs-chip fs-chip-theo">{% trans %}Theo.{% endtrans %} {{ lessonPrevu.nbreLessonTheoriquePrevueSeq2 + lessonPrevu.nbreLessonTheoriqueFaiteAvecRessourceSeq2 }}</span>
+                                    <span class="fs-chip fs-chip-pra">{% trans %}Pra.{% endtrans %} {{ lessonPrevu.nbreLessonPratiquePrevueSeq2 }}</span>
+                                </div>
+                            </div>
+
+                            <div class="fs-sequence-block">
+                                <span class="fs-mini-label">{% trans %}Done{% endtrans %}</span>
+                                <div class="fs-chip-row">
+                                    <span class="fs-chip fs-chip-done">{% trans %}Theo.{% endtrans %} {{ lessonPrevu.nbreLessonTheoriqueFaiteSeq2 + lessonPrevu.nbreLessonTheoriqueFaiteAvecRessourceSeq2 }}</span>
+                                    <span class="fs-chip fs-chip-done">{% trans %}Pra.{% endtrans %} {{ lessonPrevu.nbreLessonPratiqueFaiteSeq2 + lessonPrevu.nbreLessonPratiqueFaiteAvecRessourceSeq2 }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="fs-sequence-card">
+                            <div class="fs-sequence-title">{% trans %}Sequence 3{% endtrans %}</div>
+
+                            <div class="fs-sequence-block">
+                                <span class="fs-mini-label">{% trans %}Planned{% endtrans %}</span>
+                                <div class="fs-chip-row">
+                                    <span class="fs-chip fs-chip-theo">{% trans %}Theo.{% endtrans %} {{ lessonPrevu.nbreLessonTheoriquePrevueSeq3 }}</span>
+                                    <span class="fs-chip fs-chip-pra">{% trans %}Pra.{% endtrans %} {{ lessonPrevu.nbreLessonPratiquePrevueSeq3 }}</span>
+                                </div>
+                            </div>
+
+                            <div class="fs-sequence-block">
+                                <span class="fs-mini-label">{% trans %}Done{% endtrans %}</span>
+                                <div class="fs-chip-row">
+                                    <span class="fs-chip fs-chip-done">{% trans %}Theo.{% endtrans %} {{ lessonPrevu.nbreLessonTheoriqueFaiteSeq3 + lessonPrevu.nbreLessonTheoriqueFaiteAvecRessourceSeq3 }}</span>
+                                    <span class="fs-chip fs-chip-done">{% trans %}Pra.{% endtrans %} {{ lessonPrevu.nbreLessonPratiqueFaiteSeq3 + lessonPrevu.nbreLessonPratiqueFaiteAvecRessourceSeq3 }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="fs-sequence-card">
+                            <div class="fs-sequence-title">{% trans %}Sequence 4{% endtrans %}</div>
+
+                            <div class="fs-sequence-block">
+                                <span class="fs-mini-label">{% trans %}Planned{% endtrans %}</span>
+                                <div class="fs-chip-row">
+                                    <span class="fs-chip fs-chip-theo">{% trans %}Theo.{% endtrans %} {{ lessonPrevu.nbreLessonTheoriquePrevueSeq4 }}</span>
+                                    <span class="fs-chip fs-chip-pra">{% trans %}Pra.{% endtrans %} {{ lessonPrevu.nbreLessonPratiquePrevueSeq4 }}</span>
+                                </div>
+                            </div>
+
+                            <div class="fs-sequence-block">
+                                <span class="fs-mini-label">{% trans %}Done{% endtrans %}</span>
+                                <div class="fs-chip-row">
+                                    <span class="fs-chip fs-chip-done">{% trans %}Theo.{% endtrans %} {{ lessonPrevu.nbreLessonTheoriqueFaiteSeq4 + lessonPrevu.nbreLessonTheoriqueFaiteAvecRessourceSeq4 }}</span>
+                                    <span class="fs-chip fs-chip-done">{% trans %}Pra.{% endtrans %} {{ lessonPrevu.nbreLessonPratiqueFaiteSeq4 + lessonPrevu.nbreLessonPratiqueFaiteAvecRessourceSeq4 }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="fs-sequence-card">
+                            <div class="fs-sequence-title">{% trans %}Sequence 5{% endtrans %}</div>
+
+                            <div class="fs-sequence-block">
+                                <span class="fs-mini-label">{% trans %}Planned{% endtrans %}</span>
+                                <div class="fs-chip-row">
+                                    <span class="fs-chip fs-chip-theo">{% trans %}Theo.{% endtrans %} {{ lessonPrevu.nbreLessonTheoriquePrevueSeq5 }}</span>
+                                    <span class="fs-chip fs-chip-pra">{% trans %}Pra.{% endtrans %} {{ lessonPrevu.nbreLessonPratiquePrevueSeq5 }}</span>
+                                </div>
+                            </div>
+
+                            <div class="fs-sequence-block">
+                                <span class="fs-mini-label">{% trans %}Done{% endtrans %}</span>
+                                <div class="fs-chip-row">
+                                    <span class="fs-chip fs-chip-done">{% trans %}Theo.{% endtrans %} {{ lessonPrevu.nbreLessonTheoriqueFaiteSeq5 + lessonPrevu.nbreLessonTheoriqueFaiteAvecRessourceSeq5 }}</span>
+                                    <span class="fs-chip fs-chip-done">{% trans %}Pra.{% endtrans %} {{ lessonPrevu.nbreLessonPratiqueFaiteSeq5 + lessonPrevu.nbreLessonPratiqueFaiteAvecRessourceSeq5 }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="fs-sequence-card">
+                            <div class="fs-sequence-title">{% trans %}Sequence 6{% endtrans %}</div>
+
+                            <div class="fs-sequence-block">
+                                <span class="fs-mini-label">{% trans %}Planned{% endtrans %}</span>
+                                <div class="fs-chip-row">
+                                    <span class="fs-chip fs-chip-theo">{% trans %}Theo.{% endtrans %} {{ lessonPrevu.nbreLessonTheoriquePrevueSeq6 }}</span>
+                                    <span class="fs-chip fs-chip-pra">{% trans %}Pra.{% endtrans %} {{ lessonPrevu.nbreLessonPratiquePrevueSeq6 }}</span>
+                                </div>
+                            </div>
+
+                            <div class="fs-sequence-block">
+                                <span class="fs-mini-label">{% trans %}Done{% endtrans %}</span>
+                                <div class="fs-chip-row">
+                                    <span class="fs-chip fs-chip-done">{% trans %}Theo.{% endtrans %} {{ lessonPrevu.nbreLessonTheoriqueFaiteSeq6 + lessonPrevu.nbreLessonTheoriqueFaiteAvecRessourceSeq6 }}</span>
+                                    <span class="fs-chip fs-chip-done">{% trans %}Pra.{% endtrans %} {{ lessonPrevu.nbreLessonPratiqueFaiteSeq6 + lessonPrevu.nbreLessonPratiqueFaiteAvecRessourceSeq6 }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="fs-empty-card">
+            {% trans %}No planned lessons found.{% endtrans %}
+        </div>
+    {% endif %}
 </div>
+        </div>
 
+    </div>
+</div>
 {% endblock %}

@@ -93,6 +93,44 @@ class StudentRepository extends ServiceEntityRepository
     }
 
     /**
+     * Eleves d'une classe autorises pour les fiches sport.
+     *
+     * @param string[] $studentSlugs
+     * @return Student[]
+     */
+    public function findForSportSheets(
+        Classroom $classroom,
+        SchoolYear $schoolYear,
+        SubSystem $subSystem,
+        array $studentSlugs = []
+    ): array {
+        $qb = $this->createQueryBuilder('s')
+            ->leftJoin('s.sex', 'sx')
+            ->addSelect('sx')
+            ->andWhere('s.classroom = :classroom')
+            ->andWhere('s.schoolYear = :schoolYear')
+            ->andWhere('s.subSystem = :subSystem')
+            ->setParameters([
+                'classroom' => $classroom,
+                'schoolYear' => $schoolYear,
+                'subSystem' => $subSystem,
+            ])
+            ->orderBy('s.fullName', 'ASC');
+
+        if ($studentSlugs !== []) {
+            $studentSlugs = array_values(array_unique(array_filter(array_map(
+                static fn ($slug): string => trim((string) $slug),
+                $studentSlugs
+            ))));
+
+            $qb->andWhere('s.slug IN (:studentSlugs)')
+                ->setParameter('studentSlugs', $studentSlugs);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * Undocumented function
      *
      * @param SchoolYear $schoolYear

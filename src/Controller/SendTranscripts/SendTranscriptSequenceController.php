@@ -24,10 +24,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 class SendTranscriptSequenceController extends AbstractController
 {
     public function __construct(
@@ -83,6 +80,11 @@ class SendTranscriptSequenceController extends AbstractController
 
         $student = $this->studentRepository->findOneBy(['slug' => $slugStudent ]);
 
+        if (!$student) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
+
         $term = null;
         $sequence = null;
         $studentName = null;
@@ -90,6 +92,10 @@ class SendTranscriptSequenceController extends AbstractController
         if ($sequenceId && !$slugClassroom) 
         {
             $sequence = $this->sequenceRepository->find($sequenceId);
+            if (!$sequence) 
+            {
+                return $this->redirectToRoute('page_error');
+            }
             $releves = $this->lessonRepository->getEvaluationsByStudentAndSequence($student->getId(), $sequence->getId());
 
             $pdf = $this->printTranscriptService->printTranscriptStudentSequence($subSystem, $schoolYear, $school, $student->getClassroom(), $releves, $student, $studentName, $term, $sequence);
@@ -153,6 +159,11 @@ class SendTranscriptSequenceController extends AbstractController
             $sequence = $this->sequenceRepository->find($request->request->get('sequenceId'));
             $classroom = $this->classroomRepository->findOneBy(['slug' => $request->request->get('slugClassroom')] );
             
+            if (!$sequence || !$classroom) 
+            {
+                return $this->redirectToRoute('page_error');
+            }
+
             $relevesSequenceClasse = $this->lessonRepository->getTranscriptsByClassAndSequence($classroom->getId(), $sequence->getId());
             
             foreach ($relevesSequenceClasse as $releves) 

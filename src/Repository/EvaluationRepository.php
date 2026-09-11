@@ -2,21 +2,22 @@
 
 namespace App\Repository;
 
-use App\Entity\Term;
-use App\Entity\Lesson;
-use App\Entity\Student;
-use App\Entity\Subject;
-use App\Entity\Sequence;
 use App\Entity\Classroom;
 use App\Entity\Cycle;
-use App\Entity\SubSystem;
 use App\Entity\Evaluation;
+use App\Entity\Lesson;
 use App\Entity\Level;
 use App\Entity\School;
 use App\Entity\SchoolYear;
-use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\Sequence;
+use App\Entity\Student;
+use App\Entity\Subject;
+use App\Entity\SubSystem;
+use App\Entity\Teacher;
+use App\Entity\Term;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<Evaluation>
@@ -32,6 +33,62 @@ class EvaluationRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Evaluation::class);
     }
+
+    public function findDashboardEvaluationsByTeacher(Teacher $teacher): array
+    {
+        return $this->createQueryBuilder('e')
+            ->leftJoin('e.lesson', 'l')->addSelect('l')
+            ->leftJoin('l.classroom', 'c')->addSelect('c')
+            ->leftJoin('l.subject', 's')->addSelect('s')
+            ->leftJoin('e.sequence', 'seq')->addSelect('seq')
+            ->andWhere('l.teacher = :teacher')
+            ->setParameter('teacher', $teacher)
+            ->orderBy('seq.sequence', 'ASC')
+            ->addOrderBy('c.classroom', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findMarksForTeacherCharts(Teacher $teacher): array
+    {
+        return $this->createQueryBuilder('e')
+            ->leftJoin('e.lesson', 'l')->addSelect('l')
+            ->leftJoin('l.classroom', 'c')->addSelect('c')
+            ->leftJoin('l.subject', 's')->addSelect('s')
+            ->leftJoin('e.sequence', 'seq')->addSelect('seq')
+            ->leftJoin('seq.term', 't')->addSelect('t')
+            ->leftJoin('e.student', 'st')->addSelect('st')
+            ->leftJoin('st.sex', 'sex')->addSelect('sex')
+            ->andWhere('l.teacher = :teacher')
+            ->andWhere('e.mark IS NOT NULL')
+            ->setParameter('teacher', $teacher)
+            ->orderBy('t.id', 'ASC')
+            ->addOrderBy('seq.id', 'ASC')
+            ->addOrderBy('c.classroom', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+
+    public function findSubmittedLessonSequenceKeysByTeacher(Teacher $teacher): array
+{
+    return $this->createQueryBuilder('e')
+        ->select('l.id AS lessonId')
+        ->addSelect('seq.id AS sequenceId')
+        ->addSelect('COUNT(e.id) AS markCount')
+        ->innerJoin('e.lesson', 'l')
+        ->innerJoin('e.sequence', 'seq')
+        ->andWhere('l.teacher = :teacher')
+        ->andWhere('e.mark IS NOT NULL')
+        ->setParameter('teacher', $teacher)
+        ->groupBy('l.id')
+        ->addGroupBy('seq.id')
+        ->getQuery()
+        ->getArrayResult()
+    ;
+}
 
     public function save(Evaluation $entity, bool $flush = false): void
     {
@@ -166,6 +223,8 @@ class EvaluationRepository extends ServiceEntityRepository
             $evaluationIds = [3, 4];
         } elseif ($trimester === 3) {
             $evaluationIds = [5, 6];
+        } elseif ($trimester === 0) {
+            $evaluationIds = [1, 2, 3, 4, 5, 6];
         }
 
         $query = $this->getEntityManager()->createQuery(
@@ -731,21 +790,54 @@ class EvaluationRepository extends ServiceEntityRepository
      * @param [type] $sequence
      * @return void
      */
-    public function getEvaluationsByEleveAndSequence($student, $sequence)
+    public function getEvaluationsByEleveAndSequence($student, $sequence): array
     {
         return $this->createQueryBuilder('e')
-            ->select('e.id as evaluationId, IDENTITY(e.lesson) as lessonId', 'IDENTITY(e.sequence) as sequenceId', 'e.mark', 'sb.id as subjectId', 'sb.subject as subject')
+            ->select(
+                'e.id AS evaluationId',
+                'l.id AS lessonId',
+                's.id AS sequenceId',
+                'e.mark AS mark',
+                'sb.id AS subjectId',
+                'sb.subject AS subject'
+            )
             ->innerJoin('e.lesson','l')
+            ->innerJoin('e.sequence','s')
             ->innerJoin('l.subject','sb')
             ->where('e.student = :student')
-            ->andWhere('l.id = e.lesson')
-            ->andWhere('sb.id = l.subject')
-            ->andWhere('e.sequence = :sequences')
+            ->andWhere('e.sequence = :sequence')
             ->setParameter('student', $student)
-            ->setParameter('sequences', $sequence)
+            ->setParameter('sequence', $sequence)
+            ->orderBy('sb.subject', 'ASC')
+            ->addOrderBy('e.id', 'ASC')
             ->getQuery()
-            ->getResult();
+            ->getScalarResult(); // <<< clé : SCALAIRES, pas getResult()
     }
+
+
+
+    /**
+     * Retourne les couples leçon/séquence qui ont déjà au moins une note saisie
+     * dans une classe. Sert à initialiser automatiquement les notes manquantes
+     * d'un élève ajouté après le début des évaluations.
+     */
+    public function findRecordedLessonSequencesForClassroom(Classroom $classroom): array
+    {
+        return $this->createQueryBuilder('e')
+            ->select('DISTINCT lesson.id AS lessonId, seq.id AS sequenceId')
+            ->innerJoin('e.lesson', 'lesson')
+            ->innerJoin('lesson.classroom', 'classroom')
+            ->innerJoin('e.sequence', 'seq')
+            ->andWhere('classroom = :classroom')
+            ->setParameter('classroom', $classroom)
+            ->getQuery()
+            ->getArrayResult()
+        ;
+    }
+
+
+
+
 
 
 //    /**

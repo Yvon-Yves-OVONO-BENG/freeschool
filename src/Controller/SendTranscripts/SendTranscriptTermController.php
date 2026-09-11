@@ -24,10 +24,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 class SendTranscriptTermController extends AbstractController
 {
     public function __construct(
@@ -83,6 +80,11 @@ class SendTranscriptTermController extends AbstractController
 
         $student = $this->studentRepository->findOneBy(['slug' => $slugStudent ]);
 
+        if (!$student) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
+
         $term = null;
         $sequence = null;
         $studentName = null;
@@ -90,6 +92,11 @@ class SendTranscriptTermController extends AbstractController
         if ($slugTerm && !$slugClassroom) 
         {
             $term = $this->termRepository->findOneBy(['slug' => $slugTerm]);
+
+            if (!$term) 
+            {
+                return $this->redirectToRoute('page_error');
+            }
 
             $releves = $this->lessonRepository->getEvaluationsByStudentAndTrimester($student->getId(), $term->getId());
             
@@ -154,6 +161,11 @@ class SendTranscriptTermController extends AbstractController
             $term = $this->termRepository->find($request->request->get('term'));
             $classroom = $this->classroomRepository->findOneBy(['slug' => $request->request->get('slugClassroom')] );
             
+            if (!$term || !$classroom) 
+            {
+                return $this->redirectToRoute('page_error');
+            }
+
             $relevesTermClasse = $this->lessonRepository->getSubjectsWithGradesByClassAndTrimester($classroom->getId(), $term->getId());
             
             foreach ($relevesTermClasse as $releves) 

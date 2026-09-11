@@ -12,10 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux utilisateurs")
- *
- */
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 class SaveKeyController extends AbstractController
 {
     public function __construct(

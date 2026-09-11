@@ -1,0 +1,1141 @@
+{#
+    FreeSchool — couche UI SaaS Premium++
+    Ce fichier ne modifie aucune logique Twig, route, formulaire ou donnée.
+    Il harmonise uniquement la présentation des composants existants.
+#}
+<style id="fs-saas-premium-theme">
+    .fs-saas-premium {
+        --fs-saas-primary: #4f46e5;
+        --fs-saas-primary-strong: #3730a3;
+        --fs-saas-primary-soft: #eef2ff;
+        --fs-saas-secondary: #0ea5e9;
+        --fs-saas-accent: #14b8a6;
+        --fs-saas-success: #10b981;
+        --fs-saas-warning: #f59e0b;
+        --fs-saas-danger: #ef4444;
+        --fs-saas-ink: #172033;
+        --fs-saas-text: #334155;
+        --fs-saas-muted: #718096;
+        --fs-saas-line: #e6eaf1;
+        --fs-saas-line-strong: #d6dce8;
+        --fs-saas-surface: #ffffff;
+        --fs-saas-surface-soft: #f7f9fc;
+        --fs-saas-canvas: #f3f6fb;
+        --fs-saas-radius-sm: 10px;
+        --fs-saas-radius: 16px;
+        --fs-saas-radius-lg: 22px;
+        --fs-saas-shadow-sm: 0 4px 14px rgba(30, 41, 59, .055);
+        --fs-saas-shadow: 0 14px 38px rgba(30, 41, 59, .085);
+        --fs-saas-shadow-lg: 0 24px 70px rgba(30, 41, 59, .12);
+        --fs-saas-font: Inter, Manrope, "Plus Jakarta Sans", "Segoe UI", Roboto, Arial, sans-serif;
+
+        min-height: 100vh;
+        color: var(--fs-saas-text);
+        font-family: var(--fs-saas-font) !important;
+        font-size: 14px;
+        font-weight: 400;
+        letter-spacing: -.006em;
+        background:
+            radial-gradient(circle at 8% 2%, rgba(79, 70, 229, .055), transparent 25rem),
+            radial-gradient(circle at 95% 8%, rgba(14, 165, 233, .045), transparent 24rem),
+            var(--fs-saas-canvas) !important;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+    }
+
+    .fs-saas-premium *,
+    .fs-saas-premium *::before,
+    .fs-saas-premium *::after {
+        box-sizing: border-box;
+    }
+
+    .fs-saas-premium h1,
+    .fs-saas-premium h2,
+    .fs-saas-premium h3,
+    .fs-saas-premium h4,
+    .fs-saas-premium h5,
+    .fs-saas-premium h6,
+    .fs-saas-premium .h1,
+    .fs-saas-premium .h2,
+    .fs-saas-premium .h3,
+    .fs-saas-premium .h4,
+    .fs-saas-premium .h5,
+    .fs-saas-premium .h6 {
+        color: var(--fs-saas-ink);
+        font-family: var(--fs-saas-font) !important;
+        font-weight: 600 !important;
+        letter-spacing: -.025em;
+    }
+
+    .fs-saas-premium b,
+    .fs-saas-premium strong,
+    .fs-saas-premium .font-weight-bold,
+    .fs-saas-premium .fw-bold,
+    .fs-saas-premium .fw-bolder {
+        font-weight: 600 !important;
+    }
+
+    .fs-saas-premium p,
+    .fs-saas-premium label,
+    .fs-saas-premium input,
+    .fs-saas-premium select,
+    .fs-saas-premium textarea,
+    .fs-saas-premium button,
+    .fs-saas-premium a,
+    .fs-saas-premium td,
+    .fs-saas-premium th {
+        font-family: var(--fs-saas-font) !important;
+    }
+
+    .fs-saas-premium a {
+        color: var(--fs-saas-primary);
+        text-decoration: none;
+        transition: color .18s ease, background-color .18s ease, border-color .18s ease, transform .18s ease, box-shadow .18s ease;
+    }
+
+    .fs-saas-premium a:hover {
+        color: var(--fs-saas-primary-strong);
+    }
+
+    .fs-saas-premium .page,
+    .fs-saas-premium .page-main,
+    .fs-saas-premium .main-content,
+    .fs-saas-premium .hor-content,
+    .fs-saas-premium .app-content,
+    .fs-saas-premium .content-wrapper {
+        background: transparent !important;
+    }
+
+    .fs-saas-premium .main-content > .container,
+    .fs-saas-premium .hor-content > .container,
+    .fs-saas-premium .content-wrapper > .container-fluid {
+        width: min(100%, 1500px);
+    }
+
+    /* En-tête principal */
+    .fs-saas-premium .fs4-header,
+    .fs-saas-premium .hor-header.fs4-header,
+    .fs-saas-premium .header.fs4-header,
+    .fs-saas-premium .top-header.fs4-header {
+        background:
+            radial-gradient(circle at 18% -55%, rgba(255, 255, 255, .18), transparent 38%),
+            linear-gradient(112deg, #111827 0%, #25245d 48%, #4338ca 100%) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, .10) !important;
+        box-shadow: 0 10px 30px rgba(17, 24, 39, .16) !important;
+    }
+
+    .fs-saas-premium .fs4-header-inner {
+        grid-template-columns: 220px minmax(0, 1fr) minmax(300px, 410px);
+        gap: 18px;
+    }
+
+    .fs-saas-premium .fs4-brand img {
+        max-height: 47px;
+        filter: drop-shadow(0 7px 16px rgba(0, 0, 0, .14));
+    }
+
+    .fs-saas-premium .fs4-school-name {
+        font-size: 14px;
+        font-weight: 600 !important;
+        letter-spacing: -.012em;
+    }
+
+    .fs-saas-premium .fs4-school-section {
+        margin-top: 5px;
+        font-size: 11.5px;
+        font-weight: 400 !important;
+        color: rgba(255, 255, 255, .74);
+    }
+
+    .fs-saas-premium .fs4-pill,
+    .fs-saas-premium .fs4-mobile-btn {
+        border-color: rgba(255, 255, 255, .13) !important;
+        background: rgba(255, 255, 255, .09) !important;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, .10), 0 8px 24px rgba(0, 0, 0, .09) !important;
+        backdrop-filter: blur(18px);
+    }
+
+    .fs-saas-premium .fs4-pill {
+        height: 40px;
+        padding-inline: 11px;
+        border-radius: 12px;
+    }
+
+    .fs-saas-premium .fs4-pill:hover,
+    .fs-saas-premium .fs4-pill[aria-expanded="true"],
+    .fs-saas-premium .fs4-mobile-btn:hover {
+        background: rgba(255, 255, 255, .16) !important;
+        border-color: rgba(255, 255, 255, .23) !important;
+        transform: translateY(-1px);
+    }
+
+    .fs-saas-premium .fs4-pill-icon,
+    .fs-saas-premium .fs4-avatar {
+        border-radius: 9px;
+        font-weight: 600 !important;
+    }
+
+    .fs-saas-premium .fs4-pill-text {
+        font-size: 12px;
+        font-weight: 500 !important;
+    }
+
+    .fs-saas-premium .fs4-dropdown,
+    .fs-saas-premium .fs4-header .dropdown-menu.fs4-dropdown {
+        border: 1px solid rgba(214, 220, 232, .9) !important;
+        border-radius: 16px !important;
+        padding: 8px !important;
+        box-shadow: var(--fs-saas-shadow-lg) !important;
+    }
+
+    .fs-saas-premium .fs4-dropdown .dropdown-item {
+        min-height: 40px;
+        border-radius: 10px;
+        font-size: 12.5px;
+        font-weight: 500 !important;
+    }
+
+    .fs-saas-premium .fs4-dropdown .dropdown-item:hover {
+        transform: translateX(3px);
+        background: var(--fs-saas-primary-soft) !important;
+    }
+
+    /* Navigation horizontale */
+    .fs-saas-premium .fs4-menu-shell,
+    .fs-saas-premium .fs4-horizontal,
+    .fs-saas-premium .horizontal-main,
+    .fs-saas-premium .hor-menu {
+        background: rgba(255, 255, 255, .94) !important;
+        border-bottom: 1px solid var(--fs-saas-line) !important;
+        box-shadow: 0 6px 18px rgba(30, 41, 59, .045) !important;
+        backdrop-filter: blur(18px);
+    }
+
+    .fs-saas-premium .horizontalMenu > .horizontalMenu-list > li > a {
+        color: #475569 !important;
+        font-size: 12.5px !important;
+        font-weight: 500 !important;
+        letter-spacing: -.008em;
+        border-radius: 10px;
+    }
+
+    .fs-saas-premium .horizontalMenu > .horizontalMenu-list > li > a:hover,
+    .fs-saas-premium .horizontalMenu > .horizontalMenu-list > li:hover > a,
+    .fs-saas-premium .horizontalMenu > .horizontalMenu-list > li > a.active {
+        color: var(--fs-saas-primary) !important;
+        background: var(--fs-saas-primary-soft) !important;
+    }
+
+    .fs-saas-premium .horizontalMenu-list .hor-icon,
+    .fs-saas-premium .horizontalMenu-list .horizontal-icon {
+        color: #7c87a0 !important;
+    }
+
+    .fs-saas-premium .horizontalMenu-list > li:hover .hor-icon,
+    .fs-saas-premium .horizontalMenu-list > li:hover .horizontal-icon {
+        color: var(--fs-saas-primary) !important;
+    }
+
+    .fs-saas-premium .horizontalMenu .sub-menu,
+    .fs-saas-premium .horizontal-megamenu .mega-menubg {
+        border: 1px solid var(--fs-saas-line) !important;
+        border-radius: 18px !important;
+        background: rgba(255, 255, 255, .985) !important;
+        box-shadow: var(--fs-saas-shadow-lg) !important;
+        overflow: hidden;
+    }
+
+    .fs-saas-premium .horizontalMenu .sub-menu li a,
+    .fs-saas-premium .horizontal-megamenu .link-list li a {
+        color: #475569 !important;
+        font-size: 12px !important;
+        font-weight: 450 !important;
+        border-radius: 9px;
+    }
+
+    .fs-saas-premium .horizontalMenu .sub-menu li a:hover,
+    .fs-saas-premium .horizontal-megamenu .link-list li a:hover {
+        color: var(--fs-saas-primary) !important;
+        background: var(--fs-saas-primary-soft) !important;
+        transform: translateX(2px);
+    }
+
+    /* Titres de page */
+    .fs-saas-premium .page-header,
+    .fs-saas-premium .fs-dashboard-header {
+        min-height: 58px;
+        margin-bottom: 18px !important;
+        padding: 11px 14px !important;
+        border: 1px solid rgba(230, 234, 241, .88);
+        border-radius: var(--fs-saas-radius);
+        background: rgba(255, 255, 255, .78);
+        box-shadow: var(--fs-saas-shadow-sm);
+        backdrop-filter: blur(14px);
+    }
+
+    .fs-saas-premium .page-title,
+    .fs-saas-premium .page-header .page-title {
+        margin: 0;
+        color: var(--fs-saas-ink) !important;
+        font-size: clamp(18px, 1.7vw, 24px) !important;
+        line-height: 1.2;
+        font-weight: 600 !important;
+    }
+
+    .fs-saas-premium .fs-school-subtitle,
+    .fs-saas-premium .page-header .text-muted {
+        color: var(--fs-saas-muted) !important;
+        font-weight: 400 !important;
+    }
+
+    .fs-saas-premium .breadcrumb,
+    .fs-saas-premium ol.breadcrumb {
+        padding: 11px 14px;
+        border: 1px solid var(--fs-saas-line);
+        border-radius: 14px;
+        color: var(--fs-saas-muted);
+        background: rgba(255, 255, 255, .84) !important;
+        box-shadow: var(--fs-saas-shadow-sm);
+    }
+
+    /* Cartes et panneaux */
+    .fs-saas-premium .card,
+    .fs-saas-premium .fs-panel,
+    .fs-saas-premium .fs-stat-card,
+    .fs-saas-premium .fs-term-card,
+    .fs-saas-premium .fs-sequence-card,
+    .fs-saas-premium .fs-evaluation-board,
+    .fs-saas-premium .panel,
+    .fs-saas-premium .well {
+        border: 1px solid rgba(230, 234, 241, .96) !important;
+        border-radius: var(--fs-saas-radius-lg) !important;
+        background: rgba(255, 255, 255, .96) !important;
+        box-shadow: var(--fs-saas-shadow) !important;
+    }
+
+    .fs-saas-premium .card {
+        overflow: hidden;
+    }
+
+    .fs-saas-premium .card-header,
+    .fs-saas-premium .modal-header,
+    .fs-saas-premium .fs-term-card-header {
+        min-height: 54px;
+        padding: 14px 18px !important;
+        border-bottom: 1px solid var(--fs-saas-line) !important;
+        color: var(--fs-saas-ink) !important;
+        background: linear-gradient(180deg, #ffffff 0%, #fafbfe 100%) !important;
+    }
+
+    .fs-saas-premium .card-header h1,
+    .fs-saas-premium .card-header h2,
+    .fs-saas-premium .card-header h3,
+    .fs-saas-premium .card-header h4,
+    .fs-saas-premium .card-header h5,
+    .fs-saas-premium .card-header h6,
+    .fs-saas-premium .card-title,
+    .fs-saas-premium .fs-panel-title,
+    .fs-saas-premium .fs-evaluation-head h5 {
+        color: var(--fs-saas-ink) !important;
+        font-weight: 600 !important;
+        letter-spacing: -.018em;
+    }
+
+    .fs-saas-premium .card-body,
+    .fs-saas-premium .modal-body {
+        padding: 18px !important;
+    }
+
+    .fs-saas-premium .card-footer,
+    .fs-saas-premium .modal-footer {
+        padding: 13px 18px !important;
+        border-top: 1px solid var(--fs-saas-line) !important;
+        background: #fbfcfe !important;
+    }
+
+    .fs-saas-premium a.card:hover,
+    .fs-saas-premium .fs-stat-card-link:hover,
+    .fs-saas-premium .fs-stat-card:hover {
+        transform: translateY(-3px);
+        border-color: rgba(79, 70, 229, .20) !important;
+        box-shadow: 0 20px 48px rgba(30, 41, 59, .115) !important;
+    }
+
+    .fs-saas-premium .fs-stat-card {
+        padding: 17px !important;
+    }
+
+    .fs-saas-premium .fs-stat-icon {
+        width: 48px !important;
+        height: 48px !important;
+        border-radius: 14px !important;
+        font-size: 1.15rem !important;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .65);
+    }
+
+    .fs-saas-premium .fs-stat-label,
+    .fs-saas-premium .fs-evaluation-head p,
+    .fs-saas-premium .fs-term-card p {
+        color: var(--fs-saas-muted) !important;
+        font-size: 12.5px !important;
+        font-weight: 450 !important;
+    }
+
+    .fs-saas-premium .fs-stat-value {
+        color: var(--fs-saas-ink) !important;
+        font-size: 1.6rem !important;
+        font-weight: 600 !important;
+        letter-spacing: -.035em;
+    }
+
+    .fs-saas-premium .fs-dashboard-hero,
+    .fs-saas-premium [class*="-hero"]:not(.header-brand):not(.hero-image) {
+        border: 1px solid rgba(255, 255, 255, .12) !important;
+        border-radius: 22px !important;
+        box-shadow: 0 20px 52px rgba(30, 41, 59, .13) !important;
+    }
+
+    .fs-saas-premium .fs-dashboard-hero {
+        background:
+            radial-gradient(circle at 85% 12%, rgba(255,255,255,.15), transparent 23%),
+            linear-gradient(125deg, #1e293b 0%, #4338ca 58%, #0ea5e9 112%) !important;
+    }
+
+    .fs-saas-premium .fs-dashboard-hero h1,
+    .fs-saas-premium .fs-dashboard-hero h2,
+    .fs-saas-premium .fs-dashboard-hero h3,
+    .fs-saas-premium .fs-dashboard-hero h4,
+    .fs-saas-premium .fs-dashboard-hero p {
+        color: #fff !important;
+    }
+
+    /* Boutons */
+    .fs-saas-premium .btn {
+        min-height: 40px;
+        padding: 9px 15px;
+        border-radius: 11px !important;
+        border-width: 1px;
+        font-size: 13px;
+        line-height: 1.25;
+        font-weight: 500 !important;
+        letter-spacing: -.008em;
+        box-shadow: 0 5px 13px rgba(30, 41, 59, .075);
+        transition: transform .16s ease, box-shadow .16s ease, background-color .16s ease, border-color .16s ease, color .16s ease;
+    }
+
+    .fs-saas-premium .btn:hover:not(:disabled),
+    .fs-saas-premium .btn:focus:not(:disabled) {
+        transform: translateY(-1px);
+        box-shadow: 0 9px 20px rgba(30, 41, 59, .11);
+    }
+
+    .fs-saas-premium .btn:active:not(:disabled) {
+        transform: translateY(0);
+    }
+
+    .fs-saas-premium .btn-sm,
+    .fs-saas-premium .btn-medium {
+        min-height: 34px;
+        padding: 7px 11px !important;
+        border-radius: 9px !important;
+        font-size: 12px !important;
+    }
+
+    .fs-saas-premium .btn-lg {
+        min-height: 47px;
+        padding: 11px 18px;
+        border-radius: 13px !important;
+    }
+
+    .fs-saas-premium .btn-primary,
+    .fs-saas-premium .btn-outline-primary:hover,
+    .fs-saas-premium .btn-gradient-primary,
+    .fs-saas-premium .btn-indigo {
+        border-color: #4f46e5 !important;
+        color: #fff !important;
+        background: linear-gradient(135deg, #5b52ec 0%, #4338ca 100%) !important;
+    }
+
+    .fs-saas-premium .btn-outline-primary {
+        border-color: rgba(79, 70, 229, .32) !important;
+        color: #4338ca !important;
+        background: #fff !important;
+    }
+
+    .fs-saas-premium .btn-secondary,
+    .fs-saas-premium .btn-light {
+        border-color: var(--fs-saas-line-strong) !important;
+        color: #475569 !important;
+        background: #fff !important;
+    }
+
+    .fs-saas-premium .btn-success,
+    .fs-saas-premium .btn-outline-success:hover {
+        border-color: #10b981 !important;
+        color: #fff !important;
+        background: linear-gradient(135deg, #1fbd8d, #059669) !important;
+    }
+
+    .fs-saas-premium .btn-warning,
+    .fs-saas-premium .btn-outline-warning:hover {
+        border-color: #f59e0b !important;
+        color: #fff !important;
+        background: linear-gradient(135deg, #f6ad27, #e88a05) !important;
+    }
+
+    .fs-saas-premium .btn-danger,
+    .fs-saas-premium .btn-outline-danger:hover {
+        border-color: #ef4444 !important;
+        color: #fff !important;
+        background: linear-gradient(135deg, #f35b5b, #dc2626) !important;
+    }
+
+    .fs-saas-premium .btn-info,
+    .fs-saas-premium .btn-outline-info:hover {
+        border-color: #0ea5e9 !important;
+        color: #fff !important;
+        background: linear-gradient(135deg, #22b5eb, #0284c7) !important;
+    }
+
+    .fs-saas-premium .btn-outline-success,
+    .fs-saas-premium .btn-outline-warning,
+    .fs-saas-premium .btn-outline-danger,
+    .fs-saas-premium .btn-outline-info {
+        background: #fff !important;
+    }
+
+    .fs-saas-premium .btn-link {
+        min-height: auto;
+        padding: 0;
+        border: 0;
+        box-shadow: none;
+    }
+
+    .fs-saas-premium .btn:disabled,
+    .fs-saas-premium .btn.disabled {
+        opacity: .58;
+        transform: none !important;
+        box-shadow: none !important;
+        cursor: not-allowed;
+    }
+
+    /* Formulaires */
+    .fs-saas-premium .form-group {
+        margin-bottom: 15px;
+    }
+
+    .fs-saas-premium label,
+    .fs-saas-premium .form-label,
+    .fs-saas-premium .fs-floating-label {
+        color: #596579;
+        font-size: 12.5px;
+        font-weight: 500 !important;
+    }
+
+    .fs-saas-premium .form-control,
+    .fs-saas-premium .form-select,
+    .fs-saas-premium .custom-select,
+    .fs-saas-premium select.form-control,
+    .fs-saas-premium textarea.form-control,
+    .fs-saas-premium .select2-container--default .select2-selection--single,
+    .fs-saas-premium .select2-container--default .select2-selection--multiple {
+        min-height: 45px;
+        border: 1px solid var(--fs-saas-line-strong) !important;
+        border-radius: 12px !important;
+        color: var(--fs-saas-ink) !important;
+        font-size: 13px;
+        font-weight: 450 !important;
+        background-color: #fff !important;
+        box-shadow: inset 0 1px 2px rgba(30, 41, 59, .025) !important;
+        transition: border-color .18s ease, box-shadow .18s ease, background-color .18s ease;
+    }
+
+    .fs-saas-premium .form-control,
+    .fs-saas-premium .form-select,
+    .fs-saas-premium .custom-select,
+    .fs-saas-premium select.form-control {
+        padding: 10px 13px;
+    }
+
+    .fs-saas-premium textarea.form-control {
+        min-height: 110px;
+        resize: vertical;
+    }
+
+    .fs-saas-premium .form-control:focus,
+    .fs-saas-premium .form-select:focus,
+    .fs-saas-premium .custom-select:focus,
+    .fs-saas-premium select.form-control:focus,
+    .fs-saas-premium textarea.form-control:focus,
+    .fs-saas-premium .select2-container--default.select2-container--focus .select2-selection--multiple,
+    .fs-saas-premium .select2-container--default.select2-container--open .select2-selection--single {
+        border-color: rgba(79, 70, 229, .72) !important;
+        background-color: #fff !important;
+        box-shadow: 0 0 0 4px rgba(79, 70, 229, .105) !important;
+        outline: none !important;
+    }
+
+    .fs-saas-premium .form-control::placeholder,
+    .fs-saas-premium textarea::placeholder {
+        color: #a0aabc !important;
+        opacity: 1;
+        font-weight: 400;
+    }
+
+    .fs-saas-premium .input-group-text {
+        min-width: 43px;
+        border-color: var(--fs-saas-line-strong) !important;
+        color: #69758a !important;
+        background: #f8f9fc !important;
+    }
+
+    .fs-saas-premium .input-group > .input-group-text:first-child,
+    .fs-saas-premium .input-group > a.input-group-text:first-child {
+        border-radius: 12px 0 0 12px !important;
+    }
+
+    .fs-saas-premium .input-group > .form-control:last-child,
+    .fs-saas-premium .input-group > .form-select:last-child {
+        border-radius: 0 12px 12px 0 !important;
+    }
+
+    .fs-saas-premium .fs-floating-field {
+        margin-bottom: 15px;
+    }
+
+    .fs-saas-premium .fs-floating-control,
+    .fs-saas-premium .fs-floating-field .form-control,
+    .fs-saas-premium .fs-floating-field .form-select,
+    .fs-saas-premium .fs-floating-field select {
+        min-height: 49px !important;
+        border-radius: 12px !important;
+    }
+
+    .fs-saas-premium .fs-floating-label {
+        color: #778298 !important;
+        background: transparent;
+    }
+
+    .fs-saas-premium .fs-floating-field:focus-within .fs-floating-label {
+        color: var(--fs-saas-primary) !important;
+    }
+
+    .fs-saas-premium .form-check-input,
+    .fs-saas-premium .custom-control-input,
+    .fs-saas-premium input[type="checkbox"],
+    .fs-saas-premium input[type="radio"] {
+        accent-color: var(--fs-saas-primary);
+    }
+
+    .fs-saas-premium .invalid-feedback,
+    .fs-saas-premium .fs-field-error {
+        color: #dc3545 !important;
+        font-size: 11.5px;
+        font-weight: 450 !important;
+    }
+
+    .fs-saas-premium .select2-container {
+        width: 100% !important;
+    }
+
+    .fs-saas-premium .select2-container--default .select2-selection--single .select2-selection__rendered {
+        padding: 10px 38px 9px 13px !important;
+        color: var(--fs-saas-ink) !important;
+        line-height: 24px !important;
+        font-weight: 450 !important;
+    }
+
+    .fs-saas-premium .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 43px !important;
+        right: 7px !important;
+    }
+
+    .fs-saas-premium .select2-dropdown {
+        border: 1px solid var(--fs-saas-line-strong) !important;
+        border-radius: 13px !important;
+        box-shadow: var(--fs-saas-shadow-lg) !important;
+        overflow: hidden;
+    }
+
+    .fs-saas-premium .select2-results__option {
+        padding: 9px 12px !important;
+        font-size: 12.5px;
+        font-weight: 450 !important;
+    }
+
+    .fs-saas-premium .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background: var(--fs-saas-primary) !important;
+    }
+
+    /* Tableaux et DataTables */
+    .fs-saas-premium .table-responsive {
+        border-radius: 15px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .fs-saas-premium table.table,
+    .fs-saas-premium .dataTable {
+        margin-bottom: 0;
+        color: var(--fs-saas-text);
+        font-size: 12.5px;
+        border-collapse: separate !important;
+        border-spacing: 0;
+    }
+
+    .fs-saas-premium .table thead th,
+    .fs-saas-premium table.dataTable thead th {
+        padding: 12px 11px !important;
+        border-top: 0 !important;
+        border-bottom: 1px solid var(--fs-saas-line-strong) !important;
+        color: #667085 !important;
+        font-size: 11.25px !important;
+        font-weight: 600 !important;
+        letter-spacing: .035em;
+        text-transform: uppercase;
+        white-space: nowrap;
+        background: #f7f9fc !important;
+    }
+
+    .fs-saas-premium .table tbody td,
+    .fs-saas-premium table.dataTable tbody td {
+        padding: 11px !important;
+        border-top: 1px solid #edf0f5 !important;
+        color: #3f4a5d;
+        vertical-align: middle !important;
+        font-weight: 400 !important;
+        background: rgba(255, 255, 255, .96);
+    }
+
+    .fs-saas-premium .table-striped tbody tr:nth-of-type(odd) td {
+        background: #fbfcfe !important;
+    }
+
+    .fs-saas-premium .table-hover tbody tr:hover td,
+    .fs-saas-premium table.dataTable tbody tr:hover td {
+        background: #f6f7ff !important;
+    }
+
+    .fs-saas-premium .dataTables_wrapper {
+        color: var(--fs-saas-muted);
+        font-size: 12px;
+    }
+
+    .fs-saas-premium .dataTables_wrapper .dataTables_length select,
+    .fs-saas-premium .dataTables_wrapper .dataTables_filter input {
+        min-height: 36px;
+        border: 1px solid var(--fs-saas-line-strong) !important;
+        border-radius: 10px !important;
+        background: #fff !important;
+        box-shadow: none !important;
+    }
+
+    .fs-saas-premium .dataTables_wrapper .dataTables_filter input:focus {
+        border-color: var(--fs-saas-primary) !important;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, .10) !important;
+        outline: none;
+    }
+
+    .fs-saas-premium .page-link,
+    .fs-saas-premium .paginate_button {
+        min-width: 34px;
+        min-height: 34px;
+        margin: 0 2px;
+        border: 1px solid var(--fs-saas-line) !important;
+        border-radius: 9px !important;
+        color: #596579 !important;
+        background: #fff !important;
+        box-shadow: none !important;
+    }
+
+    .fs-saas-premium .page-item.active .page-link,
+    .fs-saas-premium .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+    .fs-saas-premium .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+        border-color: var(--fs-saas-primary) !important;
+        color: #fff !important;
+        background: var(--fs-saas-primary) !important;
+    }
+
+    /* Badges, puces, alertes */
+    .fs-saas-premium .badge,
+    .fs-saas-premium .fs-chip,
+    .fs-saas-premium .fs-list-pill,
+    .fs-saas-premium .fs-class-pill {
+        border-radius: 999px !important;
+        padding: 6px 10px;
+        font-size: 11px !important;
+        font-weight: 500 !important;
+        letter-spacing: 0;
+    }
+
+    .fs-saas-premium .badge-primary,
+    .fs-saas-premium .bg-primary,
+    .fs-saas-premium .badge-gradient-primary {
+        background-color: var(--fs-saas-primary) !important;
+    }
+
+    .fs-saas-premium .alert,
+    .fs-saas-premium .fs-warning-banner {
+        border: 1px solid transparent !important;
+        border-radius: 14px !important;
+        padding: 12px 14px !important;
+        font-size: 12.5px;
+        font-weight: 450 !important;
+        box-shadow: var(--fs-saas-shadow-sm) !important;
+    }
+
+    .fs-saas-premium .alert-success {
+        border-color: #bcebd9 !important;
+        color: #087657 !important;
+        background: #ecfdf7 !important;
+    }
+
+    .fs-saas-premium .alert-warning,
+    .fs-saas-premium .fs-warning-banner {
+        border-color: #f7dfaa !important;
+        color: #9a5b05 !important;
+        background: #fffaf0 !important;
+    }
+
+    .fs-saas-premium .alert-danger {
+        border-color: #f5c6c6 !important;
+        color: #b4232c !important;
+        background: #fff3f3 !important;
+    }
+
+    .fs-saas-premium .alert-info {
+        border-color: #b9e5f7 !important;
+        color: #086b96 !important;
+        background: #f0faff !important;
+    }
+
+    /* Modales et menus */
+    .fs-saas-premium .modal-content {
+        border: 1px solid rgba(230, 234, 241, .96) !important;
+        border-radius: 20px !important;
+        box-shadow: 0 30px 90px rgba(15, 23, 42, .22) !important;
+        overflow: hidden;
+    }
+
+    .fs-saas-premium .modal-title {
+        font-size: 17px;
+        font-weight: 600 !important;
+    }
+
+    .fs-saas-premium .modal-backdrop.show {
+        opacity: .42;
+        backdrop-filter: blur(5px);
+    }
+
+    .fs-saas-premium .dropdown-menu:not(.fs4-dropdown) {
+        padding: 7px;
+        border: 1px solid var(--fs-saas-line) !important;
+        border-radius: 13px !important;
+        box-shadow: var(--fs-saas-shadow-lg) !important;
+    }
+
+    .fs-saas-premium .dropdown-menu:not(.fs4-dropdown) .dropdown-item {
+        padding: 8px 10px;
+        border-radius: 8px;
+        font-size: 12.5px;
+        font-weight: 450 !important;
+    }
+
+    .fs-saas-premium .dropdown-menu:not(.fs4-dropdown) .dropdown-item:hover {
+        color: var(--fs-saas-primary) !important;
+        background: var(--fs-saas-primary-soft) !important;
+    }
+
+    /* Login / pages d'accès */
+    .fs-saas-premium.bg-primary,
+    .fs-saas-premium.register-2 {
+        background:
+            radial-gradient(circle at 12% 12%, rgba(99, 102, 241, .26), transparent 26rem),
+            radial-gradient(circle at 88% 88%, rgba(14, 165, 233, .20), transparent 24rem),
+            linear-gradient(145deg, #111827 0%, #27265f 53%, #4338ca 100%) !important;
+    }
+
+    .fs-saas-premium.bg-primary .card,
+    .fs-saas-premium.register-2 .card {
+        border: 1px solid rgba(255, 255, 255, .25) !important;
+        box-shadow: 0 28px 90px rgba(3, 7, 18, .35) !important;
+    }
+
+    .fs-saas-premium .fs-login-shell {
+        font-family: var(--fs-saas-font) !important;
+        background:
+            radial-gradient(circle at 12% 5%, rgba(79, 70, 229, .095), transparent 26rem),
+            radial-gradient(circle at 90% 90%, rgba(14, 165, 233, .075), transparent 22rem),
+            var(--fs-saas-canvas) !important;
+    }
+
+    .fs-saas-premium .fs-login-card {
+        border: 1px solid rgba(230, 234, 241, .88) !important;
+        border-radius: 24px !important;
+        box-shadow: var(--fs-saas-shadow-lg) !important;
+    }
+
+    .fs-saas-premium .fs-login-brand {
+        background:
+            radial-gradient(circle at 20% 10%, rgba(255,255,255,.15), transparent 24%),
+            linear-gradient(135deg, #182238 0%, #3f3a9d 62%, #0ea5e9 120%) !important;
+    }
+
+    .fs-saas-premium .fs-greeting,
+    .fs-saas-premium .fs-choice,
+    .fs-saas-premium .fs-login-form .form-label,
+    .fs-saas-premium .fs-login-form .form-control,
+    .fs-saas-premium .fs-login-form .form-select {
+        font-weight: 500 !important;
+    }
+
+    .fs-saas-premium .fs-login-brand h1,
+    .fs-saas-premium .fs-login-form h2 {
+        font-weight: 600 !important;
+    }
+
+    /* Ancien espace super-administrateur */
+    .fs-saas-premium #mainNav,
+    .fs-saas-premium #exampleAccordion,
+    .fs-saas-premium #mainNav.fixed-top .sidenav-toggler > .nav-item {
+        background: linear-gradient(180deg, #171f34 0%, #29265f 100%) !important;
+    }
+
+    .fs-saas-premium #mainNav {
+        box-shadow: 0 8px 28px rgba(15, 23, 42, .18);
+    }
+
+    .fs-saas-premium #exampleAccordion li {
+        border-bottom-color: rgba(255, 255, 255, .07) !important;
+    }
+
+    .fs-saas-premium #mainNav .nav-link,
+    .fs-saas-premium #mainNav #menu {
+        font-weight: 450 !important;
+    }
+
+    .fs-saas-premium #mainNav a:hover,
+    .fs-saas-premium #mainNav #menu:hover {
+        color: #fff !important;
+        background: rgba(255, 255, 255, .10) !important;
+    }
+
+    .fs-saas-premium .sidenav-second-level {
+        border-color: var(--fs-saas-line) !important;
+        background: #fff !important;
+    }
+
+    .fs-saas-premium .sidenav-second-level a {
+        color: #475569 !important;
+        font-weight: 450 !important;
+    }
+
+    .fs-saas-premium .sub-title,
+    .fs-saas-premium #footer {
+        background: #fff !important;
+        background-image: none !important;
+    }
+
+    .fs-saas-premium #footer {
+        color: var(--fs-saas-muted) !important;
+        border-top: 1px solid var(--fs-saas-line);
+    }
+
+    .fs-saas-premium #sub-title {
+        color: var(--fs-saas-ink) !important;
+    }
+
+    /* Pied de page et utilitaires */
+    .fs-saas-premium footer,
+    .fs-saas-premium .footer {
+        color: var(--fs-saas-muted);
+        font-size: 12px;
+        font-weight: 400;
+    }
+
+    .fs-saas-premium #back-to-top,
+    .fs-saas-premium .scroll-to-top {
+        width: 42px;
+        height: 42px;
+        border: 0;
+        border-radius: 13px !important;
+        color: #fff !important;
+        background: linear-gradient(135deg, #5b52ec, #4338ca) !important;
+        box-shadow: 0 12px 26px rgba(67, 56, 202, .25);
+    }
+
+    .fs-saas-premium ::selection {
+        color: #fff;
+        background: rgba(79, 70, 229, .82);
+    }
+
+    .fs-saas-premium :focus-visible {
+        outline: 3px solid rgba(79, 70, 229, .23);
+        outline-offset: 2px;
+    }
+
+    /* Responsive */
+    @media (max-width: 1199px) {
+        .fs-saas-premium .fs4-header-inner {
+            grid-template-columns: 185px minmax(0, 1fr) minmax(280px, 350px);
+            gap: 11px;
+        }
+
+        .fs-saas-premium .fs4-school-name {
+            font-size: 13px;
+        }
+    }
+
+    @media (max-width: 991px) {
+        .fs-saas-premium {
+            font-size: 13.5px;
+        }
+
+        .fs-saas-premium .page-header,
+        .fs-saas-premium .fs-dashboard-header {
+            padding: 10px 12px !important;
+            border-radius: 14px;
+        }
+
+        .fs-saas-premium .card,
+        .fs-saas-premium .fs-panel,
+        .fs-saas-premium .fs-stat-card,
+        .fs-saas-premium .fs-term-card,
+        .fs-saas-premium .fs-sequence-card,
+        .fs-saas-premium .fs-evaluation-board {
+            border-radius: 17px !important;
+        }
+
+        .fs-saas-premium .fs4-horizontal,
+        .fs-saas-premium .horizontal-main,
+        .fs-saas-premium .hor-menu {
+            background: #fff !important;
+        }
+
+        .fs-saas-premium .horizontalMenu > .horizontalMenu-list > li > a {
+            border-radius: 9px;
+            font-size: 13px !important;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .fs-saas-premium {
+            font-size: 13px;
+            background: #f5f7fb !important;
+        }
+
+        .fs-saas-premium .container,
+        .fs-saas-premium .container-fluid {
+            padding-right: 12px;
+            padding-left: 12px;
+        }
+
+        .fs-saas-premium .main-content > .container,
+        .fs-saas-premium .hor-content > .container {
+            padding-top: 8px;
+        }
+
+        .fs-saas-premium .fs4-header-inner {
+            gap: 8px;
+        }
+
+        .fs-saas-premium .fs4-mobile-btn {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            border-radius: 11px;
+        }
+
+        .fs-saas-premium .fs4-brand img {
+            max-height: 39px;
+        }
+
+        .fs-saas-premium .page-header,
+        .fs-saas-premium .fs-dashboard-header {
+            min-height: auto;
+            margin-bottom: 12px !important;
+            padding: 10px !important;
+            border-radius: 13px;
+        }
+
+        .fs-saas-premium .page-title,
+        .fs-saas-premium .page-header .page-title {
+            font-size: 18px !important;
+        }
+
+        .fs-saas-premium .card-body,
+        .fs-saas-premium .modal-body,
+        .fs-saas-premium .fs-panel {
+            padding: 14px !important;
+        }
+
+        .fs-saas-premium .card-header,
+        .fs-saas-premium .modal-header,
+        .fs-saas-premium .fs-term-card-header {
+            min-height: 49px;
+            padding: 12px 14px !important;
+        }
+
+        .fs-saas-premium .btn {
+            min-height: 38px;
+            padding: 8px 12px;
+            font-size: 12px;
+        }
+
+        .fs-saas-premium .form-control,
+        .fs-saas-premium .form-select,
+        .fs-saas-premium .custom-select,
+        .fs-saas-premium select.form-control,
+        .fs-saas-premium .select2-container--default .select2-selection--single,
+        .fs-saas-premium .select2-container--default .select2-selection--multiple {
+            min-height: 43px;
+        }
+
+        .fs-saas-premium .table thead th,
+        .fs-saas-premium table.dataTable thead th,
+        .fs-saas-premium .table tbody td,
+        .fs-saas-premium table.dataTable tbody td {
+            padding: 9px !important;
+        }
+
+        .fs-saas-premium .modal-dialog {
+            margin: 10px;
+        }
+
+        .fs-saas-premium .fs-login-shell {
+            padding: 18px 10px !important;
+        }
+
+        .fs-saas-premium .fs-login-card {
+            border-radius: 18px !important;
+        }
+    }
+
+    /* Impression : préserver la lisibilité des bulletins, PV et états */
+    @media print {
+        .fs-saas-premium,
+        .fs-saas-premium .page,
+        .fs-saas-premium .page-main,
+        .fs-saas-premium .main-content,
+        .fs-saas-premium .hor-content,
+        .fs-saas-premium .content-wrapper {
+            color: #000 !important;
+            background: #fff !important;
+        }
+
+        .fs-saas-premium .card,
+        .fs-saas-premium .fs-panel,
+        .fs-saas-premium .fs-stat-card,
+        .fs-saas-premium table,
+        .fs-saas-premium .table-responsive {
+            box-shadow: none !important;
+        }
+
+        .fs-saas-premium .fs4-header,
+        .fs-saas-premium .fs4-menu-shell,
+        .fs-saas-premium footer,
+        .fs-saas-premium #back-to-top,
+        .fs-saas-premium .scroll-to-top {
+            display: none !important;
+        }
+    }
+</style>

@@ -13,11 +13,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/student")]
 class PrintSchoolAttendanceCertificateController extends AbstractController
 {
@@ -58,9 +54,14 @@ class PrintSchoolAttendanceCertificateController extends AbstractController
             return $this->redirectToRoute('home_mainMenu');
         }
 
-        $student = $this->studentRepository->findOneBySlug([
+        $student = $this->studentRepository->findOneBy([
             'slug' => $slug
         ]);
+        
+        if (!$student) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
         
         $school = $this->schoolRepository->findOneBy(['schoolYear' => $schoolYear]);
 

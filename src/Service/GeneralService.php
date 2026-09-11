@@ -218,6 +218,36 @@ class GeneralService
         return $pdf;
     }
 
+    public function ligneDeMesTableauxMeilleursElevesParCycle(Pagination $pdf, int $fontSize, int $cellTableClassroom, int $cellTableHeight, int $cellTablePresence, SchoolYear $schoolYear, array $students): Pagination
+    {
+        $numero = 1;
+        foreach ($students as $topFiveStudent) 
+        {   
+            if ($numero % 2 == 1) 
+            {
+                $pdf->SetFillColor(255,255,255);
+            }else
+            {
+                $pdf->SetFillColor(224,235,255);
+            }
+            
+            $pdf->SetFont('Times', '', $fontSize-1);
+            $pdf->Cell($cellTableClassroom-15 , $cellTableHeight*1.5, utf8_decode($numero), 1, 0, 'C', true);
+            $pdf->Cell($cellTablePresence+45 , $cellTableHeight*1.5, utf8_decode($topFiveStudent['fullName']), 1, 0, 'L', true);
+            $pdf->Cell($cellTablePresence-20 , $cellTableHeight*1.5, utf8_decode($topFiveStudent['sex']), 1, 0, 'C', true);
+            $pdf->Cell($cellTablePresence-10 , $cellTableHeight*1.5, utf8_decode(number_format($topFiveStudent['moyenne'], 2)), 1, 0, 'C', true);
+            $pdf->Cell($cellTableClassroom , $cellTableHeight*1.5, utf8_decode($topFiveStudent['classroom']), 1, 0, 'C', true);
+            $pdf->Cell($cellTablePresence , $cellTableHeight*1.5, utf8_decode(date_format($topFiveStudent['birthday'],'d/m/Y')), 1, 1, 'C', true);
+            
+            
+            $numero ++;
+            
+        
+        }
+
+        return $pdf;
+    }
+
 
     /**
      * Calcule la moyenne en fonction du total des notes et des coefficients
@@ -554,9 +584,10 @@ class GeneralService
             $pdf->SetFont('Times', '', $fontSize-3);
             
             $pdf->Cell($wHeader, $cellHeaderHeight, utf8_decode($school->getFrenchMotto()), 0, 2, 'C');
+            //$pdf->Cell($wHeader, $cellHeaderHeight, utf8_decode("Mle ".$school->getMatricule()), 0, 2, 'C');
             // $pdf->Cell($wHeader, $cellHeaderHeight, '**********', 0, 2, 'C');
 
-            // $pdf->Cell($wHeader, $cellHeaderHeight, 'B.P : '.utf8_decode($school->getPobox()).'  Tel : '.$school->getTelephone(), 0, 2, 'C');
+            //$pdf->Cell($wHeader, $cellHeaderHeight, 'B.P : '.utf8_decode($school->getPobox()).'  Tel : '.$school->getTelephone(), 0, 2, 'C');
             // $pdf->Cell($wHeader, $cellHeaderHeight, 'E-mail : '.utf8_decode($school->getEmail()), 0, 2, 'C');
             // $pdf->Ln();
 
@@ -590,9 +621,10 @@ class GeneralService
             $pdf->SetFont('Times', '', $fontSize-3);
     
             $pdf->Cell($wHeader, $cellHeaderHeight, utf8_decode($school->getEnglishMotto()), 0, 2, 'C');
+            //$pdf->Cell($wHeader, $cellHeaderHeight, utf8_decode("Mle ".$school->getMatricule()), 0, 2, 'C');
             // $pdf->Cell($wHeader, $cellHeaderHeight, '**********', 0, 2, 'C');
     
-            // $pdf->Cell($wHeader, $cellHeaderHeight, 'PO Box: '.utf8_decode($school->getPobox()).'  Tel : '.$school->getTelephone(), 0, 2, 'C');
+            //$pdf->Cell($wHeader, $cellHeaderHeight, 'PO Box: '.utf8_decode($school->getPobox()).'  Tel : '.$school->getTelephone(), 0, 2, 'C');
             // $pdf->Cell($wHeader, $cellHeaderHeight, 'E-mail : '.utf8_decode($school->getEmail()), 0, 2, 'C');
             // $pdf->Ln();
 
@@ -607,7 +639,7 @@ class GeneralService
             $x = $pdf->GetX();
             $y = $pdf->GetY();
             
-            $pdf->Image('images/school/'.$school->getLogo(), 92, 7, -200);
+            $pdf->Image('images/school/'.$school->getLogo(), 95, 7, -150);
 
             $pdf->Image('images/school/'.$school->getFiligree(), 40, 90, -100);  
             $pdf->setXY($x, $y);
@@ -666,9 +698,10 @@ class GeneralService
             $pdf->SetFont('Times', '', $fontSize-3);
             
             $pdf->Cell($wHeader, $cellHeaderHeight, utf8_decode($school->getFrenchMotto()), 0, 2, 'C');
+            //$pdf->Cell($wHeader, $cellHeaderHeight, utf8_decode("Mle ".$school->getMatricule()), 0, 2, 'C');
             // $pdf->Cell($wHeader, $cellHeaderHeight, '**********', 0, 2, 'C');
 
-            // $pdf->Cell($wHeader, $cellHeaderHeight, 'B.P : '.utf8_decode($school->getPobox()).'  Tel : '.$school->getTelephone(), 0, 2, 'C');
+            //$pdf->Cell($wHeader, $cellHeaderHeight, 'B.P : '.utf8_decode($school->getPobox()).'  Tel : '.$school->getTelephone(), 0, 2, 'C');
             // $pdf->Cell($wHeader, $cellHeaderHeight, 'E-mail : '.utf8_decode($school->getEmail()), 0, 2, 'C');
             // $pdf->Ln();
 
@@ -702,9 +735,10 @@ class GeneralService
             $pdf->SetFont('Times', '', $fontSize-3);
     
             $pdf->Cell($wHeader, $cellHeaderHeight, utf8_decode($school->getEnglishMotto()), 0, 2, 'C');
+            //$pdf->Cell($wHeader, $cellHeaderHeight, utf8_decode("Mle ".$school->getMatricule()), 0, 2, 'C');
             // $pdf->Cell($wHeader, $cellHeaderHeight, '**********', 0, 2, 'C');
     
-            // $pdf->Cell($wHeader, $cellHeaderHeight, 'PO Box: '.utf8_decode($school->getPobox()).'  Tel : '.$school->getTelephone(), 0, 2, 'C');
+            //$pdf->Cell($wHeader, $cellHeaderHeight, 'PO Box: '.utf8_decode($school->getPobox()).'  Tel : '.$school->getTelephone(), 0, 2, 'C');
             // $pdf->Cell($wHeader, $cellHeaderHeight, 'E-mail : '.utf8_decode($school->getEmail()), 0, 2, 'C');
             // $pdf->Ln();
 
@@ -778,9 +812,10 @@ class GeneralService
             $pdf->SetFont('Times', '', $fontSize-3);
             
             $pdf->Cell($wHeader, $cellHeaderHeight, utf8_decode($school->getFrenchMotto()), 0, 2, 'C');
+            //$pdf->Cell($wHeader, $cellHeaderHeight, utf8_decode("Mle ".$school->getMatricule()), 0, 2, 'C');
             // $pdf->Cell($wHeader, $cellHeaderHeight, '**********', 0, 2, 'C');
 
-            // $pdf->Cell($wHeader, $cellHeaderHeight, 'B.P : '.utf8_decode($school->getPobox()).'  Tel : '.$school->getTelephone(), 0, 2, 'C');
+            //$pdf->Cell($wHeader, $cellHeaderHeight, 'B.P : '.utf8_decode($school->getPobox()).'  Tel : '.$school->getTelephone(), 0, 2, 'C');
             // $pdf->Cell($wHeader, $cellHeaderHeight, 'E-mail : '.utf8_decode($school->getEmail()), 0, 2, 'C');
             // $pdf->Ln();
 
@@ -814,9 +849,10 @@ class GeneralService
             $pdf->SetFont('Times', '', $fontSize-3);
     
             $pdf->Cell($wHeader, $cellHeaderHeight, utf8_decode($school->getEnglishMotto()), 0, 2, 'C');
+            //$pdf->Cell($wHeader, $cellHeaderHeight, utf8_decode("Mle ".$school->getMatricule()), 0, 2, 'C');
             // $pdf->Cell($wHeader, $cellHeaderHeight, '**********', 0, 2, 'C');
     
-            // $pdf->Cell($wHeader, $cellHeaderHeight, 'PO Box: '.utf8_decode($school->getPobox()).'  Tel : '.$school->getTelephone(), 0, 2, 'C');
+            //$pdf->Cell($wHeader, $cellHeaderHeight, 'PO Box: '.utf8_decode($school->getPobox()).'  Tel : '.$school->getTelephone(), 0, 2, 'C');
             // $pdf->Cell($wHeader, $cellHeaderHeight, 'E-mail : '.utf8_decode($school->getEmail()), 0, 2, 'C');
             // $pdf->Ln();
 
@@ -880,9 +916,10 @@ class GeneralService
             $pdf->SetFont('Times', '', $fontSize-3);
             
             $pdf->Cell($wHeader, $cellHeaderHeight, utf8_decode($school->getFrenchMotto()), 0, 2, 'C');
+            //$pdf->Cell($wHeader, $cellHeaderHeight, utf8_decode("Mle ".$school->getMatricule()), 0, 2, 'C');
             // $pdf->Cell($wHeader, $cellHeaderHeight, '**********', 0, 2, 'C');
 
-            // $pdf->Cell($wHeader, $cellHeaderHeight, 'B.P : '.utf8_decode($school->getPobox()).'  Tel : '.$school->getTelephone(), 0, 2, 'C');
+            //$pdf->Cell($wHeader, $cellHeaderHeight, 'B.P : '.utf8_decode($school->getPobox()).'  Tel : '.$school->getTelephone(), 0, 2, 'C');
             // $pdf->Cell($wHeader, $cellHeaderHeight, 'E-mail : '.utf8_decode($school->getEmail()), 0, 2, 'C');
             $pdf->Ln();
 
@@ -915,9 +952,10 @@ class GeneralService
             $pdf->SetFont('Times', '', $fontSize-3);
     
             $pdf->Cell($wHeader, $cellHeaderHeight, utf8_decode($school->getEnglishMotto()), 0, 2, 'C');
+            //$pdf->Cell($wHeader, $cellHeaderHeight, utf8_decode("Mle ".$school->getMatricule()), 0, 2, 'C');
             // $pdf->Cell($wHeader, $cellHeaderHeight, '**********', 0, 2, 'C');
     
-            // $pdf->Cell($wHeader, $cellHeaderHeight, 'PO Box: '.utf8_decode($school->getPobox()).'  Tel : '.$school->getTelephone(), 0, 2, 'C');
+            //$pdf->Cell($wHeader, $cellHeaderHeight, 'PO Box: '.utf8_decode($school->getPobox()).'  Tel : '.$school->getTelephone(), 0, 2, 'C');
             // $pdf->Cell($wHeader, $cellHeaderHeight, 'E-mail : '.utf8_decode($school->getEmail()), 0, 2, 'C');
             $pdf->Ln();
 
@@ -980,9 +1018,10 @@ class GeneralService
             $pdf->SetFont('Times', '', $fontSize-3);
             
             $pdf->Cell($wHeader, $cellHeaderHeight, utf8_decode($school->getFrenchMotto()), 0, 2, 'C');
+            //$pdf->Cell($wHeader, $cellHeaderHeight, utf8_decode("Mle ".$school->getMatricule()), 0, 2, 'C');
             // $pdf->Cell($wHeader, $cellHeaderHeight, '**********', 0, 2, 'C');
 
-            // $pdf->Cell($wHeader, $cellHeaderHeight, 'B.P : '.utf8_decode($school->getPobox()).'  Tel : '.$school->getTelephone(), 0, 2, 'C');
+            //$pdf->Cell($wHeader, $cellHeaderHeight, 'B.P : '.utf8_decode($school->getPobox()).'  Tel : '.$school->getTelephone(), 0, 2, 'C');
             // $pdf->Cell($wHeader, $cellHeaderHeight, 'E-mail : '.utf8_decode($school->getEmail()), 0, 2, 'C');
             $pdf->Ln();
 
@@ -1015,9 +1054,10 @@ class GeneralService
             $pdf->SetFont('Times', '', $fontSize-3);
     
             $pdf->Cell($wHeader, $cellHeaderHeight, utf8_decode($school->getEnglishMotto()), 0, 2, 'C');
+            //$pdf->Cell($wHeader, $cellHeaderHeight, utf8_decode("Mle ".$school->getMatricule()), 0, 2, 'C');
             // $pdf->Cell($wHeader, $cellHeaderHeight, '**********', 0, 2, 'C');
     
-            // $pdf->Cell($wHeader, $cellHeaderHeight, 'PO Box: '.utf8_decode($school->getPobox()).'  Tel : '.$school->getTelephone(), 0, 2, 'C');
+            //$pdf->Cell($wHeader, $cellHeaderHeight, 'PO Box: '.utf8_decode($school->getPobox()).'  Tel : '.$school->getTelephone(), 0, 2, 'C');
             // $pdf->Cell($wHeader, $cellHeaderHeight, 'E-mail : '.utf8_decode($school->getEmail()), 0, 2, 'C');
             $pdf->Ln();
 
@@ -1081,9 +1121,10 @@ class GeneralService
 
         $pdf->SetFont('Times', '', 7);
         $pdf->Cell($wHeader, $cellHeaderHeight, utf8_decode($school->getFrenchMotto()), 0, 2, 'C');
+        //$pdf->Cell($wHeader, $cellHeaderHeight, utf8_decode("Mle ".$school->getMatricule()), 0, 2, 'C');
         // $pdf->Cell($wHeader, $cellHeaderHeight, '**********', 0, 2, 'C');
             
-        // $pdf->Cell($wHeader, $cellHeaderHeight, 'B.P : '.$school->getPobox().'  Tel : '.$school->getTelephone(), 0, 2, 'C');
+        //$pdf->Cell($wHeader, $cellHeaderHeight, 'B.P : '.utf8_decode($school->getPobox()).'  Tel : '.$school->getTelephone(), 0, 2, 'C');
         // $pdf->Cell($wHeader, $cellHeaderHeight, 'E-mail : '.utf8_decode($school->getEmail()), 0, 2, 'C');
 
         $pdf->Cell($wHeader,3,'',0,2,'C');
@@ -1121,9 +1162,10 @@ class GeneralService
 
         $pdf->SetFont('Times', '', 7);
         $pdf->Cell($wHeader, $cellHeaderHeight, utf8_decode($school->getEnglishMotto()), 0, 2, 'C');
+        //$pdf->Cell($wHeader, $cellHeaderHeight, utf8_decode("Mle ".$school->getMatricule()), 0, 2, 'C');
         // $pdf->Cell($wHeader, $cellHeaderHeight, '**********', 0, 2, 'C');
             
-        // $pdf->Cell($wHeader, $cellHeaderHeight, 'B.P : '.$school->getPobox().'  Tel : '.$school->getTelephone(), 0, 2, 'C');
+        //$pdf->Cell($wHeader, $cellHeaderHeight, 'B.P : '.utf8_decode($school->getPobox()).'  Tel : '.$school->getTelephone(), 0, 2, 'C');
         // $pdf->Cell($wHeader, $cellHeaderHeight, 'E-mail : '.utf8_decode($school->getEmail()), 0, 2, 'C');
 
         $pdf->Cell($wHeader,3,'',0,2,'C');
@@ -1186,9 +1228,10 @@ class GeneralService
 
         $pdf->SetFont('Times', '', 8);
         $pdf->Cell($wHeader+50, $cellHeaderHeight, utf8_decode($school->getFrenchMotto()), 0, 2, 'C');
+        //$pdf->Cell($wHeader+50, $cellHeaderHeight, utf8_decode("Mle ".$school->getMatricule()), 0, 2, 'C');
         // $pdf->Cell($wHeader, $cellHeaderHeight, '**********', 0, 2, 'C');
             
-        // $pdf->Cell($wHeader, $cellHeaderHeight, 'B.P : '.$school->getPobox().'  Tel : '.$school->getTelephone(), 0, 2, 'C');
+        //$pdf->Cell($wHeader+50, $cellHeaderHeight, 'B.P : '.utf8_decode($school->getPobox()).'  Tel : '.$school->getTelephone(), 0, 2, 'C');
         // $pdf->Cell($wHeader, $cellHeaderHeight, 'E-mail : '.utf8_decode($school->getEmail()), 0, 2, 'C');
 
         $pdf->Cell($wHeader,3,'',0,2,'C');
@@ -1225,9 +1268,10 @@ class GeneralService
 
         $pdf->SetFont('Times', '', 8);
         $pdf->Cell($wHeader+50, $cellHeaderHeight, utf8_decode($school->getEnglishMotto()), 0, 2, 'C');
+        //$pdf->Cell($wHeader+50, $cellHeaderHeight, utf8_decode("Mle ".$school->getMatricule()), 0, 2, 'C');
         // $pdf->Cell($wHeader, $cellHeaderHeight, '**********', 0, 2, 'C');
             
-        // $pdf->Cell($wHeader, $cellHeaderHeight, 'B.P : '.$school->getPobox().'  Tel : '.$school->getTelephone(), 0, 2, 'C');
+        //$pdf->Cell($wHeader+50, $cellHeaderHeight, 'B.P : '.utf8_decode($school->getPobox()).'  Tel : '.$school->getTelephone(), 0, 2, 'C');
         // $pdf->Cell($wHeader, $cellHeaderHeight, 'E-mail : '.utf8_decode($school->getEmail()), 0, 2, 'C');
 
         $pdf->Cell($wHeader,3,'',0,2,'C');

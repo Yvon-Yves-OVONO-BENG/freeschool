@@ -98,6 +98,9 @@ class SchoolType extends AbstractType
             ->add('serviceNote', TextType::class, [
                 'label' => 'Service note'
             ])
+            ->add('matricule', TextType::class, [
+                'label' => 'Immatriculation'
+            ])
             ->add('headmaster', EntityType::class, [
                 'label' => "Chef d'établissement",
                 'class' => Teacher::class,

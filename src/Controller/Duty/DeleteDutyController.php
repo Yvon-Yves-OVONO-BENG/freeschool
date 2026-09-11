@@ -12,11 +12,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/duty")]
 class DeleteDutyController extends AbstractController
 {
@@ -51,9 +47,14 @@ class DeleteDutyController extends AbstractController
             return $this->redirectToRoute('home_mainMenu');
         }
 
-        $duty = $this->dutyRepository->findOneBySlug([
+        $duty = $this->dutyRepository->findOneBy([
             'slug' => $slug
         ]);
+
+        if (!$duty) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
 
         $this->em->remove($duty);
         $this->em->flush();

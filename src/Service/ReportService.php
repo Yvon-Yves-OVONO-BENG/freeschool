@@ -70,13 +70,14 @@ class ReportService
      * @param Term $term
      * @return array
      */
-    public function getRankedStudents(array $studentMarkTerm, Classroom $classroom, Term $term, int $pv = 0): array
+    public function getRankedStudents(array $studentMarkTerm, Classroom $classroom, Term $term, School $school, int $pv = 0): array
     {
         $rankedStudents = [];
         $rankedCaterory1 = [];
         $rankedCaterory2 = [];
         $rankedCaterory3 = [];
-        $allRanked= [];
+        $rankedCaterory4 = [];
+        $allRanked = [];
 
         $lessons = $classroom->getLessons();
         $numberOfLessons = count($lessons );
@@ -86,6 +87,7 @@ class ReportService
         $totalCoefficientCategory1 = 0;
         $totalCoefficientCategory2 = 0;
         $totalCoefficientCategory3 = 0;
+        $totalCoefficientCategory4 = 0;
 
         foreach ($lessons  as $lesson) 
         {
@@ -99,19 +101,43 @@ class ReportService
                 $totalCoefficientFirstGroup += $lessonCoefficient;
             }
 
-            switch ($lesson->getSubject()->getCategory()->getCategory()) 
+            if($school->getEducation()->getEducation() == ConstantsClass::GENERAL_EDUCATION)
             {
-                case ConstantsClass::CATEGORY1:
-                    $totalCoefficientCategory1 += $lessonCoefficient;
-                    break;
+                switch ($lesson->getSubject()->getCategory()->getCategory()) 
+                {
+                    case ConstantsClass::CATEGORY_1:
+                        $totalCoefficientCategory1 += $lessonCoefficient;
+                        break;
 
-                case  ConstantsClass::CATEGORY2:
-                    $totalCoefficientCategory2 += $lessonCoefficient;
-                    break;
+                    case  ConstantsClass::CATEGORY_2:
+                        $totalCoefficientCategory2 += $lessonCoefficient;
+                        break;
 
-                case  ConstantsClass::CATEGORY3:
-                    $totalCoefficientCategory3 += $lessonCoefficient;
-                    break;
+                    case  ConstantsClass::CATEGORY_3:
+                        $totalCoefficientCategory3 += $lessonCoefficient;
+                        break;
+                }
+            }
+            else
+            {
+                switch ($lesson->getSubject()->getCategory()->getCategory()) 
+                {
+                    case ConstantsClass::CATEGORY_1_TECH:
+                        $totalCoefficientCategory1 += $lessonCoefficient;
+                        break;
+
+                    case  ConstantsClass::CATEGORY_2_TECH:
+                        $totalCoefficientCategory2 += $lessonCoefficient;
+                        break;
+
+                    case  ConstantsClass::CATEGORY_3_TECH:
+                        $totalCoefficientCategory3 += $lessonCoefficient;
+                        break;
+
+                    case  ConstantsClass::CATEGORY_4_TECH:
+                        $totalCoefficientCategory4 += $lessonCoefficient;
+                        break;
+                }
             }
         }
 
@@ -143,6 +169,10 @@ class ReportService
                 $totalStudentMarkCategory3 = 0;
                 $averageCategory3 = ConstantsClass::UNRANKED_AVERAGE;
 
+                $totalStudentCoefficientCatgory4 = 0;
+                $totalStudentMarkCategory4 = 0;
+                $averageCategory4 = ConstantsClass::UNRANKED_AVERAGE;
+
     
                 for ($j = $beging; $j < $end; $j++) 
                 { 
@@ -165,25 +195,53 @@ class ReportService
                         }
     
                         // On calule les totaux par groupe de matières
-                        switch ($category) 
+                        
+                        if($school->getEducation()->getEducation() == ConstantsClass::GENERAL_EDUCATION)
                         {
-                            case ConstantsClass::CATEGORY1:
-                                $totalStudentCoefficientCatgory1 += $coefficient;
-                                $totalStudentMarkCategory1 += $mark * $coefficient;
-                                break;
-        
-                            case ConstantsClass::CATEGORY2:
-                                $totalStudentCoefficientCatgory2 += $coefficient;
-                                $totalStudentMarkCategory2 += $mark * $coefficient;
-                                break;
-        
-                            case ConstantsClass::CATEGORY3:
-                                $totalStudentCoefficientCatgory3 += $coefficient;
-                                $totalStudentMarkCategory3 += $mark * $coefficient;
-                                break;
+                            switch ($category) 
+                            {
+                                case ConstantsClass::CATEGORY_1:
+                                    $totalStudentCoefficientCatgory1 += $coefficient;
+                                    $totalStudentMarkCategory1 += $mark * $coefficient;
+                                    break;
+            
+                                case ConstantsClass::CATEGORY_2:
+                                    $totalStudentCoefficientCatgory2 += $coefficient;
+                                    $totalStudentMarkCategory2 += $mark * $coefficient;
+                                    break;
+            
+                                case ConstantsClass::CATEGORY_3:
+                                    $totalStudentCoefficientCatgory3 += $coefficient;
+                                    $totalStudentMarkCategory3 += $mark * $coefficient;
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            switch ($category) 
+                            {
+                                case ConstantsClass::CATEGORY_1_TECH:
+                                    $totalStudentCoefficientCatgory1 += $coefficient;
+                                    $totalStudentMarkCategory1 += $mark * $coefficient;
+                                    break;
+            
+                                case ConstantsClass::CATEGORY_2_TECH:
+                                    $totalStudentCoefficientCatgory2 += $coefficient;
+                                    $totalStudentMarkCategory2 += $mark * $coefficient;
+                                    break;
+            
+                                case ConstantsClass::CATEGORY_3_TECH:
+                                    $totalStudentCoefficientCatgory3 += $coefficient;
+                                    $totalStudentMarkCategory3 += $mark * $coefficient;
+                                    break;
+
+                                case ConstantsClass::CATEGORY_4_TECH:
+                                    $totalStudentCoefficientCatgory4 += $coefficient;
+                                    $totalStudentMarkCategory4 += $mark * $coefficient;
+                                    break;
+                            }
                         }
                     }
-    
     
                 }
                 
@@ -226,11 +284,13 @@ class ReportService
                     if($forFirstGroup)
                     {
                        $outside =  $totalStudentCoefficientFirstGroup - ($totalCoefficientFirstGroup -  $outsideCoefficient);
-                    }else
+                    }
+                    else
                     {
                         $outside = $totalStudentCoefficient - ($totalCoefficient - $outsideCoefficient);
                     }
-                }else
+                }
+                else
                 {
                     $outside = 1;
                 }
@@ -250,56 +310,22 @@ class ReportService
                     }
                     else
                     {
-                        $moyenneTerm1 = $this->reportRepository->findOneBy([
-                            'student' => $student,
-                            'term' => 1
-                        ])->getMoyenne();
-
-                        $moyenneTerm2 = $this->reportRepository->findOneBy([
-                            'student' => $student,
-                            'term' => 2
-                        ])->getMoyenne();
-
-                        $moyenneTerm3 = $this->reportRepository->findOneBy([
-                            'student' => $student,
-                            'term' => 3
-                        ])->getMoyenne();
-
-                            // CALCUL DE LA MOYENNE ANNUELLE
+                        $moyenneTerm1 = $this->getSavedAverage($student, 1);
+                        $moyenneTerm2 = $this->getSavedAverage($student, 2);
+                        $moyenneTerm3 = $this->getSavedAverage($student, 3);
+                        
+                        // CALCUL DE LA MOYENNE ANNUELLE
                         $moyenne  = $this->calculerMoyenneAnnuelle($moyenneTerm1, $moyenneTerm2, $moyenneTerm3);
                         
-                        // if($moyenneTerm1 == -1)
-                        // {
-                        //     $moyenneTerm1 = 0;
-                        // }
-
-                        // if($moyenneTerm2 == -1)
-                        // {
-                        //     $moyenneTerm2 = 0;
-                        // }
-
-                        // if($moyenneTerm3 == -1)
-                        // {
-                        //     $moyenneTerm3 = 0;
-                        // }
-                        
-
-                        // $moyenne = $this->generalService->getRatio($totalStudentMark, $totalStudentCoefficient);
-                        // $moyenne = number_format((
-                        //     number_format($moyenneTerm1, 2, ".", "") + 
-                        //     number_format($moyenneTerm2, 2, ".", "") + 
-                        //     number_format($moyenneTerm3, 2, ".", "")
-                        //     )/3, 2, ".", "");
-
                     }
 
-                    
                     $averageCategory1 = $this->generalService->getRatio($totalStudentMarkCategory1, $totalStudentCoefficientCatgory1);
                     $averageCategory2 = $this->generalService->getRatio($totalStudentMarkCategory2, $totalStudentCoefficientCatgory2);
                     $averageCategory3 = $this->generalService->getRatio($totalStudentMarkCategory3, $totalStudentCoefficientCatgory3);
+                    $averageCategory4 = $this->generalService->getRatio($totalStudentMarkCategory4, $totalStudentCoefficientCatgory4);
                     $appreciation = $this->generalService->getApoAppreciation($moyenne);
                 }
-
+                
                 $rankedStudents[] = [
                     'student' => $student,
                     'sex' => $sex,
@@ -327,6 +353,11 @@ class ReportService
                     'totalMarkCategory3' => $totalStudentMarkCategory3,
                     'averageCategory3' => $averageCategory3,
 
+                    'totalCoefficentCategory4' => $totalCoefficientCategory4,
+                    'totalStudentCoefficentCategory4' => $totalStudentCoefficientCatgory4,
+                    'totalMarkCategory4' => $totalStudentMarkCategory4,
+                    'averageCategory4' => $averageCategory4,
+
                     'absence' => $absence,
                     'decision' => $decision,
                     'motif' => $motif,
@@ -336,10 +367,10 @@ class ReportService
                 $rankedCaterory1[] = $averageCategory1;
                 $rankedCaterory2[] = $averageCategory2;
                 $rankedCaterory3[] = $averageCategory3;
+                $rankedCaterory4[] = $averageCategory4;
                
             }
 
-            
             $decision = "";
             $motif = "";
 
@@ -361,20 +392,21 @@ class ReportService
             rsort( $rankedCaterory1, SORT_NUMERIC);
             rsort( $rankedCaterory2, SORT_NUMERIC);
             rsort( $rankedCaterory3, SORT_NUMERIC);
+            rsort( $rankedCaterory4, SORT_NUMERIC);
     
-             // On ajoute les rangs de chaque élève
-             for($k = 0; $k < $numberOfStudents; $k++)
-             {
-                // si le student est non classé, on set le rang à -1
-                if($rankedStudents[$k]['moyenne'] != ConstantsClass::UNRANKED_AVERAGE)
-                {
-                    $rankedStudents[$k]['rang'] = ($k+1);
+            // On ajoute les rangs de chaque élève
+            for($k = 0; $k < $numberOfStudents; $k++)
+            {
+            // si le student est non classé, on set le rang à -1
+            if($rankedStudents[$k]['moyenne'] != ConstantsClass::UNRANKED_AVERAGE)
+            {
+                $rankedStudents[$k]['rang'] = ($k+1);
 
-                }else
-                {
-                    $rangedStudents[$k]['rang'] = ConstantsClass::UNRANKED_RANK_DB;
-                }
-             }
+            }else
+            {
+                $rangedStudents[$k]['rang'] = ConstantsClass::UNRANKED_RANK_DB;
+            }
+            }
      
         }else
         {
@@ -406,6 +438,11 @@ class ReportService
                     'totalStudentCoefficentCategory3' => 0,
                     'totalMarkCategory3' => 0,
                     'averageCategory3' => ConstantsClass::UNRANKED_AVERAGE,
+
+                    'totalCoefficentCategory4' => 0,
+                    'totalStudentCoefficentCategory4' => 0,
+                    'totalMarkCategory4' => 0,
+                    'averageCategory4' => ConstantsClass::UNRANKED_AVERAGE,
     
                     'absence' => 0,
                     'decision' => $oneStudent->getConseils(),
@@ -418,6 +455,7 @@ class ReportService
                 $rankedCaterory1[] = ConstantsClass::UNRANKED_AVERAGE;
                 $rankedCaterory2[] = ConstantsClass::UNRANKED_AVERAGE;
                 $rankedCaterory3[] = ConstantsClass::UNRANKED_AVERAGE;
+                $rankedCaterory4[] = ConstantsClass::UNRANKED_AVERAGE;
 
             }
         }
@@ -425,8 +463,9 @@ class ReportService
         $allRanked['rankedCategory1'] = $rankedCaterory1;
         $allRanked['rankedCategory2'] = $rankedCaterory2;
         $allRanked['rankedCategory3'] = $rankedCaterory3;
+        $allRanked['rankedCategory4'] = $rankedCaterory4;
         $allRanked['rankedTerm'] = $rankedStudents;
-
+        
         return $allRanked;
     }
 
@@ -843,6 +882,7 @@ class ReportService
      * @param array $rankedStudentsCategory1
      * @param array $rankedStudentsCategory2
      * @param array $rankedStudentsCategory3
+     * @param array $rankedStudentsCategory4
      * @param array $studentMarkSequence3
      * @return ReportBody
      */
@@ -856,7 +896,9 @@ class ReportService
                                         array $rankedStudentsCategory1, 
                                         array $rankedStudentsCategory2,
                                         array $rankedStudentsCategory3,  
-                                        SubSystem $subSystem, 
+                                        SubSystem $subSystem,
+                                        School $school, 
+                                        ?array $rankedStudentsCategory4 = null,  
                                         ?Term $term = null,  
                                         array $rankPerLesson = [],
                                         array $studentMarkSequence3 = []): ReportBody
@@ -866,65 +908,152 @@ class ReportService
             $reportRowGroup1 = [];
             $reportRowGroup2 = [];
             $reportRowGroup3 = [];
+            $reportRowGroup4 = [];
 
-            if($subSystem->getSubSystem() == constantsClass::FRANCOPHONE)
+            if($school->getEducation()->getEducation() == ConstantsClass::GENERAL_EDUCATION)
             {
-                // Resumé des notes du groupe 1
-                $reportSummaryGroup1 = new StudentResult();
-                $reportSummaryGroup1->setName('Formation Scientifique')
-                            ->setTotalStudentCoefficient($rankedStudents[$index]['totalStudentCoefficentCategory1'])
-                            ->setTotalClassroomCoefficient($rankedStudents[$index]['totalCoefficentCategory1'])
-                            ->setTotalMark($rankedStudents[$index]['totalMarkCategory1'])
-                            ->setMoyenne($rankedStudents[$index]['averageCategory1'])
-                            ->setRang($this->getIndex($rankedStudents[$index]['averageCategory1'], $rankedStudentsCategory1));
+                //FORMATIONS ENSEIGNEMENTS GENERAL
+                if($subSystem->getSubSystem() == constantsClass::FRANCOPHONE)
+                {
+                    // Resumé des notes du groupe 1
+                    $reportSummaryGroup1 = new StudentResult();
+                    $reportSummaryGroup1->setName('Formation Scientifique')
+                                ->setTotalStudentCoefficient($rankedStudents[$index]['totalStudentCoefficentCategory1'])
+                                ->setTotalClassroomCoefficient($rankedStudents[$index]['totalCoefficentCategory1'])
+                                ->setTotalMark($rankedStudents[$index]['totalMarkCategory1'])
+                                ->setMoyenne($rankedStudents[$index]['averageCategory1'])
+                                ->setRang($this->getIndex($rankedStudents[$index]['averageCategory1'], $rankedStudentsCategory1));
 
-                // Resumé des notes du groupe 2
-                $reportSummaryGroup2 = new StudentResult();
-                $reportSummaryGroup2->setName('Formation Littéraire')
-                            ->setTotalStudentCoefficient($rankedStudents[$index]['totalStudentCoefficentCategory2'])
-                            ->setTotalClassroomCoefficient($rankedStudents[$index]['totalCoefficentCategory2'])
-                            ->setTotalMark($rankedStudents[$index]['totalMarkCategory2'])
-                            ->setMoyenne($rankedStudents[$index]['averageCategory2'])
-                            ->setRang($this->getIndex($rankedStudents[$index]['averageCategory2'], $rankedStudentsCategory2));
-                            
-                // Resumé des notes du groupe 3
-                $reportSummaryGroup3 = new StudentResult();
-                $reportSummaryGroup3->setName('Formation Humaine')
-                            ->setTotalStudentCoefficient($rankedStudents[$index]['totalStudentCoefficentCategory3'])
-                            ->setTotalClassroomCoefficient($rankedStudents[$index]['totalCoefficentCategory3'])
-                            ->setTotalMark($rankedStudents[$index]['totalMarkCategory3'])
-                            ->setMoyenne($rankedStudents[$index]['averageCategory3'])
-                            ->setRang($this->getIndex($rankedStudents[$index]['averageCategory3'], $rankedStudentsCategory3));
-                            
-            }else
-            {
-                // Resumé des notes du groupe 1
-                $reportSummaryGroup1 = new StudentResult();
-                $reportSummaryGroup1->setName('Scientific Training ')
-                            ->setTotalStudentCoefficient($rankedStudents[$index]['totalStudentCoefficentCategory1'])
-                            ->setTotalClassroomCoefficient($rankedStudents[$index]['totalCoefficentCategory1'])
-                            ->setTotalMark($rankedStudents[$index]['totalMarkCategory1'])
-                            ->setMoyenne($rankedStudents[$index]['averageCategory1'])
-                            ->setRang($this->getIndex($rankedStudents[$index]['averageCategory1'], $rankedStudentsCategory1));
+                    // Resumé des notes du groupe 2
+                    $reportSummaryGroup2 = new StudentResult();
+                    $reportSummaryGroup2->setName('Formation Littéraire')
+                                ->setTotalStudentCoefficient($rankedStudents[$index]['totalStudentCoefficentCategory2'])
+                                ->setTotalClassroomCoefficient($rankedStudents[$index]['totalCoefficentCategory2'])
+                                ->setTotalMark($rankedStudents[$index]['totalMarkCategory2'])
+                                ->setMoyenne($rankedStudents[$index]['averageCategory2'])
+                                ->setRang($this->getIndex($rankedStudents[$index]['averageCategory2'], $rankedStudentsCategory2));
+                                
+                    // Resumé des notes du groupe 3
+                    $reportSummaryGroup3 = new StudentResult();
+                    $reportSummaryGroup3->setName('Formation Humaine')
+                                ->setTotalStudentCoefficient($rankedStudents[$index]['totalStudentCoefficentCategory3'])
+                                ->setTotalClassroomCoefficient($rankedStudents[$index]['totalCoefficentCategory3'])
+                                ->setTotalMark($rankedStudents[$index]['totalMarkCategory3'])
+                                ->setMoyenne($rankedStudents[$index]['averageCategory3'])
+                                ->setRang($this->getIndex($rankedStudents[$index]['averageCategory3'], $rankedStudentsCategory3));
+                                
+                }else
+                {
+                    // Resumé des notes du groupe 1
+                    $reportSummaryGroup1 = new StudentResult();
+                    $reportSummaryGroup1->setName('Scientific Training ')
+                                ->setTotalStudentCoefficient($rankedStudents[$index]['totalStudentCoefficentCategory1'])
+                                ->setTotalClassroomCoefficient($rankedStudents[$index]['totalCoefficentCategory1'])
+                                ->setTotalMark($rankedStudents[$index]['totalMarkCategory1'])
+                                ->setMoyenne($rankedStudents[$index]['averageCategory1'])
+                                ->setRang($this->getIndex($rankedStudents[$index]['averageCategory1'], $rankedStudentsCategory1));
 
-                // Resumé des notes du groupe 2
-                $reportSummaryGroup2 = new StudentResult();
-                $reportSummaryGroup2->setName('Literary Training ')
-                            ->setTotalStudentCoefficient($rankedStudents[$index]['totalStudentCoefficentCategory2'])
-                            ->setTotalClassroomCoefficient($rankedStudents[$index]['totalCoefficentCategory2'])
-                            ->setTotalMark($rankedStudents[$index]['totalMarkCategory2'])
-                            ->setMoyenne($rankedStudents[$index]['averageCategory2'])
-                            ->setRang($this->getIndex($rankedStudents[$index]['averageCategory2'], $rankedStudentsCategory2));
+                    // Resumé des notes du groupe 2
+                    $reportSummaryGroup2 = new StudentResult();
+                    $reportSummaryGroup2->setName('Literary Training ')
+                                ->setTotalStudentCoefficient($rankedStudents[$index]['totalStudentCoefficentCategory2'])
+                                ->setTotalClassroomCoefficient($rankedStudents[$index]['totalCoefficentCategory2'])
+                                ->setTotalMark($rankedStudents[$index]['totalMarkCategory2'])
+                                ->setMoyenne($rankedStudents[$index]['averageCategory2'])
+                                ->setRang($this->getIndex($rankedStudents[$index]['averageCategory2'], $rankedStudentsCategory2));
 
-                // Resumé des notes du groupe 3
-                $reportSummaryGroup3 = new StudentResult();
-                $reportSummaryGroup3->setName('Human Training')
-                            ->setTotalStudentCoefficient($rankedStudents[$index]['totalStudentCoefficentCategory3'])
-                            ->setTotalClassroomCoefficient($rankedStudents[$index]['totalCoefficentCategory3'])
-                            ->setTotalMark($rankedStudents[$index]['totalMarkCategory3'])
-                            ->setMoyenne($rankedStudents[$index]['averageCategory3'])
-                            ->setRang($this->getIndex($rankedStudents[$index]['averageCategory3'], $rankedStudentsCategory3));
+                    // Resumé des notes du groupe 3
+                    $reportSummaryGroup3 = new StudentResult();
+                    $reportSummaryGroup3->setName('Human Training')
+                                ->setTotalStudentCoefficient($rankedStudents[$index]['totalStudentCoefficentCategory3'])
+                                ->setTotalClassroomCoefficient($rankedStudents[$index]['totalCoefficentCategory3'])
+                                ->setTotalMark($rankedStudents[$index]['totalMarkCategory3'])
+                                ->setMoyenne($rankedStudents[$index]['averageCategory3'])
+                                ->setRang($this->getIndex($rankedStudents[$index]['averageCategory3'], $rankedStudentsCategory3));
+                }
             }
+            else
+            {
+                //FORMATIONS ENSEIGNEMENTS TECHNIQUE
+                if($subSystem->getSubSystem() == constantsClass::FRANCOPHONE)
+                {
+                    // Resumé des notes du groupe 1
+                    $reportSummaryGroup1 = new StudentResult();
+                    $reportSummaryGroup1->setName('Enseignements Généraux')
+                                ->setTotalStudentCoefficient($rankedStudents[$index]['totalStudentCoefficentCategory1'])
+                                ->setTotalClassroomCoefficient($rankedStudents[$index]['totalCoefficentCategory1'])
+                                ->setTotalMark($rankedStudents[$index]['totalMarkCategory1'])
+                                ->setMoyenne($rankedStudents[$index]['averageCategory1'])
+                                ->setRang($this->getIndex($rankedStudents[$index]['averageCategory1'], $rankedStudentsCategory1));
+
+                    // Resumé des notes du groupe 2
+                    $reportSummaryGroup2 = new StudentResult();
+                    $reportSummaryGroup2->setName('Enseignements Professionnels Pratiques')
+                                ->setTotalStudentCoefficient($rankedStudents[$index]['totalStudentCoefficentCategory2'])
+                                ->setTotalClassroomCoefficient($rankedStudents[$index]['totalCoefficentCategory2'])
+                                ->setTotalMark($rankedStudents[$index]['totalMarkCategory2'])
+                                ->setMoyenne($rankedStudents[$index]['averageCategory2'])
+                                ->setRang($this->getIndex($rankedStudents[$index]['averageCategory2'], $rankedStudentsCategory2));
+                                
+                    // Resumé des notes du groupe 3
+                    $reportSummaryGroup3 = new StudentResult();
+                    $reportSummaryGroup3->setName('Enseignements Professionnels Théoriques')
+                                ->setTotalStudentCoefficient($rankedStudents[$index]['totalStudentCoefficentCategory3'])
+                                ->setTotalClassroomCoefficient($rankedStudents[$index]['totalCoefficentCategory3'])
+                                ->setTotalMark($rankedStudents[$index]['totalMarkCategory3'])
+                                ->setMoyenne($rankedStudents[$index]['averageCategory3'])
+                                ->setRang($this->getIndex($rankedStudents[$index]['averageCategory3'], $rankedStudentsCategory3));
+                                
+                     // Resumé des notes du groupe 4
+                    $reportSummaryGroup4 = new StudentResult();
+                    $reportSummaryGroup4->setName('Enseignements Complémentaires')
+                                ->setTotalStudentCoefficient($rankedStudents[$index]['totalStudentCoefficentCategory4'])
+                                ->setTotalClassroomCoefficient($rankedStudents[$index]['totalCoefficentCategory4'])
+                                ->setTotalMark($rankedStudents[$index]['totalMarkCategory4'])
+                                ->setMoyenne($rankedStudents[$index]['averageCategory4'])
+                                ->setRang($this->getIndex($rankedStudents[$index]['averageCategory4'], $rankedStudentsCategory4));
+                             
+                }else
+                {
+                    // Resumé des notes du groupe 1
+                    $reportSummaryGroup1 = new StudentResult();
+                    $reportSummaryGroup1->setName('General Training ')
+                                ->setTotalStudentCoefficient($rankedStudents[$index]['totalStudentCoefficentCategory1'])
+                                ->setTotalClassroomCoefficient($rankedStudents[$index]['totalCoefficentCategory1'])
+                                ->setTotalMark($rankedStudents[$index]['totalMarkCategory1'])
+                                ->setMoyenne($rankedStudents[$index]['averageCategory1'])
+                                ->setRang($this->getIndex($rankedStudents[$index]['averageCategory1'], $rankedStudentsCategory1));
+
+                    // Resumé des notes du groupe 2
+                    $reportSummaryGroup2 = new StudentResult();
+                    $reportSummaryGroup2->setName('Theoretical professional Training ')
+                                ->setTotalStudentCoefficient($rankedStudents[$index]['totalStudentCoefficentCategory2'])
+                                ->setTotalClassroomCoefficient($rankedStudents[$index]['totalCoefficentCategory2'])
+                                ->setTotalMark($rankedStudents[$index]['totalMarkCategory2'])
+                                ->setMoyenne($rankedStudents[$index]['averageCategory2'])
+                                ->setRang($this->getIndex($rankedStudents[$index]['averageCategory2'], $rankedStudentsCategory2));
+
+                    // Resumé des notes du groupe 3
+                    $reportSummaryGroup3 = new StudentResult();
+                    $reportSummaryGroup3->setName('Pratical vocational Training')
+                                ->setTotalStudentCoefficient($rankedStudents[$index]['totalStudentCoefficentCategory3'])
+                                ->setTotalClassroomCoefficient($rankedStudents[$index]['totalCoefficentCategory3'])
+                                ->setTotalMark($rankedStudents[$index]['totalMarkCategory3'])
+                                ->setMoyenne($rankedStudents[$index]['averageCategory3'])
+                                ->setRang($this->getIndex($rankedStudents[$index]['averageCategory3'], $rankedStudentsCategory3));
+                    
+                    // Resumé des notes du groupe 4
+                    $reportSummaryGroup4 = new StudentResult();
+                    $reportSummaryGroup4->setName('Complementary Training')
+                                ->setTotalStudentCoefficient($rankedStudents[$index]['totalStudentCoefficentCategory4'])
+                                ->setTotalClassroomCoefficient($rankedStudents[$index]['totalCoefficentCategory4'])
+                                ->setTotalMark($rankedStudents[$index]['totalMarkCategory4'])
+                                ->setMoyenne($rankedStudents[$index]['averageCategory4'])
+                                ->setRang($this->getIndex($rankedStudents[$index]['averageCategory4'], $rankedStudentsCategory4));
+                
+                }
+            }
+            
                 
             // On recupère la position du student dans le tableau $studentMarkTerm
             $position = $this->getPosition($studentMarkTerm, $rankedStudents, $index);
@@ -1120,41 +1249,100 @@ class ReportService
 
                     }
                 }
-                
-                switch ($studentMarkSequence1[$j]->getLesson()->getSubject()->getCategory()->getCategory()) 
-                {
-                    case ConstantsClass::CATEGORY1:
-                        $reportRowGroup1[] = $reportRow;
-                        break;
-                    
-                    case ConstantsClass::CATEGORY2:
-                        $reportRowGroup2[] = $reportRow;
-                        break;
 
-                    case ConstantsClass::CATEGORY3:
-                        $reportRowGroup3[] = $reportRow;
-                        break;
+                if($school->getEducation()->getEducation() == ConstantsClass::GENERAL_EDUCATION)
+                {
+                    switch ($studentMarkSequence1[$j]->getLesson()->getSubject()->getCategory()->getCategory()) 
+                    {
+                        case ConstantsClass::CATEGORY_1:
+                            $reportRowGroup1[] = $reportRow;
+                            break;
+                        
+                        case ConstantsClass::CATEGORY_2:
+                            $reportRowGroup2[] = $reportRow;
+                            break;
+
+                        case ConstantsClass::CATEGORY_3:
+                            $reportRowGroup3[] = $reportRow;
+                            break;
+                    }
                 }
+                else
+                {
+                    switch ($studentMarkSequence1[$j]->getLesson()->getSubject()->getCategory()->getCategory()) 
+                    {
+                        case ConstantsClass::CATEGORY_1_TECH:
+                            $reportRowGroup1[] = $reportRow;
+                            break;
+                        
+                        case ConstantsClass::CATEGORY_2_TECH:
+                            $reportRowGroup2[] = $reportRow;
+                            break;
+
+                        case ConstantsClass::CATEGORY_3_TECH:
+                            $reportRowGroup3[] = $reportRow;
+                            break;
+
+                        case ConstantsClass::CATEGORY_4_TECH:
+                            $reportRowGroup4[] = $reportRow;
+                            break;
+                    }
+                }
+                
+                
             }
 
             $reportBody = new ReportBody();
-            return $reportBody->setRowsGroup1($reportRowGroup1)
+
+            if($school->getEducation()->getEducation() == ConstantsClass::GENERAL_EDUCATION)
+            {
+                return $reportBody->setRowsGroup1($reportRowGroup1)
                         ->setRowsGroup2($reportRowGroup2)
                         ->setRowsGroup3($reportRowGroup3)
+                        ->setRowsGroup4($reportRowGroup4)
                         ->setSummaryGroup1($reportSummaryGroup1)
                         ->setSummaryGroup2($reportSummaryGroup2)
                         ->setSummaryGroup3($reportSummaryGroup3);
-                        
+            }
+            else
+            {
+                return $reportBody->setRowsGroup1($reportRowGroup1)
+                        ->setRowsGroup2($reportRowGroup2)
+                        ->setRowsGroup3($reportRowGroup3)
+                        ->setRowsGroup4($reportRowGroup4)
+                        ->setSummaryGroup1($reportSummaryGroup1)
+                        ->setSummaryGroup2($reportSummaryGroup2)
+                        ->setSummaryGroup3($reportSummaryGroup3)
+                        ->setSummaryGroup4($reportSummaryGroup4);
+            }
+                     
         }else
         {
             $reportBody = new ReportBody();
 
-            return $reportBody->setRowsGroup1([])
+            if($school->getEducation()->getEducation() == ConstantsClass::GENERAL_EDUCATION)
+            {
+                return $reportBody->setRowsGroup1([])
                         ->setRowsGroup2([])
                         ->setRowsGroup3([])
                         ->setSummaryGroup1(new StudentResult())
                         ->setSummaryGroup2(new StudentResult())
-                        ->setSummaryGroup3(new StudentResult());
+                        ->setSummaryGroup3(new StudentResult())
+                        ;
+            }
+            else
+            {
+                return $reportBody->setRowsGroup1([])
+                        ->setRowsGroup2([])
+                        ->setRowsGroup3([])
+                        ->setRowsGroup4([])
+                        ->setSummaryGroup1(new StudentResult())
+                        ->setSummaryGroup2(new StudentResult())
+                        ->setSummaryGroup3(new StudentResult())
+                        ->setSummaryGroup4(new StudentResult())
+                        ;
+            }
+            
         }
        
     }
@@ -1171,7 +1359,6 @@ class ReportService
     public function getStudentReportFooter(array $studentResults, ClassroomProfile $reportClassroomProfile, Term $term): ReportFooter
     {   
         // on construit la partie des résultats de l'élève
-        // dd($studentResults);
         $reportResult = new StudentResult();
         
         $reportResult->setTotalStudentCoefficient($studentResults['totalStudentCoefficient'])
@@ -1187,64 +1374,31 @@ class ReportService
     
         switch($term->getTerm())
         {
-            case 1: 
-                // Pas de rappel au trimestre 1 
+            case 1:
+                // Pas de rappel au trimestre 1.
             break;
 
             case 2:
-                // Moyenne et rang du trimestre 1
-                $report1 = $this->reportRepository->findOneBy([
-                    'student' => $studentResults['student'],
-                    'term' => $this->termRepository->findOneBy(['term' => 1])
-                ]);
-
-                $reportRemember->setMoyenneTerm1($report1->getMoyenne())
-                        ->setRank1($report1->getRang())
+                $reportRemember->setMoyenneTerm1($this->getSavedAverage($studentResults['student'], 1))
+                    ->setRank1($this->getSavedRank($studentResults['student'], 1))
                 ;
             break;
 
             case 3:
-                // Moyenne et rang du trimestre 2
-                $report2 = $this->reportRepository->findOneBy([
-                    'student' => $studentResults['student'],
-                    'term' => $this->termRepository->findOneBy(['term' => 2])
-                ]);
-                // Moyenne et rang du trimestre 1
-                $report1 = $this->reportRepository->findOneBy([
-                    'student' => $studentResults['student'],
-                    'term' => $this->termRepository->findOneBy(['term' => 1])
-                ]);
-
-                $reportRemember->setMoyenneTerm1($report1->getMoyenne())
-                        ->setRank1($report1->getRang())
-                        ->setMoyenneTerm2($report2->getMoyenne())
-                        ->setRank2($report2->getRang())
+                $reportRemember->setMoyenneTerm1($this->getSavedAverage($studentResults['student'], 1))
+                    ->setRank1($this->getSavedRank($studentResults['student'], 1))
+                    ->setMoyenneTerm2($this->getSavedAverage($studentResults['student'], 2))
+                    ->setRank2($this->getSavedRank($studentResults['student'], 2))
                 ;
             break;
 
             case 0:
-                // Moyenne et rang du trimestre 3
-                $report3 = $this->reportRepository->findOneBy([
-                    'student' => $studentResults['student'],
-                    'term' => $this->termRepository->findOneBy(['term' => 3])
-                ]);
-                // Moyenne et rang du trimestre 2
-                $report2 = $this->reportRepository->findOneBy([
-                    'student' => $studentResults['student'],
-                    'term' => $this->termRepository->findOneBy(['term' => 2])
-                ]);
-                // Moyenne et rang du trimestre 1
-                $report1 = $this->reportRepository->findOneBy([
-                    'student' => $studentResults['student'],
-                    'term' => $this->termRepository->findOneBy(['term' => 1])
-                ]);
-    
-                $reportRemember->setMoyenneTerm1($report1->getMoyenne())
-                        ->setRank1($report1->getRang())
-                        ->setMoyenneTerm2($report2->getMoyenne())
-                        ->setRank2($report2->getRang())
-                        ->setMoyenneTerm3($report3->getMoyenne())
-                        ->setRank3($report3->getRang())
+                $reportRemember->setMoyenneTerm1($this->getSavedAverage($studentResults['student'], 1))
+                    ->setRank1($this->getSavedRank($studentResults['student'], 1))
+                    ->setMoyenneTerm2($this->getSavedAverage($studentResults['student'], 2))
+                    ->setRank2($this->getSavedRank($studentResults['student'], 2))
+                    ->setMoyenneTerm3($this->getSavedAverage($studentResults['student'], 3))
+                    ->setRank3($this->getSavedRank($studentResults['student'], 3))
                 ;
             break;
         }
@@ -1372,7 +1526,7 @@ class ReportService
 
         foreach($trimestres as $moyenne)
         {
-            if ($moyenne !== -1)
+            if ($moyenne != ConstantsClass::UNRANKED_AVERAGE)
             {
                 $somme += $moyenne;
                 $compteur++;
@@ -1382,13 +1536,14 @@ class ReportService
         if ($compteur === 0) 
         {
             //aucun trimestre valide
-            return null;
+            return 0;
         }
-
+      
         //moyenne arrondi à 2
         return round($somme / $compteur, 2);
     }
 
+   
 
     /**
      * Détermine s'il y a blâme conduite
@@ -1488,6 +1643,21 @@ class ReportService
     }
 
 
+    /**
+     * 
+     * Impression du bulletin
+     * 
+     * @param \App\Entity\School $school
+     * @param array $allStudentReports
+     * @param int $numberOfLessons
+     * @param \App\Entity\Term $term
+     * @param \App\Entity\SchoolYear $schoolYear
+     * @param int $numberOfStudents
+     * @param int $numberOfBoys
+     * @param int $numberOfGirls
+     * @param \App\Entity\SubSystem $subSystem
+     * @return PDF
+     */
     public function printReport(School $school, array $allStudentReports, int $numberOfLessons, 
     Term $term, SchoolYear $schoolYear, int $numberOfStudents, int $numberOfBoys, int $numberOfGirls, 
     SubSystem $subSystem)
@@ -1641,10 +1811,10 @@ class ReportService
                     if ($student->getRepeater()->getRepeater() == ConstantsClass::REPEATER_NO) 
                     {
                         $pdf->Cell(10, $cellHeaderStudentHeight, "Non", 0, 0, 'L');
-                        $pdf->Image('build/custom/images/unchecked.png', 105, 65.5, 4, 4) ;
+                        $pdf->Image('build/custom/images/checked.png', 105, 65.5, 4, 4) ;
                         
                         $pdf->Cell(20, $cellHeaderStudentHeight, "Oui", 0, 0, 'R');
-                        $pdf->Image('build/custom/images/checked.png', 135, 65.5, 4, 4) ;
+                        $pdf->Image('build/custom/images/unchecked.png', 135, 65.5, 4, 4) ;
                         $pdf->Cell(10, $cellHeaderStudentHeight, '', 0, 1, 'L');
                         
                     }else
@@ -1722,10 +1892,10 @@ class ReportService
                     if ($student->getRepeater()->getRepeater() == ConstantsClass::REPEATER_NO) 
                     {
                         $pdf->Cell(10, $cellHeaderStudentHeight, "Non", 0, 0, 'L');
-                        $pdf->Image('build/custom/images/unchecked.png', 105, 65.5, 4, 4) ;
+                        $pdf->Image('build/custom/images/checked.png', 105, 65.5, 4, 4) ;
                         
                         $pdf->Cell(20, $cellHeaderStudentHeight, "Oui", 0, 0, 'R');
-                        $pdf->Image('build/custom/images/checked.png', 135, 65.5, 4, 4) ;
+                        $pdf->Image('build/custom/images/unchecked.png', 135, 65.5, 4, 4) ;
                         $pdf->Cell(10, $cellHeaderStudentHeight, '', 0, 1, 'L');
                         
                     }else
@@ -1777,7 +1947,8 @@ class ReportService
                 if($student->getPhoto())
                 {
                     $pdf->Image('images/students/'.$student->getPhoto(), 15, 52, 25, 25);
-                }else
+                }
+                else
                 {
                     if($student->getSex()->getSex() == 'F')
                     {
@@ -1802,19 +1973,19 @@ class ReportService
                 {
                     if ($subSystem->getSubSystem() == ConstantsClass::FRANCOPHONE) 
                     {
-                        $qrCode = $this->qrCodeService->qrcode($school->getFrenchName()." : Ce bulletin appartient à l'élève : ".$student->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber()).", Année Scolaire : ".$schoolYear->getSchoolYear().", Classe : ".$student->getClassroom()->getClassroom());
+                        $qrCode = $this->qrCodeService->qrcode(($school->getFrenchName()." : Ce bulletin appartient à l'élève : ".$student->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber()).", Année Scolaire : ".$schoolYear->getSchoolYear().", Classe : ".$student->getClassroom()->getClassroom()), $student->getSlug(), $school);
         
-                        $qrCodeFiche = $this->qrCodeService->qrcode($school->getFrenchName()." : Cette fiche appartient à l'élève : ".$student->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber())." Année Scolaire : ".$schoolYear->getSchoolYear().", Classe : ".$student->getClassroom()->getClassroom());
+                        $qrCodeFiche = $this->qrCodeService->qrcode(($school->getFrenchName()." : Cette fiche appartient à l'élève : ".$student->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber())." Année Scolaire : ".$schoolYear->getSchoolYear().", Classe : ".$student->getClassroom()->getClassroom()), $student->getSlug(), $school);
                         
-                        $qrCodeRollOfHonor = $this->qrCodeService->qrcode($school->getFrenchName()." : Ce TABLEAU D'HONNEUR appartient à l'élève : ".$student->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber()).", Année Scolaire : ".$schoolYear->getSchoolYear().", Classe : ".$student->getClassroom()->getClassroom());
+                        $qrCodeRollOfHonor = $this->qrCodeService->qrcode(($school->getFrenchName()." : Ce TABLEAU D'HONNEUR appartient à l'élève : ".$student->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber()).", Année Scolaire : ".$schoolYear->getSchoolYear().", Classe : ".$student->getClassroom()->getClassroom()), $student->getSlug(), $school);
         
                     } else 
                     {
-                        $qrCode = $this->qrCodeService->qrcode($school->getEnglishName()." : This report belongs to the student : ".$student->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber()).", School Year : ".$schoolYear->getSchoolYear().", Classroom : ".$student->getClassroom()->getClassroom());
+                        $qrCode = $this->qrCodeService->qrcode(($school->getEnglishName()." : This report belongs to the student : ".$student->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber()).", School Year : ".$schoolYear->getSchoolYear().", Classroom : ".$student->getClassroom()->getClassroom()), $student->getSlug(), $school);
         
-                        $qrCodeFiche = $this->qrCodeService->qrcode($school->getEnglishName()." : This sheet belongs to the student : ".$student->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber()).", School Year  : ".$schoolYear->getSchoolYear().", Classroom : ".$student->getClassroom()->getClassroom());
+                        $qrCodeFiche = $this->qrCodeService->qrcode(($school->getEnglishName()." : This sheet belongs to the student : ".$student->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber()).", School Year  : ".$schoolYear->getSchoolYear().", Classroom : ".$student->getClassroom()->getClassroom()), $student->getSlug(), $school);
                     
-                        $qrCodeRollOfHonor = $this->qrCodeService->qrcode($school->getEnglishName()." : This roll of honor belongs to the student: ".$student->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber()).", School Year  : ".$schoolYear->getSchoolYear().", Classroom : ".$student->getClassroom()->getClassroom());
+                        $qrCodeRollOfHonor = $this->qrCodeService->qrcode(($school->getEnglishName()." : This roll of honor belongs to the student: ".$student->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber()).", School Year  : ".$schoolYear->getSchoolYear().", Classroom : ".$student->getClassroom()->getClassroom()), $student->getSlug(), $school);
         
                     }
 
@@ -1828,7 +1999,9 @@ class ReportService
                     $pdf->Cell(25, 5, $pdf->Image('images/qrcode/'.$student->getQrCode(), 175, 52, 25, 25) , 0, 1, 'C', 0);
 
 
-                } else {
+                } 
+                else 
+                {
                     // Le fichier existe, vous pouvez l'utiliser directement
                     // par exemple : retourner le chemin du fichier ou afficher l'image
                     $pdf->Cell(25, 5, $pdf->Image('images/qrcode/'.$student->getQrCode(), 175, 52, 25, 25) , 0, 1, 'C', 0);
@@ -2017,6 +2190,12 @@ class ReportService
                 // Groupe 3
                 $pdf = $this->displayMarkGroup($reportBody->getRowsGroup3(), $reportBody->getSummaryGroup3(), $pdf, $fontSize, $cellSubjectWidth, $cellTableBodyHeight, $term, $cellSkillWidth, $cellEvaluationWidth, $cellAverageWidth, $cellCoefficientWidth, $cellTotalWidth, $cellRankWidth, $cellAppreciationWidth, $cellRecapNameWidth, $cellRecapTotalCoefficientWidth, $cellRecapTotalMarkWidth, $cellRecapAverageWidth, $cellRecapRankWidth, $student, $subSystem, $schoolYear);
 
+                if($school->getEducation()->getEducation() == ConstantsClass::TECHNICAL_EDUCATION)
+                {
+                    // Groupe 4
+                    $pdf = $this->displayMarkGroup($reportBody->getRowsGroup4(), $reportBody->getSummaryGroup4(), $pdf, $fontSize, $cellSubjectWidth, $cellTableBodyHeight, $term, $cellSkillWidth, $cellEvaluationWidth, $cellAverageWidth, $cellCoefficientWidth, $cellTotalWidth, $cellRankWidth, $cellAppreciationWidth, $cellRecapNameWidth, $cellRecapTotalCoefficientWidth, $cellRecapTotalMarkWidth, $cellRecapAverageWidth, $cellRecapRankWidth, $student, $subSystem, $schoolYear);
+                }
+                
                 $pdf->Cell(0, 2, '', 0, 1, 'C');
 
                 // Pied de bulletin
@@ -2058,7 +2237,9 @@ class ReportService
                 else
                 {
                     $totalMark = $this->generalService->formatMark($reportResult->getTotalMark());
+
                     $moyenne = $this->generalService->formatMark($reportResult->getMoyenne());
+
                     // $rang = $this->generalService->formatRank($reportResult->getRang(), $student->getSex()->getSex());
 
                     $eleve = $this->reportRepository->findBy(
@@ -2800,7 +2981,14 @@ class ReportService
                     //$pdf->Cell($w02, $cellTableBodyHeight, '', 'LR', 2, 'C');
                 //}
                 //$pdf->Cell($w02, $cellTableBodyHeight, '', 'LR', 2, 'C');
-                $pdf->Cell($w02, $cellTableBodyHeight, '', 'LBR', 2, 'C');
+                if($school->getEducation()->getEducation() == ConstantsClass::GENERAL_EDUCATION)
+                {
+                    $pdf->Cell($w02, $cellTableBodyHeight, '', 'LBR', 2, 'C');
+                }
+                else
+                {
+                    $pdf->Cell($w02, $cellTableBodyHeight-2.5, '', 'LBR', 2, 'C');
+                }
                 
                 $pdf->setXY($x1+$space, $y1);
 
@@ -2823,7 +3011,15 @@ class ReportService
                 }
                 
                 //$pdf->Cell($w03, $cellTableBodyHeight, '', 'LR', 2, 'C');
-                $pdf->Cell($w03, $cellTableBodyHeight, '', 'LBR', 2, 'C');
+                
+                if($school->getEducation()->getEducation() == ConstantsClass::GENERAL_EDUCATION)
+                {
+                    $pdf->Cell($w03, $cellTableBodyHeight, '', 'LBR', 2, 'C');
+                }
+                else
+                {
+                    $pdf->Cell($w03, $cellTableBodyHeight-2.5, '', 'LBR', 2, 'C');
+                }
 
                 $pdf->setXY($x+$space, $y);
                 
@@ -2852,10 +3048,13 @@ class ReportService
                             $decisionConseil = "Attendu au rattrapage ";
                             break;
                         case ConstantsClass::DECISION_REAPETED_IF_FAILED:
-                            $decisionConseil = "Redouble si échec" . $student->getNextClassroomName();
+                            $decisionConseil = "Redouble ".$student->getNextClassroomName()." si échec";
                             break;
                         case ConstantsClass::DECISION_EXPELLED_IF_FAILED:
                             $decisionConseil = "Exclu si échec pour " . $student->getMotif();
+                            break;
+                        case ConstantsClass::DECISION_RESIGNED:
+                            $decisionConseil = "DEMISSIONNAIRE";
                             break;
                     }
                 } 
@@ -2880,7 +3079,16 @@ class ReportService
                 $pdf->Ln();
 
                 $pdf->Cell($w01+$space);
-                $pdf->Cell($w04, $cellTableBodyHeight, '', 'LR', 2, 'C');
+
+                if($school->getEducation()->getEducation() == ConstantsClass::GENERAL_EDUCATION)
+                {
+                    $pdf->Cell($w04, $cellTableBodyHeight, '', 'LR', 2, 'C');
+                }
+                else
+                {
+                    $pdf->Cell($w04, $cellTableBodyHeight-2.5, '', 'LR', 2, 'C');
+                }
+                
 
                 if ($classroom->isIsDeliberated() && $term->getTerm() == ConstantsClass::ANNUEL_TERM) 
                 {
@@ -2953,8 +3161,16 @@ class ReportService
                     }
                 }
 
+                if($school->getEducation()->getEducation() == ConstantsClass::GENERAL_EDUCATION)
+                {
+                    $pdf->Cell($w05, $cellTableBodyHeight, '', 'LR', 2, 'C');
+                }
+                else
+                {
+                    $pdf->Cell($w05, $cellTableBodyHeight-2.5, '', 'LR', 2, 'C');
+                }
+                
 
-                $pdf->Cell($w05, $cellTableBodyHeight, '', 'LR', 2, 'C');
                 $pdf->SetFont('Times', '', $fontSize);
 
                 if($subSystem->getSubSystem() == constantsClass::FRANCOPHONE)
@@ -2973,16 +3189,30 @@ class ReportService
                 $pdf->Cell($w05, $cellTableBodyHeight+2, '', 'LBR', 1, 'C');
 
                 #légende
-                $pdf->SetFont('Times', '', $fontSize-3.2);
-                if($subSystem->getSubSystem() == constantsClass::FRANCOPHONE)
+                if($school->getEducation()->getEducation() == ConstantsClass::GENERAL_EDUCATION)
                 {
-                    $pdf->Cell(0, $cellTableBodyHeight-3, utf8_decode('CTBA = Compétences très bien acquises, CBA = Compétences bien acquises, CA = Compétences acquises, CMA = Compétences moyennement acquises, CNA = Compétences non acquises'), 0, 2, 'L');
+                    $pdf->SetFont('Times', '', $fontSize-3.2);
+                    if($subSystem->getSubSystem() == constantsClass::FRANCOPHONE)
+                    {
+                        $pdf->Cell(0, $cellTableBodyHeight-4, utf8_decode('CTBA = Compétences très bien acquises, CBA = Compétences bien acquises, CA = Compétences acquises, CMA = Compétences moyennement acquises, CNA = Compétences non acquises'), 0, 2, 'L');
+                    }
+                    else
+                    {
+                        $pdf->Cell(0, $cellTableBodyHeight-4, utf8_decode('CVWA = Competences Very Well CWA = Acquired, Competences Well Acquired, CA = Competences Acquired, CAA = Competences Averagely Acquired, CNA = Competences Not Acquired'), 0, 2, 'L');
+                    }
                 }
-                else
-                {
-                    $pdf->Cell(0, $cellTableBodyHeight-3, utf8_decode('CVWA = Competences Very Well CWA = Acquired, Competences Well Acquired, CA = Competences Acquired, CAA = Competences Averagely Acquired, CNA = Competences Not Acquired'), 0, 2, 'L');
-                }
-
+                // else
+                // {
+                //     $pdf->SetFont('Times', '', $fontSize-4.2);
+                //     if($subSystem->getSubSystem() == constantsClass::FRANCOPHONE)
+                //     {
+                //         $pdf->Cell(0, $cellTableBodyHeight-5, utf8_decode('CTBA = Compétences très bien acquises, CBA = Compétences bien acquises, CA = Compétences acquises, CMA = Compétences moyennement acquises, CNA = Compétences non acquises'), 0, 2, 'L');
+                //     }
+                //     else
+                //     {
+                //         $pdf->Cell(0, $cellTableBodyHeight-5, utf8_decode('CVWA = Competences Very Well CWA = Acquired, Competences Well Acquired, CA = Competences Acquired, CAA = Competences Averagely Acquired, CNA = Competences Not Acquired'), 0, 2, 'L');
+                //     }
+                // }
                 
             }
 
@@ -3170,18 +3400,31 @@ class ReportService
                 else
                 {
                     $pdf->Cell($cellAppreciationWidth, $cellTableBodyHeight, utf8_decode($reportRow->getAppreciationEn()), 1, 1, 'L');
-
                 }
                 
             }else
             {
-                $pdf->Cell($cellTotalWidth, $cellTableBodyHeight, '/', 1, 0, 'C');
+                if($term->getTerm() != ConstantsClass::ANNUEL_TERM)
+                {
+                    $pdf->Cell($cellTotalWidth, $cellTableBodyHeight, '/', 1, 0, 'C');
 
-                $pdf->SetFont('Times', '', $fontSize);
-                $pdf->Cell($cellRankWidth, $cellTableBodyHeight, '/', 1, 0, 'C');
-                $pdf->Cell($cellRankWidth, $cellTableBodyHeight, '/', 1, 0, 'C');
-                $pdf->Cell($cellRankWidth, $cellTableBodyHeight, '/', 1, 0, 'C');
-                $pdf->Cell($cellAppreciationWidth, $cellTableBodyHeight, '/', 1, 1, 'L');
+                    $pdf->SetFont('Times', '', $fontSize);
+                    $pdf->Cell($cellRankWidth, $cellTableBodyHeight, '/', 1, 0, 'C');
+                    $pdf->Cell($cellRankWidth, $cellTableBodyHeight, '/', 1, 0, 'C');
+                    $pdf->Cell($cellRankWidth, $cellTableBodyHeight, '/', 1, 0, 'C');
+                    $pdf->Cell($cellAppreciationWidth, $cellTableBodyHeight, '/', 1, 1, 'C');
+                }
+                else
+                {
+                    $pdf->Cell($cellTotalWidth-5, $cellTableBodyHeight, '/', 1, 0, 'C');
+
+                    $pdf->SetFont('Times', '', $fontSize);
+                    $pdf->Cell($cellRankWidth-5, $cellTableBodyHeight, '/', 1, 0, 'C');
+                    $pdf->Cell($cellRankWidth, $cellTableBodyHeight, '/', 1, 0, 'C');
+                    $pdf->Cell($cellRankWidth, $cellTableBodyHeight, '/', 1, 0, 'C');
+                    $pdf->Cell($cellAppreciationWidth, $cellTableBodyHeight, '/', 1, 1, 'C');
+                }
+                
 
             }
             
@@ -3191,7 +3434,7 @@ class ReportService
 
         $pdf->SetFont('Times', 'B', $fontSize-1);
 
-        $pdf->Cell($cellRecapNameWidth, $cellTableBodyHeight, utf8_decode($reportResult->getName()), 'LTB', 0, 'C', true);
+        $pdf->Cell($cellRecapNameWidth, $cellTableBodyHeight, utf8_decode($reportResult->getName()), 'LTB', 0, 'L', true);
     
         $pdf->Cell($cellRecapTotalCoefficientWidth, $cellTableBodyHeight, 'Total Coef : '.$reportResult->getTotalStudentCoefficient().' / '.$reportResult->getTotalClassroomCoefficient(), 'TB', 0, 'C', true);
 
@@ -3276,7 +3519,7 @@ class ReportService
     /**
      * Imprime les cartes scolaires
      */
-    public function printStudentCard(array $students, School $school, SchoolYear $schoolYear, Classroom $selectedClassroom, SubSystem $subSystem): NoFooter
+    public function printStudentCard(School $school, SchoolYear $schoolYear, Classroom $selectedClassroom, SubSystem $subSystem, ?array $students = null,  ?Student $student = null): NoFooter
     {
         $pdf = new NoFooter();
         $pdf->SetAutoPageBreak(false);
@@ -3316,35 +3559,395 @@ class ReportService
         $x0 = $pdf->GetX();
         $y0 = $pdf->GetY();
 
-
-        foreach ($students as $student) 
+        if(count($students) > 0)
         {
-            $i++;
-
-            if($i >= 6)
+            foreach ($students as $student) 
             {
-                $escape = $totalCellWidth + $space;
-            }
+                $i++;
 
+                if($i >= 6)
+                {
+                    $escape = $totalCellWidth + $space;
+                }
+
+                $pdf->SetFont('Times', 'B', 5);
+                $x = $pdf->GetX();
+                $y = $pdf->GetY();
+        
+                // Logo de l'établissement et filigrane et signature
+                $pdf->Image('images/school/'.$school->getLogo(), $xLogo, $yLogo, $logoSize);
+                $pdf->Image('images/school/'.$school->getFiligree(), $xFiligree, $yFiligree, $filigreeSize); 
+
+                $pdf->Image('build/custom/images/signature2.png', $xStamp, $yStamp, $stampSize);
+                
+                // Photo de l'élève
+                if($student->getPhoto())
+                {
+                    $pdf->Image('images/students/'.$student->getPhoto(), $xPhoto-3, $yPhoto, 20,20);
+                }
+                else
+                {
+                    $pdf->Image('images/students/defaultPhoto.jpg', $xPhoto-3, $yPhoto, 20,20);
+                } 
+        
+                $pdf->setXY($x, $y);
+
+                // partie administrative french
+                $pdf->Cell($cellWidth, $cellHeight, utf8_decode($school->getFrenchCountry()), 0, 0, 'C');
+                $x = $pdf->GetX();
+                $y = $pdf->GetY();
+                $pdf->Ln();
+
+                $pdf = $this->generalService->escapeNoFooter($pdf, $escape);
+
+                $pdf->Cell($cellWidth, $cellHeight, utf8_decode($school->getFrenchCountryMotto()), 0, 2, 'C');
+                $pdf->SetFont('Times', 'B', 3.5);
+                $pdf->Cell($cellWidth, $cellHeight, utf8_decode($school->getFrenchMinister()), 0, 2, 'L');
+                // $pdf->SetFont('Times', 'B', 3.5);
+                $pdf->Cell($cellWidth, $cellHeight, utf8_decode($school->getFrenchName()), 0, 2, 'C');
+                // $pdf->SetFont('Times', 'B', 2.8);
+                $pdf->Cell($cellWidth, $cellHeight, '', 0, 1, 'C');
+
+                $pdf = $this->generalService->escapeNoFooter($pdf, $escape);
+
+                $pdf->SetFont('Times', 'B', 5);
+
+                $pdf->SetXY($x, $y);
+                $pdf->Cell($cellWidth, $cellHeight, '', 0, 0, 'C');
+
+                // partie administrative english
+                $pdf->Cell($cellWidth, $cellHeight, utf8_decode($school->getEnglishCountry()), 0, 2, 'C');
+                $pdf->Cell($cellWidth, $cellHeight, utf8_decode($school->getEnglishCountryMotto()), 0, 2, 'C');
+                $pdf->SetFont('Times', 'B', 3.5);
+                $pdf->Cell($cellWidth, $cellHeight, utf8_decode($school->getEnglishMinister()), 0, 2, 'C');
+                //  $pdf->SetFont('Times', 'B', 5);
+                $pdf->Cell($cellWidth, $cellHeight, utf8_decode($school->getEnglishName()), 0, 2, 'C');
+                //  $pdf->SetFont('Times', 'B', 2.8);
+                $pdf->Cell($cellWidth, $cellHeight, '', 0, 1, 'C');
+
+                $pdf = $this->generalService->escapeNoFooter($pdf, $escape);
+
+                //  bande vert rouge jaune
+                $pdf->Cell(3, $cellHeight, '', 0, 0, 'C');
+                $pdf->SetFillColor(0,128,0);
+                $pdf->Cell($cellWidth-2, $cellHeight, '', 0, 0, 'C', true);
+                $pdf->SetFillColor(255,0,0);
+                $pdf->Cell($cellWidth-2, $cellHeight, '', 0, 0, 'C', true);
+                $pdf->SetFillColor(255,219,0);
+                $pdf->Cell($cellWidth-2, $cellHeight, '', 0, 0, 'C', true);
+                $pdf->Cell(3, $cellHeight, '', 0, 1, 'C');
+
+                $pdf = $this->generalService->escapeNoFooter($pdf, $escape);
+
+                $x = $pdf->GetX();
+                $y = $pdf->GetY();
+
+                $pdf->Image('build/custom/images/etoile.PNG', $xYellowStar, $yYellowStar, $yellowStarSize);
+
+                $pdf->SetFont('Times', 'B', 6.5);
+                $pdf->SetTextColor(0, 0, 255);
+
+                $pdf->SetXY($x, $y);
+
+                // nom établissement
+                $pdf->Cell($totalCellWidth, $cellHeight/3, '', 0, 1, 'C');
+
+                $pdf = $this->generalService->escapeNoFooter($pdf, $escape);
+
+                $pdf->Cell($totalCellWidth, $cellHeight, utf8_decode($school->getFrenchName()).' / '.utf8_decode($school->getEnglishName()), 0, 1, 'C');
+
+                $pdf = $this->generalService->escapeNoFooter($pdf, $escape);
+
+                // BP et téléphone
+                $pdf->SetTextColor(0, 0, 0);
+                $pdf->SetFont('Times', 'B', 4);
+                $pdf->Cell($totalCellWidth, $cellHeight/3, 'B.P : '.utf8_decode($school->getPobox()).'  Tel : '.$school->getTelephone(), 0, 1, 'C');
+
+                $pdf = $this->generalService->escapeNoFooter($pdf, $escape);
+
+                $pdf->Cell($totalCellWidth, $cellHeight/3, '', 0, 1, 'C');
+
+                $pdf = $this->generalService->escapeNoFooter($pdf, $escape);
+
+                $pdf->SetFont('Times', 'B', 6);
+                $pdf->SetTextColor(255, 255, 255);
+                $pdf->SetFillColor(0,127,127);
+                
+                // cadre titre
+                $pdf->Cell($cellWidth/2+7, $cellHeight, '', 0, 0, 'C');
+                $pdf->Cell($cellWidth*2-7, $cellHeight, utf8_decode("CARTE D'IDENTITE SCOLAIRE"), 0, 0, 'C', true);
+
+                $pdf->SetFont('Times', 'B', 4);
+                $pdf->SetTextColor(0, 0, 0);
+
+                if($subSystem->getSubSystem() == constantsClass::FRANCOPHONE)
+                {
+                    $pdf->Cell($cellWidth/2, $cellHeight, utf8_decode('Année Scolaire'), 0, 1, 'C');
+                }else
+                {
+                    $pdf->Cell($cellWidth/2, $cellHeight, utf8_decode('School Year'), 0, 1, 'C');
+                }
+
+                $pdf->SetFont('Times', 'B', 6);
+                $pdf = $this->generalService->escapeNoFooter($pdf, $escape);
+
+                $pdf->SetFont('Times', 'BI', 6);
+                $pdf->SetTextColor(255, 255, 255);
+
+                $pdf->Cell($cellWidth/2+7, $cellHeight, '', 0, 0, 'C');
+                $pdf->Cell($cellWidth*2-7, $cellHeight, utf8_decode('SCHOOL IDENTITY CARD'), 0, 0, 'C', true);
+
+                $pdf->SetFont('Times', 'B', 6);
+                $pdf->SetTextColor(0, 0, 0);
+
+                $pdf->Cell($cellWidth/2, $cellHeight, utf8_decode($schoolYear->getSchoolYear()), 0, 1, 'C');
+
+                $pdf = $this->generalService->escapeNoFooter($pdf, $escape);
+
+                $pdf->SetFont('Times', 'B', 6);
+                $pdf->SetTextColor(0, 0, 0);
+
+                // Etat civil de l'élève
+                $pdf->Cell($totalCellWidth, $cellHeight/3, '', 0, 1, 'C');
+
+                $pdf = $this->generalService->escapeNoFooter($pdf, $escape);
+
+                $pdf->Cell($cellWidth*2/3, $cellHeight, '', 0, 0, 'R');
+
+                if ($subSystem->getSubSystem() == constantsClass::FRANCOPHONE) 
+                {
+                    $pdf->Cell($cellWidth*2/3, $cellHeight, utf8_decode('Noms et prénoms  '), 0 , 0, 'L');
+                } else 
+                {
+                    $pdf->Cell($cellWidth*2/3, $cellHeight, utf8_decode('First and last name  '), 0 , 0, 'L');
+                }
+                
+                $pdf->SetFont('Times', 'B', 6.5);
+                $pdf->SetTextColor(0, 0, 255);
+
+                $pdf->Cell($cellWidth*5/3, $cellHeight, utf8_decode($student->getFullName()), 0, 1, 'L');
+
+                $pdf = $this->generalService->escapeNoFooter($pdf, $escape);
+
+                $pdf->SetFont('Times', 'B', 6);
+                $pdf->SetTextColor(0, 0, 0);
+
+                $pdf->Cell($totalCellWidth, $cellHeight/3, '', 0, 1, 'C');
+
+                $pdf = $this->generalService->escapeNoFooter($pdf, $escape);
+
+                $pdf->Cell($cellWidth*2/3 + $cellWidth*7/12, $cellHeight, '', 0, 0, 'R');
+
+                if ($subSystem->getSubSystem() == constantsClass::FRANCOPHONE) 
+                {
+                    $pdf->Cell($cellWidth*1/3, $cellHeight, utf8_decode('Né(e) le '), 0, 0, 'L');
+                } else 
+                {
+                    $pdf->Cell($cellWidth*1/3, $cellHeight, utf8_decode('Born on '), 0, 0, 'L');
+                }
+
+                
+                $pdf->Cell($cellWidth*1/3, $cellHeight, $student->getBirthday()->format('d/m/Y'), 0, 0, 'R');
+
+                if ($subSystem->getSubSystem() == constantsClass::FRANCOPHONE) 
+                {
+                    $pdf->Cell($cellWidth*1/6, $cellHeight, utf8_decode(' à '), 0, 0, 'R');
+                } else 
+                {
+                    $pdf->Cell($cellWidth*1/6, $cellHeight, utf8_decode(' at '), 0, 0, 'L');
+                }
+                
+
+                $pdf->Cell($cellWidth*7/12, $cellHeight, utf8_decode($student->getBirthplace()), 0, 1, 'C');
+
+                $pdf = $this->generalService->escapeNoFooter($pdf, $escape);
+
+                $pdf->Cell($totalCellWidth, $cellHeight/3, '', 0, 1, 'C');
+
+                $pdf = $this->generalService->escapeNoFooter($pdf, $escape);
+
+                $pdf->Cell($cellWidth*2/3 + $cellWidth*7/12, $cellHeight, '', 0, 0, 'R');
+
+                if ($subSystem->getSubSystem() == constantsClass::FRANCOPHONE) 
+                {
+                    $pdf->Cell($cellWidth*1/3, $cellHeight, utf8_decode('Classe  '), 0, 0, 'L');
+                } else 
+                {
+                    $pdf->Cell($cellWidth*1/3, $cellHeight, utf8_decode('Class  '), 0, 0, 'L');
+                }
+            
+
+                $pdf->SetFont('Times', 'B', 6.5);
+                $pdf->SetTextColor(0, 0, 255);
+
+                $pdf->Cell($cellWidth*2/3, $cellHeight, utf8_decode($selectedClassroom->getClassroom()), 0, 1, 'L');
+
+                $pdf->SetFont('Times', 'B', 6);
+                $pdf->SetTextColor(0, 0, 0);
+
+                // $pdf->Cell($cellWidth*1/3, $cellHeight, utf8_decode('Contact '), 0, 0, 'L');
+                // $pdf->Cell($cellWidth*5/12-4, $cellHeight, utf8_decode($student->getTelephonePere() ? $student->getTelephonePere() : ""), 0, 1, 'L');
+
+                $pdf = $this->generalService->escapeNoFooter($pdf, $escape);
+                $pdf->SetFont('Times', 'B', 5);
+
+                if($school->isPublic())
+                {
+                    if($school->isLycee())
+                    {
+                        if($subSystem->getSubSystem() == constantsClass::FRANCOPHONE)
+                        {
+                            $pdf->Cell($cellWidth+4, $cellHeight/3, utf8_decode("Le Proviseur"), 0, 1, 'R');
+                        }else
+                        {
+                            $pdf->Cell($cellWidth+4, $cellHeight/3, utf8_decode("The Principal"), 0, 1, 'R');
+                        }
+                        
+                    }else
+                    {
+                        if($subSystem->getSubSystem() == constantsClass::FRANCOPHONE)
+                        {
+                            $pdf->Cell($cellWidth+4, $cellHeight/3, utf8_decode("Le Directeur"), 0, 1, 'R');
+                        }else
+                        {
+                            $pdf->Cell($cellWidth+4, $cellHeight/3, utf8_decode("The Director"), 0, 1, 'R');
+                        }
+                        
+                    }
+                }else
+                {
+                    if($subSystem->getSubSystem() == constantsClass::FRANCOPHONE)
+                    {
+                        $pdf->Cell($cellWidth+4, $cellHeight/3, utf8_decode("Le Principal"), 0, 1, 'R');
+                    }else
+                    {
+                        $pdf->Cell($cellWidth+4, $cellHeight/3, utf8_decode("The Principal"), 0, 1, 'R');
+                    }
+                }
+                
+
+
+                $pdf->SetFont('Times', 'B', 6);
+
+                $pdf = $this->generalService->escapeNoFooter($pdf, $escape);
+
+                $pdf->SetFont('Times', 'B', 5);
+                $pdf->Cell(($cellWidth*2/3)-2.2 + $cellWidth*8/12, $cellHeight, '', 0, 0, 'R');
+                $pdf->SetFont('Times', 'B', 6);
+                $pdf->Cell($cellWidth*4/6, $cellHeight, $subSystem->getSubSystem() == constantsClass::FRANCOPHONE ? utf8_decode('NIU '): "NIU", 0, 0, 'L');
+
+                $pdf->Cell($cellWidth*5/6, $cellHeight, utf8_decode($student->getRegistrationNumber()), 0, 1, 'L');
+
+                $pdf = $this->generalService->escapeNoFooter($pdf, $escape);
+
+                $pdf->Cell($totalCellWidth, $cellHeight/3, '', 0, 1, 'C');
+
+                $pdf = $this->generalService->escapeNoFooter($pdf, $escape);
+
+                // espace vide pour rattraper les eux cellules remontées
+                $pdf->Cell($totalCellWidth/3, $cellHeight/3, '', 0, 1, 'R');
+                $pdf->Cell($totalCellWidth, $cellHeight, '', 0, 1, 'R');
+                // fin espace pour rattrapper les deux cellules remontées
+
+
+                $pdf->Cell($totalCellWidth, $space, '', 0, 1, 'C');
+
+                $pdf = $this->generalService->escapeNoFooter($pdf, $escape);
+
+                // on repositionne les coordonnées pour les images
+                $xToAdd = 51+$space;
+                $escapeToAdd = $totalCellWidth + $space;
+
+                if($i%5 != 0)
+                {
+                    $yLogo += $xToAdd;
+                    $yFiligree += $xToAdd;
+                    $yPhoto += $xToAdd;
+                    $yYellowStar += $xToAdd;
+                    $yStamp += $xToAdd;
+                }
+                
+                if($i%5 == 0 && $i%10 != 0)
+                {
+                    $x0 += $escapeToAdd;
+                    $xLogo += $escapeToAdd;
+                    $xFiligree += $escapeToAdd;
+                    $xPhoto += $escapeToAdd;
+                    $xYellowStar += $escapeToAdd;
+                    $xStamp += $escapeToAdd;
+
+                    $yLogo = $y0Logo;
+                    $yFiligree = $y0Filigree;
+                    $yPhoto = $y0Photo;
+                    $yYellowStar = $y0YellowStar;
+                    $yStamp = $y0Stamp;
+
+                    $pdf->SetXY($x0, $y0);
+                }
+                
+                if($i == 10 && count($students) > 10)
+                {
+                    // on ajoute une page en portrait
+                    $pdf =  $this->generalService->newPageNoFooter($pdf, 'P', 10, 10);
+                
+                    $i = 0;
+
+                    $totalCellWidth = 90;
+                    $cellHeight = 3;
+                    $cellWidth = $totalCellWidth/3;
+                    $space = 8;
+            
+                    $escape = 0;
+            
+                    $xLogo = $x0Logo = 49;
+                    $yLogo = $y0Logo = 11;
+                    $logoSize = -350;
+            
+                    $xFiligree = $x0Filigree = 36;
+                    $yFiligree = $y0Filigree = 26;
+                    $filigreeSize = -800;
+            
+                    $xPhoto = $x0Photo = 13;
+                    $yPhoto = $y0Photo = 33;
+                    $photoSize = -225; 
+                    
+                    $xYellowStar = $x0YellowStar = 53;
+                    $yYellowStar = $y0YellowStar = 25;
+                    $yellowStarSize = -1500;
+            
+                    $xStamp = $x0Stamp = 30;
+                    $yStamp =  $y0Stamp = 43;
+                    $stampSize = -400;
+                    
+                    $x0 = $pdf->GetX();
+                    $y0 = $pdf->GetY();
+                }
+
+            }
+        }
+
+        if($student)
+        {
             $pdf->SetFont('Times', 'B', 5);
             $x = $pdf->GetX();
             $y = $pdf->GetY();
-     
+    
             // Logo de l'établissement et filigrane et signature
             $pdf->Image('images/school/'.$school->getLogo(), $xLogo, $yLogo, $logoSize);
             $pdf->Image('images/school/'.$school->getFiligree(), $xFiligree, $yFiligree, $filigreeSize); 
 
             $pdf->Image('build/custom/images/signature2.png', $xStamp, $yStamp, $stampSize);
-
+            
             // Photo de l'élève
             if($student->getPhoto())
             {
                 $pdf->Image('images/students/'.$student->getPhoto(), $xPhoto-3, $yPhoto, 20,20);
-            }else
+            }
+            else
             {
                 $pdf->Image('images/students/defaultPhoto.jpg', $xPhoto-3, $yPhoto, 20,20);
             } 
-     
+    
             $pdf->setXY($x, $y);
 
             // partie administrative french
@@ -3530,7 +4133,7 @@ class ReportService
             {
                 $pdf->Cell($cellWidth*1/3, $cellHeight, utf8_decode('Class  '), 0, 0, 'L');
             }
-           
+        
 
             $pdf->SetFont('Times', 'B', 6.5);
             $pdf->SetTextColor(0, 0, 255);
@@ -3580,8 +4183,6 @@ class ReportService
                 }
             }
             
-
-
             $pdf->SetFont('Times', 'B', 6);
 
             $pdf = $this->generalService->escapeNoFooter($pdf, $escape);
@@ -3644,7 +4245,7 @@ class ReportService
             {
                 // on ajoute une page en portrait
                 $pdf =  $this->generalService->newPageNoFooter($pdf, 'P', 10, 10);
-               
+            
                 $i = 0;
 
                 $totalCellWidth = 90;
@@ -3677,8 +4278,8 @@ class ReportService
                 $x0 = $pdf->GetX();
                 $y0 = $pdf->GetY();
             }
-
         }
+        
 
         /////////////////VERSO////////////////////////
         // on ajoute une page en paysage
@@ -3780,5 +4381,42 @@ class ReportService
         return $levelsName;
     }
 
+
+
+    private function getSavedReport(Student $student, int $termNumber): ?object
+    {
+        $savedTerm = $this->termRepository->findOneBy(['term' => $termNumber]);
+
+        if ($savedTerm === null) {
+            return null;
+        }
+
+        return $this->reportRepository->findOneBy([
+            'student' => $student,
+            'term' => $savedTerm,
+        ]);
+    }
+
+    private function getSavedAverage(Student $student, int $termNumber): float
+    {
+        $savedReport = $this->getSavedReport($student, $termNumber);
+
+        if ($savedReport === null || $savedReport->getMoyenne() === null) {
+            return 0.0;
+        }
+
+        return (float) $savedReport->getMoyenne();
+    }
+
+    private function getSavedRank(Student $student, int $termNumber): int
+    {
+        $savedReport = $this->getSavedReport($student, $termNumber);
+
+        if ($savedReport === null || $savedReport->getRang() === null) {
+            return 0;
+        }
+
+        return (int) $savedReport->getRang();
+    }
 
 }

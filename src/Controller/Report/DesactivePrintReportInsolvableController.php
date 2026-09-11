@@ -13,10 +13,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 class DesactivePrintReportInsolvableController extends AbstractController
 {
     public function __construct(
@@ -95,6 +92,7 @@ class DesactivePrintReportInsolvableController extends AbstractController
         $this->em->flush();
 
         $this->addFlash('info', $this->translator->trans('Print report of insolvable desactivate with success !'));
+        
         $mySession->set('miseAjour', 1);
 
         if ($transcript == 1) 

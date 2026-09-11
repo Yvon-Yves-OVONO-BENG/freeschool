@@ -17,11 +17,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/subject")]
 class EditSubjectController extends AbstractController
 {
@@ -69,12 +65,17 @@ class EditSubjectController extends AbstractController
         // on ecupère le schoolYear de la BD pour qu'il soit suivi par le EntityManager au moment du persist
         $schoolYear = $this->schoolYearRepository->find($mySession->get('schoolYear')->getId());
 
-        $subject = $this->subjectRepository->findOneBySlug([
+        $subject = $this->subjectRepository->findOneBy([
             'slug' => $slug
         
         ]);
 
-        $form = $this->createForm(SubjectType::class, $subject);
+        if (!$subject) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
+
+        $form = $this->createForm(SubjectType::class, $subject, ['school' => $school]);
 
         // on set le schoolYear pour qu'il soit pris en compte dans la validation du formulaire
         $subject->setSchoolYear($schoolYear); 

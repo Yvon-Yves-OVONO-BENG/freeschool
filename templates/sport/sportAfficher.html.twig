@@ -1,67 +1,656 @@
 {% extends 'base.html.twig' %}
 
+{% set isObc = sheetType == 'obc' %}
+{% set pageRoute = isObc ? 'fiche_sport_obc' : 'fiche_sport' %}
+
 {% block title %}
-	{% trans %}Sheet sport{% endtrans %}
+	{% if isObc %}
+		{% trans %}OBC sport sheets{% endtrans %}
+	{% else %}
+		{% trans %}Sport sheets - level 4{% endtrans %}
+	{% endif %}
+{% endblock %}
+
+{% block stylesheets %}
+	<style>
+		.fs-sport-page {
+			min-height: calc(100vh - 150px);
+			padding: 82px 0 44px;
+			background:
+				radial-gradient(circle at 8% 4%, rgba(79, 70, 229, .13), transparent 28%),
+				radial-gradient(circle at 94% 8%, rgba(14, 165, 233, .11), transparent 27%),
+				#f6f8fc;
+		}
+
+		.fs-sport-shell {
+			width: min(1380px, calc(100% - 30px));
+			margin: 0 auto;
+		}
+
+		.fs-sport-hero {
+			position: relative;
+			overflow: hidden;
+			display: grid;
+			grid-template-columns: minmax(0, 1fr) auto;
+			gap: 24px;
+			align-items: center;
+			padding: 28px 32px;
+			border: 1px solid rgba(255,255,255,.44);
+			border-radius: 24px;
+			color: #fff;
+			background: linear-gradient(125deg, #172554 0%, #3730a3 52%, #2563eb 100%);
+			box-shadow: 0 24px 58px rgba(30, 41, 94, .22);
+		}
+
+		.fs-sport-hero::after {
+			content: '';
+			position: absolute;
+			width: 290px;
+			height: 290px;
+			right: -85px;
+			top: -160px;
+			border-radius: 50%;
+			background: rgba(255,255,255,.12);
+		}
+
+		.fs-sport-eyebrow {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			margin-bottom: 10px;
+			font-size: .76rem;
+			font-weight: 900;
+			letter-spacing: .12em;
+			text-transform: uppercase;
+			color: #bfdbfe;
+		}
+
+		.fs-sport-hero h1 {
+			margin: 0;
+			font-size: clamp(1.7rem, 2.6vw, 2.6rem);
+			font-weight: 900;
+			letter-spacing: -.045em;
+			color: #fff;
+		}
+
+		.fs-sport-hero p {
+			max-width: 770px;
+			margin: 10px 0 0;
+			font-size: .98rem;
+			line-height: 1.65;
+			color: rgba(255,255,255,.78);
+		}
+
+		.fs-sport-session {
+			position: relative;
+			z-index: 1;
+			min-width: 160px;
+			padding: 15px 20px;
+			border: 1px solid rgba(255,255,255,.25);
+			border-radius: 18px;
+			text-align: center;
+			background: rgba(255,255,255,.13);
+			backdrop-filter: blur(12px);
+		}
+
+		.fs-sport-session span,
+		.fs-sport-session small {
+			display: block;
+			font-weight: 800;
+			color: rgba(255,255,255,.72);
+		}
+
+		.fs-sport-session strong {
+			display: block;
+			margin: 2px 0;
+			font-size: 1.8rem;
+			font-weight: 950;
+			color: #fff;
+		}
+
+		.fs-sport-tabs {
+			display: flex;
+			gap: 10px;
+			margin: 18px 0;
+			padding: 6px;
+			border: 1px solid #e2e8f0;
+			border-radius: 16px;
+			background: rgba(255,255,255,.82);
+			box-shadow: 0 10px 32px rgba(15,23,42,.06);
+		}
+
+		.fs-sport-tab {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			gap: 8px;
+			min-height: 44px;
+			padding: 8px 17px;
+			border-radius: 11px;
+			font-weight: 850;
+			color: #475569;
+			transition: .2s ease;
+		}
+
+		.fs-sport-tab:hover {
+			color: #3730a3;
+			background: #eef2ff;
+		}
+
+		.fs-sport-tab.is-active {
+			color: #fff;
+			background: linear-gradient(135deg, #4f46e5, #2563eb);
+			box-shadow: 0 9px 20px rgba(79,70,229,.22);
+		}
+
+		.fs-sport-card {
+			border: 1px solid #e7ebf3;
+			border-radius: 22px;
+			background: #fff;
+			box-shadow: 0 18px 48px rgba(15,23,42,.08);
+		}
+
+		.fs-sport-filter {
+			display: grid;
+			grid-template-columns: minmax(280px, 720px) auto;
+			gap: 18px;
+			align-items: end;
+			justify-content: start;
+			padding: 24px;
+		}
+
+		.fs-sport-field { min-width: 0; }
+
+		.fs-sport-field label {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			margin-bottom: 8px;
+			font-weight: 900;
+			color: #172554;
+		}
+
+		.fs-sport-select {
+			width: 100%;
+			height: 52px;
+			padding: 0 44px 0 15px;
+			border: 1px solid #cbd5e1;
+			border-radius: 13px;
+			font-weight: 750;
+			color: #0f172a;
+			background-color: #fff;
+			transition: .2s ease;
+		}
+
+		.fs-sport-select:focus {
+			border-color: #4f46e5;
+			outline: 0;
+			box-shadow: 0 0 0 4px rgba(79,70,229,.12);
+		}
+
+		.fs-sport-btn {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			gap: 9px;
+			min-height: 48px;
+			padding: 0 19px;
+			border: 0;
+			border-radius: 12px;
+			font-weight: 900;
+			transition: transform .18s ease, box-shadow .18s ease, opacity .18s ease;
+		}
+
+		.fs-sport-btn:hover { transform: translateY(-1px); }
+		.fs-sport-btn:disabled { transform: none; opacity: .55; cursor: not-allowed; }
+		.fs-sport-btn[hidden] { display: none !important; }
+		.fs-sport-btn--primary { color: #fff; background: linear-gradient(135deg, #4f46e5, #2563eb); box-shadow: 0 12px 24px rgba(79,70,229,.2); }
+		.fs-sport-btn--success { color: #fff; background: linear-gradient(135deg, #059669, #10b981); box-shadow: 0 12px 24px rgba(5,150,105,.18); }
+		.fs-sport-btn--soft { color: #3730a3; background: #eef2ff; }
+
+		.fs-sport-notice {
+			padding: 0 24px 22px;
+		}
+
+		.fs-sport-table-card { margin-top: 18px; overflow: hidden; }
+
+		.fs-sport-table-head {
+			display: flex;
+			justify-content: space-between;
+			gap: 18px;
+			align-items: center;
+			padding: 22px 24px;
+			border-bottom: 1px solid #edf0f5;
+		}
+
+		.fs-sport-table-head h2 {
+			margin: 0;
+			font-size: 1.18rem;
+			font-weight: 900;
+			color: #172554;
+		}
+
+		.fs-sport-table-head p { margin: 5px 0 0; color: #64748b; }
+
+		.fs-sport-count {
+			display: inline-flex;
+			align-items: center;
+			gap: 7px;
+			padding: 8px 11px;
+			border-radius: 999px;
+			font-weight: 850;
+			color: #1e40af;
+			background: #dbeafe;
+		}
+
+		.fs-sport-table-wrap { padding: 22px 24px 8px; }
+
+		.fs-sport-table {
+			width: 100% !important;
+			border-collapse: separate !important;
+			border-spacing: 0;
+		}
+
+		.fs-sport-table thead th {
+			padding: 13px 12px !important;
+			border: 0 !important;
+			font-size: .73rem;
+			font-weight: 900;
+			letter-spacing: .065em;
+			text-transform: uppercase;
+			color: #334155;
+			background: #f1f5f9;
+		}
+
+		.fs-sport-table thead th:first-child { border-radius: 11px 0 0 11px; }
+		.fs-sport-table thead th:last-child { border-radius: 0 11px 11px 0; }
+
+		.fs-sport-table tbody td {
+			padding: 13px 12px !important;
+			border-top: 0 !important;
+			border-bottom: 1px solid #edf0f5 !important;
+			vertical-align: middle;
+			color: #334155;
+		}
+
+		.fs-sport-table tbody tr:hover td { background: #fafbff; }
+
+		.fs-sport-student {
+			display: flex;
+			align-items: center;
+			gap: 11px;
+		}
+
+		.fs-sport-avatar {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 39px;
+			height: 39px;
+			border-radius: 12px;
+			font-weight: 900;
+			color: #3730a3;
+			background: linear-gradient(135deg, #e0e7ff, #dbeafe);
+		}
+
+		.fs-sport-student strong { display: block; color: #172554; }
+		.fs-sport-student small { color: #94a3b8; }
+
+		.fs-sport-checkbox {
+			width: 19px;
+			height: 19px;
+			accent-color: #4f46e5;
+			cursor: pointer;
+		}
+
+		.fs-sport-actions {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 10px;
+			align-items: center;
+			justify-content: space-between;
+			padding: 15px 24px;
+			border-bottom: 1px solid #edf0f5;
+			background: #fbfcff;
+		}
+
+		.fs-sport-actions-group { display: flex; flex-wrap: wrap; gap: 10px; }
+
+		.fs-sport-empty {
+			padding: 48px 24px;
+			text-align: center;
+			color: #64748b;
+		}
+
+		.fs-sport-empty i { display: block; margin-bottom: 12px; font-size: 2.3rem; color: #a5b4fc; }
+
+		.fs-sport-table-card .dataTables_wrapper .dataTables_length,
+		.fs-sport-table-card .dataTables_wrapper .dataTables_filter { margin-bottom: 14px; }
+
+		.fs-sport-table-card .dataTables_wrapper .form-control,
+		.fs-sport-table-card .dataTables_wrapper select {
+			border: 1px solid #cbd5e1;
+			border-radius: 10px;
+		}
+
+		@media (max-width: 767px) {
+			.fs-sport-page { padding-top: 72px; }
+			.fs-sport-shell { width: min(100% - 18px, 1380px); }
+			.fs-sport-hero { grid-template-columns: 1fr; padding: 23px 20px; }
+			.fs-sport-session { min-width: 0; width: 100%; }
+			.fs-sport-tabs { display: grid; grid-template-columns: 1fr; }
+			.fs-sport-filter { grid-template-columns: 1fr; padding: 18px; }
+			.fs-sport-notice { padding: 0 18px 18px; }
+			.fs-sport-table-head { align-items: flex-start; padding: 18px; }
+			.fs-sport-table-wrap { padding: 16px 12px 5px; }
+			.fs-sport-actions { align-items: stretch; padding: 16px; }
+			.fs-sport-actions-group, .fs-sport-btn { width: 100%; }
+		}
+	</style>
+{% endblock %}
+
+{% block javascripts %}
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			const classroomSelect = document.getElementById('sportClassroom');
+			if (classroomSelect) {
+				classroomSelect.addEventListener('change', function () {
+					if (this.value) this.form.submit();
+				});
+			}
+
+			const tableElement = document.getElementById('sportStudentsTable');
+			const printForm = document.getElementById('sportPrintForm');
+			if (!tableElement || !printForm) return;
+
+			const selectedIds = new Set();
+			const selectedCount = document.getElementById('sportSelectedCount');
+			const printSelected = document.getElementById('sportPrintSelected');
+			const selectAll = document.getElementById('sportSelectAll');
+			let dataTable = null;
+
+			function updateSelectionUi() {
+				selectedCount.textContent = selectedIds.size;
+				printSelected.disabled = selectedIds.size === 0;
+				printSelected.hidden = selectedIds.size === 0;
+			}
+
+			function syncVisibleCheckboxes() {
+				tableElement.querySelectorAll('.sport-student-check').forEach(function (checkbox) {
+					checkbox.checked = selectedIds.has(checkbox.value);
+				});
+			}
+
+			function bindCheckbox(checkbox) {
+				checkbox.addEventListener('change', function () {
+					if (this.checked) selectedIds.add(this.value);
+					else selectedIds.delete(this.value);
+					selectAll.checked = false;
+					updateSelectionUi();
+				});
+			}
+
+			tableElement.querySelectorAll('.sport-student-check').forEach(bindCheckbox);
+
+			if (window.jQuery && jQuery.fn.DataTable) {
+				dataTable = jQuery(tableElement).DataTable({
+					pageLength: 10,
+					lengthMenu: [[10, 25, 50, -1], [10, 25, 50, '{{ 'All'|trans|e('js') }}']],
+					order: [[2, 'asc']],
+					responsive: true,
+					autoWidth: false,
+					columnDefs: [
+						{ orderable: false, searchable: false, targets: [0, 5] },
+						{ width: '48px', targets: 0 },
+						{ width: '110px', targets: 5 }
+					],
+					language: {
+						search: '{{ 'Search'|trans|e('js') }} :',
+						lengthMenu: '{{ 'Display'|trans|e('js') }} _MENU_',
+						info: '{{ 'Showing'|trans|e('js') }} _START_ - _END_ / _TOTAL_',
+						infoEmpty: '{{ 'No student'|trans|e('js') }}',
+						zeroRecords: '{{ 'No matching student'|trans|e('js') }}',
+						paginate: {
+							previous: '{{ 'Previous'|trans|e('js') }}',
+							next: '{{ 'Next'|trans|e('js') }}'
+						}
+					}
+				});
+
+				jQuery(tableElement).on('draw.dt', syncVisibleCheckboxes);
+			}
+
+			selectAll.addEventListener('change', function () {
+				let checkboxes;
+				if (dataTable) {
+					checkboxes = dataTable.rows({ search: 'applied' }).nodes().to$().find('.sport-student-check').toArray();
+				} else {
+					checkboxes = Array.from(tableElement.querySelectorAll('.sport-student-check'));
+				}
+
+				checkboxes.forEach(function (checkbox) {
+					checkbox.checked = selectAll.checked;
+					if (selectAll.checked) selectedIds.add(checkbox.value);
+					else selectedIds.delete(checkbox.value);
+				});
+				updateSelectionUi();
+			});
+
+			printForm.querySelectorAll('button[name="print_mode"]').forEach(function (button) {
+				button.addEventListener('click', function () {
+					printForm.dataset.printMode = this.value;
+				});
+			});
+
+			printForm.addEventListener('submit', function (event) {
+				const mode = event.submitter ? event.submitter.value : (printForm.dataset.printMode || 'selected');
+				printForm.querySelectorAll('input[data-generated-student]').forEach(function (input) {
+					input.remove();
+				});
+
+				if (mode === 'selected') {
+					if (selectedIds.size === 0) {
+						event.preventDefault();
+						return;
+					}
+
+					selectedIds.forEach(function (id) {
+						const input = document.createElement('input');
+						input.type = 'hidden';
+						input.name = 'student_slugs[]';
+						input.value = id;
+						input.dataset.generatedStudent = '1';
+						printForm.appendChild(input);
+					});
+				}
+			});
+
+			updateSelectionUi();
+		});
+	</script>
 {% endblock %}
 
 {% block body %}
+	<div class="hor-content main-content fs-sport-page">
+		<div class="fs-sport-shell">
+			<section class="fs-sport-hero">
+				<div>
+					<span class="fs-sport-eyebrow">
+						<i class="fe fe-activity"></i>
+						{% if isObc %}Office du Baccalauréat du Cameroun{% else %}{% trans %}Official sport sheets{% endtrans %}{% endif %}
+					</span>
+					<h1>
+						{% if isObc %}
+							{% trans %}OBC practical sport sheets{% endtrans %}
+						{% else %}
+							{% trans %}Sport sheets - level 4 only{% endtrans %}
+						{% endif %}
+					</h1>
+					<p>
+						{% if isObc %}
+							{% trans %}Select a level 6 or 7 classroom, choose the candidates and generate the official OBC practical PE sheets.{% endtrans %}
+						{% else %}
+							{% trans %}This workspace is limited to level 4 classrooms. Select a classroom, then choose the students whose sheets should be printed.{% endtrans %}
+						{% endif %}
+					</p>
+				</div>
+				<div class="fs-sport-session">
+					<span>{% trans %}Session{% endtrans %}</span>
+					<strong>{{ sessionYear }}</strong>
+					<small>{{ schoolYear.schoolYear }}</small>
+				</div>
+			</section>
 
-	<div class="page-content">
-    <div class="container">
-        <div class="row">
-            <div class="col mx-auto">
-                <div class="row justify-content-center">
-                    <div class="col-md-4 col-xl-4">
-                        
-                        <div class="card border-primary" style="margin-top:65px;">
-                           
-                            <div class="card-body">
-							 	<div class="row">
-                                <div class="text-center mb-3">
-                                    <h1 class="mb-2">{% trans %}Sheets sport{% endtrans %}</h1>
-                                  
-                                    
-                                   
-                                </div>
-                                </div>
-                                <div class="text-center mb-3">
-                                   
-                                </div>
-								<form action="{{path('fiche_sport')}}" method="post" class="row g-3 needs-validation" novalidate target="_blank">
-                             
-                                    <div class="row">
-                                        <div class="col-md-12 col-xl-12">
-                                            <div class="input-group mb-4">
-                                               <select name="classe" class="form-select" id="validationTooltip04" data-placeholder="Choisir une classe" required="required">
-													<option label="Classe"></option>
-													{% for classe in classes %}
-														<option value="{{classe.id}}" {% if selectedClasse is defined %} {% if selectedClasse.id == classe.id %} selected {% endif %} {% endif %}>
-															{{classe.classroom}}
-														</option>
-													{% endfor %}
-													<div class="invalid-tooltip">
-														{% trans %}Classroom{% endtrans %}
+			<nav class="fs-sport-tabs" aria-label="Types de fiches sport">
+				<a class="fs-sport-tab {{ not isObc ? 'is-active' : '' }}" href="{{ path('fiche_sport') }}">
+					<i class="fe fe-file-text"></i>
+					{% trans %}Level 4 sheets{% endtrans %}
+				</a>
+				<a class="fs-sport-tab {{ isObc ? 'is-active' : '' }}" href="{{ path('fiche_sport_obc') }}">
+					<i class="fe fe-award"></i>
+					{% trans %}OBC sheets - levels 6 and 7{% endtrans %}
+				</a>
+			</nav>
+
+			{% for label, messages in app.flashes %}
+				{% for message in messages %}
+					<div class="alert alert-{{ label == 'danger' ? 'danger' : (label == 'warning' ? 'warning' : 'info') }} alert-dismissible fade show" role="alert">
+						{{ message }}
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+				{% endfor %}
+			{% endfor %}
+
+			<section class="fs-sport-card">
+				<form class="fs-sport-filter" method="get" action="{{ path(pageRoute) }}">
+					<div class="fs-sport-field">
+						<label for="sportClassroom">
+							<i class="fe fe-layers"></i>
+							{% if isObc %}{% trans %}Level 6 or 7 classroom{% endtrans %}{% else %}{% trans %}Level 4 classroom{% endtrans %}{% endif %}
+						</label>
+						<select class="fs-sport-select" name="classe" id="sportClassroom" required>
+							<option value="">{% trans %}Choose a classroom{% endtrans %}</option>
+							{% for classe in classes %}
+								<option value="{{ classe.slug }}" {{ selectedClassroom and selectedClassroom.slug == classe.slug ? 'selected' : '' }}>
+									{{ classe.classroom }} - {% trans %}Level{% endtrans %} {{ classe.level.level }}
+								</option>
+							{% endfor %}
+						</select>
+					</div>
+					<button class="fs-sport-btn fs-sport-btn--primary" type="submit">
+						<i class="fe fe-users"></i>
+						{% trans %}Display students{% endtrans %}
+					</button>
+				</form>
+
+				{% if classes is empty %}
+					<div class="fs-sport-notice">
+						<span class="text-danger fw-bold">
+							<i class="fe fe-alert-circle"></i>
+							{% trans %}No classroom is registered for the requested levels in the connected school year.{% endtrans %}
+						</span>
+					</div>
+				{% endif %}
+			</section>
+
+			{% if selectedClassroom %}
+				<section class="fs-sport-card fs-sport-table-card">
+					<div class="fs-sport-table-head">
+						<div>
+							<h2>{{ selectedClassroom.classroom }}</h2>
+							<p>{% trans %}Select the students to print or use the print all button.{% endtrans %}</p>
+						</div>
+						<span class="fs-sport-count">
+							<i class="fe fe-users"></i>
+							{{ students|length }} {% trans %}student(s){% endtrans %}
+						</span>
+					</div>
+
+					{% if students is not empty %}
+						<form id="sportPrintForm" method="post" action="{{ path('fiche_sport_print', {'type': sheetType}) }}" target="_blank" data-no-spinner="1">
+							<input type="hidden" name="classroom" value="{{ selectedClassroom.slug }}">
+							<input type="hidden" name="_token" value="{{ csrf_token('sport_print_' ~ selectedClassroom.id ~ '_' ~ sheetType) }}">
+
+							<div class="fs-sport-actions">
+								<span class="fs-sport-count">
+									<i class="fe fe-check-square"></i>
+									<span id="sportSelectedCount">0</span> {% trans %}selected{% endtrans %}
+								</span>
+								<div class="fs-sport-actions-group">
+									<button id="sportPrintSelected" class="fs-sport-btn fs-sport-btn--primary" type="submit" name="print_mode" value="selected" disabled hidden>
+										<i class="fe fe-printer"></i>
+										{% trans %}Print selection{% endtrans %}
+									</button>
+									<button class="fs-sport-btn fs-sport-btn--success" type="submit" name="print_mode" value="all">
+										<i class="fe fe-layers"></i>
+										{% trans %}Print all{% endtrans %}
+									</button>
+								</div>
+							</div>
+
+							<div class="fs-sport-table-wrap table-responsive">
+								<table id="sportStudentsTable" class="table fs-sport-table">
+									<thead>
+										<tr>
+											<th class="text-center">
+												<input id="sportSelectAll" class="fs-sport-checkbox" type="checkbox" aria-label="{% trans %}Select all students{% endtrans %}">
+											</th>
+											<th>#</th>
+											<th>{% trans %}Student{% endtrans %}</th>
+											<th>{% trans %}Registration number{% endtrans %}</th>
+											<th>{% trans %}Sex{% endtrans %}</th>
+											<th class="text-end">{% trans %}Options{% endtrans %}</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for student in students %}
+											{% set nameParts = student.fullName|split(' ') %}
+											<tr>
+												<td class="text-center">
+											<input class="fs-sport-checkbox sport-student-check" type="checkbox" value="{{ student.slug }}" aria-label="Sélectionner {{ student.fullName }}">
+												</td>
+												<td>{{ loop.index }}</td>
+												<td>
+													<div class="fs-sport-student">
+														<span class="fs-sport-avatar">{{ nameParts|first|slice(0, 1)|upper }}{{ nameParts|length > 1 ? nameParts[1]|slice(0, 1)|upper : '' }}</span>
+														<span>
+															<strong>{{ student.fullName }}</strong>
+															<small>{{ student.birthday ? student.birthday|date('d/m/Y') : '-' }}</small>
+														</span>
 													</div>
-												</select>
-                                               
-                                            </div>
-                                        </div>
-                                      
-                                    </div>
-                                    <div class="form-group text-center mb-3">
-                                        <button class="btn btn-primary btn-lg w-100 br-7" name="imprimer"><i class="fe fe-printer me-2"></i> {% trans %}Download{% endtrans %}</button>
-                                    </div>
-                              	</form>
-                          
-                            </div>
-                        </div>
-                       
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-</div>{% endblock %}
+												</td>
+												<td>{{ student.registrationNumber }}</td>
+												<td>{{ student.sex ? student.sex.sex : '-' }}</td>
+												<td class="text-end">
+													<div class="dropdown">
+														<button class="fs-sport-btn fs-sport-btn--soft dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+															<i class="fe fe-more-horizontal"></i>
+															{% trans %}Options{% endtrans %}
+														</button>
+														<ul class="dropdown-menu dropdown-menu-end">
+															<li>
+												<a class="dropdown-item" target="_blank" href="{{ path('fiche_sport_print_one', {'type': sheetType, 'classroomSlug': selectedClassroom.slug, 'studentSlug': student.slug}) }}">
+																	<i class="fe fe-printer me-2"></i>
+																	{% trans %}Individual printing{% endtrans %}
+																</a>
+															</li>
+														</ul>
+													</div>
+												</td>
+											</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</form>
+					{% else %}
+						<div class="fs-sport-empty">
+							<i class="fe fe-user-x"></i>
+							<strong>{% trans %}No student is registered in this classroom for the connected school year.{% endtrans %}</strong>
+						</div>
+					{% endif %}
+				</section>
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}

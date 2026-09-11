@@ -2,38 +2,36 @@
 
 namespace App\Controller\Deliberation;
 
+use App\Entity\User;
 use App\Entity\Classroom;
 use App\Entity\ConstantsClass;
-use App\Entity\DeliberationElements\DeliberationRow;
+use App\Service\ClassroomService;
+use App\Repository\SchoolRepository;
+use App\Service\DeliberationService;
+use App\Repository\DecisionRepository;
 use App\Repository\ClassroomRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use App\Repository\DecisionRepository;
-use App\Repository\SchoolRepository;
-use App\Service\ClassroomService;
-use App\Service\DeliberationService;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\DeliberationElements\DeliberationRow;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
-/**
- * @Route("/deliberation")
- */
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
+#[Route('/deliberation')]
 class DisplayDeliberationController extends AbstractController
 {
-    public function __construct(protected ClassroomRepository $classroomRepository,  protected DeliberationService $deliberationService, protected DecisionRepository $decisionRepository, protected EntityManagerInterface $em, protected ClassroomService $classroomService, protected SchoolRepository $schoolRepository )
-    {
-    }
+    public function __construct(
+        protected ClassroomRepository $classroomRepository,  
+        protected DeliberationService $deliberationService, 
+        protected DecisionRepository $decisionRepository, 
+        protected EntityManagerInterface $em, 
+        protected ClassroomService $classroomService, 
+        protected SchoolRepository $schoolRepository )
+    {}
 
-    /**
-     * @Route("/displayDeliberation/{idC<[0-9]+>}/{idS<[0-9]+>}/{notification}", name="deliberation_displayDeliberation")
-     */
+    #[Route('/displayDeliberation/{idC<[0-9]+>}/{idS<[0-9]+>}/{notification}', name: 'deliberation_displayDeliberation')]
     public function displayDeliberation(Request $request, int $idC = 0, int $idS = 0, int $notification = 0): Response
     {
         $mySession = $request->getSession();
@@ -163,25 +161,25 @@ class DisplayDeliberationController extends AbstractController
         } 
         
         return $this->render('deliberation/displayDeliberation.html.twig', [
-            'classrooms' => $classrooms,
-            'selectedClassroom' => $selectedClassroom,
-            'notificationDeliberation' => $notificationDeliberation,
-            'decisions' => $decisions,
-            'deliberations' => $deliberations,
-            'deliberation' => $deliberation,
             'boys' => $boys,
             'girls' => $girls,
+            'school' => $school,
+            'isUpdate' => $isUpdate,
+            'decisions' => $decisions,
+            'classrooms' => $classrooms,
             'effectif' => $numberOfStudents,
+            'deliberation' => $deliberation,
+            'deliberations' => $deliberations,
             'nextClassrooms' => $nextClassrooms,
-            'unrankedAverage' => ConstantsClass::UNRANKED_AVERAGE,
-            'exclu' => ConstantsClass::DECISION_EXPELLED,
+            'selectedClassroom' => $selectedClassroom,
             'admis' => ConstantsClass::DECISION_PASSED,
-            'demissionnaire' => ConstantsClass::DECISION_RESIGNED,
+            'exclu' => ConstantsClass::DECISION_EXPELLED,
             'termine' => ConstantsClass::DECISION_FINISHED,
+            'demissionnaire' => ConstantsClass::DECISION_RESIGNED,
+            'unrankedAverage' => ConstantsClass::UNRANKED_AVERAGE,
+            'notificationDeliberation' => $notificationDeliberation,
             'excluSiEchec' => ConstantsClass::DECISION_EXPELLED_IF_FAILED,
             'redoubleSiEchec' => ConstantsClass::DECISION_REAPETED_IF_FAILED,
-            'isUpdate' => $isUpdate,
-            'school' => $school,
         ]);
     }
 

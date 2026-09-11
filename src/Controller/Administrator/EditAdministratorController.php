@@ -13,10 +13,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route('/administrators')]
 class EditAdministratorController extends AbstractController
 {
@@ -53,28 +50,36 @@ class EditAdministratorController extends AbstractController
 
         $administrator = $this->userRepository->findOneBy(['slug' => $slug ]);
 
-        $form = $this->createForm(AdministratorType::class, $administrator);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) 
+        if ($administrator) 
         {
-            $administrator->setUsername($administrator->getFullName());
+            $form = $this->createForm(AdministratorType::class, $administrator);
+            $form->handleRequest($request);
 
-            $this->em->persist($administrator);
-            $this->em->flush();
+            if ($form->isSubmitted() && $form->isValid()) 
+            {
+                $administrator->setUsername($administrator->getFullName());
 
-            $this->addFlash('info', $this->translator->trans('Administrator updated with success !'));
+                $this->em->persist($administrator);
+                $this->em->flush();
+
+                $this->addFlash('info', $this->translator->trans('Administrator updated with success !'));
+                    
+                $mySession->set('miseAjour', 1);
+
+                return $this->redirectToRoute('list_administrators', ['m' => 1 ]);
                 
-            $mySession->set('miseAjour', 1);
+            }
 
-            return $this->redirectToRoute('list_administrators', ['m' => 1 ]);
-            
+            return $this->render('administrator/addAdministrator.html.twig', [
+                'id' => 0,
+                'school' => $school,
+                'formAdmin' => $form->createView(),
+            ]);
+        } 
+        else 
+        {
+            return $this->redirectToRoute('page_error');
         }
-
-        return $this->render('administrator/addAdministrator.html.twig', [
-            'id' => 0,
-            'school' => $school,
-            'formAdmin' => $form->createView(),
-        ]);
+        
     }
 }

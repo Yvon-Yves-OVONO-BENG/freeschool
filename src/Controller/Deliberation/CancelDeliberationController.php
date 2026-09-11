@@ -14,11 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route('deliberation')]
 class CancelDeliberationController extends AbstractController
 {
@@ -41,7 +37,7 @@ class CancelDeliberationController extends AbstractController
         
         // On recupère le next year
         $nextSchoolYear = $this->schoolYearService->getNextSchoolYear();
-
+        
         $classroom = $this->classroomRepository->find($idC);
         
         foreach ($classroom->getStudents() as $student) 
@@ -50,11 +46,13 @@ class CancelDeliberationController extends AbstractController
                 'fullName' => $student->getFullName(),
                 'schoolYear' => $nextSchoolYear,
             ]);
-            
-            $this->studentService->deleteStudentDeliberationCancel($studen, $classroom);
 
+            if ($studen) 
+            {
+                $this->studentService->deleteStudentDeliberationCancel($studen, $classroom);
+            }
         }
-
+        
         $this->addFlash('info', $this->translator->trans('Deliberations canceled with success ! !'));
 
         return $this->redirectToRoute('deliberation_displayDeliberation', [

@@ -2,11 +2,16 @@
 
 namespace App\Security;
 
+use App\Repository\SchoolRepository;
+use App\Repository\SchoolYearRepository;
+use App\Repository\SubSystemRepository;
+use App\Repository\VerrouRepository;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
@@ -21,22 +26,49 @@ class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
 
     public const LOGIN_ROUTE = 'login';
 
-    public function __construct(private UrlGeneratorInterface $urlGenerator)
+    public function __construct(
+        private UrlGeneratorInterface $urlGenerator,
+        private SchoolYearRepository $schoolYearRepository,
+        private SubSystemRepository $subSystemRepository,
+        private SchoolRepository $schoolRepository,
+        private VerrouRepository $verrouRepository,
+    )
     {
     }
 
     public function supports(Request $request): bool
     {
-        // dump(self::LOGIN_ROUTE);
-        // dd($request->attributes->get('_route'));
         return $request->isMethod('POST') && self::LOGIN_ROUTE === $request->attributes->get('_route');
     }
 
     public function authenticate(Request $request): Passport
     {
-        $username = $request->request->get('username', '');
+        $username = trim((string) $request->request->get('username', ''));
+        $schoolYearId = $request->request->get('schoolYear');
+        $subSystemId = $request->request->get('subSystem');
 
         $request->getSession()->set(Security::LAST_USERNAME, $username);
+
+        if (!$schoolYearId || !$subSystemId) {
+            throw new CustomUserMessageAuthenticationException('Veuillez choisir le sous-système et l’année scolaire.');
+        }
+
+        $schoolYear = $this->schoolYearRepository->find($schoolYearId);
+        $subSystem = $this->subSystemRepository->find($subSystemId);
+
+        if (!$schoolYear || !$subSystem) {
+            throw new CustomUserMessageAuthenticationException('Année scolaire ou sous-système invalide.');
+        }
+
+        $session = $request->getSession();
+        $session->set('schoolYear', $schoolYear);
+        $session->set('subSystem', $subSystem);
+        $session->set('school', $this->schoolRepository->findOneBy(['schoolYear' => $schoolYear]));
+        $session->set('verrou', $this->verrouRepository->findOneBy(['schoolYear' => $schoolYear]));
+        $session->set('ajout', null);
+        $session->set('suppression', null);
+        $session->set('miseAjour', null);
+        $session->set('saisiNotes', null);
 
         return new Passport(
             new UserBadge($username),
@@ -53,10 +85,7 @@ class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
             return new RedirectResponse($targetPath);
         }
 
-        // For example:
-        // return new RedirectResponse($this->urlGenerator->generate('some_route'));
         return new RedirectResponse($this->urlGenerator->generate('home_dashboard'));
-        throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
     }
 
     protected function getLoginUrl(Request $request): string

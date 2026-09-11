@@ -14,23 +14,14 @@ use App\Repository\SchoolYearRepository;
 use App\Service\RegisterAndListService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
-/**
- * @Route("/deliberation")
- */
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
+#[Route('/deliberation')]
 class PrintStudentProvisoryListController extends AbstractController
 {
     public function __construct(protected ClassroomRepository $classroomRepository, protected SchoolYearRepository $schoolYearRepository, protected NextYearRepository $nextYearRepository,  protected SchoolRepository $schoolRepository, protected RegisterAndListService $registerAndListService)
-    {
-    }
+    {}
 
-    /**
-     * @Route("/printStudentProvisoryList", name="deliberation_printStudentProvisoryList")
-     */
+    #[Route('/printStudentProvisoryList', name: 'deliberation_printStudentProvisoryList')]
     public function printStudentProvisoryList(Request $request): Response
     {
         $mySession = $request->getSession();

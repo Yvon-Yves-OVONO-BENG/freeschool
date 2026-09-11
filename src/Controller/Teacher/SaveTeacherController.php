@@ -21,11 +21,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/teacher")]
 class SaveTeacherController extends AbstractController
 {
@@ -127,7 +123,8 @@ class SaveTeacherController extends AbstractController
 
             $user->setUsername($teacher->getAdministrativeNumber().$teacher->getId())
                 ->setFullName($teacher->getFullName())
-                ->setTeacher($teacher);
+                ->setTeacher($teacher)
+                ->setEmail($form->get('email')->getData());
 
             $hash = $this->encoder->hashPassword($user, ConstantsClass::DEFAULT_TEACHER_PASSWORD);
 

@@ -15,23 +15,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
-/**
-* @Route("/depense")
-*/
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
+#[Route("/depense")]
 class DeleteDepenseController extends AbstractController
 {
-    public function __construct(protected DepenseRepository $depenseRepository, protected EntityManagerInterface $em, protected SchoolYearService $schoolYearService, protected TranslatorInterface $translator, protected SchoolYearRepository $schoolYearRepository, protected EtatDepenseRepository $etatDepenseRepository)
-    {
-    }
+    public function __construct(
+        protected EntityManagerInterface $em, 
+        protected TranslatorInterface $translator, 
+        protected DepenseRepository $depenseRepository, 
+        protected SchoolYearService $schoolYearService, 
+        protected SchoolYearRepository $schoolYearRepository, 
+        protected EtatDepenseRepository $etatDepenseRepository
+        )
+    {}
 
-    /**
-     * @Route("/delete-depense/{id<[0-9]+>}", name="delete_depense")
-     */
+    #[Route("/delete-depense/{id<[0-9]+>}", name:"delete_depense")]
     public function deleteDepense(Request $request, int $id): Response
     {
         $mySession = $request->getSession();

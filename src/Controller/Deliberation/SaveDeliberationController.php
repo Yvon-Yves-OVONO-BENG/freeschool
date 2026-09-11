@@ -26,35 +26,31 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 
 /**
  * @Route("/deliberation")
  */
 class SaveDeliberationController extends AbstractController
 {
-    public function __construct(protected ClassroomRepository $classroomRepository,  
-                                protected DecisionRepository $decisionRepository, 
-                                protected StudentRepository $studentRepository, 
-                                protected RepeaterRepository $repeaterRepository, 
-                                protected Security $security, 
-                                protected EntityManagerInterface $em, 
-                                protected SchoolYearService $schoolYearService, 
-                                protected TranslatorInterface $translator, 
-                                protected QrcodeService $qrcodeService, 
-                                protected SchoolRepository $schoolRepository, 
-                                protected SchoolYearRepository $schoolYearRepository, 
-                                protected StrService $strService, 
-                                protected SubSystemRepository $subSystemRepository )
-    {
-    }
+    public function __construct(
+        private Security $security, 
+        private StrService $strService, 
+        private EntityManagerInterface $em, 
+        private QrcodeService $qrcodeService, 
+        private TranslatorInterface $translator, 
+        private SchoolRepository $schoolRepository, 
+        private SchoolYearService $schoolYearService, 
+        private StudentRepository $studentRepository, 
+        private DecisionRepository $decisionRepository, 
+        private RepeaterRepository $repeaterRepository, 
+        private SubSystemRepository $subSystemRepository, 
+        private ClassroomRepository $classroomRepository,  
+        private SchoolYearRepository $schoolYearRepository, 
+    )
+    {}
 
-    /**
-     * @Route("/saveDeliberation/{idC<[0-9]+>}", name="deliberation_saveDeliberation")
-     */
+    #[Route('/saveDeliberation/{idC<[0-9]+>}', name: 'deliberation_saveDeliberation')]
     public function saveDeliberation(Request $request, int $idC): Response
     {
         $mySession = $request->getSession();
@@ -82,11 +78,11 @@ class SaveDeliberationController extends AbstractController
         $schoolYear = $this->schoolYearRepository->find($mySession->get('schoolYear')->getId());
         $subSystem = $this->subSystemRepository->find($mySession->get('subSystem')->getId());
         
-        $school = $this->schoolRepository->findBy([
+        $school = $this->schoolRepository->findOneBy([
             'schoolYear' => $schoolYear
         ]);
 
-        $schoolName = $school[0]->getFrenchName()." / ".$school[0]->getEnglishName();
+        $schoolName = $school->getFrenchName()." / ".$school->getEnglishName();
 
         $now = new DateTime('now');
 
@@ -231,19 +227,19 @@ class SaveDeliberationController extends AbstractController
 
             if ($subSystem->getSubSystem() == ConstantsClass::FRANCOPHONE) 
             {
-                $qrCode = $this->qrcodeService->qrcode($schoolName." : Ce bulletin appartient à l'élève : ".$student->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber()).", Année Scolaire : ".$schoolYear->getSchoolYear().", Classe : ".$nextClassroom->getClassroom());
+                $qrCode = $this->qrcodeService->qrcode(($schoolName." : Ce bulletin appartient à l'élève : ".$student->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber()).", Année Scolaire : ".$schoolYear->getSchoolYear().", Classe : ".$nextClassroom->getClassroom()), $student->getSlug(), $school);
 
-                $qrCodeFiche = $this->qrcodeService->qrcode($schoolName." : Cette fiche appartient à l'élève : ".$student->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber())." Année Scolaire : ".$schoolYear->getSchoolYear().", Classe : ".$nextClassroom->getClassroom());
+                $qrCodeFiche = $this->qrcodeService->qrcode(($schoolName." : Cette fiche appartient à l'élève : ".$student->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber())." Année Scolaire : ".$schoolYear->getSchoolYear().", Classe : ".$nextClassroom->getClassroom()), $student->getSlug(), $school);
                 
-                $qrCodeRollOfHonor = $this->qrcodeService->qrcode($schoolName." : Ce TABLEAU D'HONNEUR appartient à l'élève : ".$student->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber()).", Année Scolaire : ".$schoolYear->getSchoolYear().", Classe : ".$nextClassroom->getClassroom());
+                $qrCodeRollOfHonor = $this->qrcodeService->qrcode(($schoolName." : Ce TABLEAU D'HONNEUR appartient à l'élève : ".$student->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber()).", Année Scolaire : ".$schoolYear->getSchoolYear().", Classe : ".$nextClassroom->getClassroom()), $student->getSlug(), $school);
 
             } else 
             {
-                $qrCode = $this->qrcodeService->qrcode($schoolName." : This report belongs to the student : ".$student->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber()).", School Year : ".$schoolYear->getSchoolYear().", Classroom : ".$nextClassroom->getClassroom());
+                $qrCode = $this->qrcodeService->qrcode(($schoolName." : This report belongs to the student : ".$student->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber()).", School Year : ".$schoolYear->getSchoolYear().", Classroom : ".$nextClassroom->getClassroom()), $student->getSlug(), $school);
 
-                $qrCodeFiche = $this->qrcodeService->qrcode($schoolName." : This sheet belongs to the student : ".$student->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber()).", School Year  : ".$schoolYear->getSchoolYear().", Classroom : ".$nextClassroom->getClassroom());
+                $qrCodeFiche = $this->qrcodeService->qrcode(($schoolName." : This sheet belongs to the student : ".$student->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber()).", School Year  : ".$schoolYear->getSchoolYear().", Classroom : ".$nextClassroom->getClassroom()), $student->getSlug(), $school);
             
-                $qrCodeRollOfHonor = $this->qrcodeService->qrcode($schoolName." : This roll of honor belongs to the student: ".$student->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber()).", School Year  : ".$schoolYear->getSchoolYear().", Classroom : ".$nextClassroom->getClassroom());
+                $qrCodeRollOfHonor = $this->qrcodeService->qrcode(($schoolName." : This roll of honor belongs to the student: ".$student->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber()).", School Year  : ".$schoolYear->getSchoolYear().", Classroom : ".$nextClassroom->getClassroom()), $student->getSlug(), $school);
 
             }
 
@@ -289,6 +285,7 @@ class SaveDeliberationController extends AbstractController
                 $this->em->persist($registration);
             }
         }
+        
         // on precise dans la classe que la deliberation s'est déjà passée
         $selectedClassroom->setIsDeliberated(true);
         $this->em->persist($selectedClassroom);
@@ -297,6 +294,8 @@ class SaveDeliberationController extends AbstractController
 
         $this->addFlash('info', $this->translator->trans('Deliberations saved with success !'));
 
+        $mySession->set('saisiNotes', 1);
+        
         return $this->redirectToRoute('deliberation_displayDeliberation', [
             'idC' => $idC,
             'notification' => 1,

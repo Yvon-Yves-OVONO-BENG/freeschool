@@ -3,72 +3,167 @@
 {% block title %}{% trans %}Editing Notes{% endtrans %}{% endblock %}
 
 {% block subTitle %}
-    {% trans %}EXTRA MARKS UPDATING{% endtrans %}
+	{% trans %}EXTRA MARKS UPDATING{% endtrans %}
 {% endblock %}
-     
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-update-mark-admin-premium.css') }}">
+{% endblock %}
+
 {% block body %}
-  <!-- App-Content -->
-	<div class="hor-content main-content">
+	<div class="hor-content main-content fs-update-mark-page">
 		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary"></h4>
-                </div>
-                <div class="page-rightheader">
-                    <div class="btn-list">
-                        
-                    </div>
-                </div>
-            </div>
-            <!--End Page header-->
+			<div class="fs-update-mark-menu-safe-space" aria-hidden="true"></div>
 
-            <div class="card border-danger">
-                <div class="card-header" >
-                    
-                    <div class="col-md-12">
-                        <span class="page-title mb-0 text-primary">
-                            <i class="fe fe-user-check me-2"></i> {% trans %}Update of a note by the administrator{% endtrans %}
-                        </span>
-                    </div>
-                  
-                </div>
-                <div class="card-body pt-5 ">
-                    <form method="post" action="{{ path('evaluation_updateMarkByAdmin') }}">
-                        <div class="row mt-3 mb-3">
-                            <div class="col-md-2">
-                            </div>
-                            <div class="col-md-5">
-                                <div class="form-group">
-                                        <select name="teacher" id="teacher" class="form-control select2-show-search" data-placeholder="Veuillez choisir un enseignant" required autofocus>
-                                            <option label="Veuillez choisir un enseignant"></option>
-                                            {% for teacher in teachers %}
-                                                <option value="{{ teacher.id }}">
-                                                    {{ teacher.fullName }}
-                                                </option>
-                                            {% endfor %}
-                                        </select>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="updateMarkExtra">
-                                        <i class="fe fe-log-in me-2"></i> {% trans %}Enter{% endtrans %}
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+			<section class="fs-update-mark-hero">
+				<div class="fs-update-mark-hero__content">
+					<div>
+						<span class="fs-update-mark-eyebrow">
+							<i class="fe fe-user-check"></i>
+							{% trans %}Administrative marks workspace{% endtrans %}
+						</span>
 
+						<h1 class="fs-update-mark-title">
+							{% trans %}Update of a note by the administrator{% endtrans %}
+						</h1>
+
+						<p class="fs-update-mark-subtitle">
+							{% trans %}Select a teacher to access extra mark updating with a clean, secure and responsive premium interface.{% endtrans %}
+						</p>
+					</div>
+
+					<div class="fs-update-mark-hero__actions">
+						<div class="fs-update-mark-hero-stat">
+							<span class="fs-update-mark-hero-stat__icon">
+								<i class="fe fe-users"></i>
+							</span>
+							<span class="fs-update-mark-hero-stat__label">{% trans %}Teachers{% endtrans %}</span>
+							<strong class="fs-update-mark-hero-stat__value">{{ teachers|length }}</strong>
+						</div>
+
+						<div class="fs-update-mark-hero-stat fs-update-mark-hero-stat--danger">
+							<span class="fs-update-mark-hero-stat__icon">
+								<i class="fe fe-shield"></i>
+							</span>
+							<span class="fs-update-mark-hero-stat__label">{% trans %}Access{% endtrans %}</span>
+							<strong class="fs-update-mark-hero-stat__value">{% trans %}Admin{% endtrans %}</strong>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="fs-update-mark-grid">
+				<div class="fs-update-mark-card">
+					<div class="fs-update-mark-card__header">
+						<div>
+							<span class="fs-update-mark-chip">
+								<i class="fe fe-filter"></i>
+								{% trans %}Teacher selection{% endtrans %}
+							</span>
+
+							<h2>{% trans %}Choose a teacher{% endtrans %}</h2>
+
+							<p>
+								{% trans %}Select the teacher whose marks must be updated, then enter the update workspace.{% endtrans %}
+							</p>
+						</div>
+
+						<span class="fs-update-mark-card__icon">
+							<i class="fe fe-user-check"></i>
+						</span>
+					</div>
+
+					<form method="post" action="{{ path('evaluation_updateMarkByAdmin') }}" class="fs-update-mark-form needs-validation" novalidate>
+						<div class="fs-floating-field fs-required-field">
+							<select name="teacher" id="teacher" class="form-control select2-show-search fs-floating-control" data-placeholder="" required autofocus>
+								<option label="" value="">
+									
+								</option>
+
+								{% for teacher in teachers %}
+									<option value="{{ teacher.id }}">
+										{{ teacher.fullName }}
+									</option>
+								{% endfor %}
+							</select>
+
+							<label class="fs-floating-label" for="teacher">
+								<i class="fe fe-user"></i>
+								{% trans %}Teacher{% endtrans %}
+							</label>
+
+							<div class="invalid-feedback">
+								{% trans %}Please choose a teacher !{% endtrans %}
+							</div>
+						</div>
+
+						<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+						<div class="fs-update-mark-form__actions">
+							<button class="fs-update-mark-btn fs-update-mark-btn--primary fs-update-mark-submit-btn" type="submit" name="updateMarkExtra">
+								<span class="fs-update-mark-submit-spinner" aria-hidden="true"></span>
+								<i class="fe fe-log-in fs-update-mark-submit-icon"></i>
+								<span>{% trans %}Enter{% endtrans %}</span>
+							</button>
+						</div>
+					</form>
+				</div>
+
+				<aside class="fs-update-mark-preview-card">
+					<div class="fs-update-mark-preview-card__visual">
+						<div class="fs-update-mark-document">
+							<div class="fs-update-mark-document__shield">
+								<i class="fe fe-shield"></i>
+							</div>
+
+							<div class="fs-update-mark-document__line fs-update-mark-document__line--wide"></div>
+							<div class="fs-update-mark-document__line"></div>
+							<div class="fs-update-mark-document__line fs-update-mark-document__line--short"></div>
+
+							<div class="fs-update-mark-document__score">
+								<span>18.50</span>
+								<small>/20</small>
+							</div>
+						</div>
+					</div>
+
+					<div class="fs-update-mark-preview-card__content">
+						<span class="fs-update-mark-chip fs-update-mark-chip--soft">
+							<i class="fe fe-lock"></i>
+							{% trans %}Secure action{% endtrans %}
+						</span>
+
+						<h3>{% trans %}Ready to update marks{% endtrans %}</h3>
+
+						<p>
+							{% trans %}Your existing route, CSRF token and submit button name are preserved to avoid breaking the controller logic.{% endtrans %}
+						</p>
+
+						<div class="fs-update-mark-benefits">
+							<div class="fs-update-mark-benefit">
+								<i class="fe fe-check-circle"></i>
+								<span>{% trans %}Route preserved{% endtrans %}</span>
+							</div>
+
+							<div class="fs-update-mark-benefit">
+								<i class="fe fe-check-circle"></i>
+								<span>{% trans %}CSRF token preserved{% endtrans %}</span>
+							</div>
+
+							<div class="fs-update-mark-benefit">
+								<i class="fe fe-check-circle"></i>
+								<span>{% trans %}No controller change required{% endtrans %}</span>
+							</div>
+						</div>
+					</div>
+				</aside>
+			</section>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-update-mark-admin-premium.js') }}"></script>
 {% endblock %}

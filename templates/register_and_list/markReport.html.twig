@@ -3,110 +3,117 @@
 {% block title %}{% trans %}Mark Report{% endtrans %}{% endblock %}
 
 {% block subTitle %}
-    {% trans %}MARKS RECORDS MANAGMENT{% endtrans %}
+	{% trans %}MARKS RECORDS MANAGMENT{% endtrans %}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-mark-report-premium.css') }}">
 {% endblock %}
 
 {% block body %}
- <!-- App-Content -->
-	<div class="hor-content main-content">
+	<div class="hor-content main-content fs-mark-page">
 		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary"></h4>
-                </div>
-                <div class="page-rightheader">
-                    <div class="btn-list">
-                        
-                    </div>
-                </div>
-            </div>
-            <!--End Page header-->
+			<div class="fs-mark-menu-safe-space" aria-hidden="true"></div>
 
-            <div class="card border-primary">
-                <div class="card-header">
-                    <span class="page-title mb-0 text-primary">
-                        <i class="fa fa-pencil me-2"></i>{% trans %}Teacher's grade transfer sheets{% endtrans %}
-                    </span>
-                </div>
-                <div class="card-body pt-5 ">
-                    <form action="{{ path('register_and_list_printMarkReport') }}" method="post" target="_blank">
-                        <div class="row">
-                            <div class="col-md-2">
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <select name="teacher" id="teacher" class="form-control select2-show-search" data-placeholder="Choose a teacher" autofocus  required>
-                                        <option label="Choose a teacher" value="">
-                                            {% trans %}Choose a teacher{% endtrans %}
-                                        </option>
-                                        <option value="0">{% trans %}All the Teachers{% endtrans %}</option>
-                                        {% for teacher in teachers %}
-                                            <option value="{{ teacher.id }}">{{ teacher.fullName }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printMarkReport">
-                                        <i class="fa fa-print"></i>
-                                        {% trans %}Print{% endtrans %}</button>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
+			<section class="fs-mark-hero">
+				<div class="fs-mark-hero__content">
+					<div>
+						<span class="fs-mark-eyebrow"><i class="fa fa-pencil"></i>{% trans %}Marks records workspace{% endtrans %}</span>
+						<h1 class="fs-mark-title">{% trans %}Teacher's and class grade transfer sheets{% endtrans %}</h1>
+						<p class="fs-mark-subtitle">{% trans %}Print marks record sheets by teacher or classroom through a clean, responsive and premium workspace.{% endtrans %}</p>
+					</div>
 
-            <div class="card border-primary">
-                <div class="card-header">
-                    <span class="page-title mb-0 text-primary">
-                        <i class="fa fa-pencil me-2"></i>{% trans %}Class grade transfer sheets{% endtrans %}
-                    </span>
-                </div>
-                <div class="card-body pt-5 ">
-                    <form action="{{ path('print_mark_report_classroom') }}" method="post" target="_blank">
-                        <div class="row">
-                            <div class="col-md-2">
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <select class="form-control select2-show-search" id="validationCustom04" data-placeholder="Choose a classroom" name="idClassroom" required style="border: 1px solid #0f0;">
-                                        <option label="Choose a classroom" value="">{% trans %}Choose a class{% endtrans %}</option>
-                                        {# <option value="0">{% trans %}All class{% endtrans %}</option> #}
-                                        
-                                        {% if subSystem == 'Francophone / French Speaker' %}
-                                            {% if school.education.education == 'Général' %}
-                                                {% include "includes/_selectClassrooms.html.twig" %}
-                                                {% else %}
-                                                    {% include "includes/_selectClassroomsTech.html.twig" %}
-                                            {% endif %}
-                                            {% else %}
-                                                {% include "includes/_selectClassroomsEn.html.twig" %}
-                                        {% endif %}
+					<div class="fs-mark-hero__actions">
+						<div class="fs-mark-hero-stat">
+							<span class="fs-mark-hero-stat__icon"><i class="fe fe-users"></i></span>
+							<span class="fs-mark-hero-stat__label">{% trans %}Teachers{% endtrans %}</span>
+							<strong class="fs-mark-hero-stat__value">{{ teachers|length }}</strong>
+						</div>
+						<div class="fs-mark-hero-stat fs-mark-hero-stat--soft">
+							<span class="fs-mark-hero-stat__icon"><i class="fe fe-printer"></i></span>
+							<span class="fs-mark-hero-stat__label">{% trans %}Output{% endtrans %}</span>
+							<strong class="fs-mark-hero-stat__value">{% trans %}PDF{% endtrans %}</strong>
+						</div>
+					</div>
+				</div>
+			</section>
 
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printMarkReport">
-                                        <i class="fa fa-print"></i>
-                                        {% trans %}Print{% endtrans %}</button>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+			<section class="fs-mark-grid">
+				<div class="fs-mark-card">
+					<div class="fs-mark-card__header">
+						<div>
+							<span class="fs-mark-chip"><i class="fe fe-user-check"></i>{% trans %}Teacher selection{% endtrans %}</span>
+							<h2>{% trans %}Teacher's grade transfer sheets{% endtrans %}</h2>
+							<p>{% trans %}Select one teacher or all teachers before printing the grade transfer sheets.{% endtrans %}</p>
+						</div>
+						<span class="fs-mark-card__icon"><i class="fa fa-pencil"></i></span>
+					</div>
 
+					<form action="{{ path('register_and_list_printMarkReport') }}" method="post" target="_blank" class="fs-mark-form needs-validation" novalidate data-no-spinner="1">
+						<div class="fs-floating-field fs-required-field">
+							<select name="teacher" id="teacher" class="form-control select2-show-search fs-floating-control" data-placeholder="" autofocus required>
+								<option label="" value=""></option>
+								<option value="0">{% trans %}All the Teachers{% endtrans %}</option>
+								{% for teacher in teachers %}
+									<option value="{{ teacher.id }}">{{ teacher.fullName }}</option>
+								{% endfor %}
+							</select>
+							<label class="fs-floating-label" for="teacher"><i class="fe fe-user"></i>{% trans %}Teacher{% endtrans %}</label>
+							<div class="invalid-feedback">{% trans %}Please choose a teacher !{% endtrans %}</div>
+						</div>
+
+						<div class="fs-mark-form__actions">
+							<button class="fs-mark-btn fs-mark-btn--primary fs-mark-submit-btn" type="submit" name="printMarkReport">
+								<i class="fa fa-print fs-mark-submit-icon"></i>
+								<span>{% trans %}Print{% endtrans %}</span>
+							</button>
+						</div>
+					</form>
+				</div>
+
+				<div class="fs-mark-card fs-mark-card--classroom">
+					<div class="fs-mark-card__header">
+						<div>
+							<span class="fs-mark-chip fs-mark-chip--violet"><i class="fe fe-home"></i>{% trans %}Classroom selection{% endtrans %}</span>
+							<h2>{% trans %}Class grade transfer sheets{% endtrans %}</h2>
+							<p>{% trans %}Select the classroom for which you want to print grade transfer sheets.{% endtrans %}</p>
+						</div>
+						<span class="fs-mark-card__icon fs-mark-card__icon--violet"><i class="fe fe-home"></i></span>
+					</div>
+
+					<form action="{{ path('print_mark_report_classroom') }}" method="post" target="_blank" class="fs-mark-form needs-validation" novalidate data-no-spinner="1">
+						<div class="fs-floating-field fs-required-field">
+							<select class="form-control select2-show-search fs-floating-control" id="idClassroom" data-placeholder="" name="idClassroom" required>
+								<option label="" value=""></option>
+								{% if subSystem == 'Francophone / French Speaker' %}
+									{% if school.education.education == 'Général' %}
+										{% include "includes/_selectClassrooms.html.twig" %}
+									{% else %}
+										{% include "includes/_selectClassroomsTech.html.twig" %}
+									{% endif %}
+								{% else %}
+									{% include "includes/_selectClassroomsEn.html.twig" %}
+								{% endif %}
+							</select>
+							<label class="fs-floating-label" for="idClassroom"><i class="fe fe-home"></i>{% trans %}Classroom{% endtrans %}</label>
+							<div class="invalid-feedback">{% trans %}Please choose a classroom !{% endtrans %}</div>
+						</div>
+
+						<div class="fs-mark-form__actions">
+							<button class="fs-mark-btn fs-mark-btn--primary fs-mark-submit-btn" type="submit" name="printMarkReport">
+								<i class="fa fa-print fs-mark-submit-icon"></i>
+								<span>{% trans %}Print{% endtrans %}</span>
+							</button>
+						</div>
+					</form>
+				</div>
+			</section>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-mark-report-premium.js') }}"></script>
 {% endblock %}

@@ -1,121 +1,953 @@
 {% extends 'baseLoggin.html.twig' %}
 
-{% block title %}FreeSchool{% endblock %}
+{% block title %}{% trans %}FreeSchool{% endtrans %}{% endblock %}
 
 {% block stylesheets %}
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap');
+
+        :root {
+            --fs-font: "Nunito", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        .fs-login-shell {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 42px 14px;
+            font-family: var(--fs-font);
+            background:
+                radial-gradient(circle at top left, rgba(59, 130, 246, .12), transparent 32%),
+                linear-gradient(135deg, #f8fafc 0%, #eef2ff 48%, #f1f5f9 100%);
+        }
+
+        .fs-login-card {
+            width: min(980px, 100%);
+            border: 0;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 24px 70px rgba(15, 23, 42, .22);
+            background: #fff;
+        }
+
+        .fs-login-brand {
+            --brand-text: #fff;
+            --brand-muted: rgba(255, 255, 255, .86);
+            --brand-background: linear-gradient(135deg, #0f172a 0%, #1d4ed8 52%, #06b6d4 100%);
+
+            position: relative;
+            min-height: 100%;
+            height: 100%;
+            overflow: hidden;
+            color: var(--brand-text);
+            padding: 46px 34px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+
+            isolation: isolate;
+            background: var(--brand-background);
+            transition: background .45s ease, color .45s ease;
+        }
+
+        /*
+         * Le sélecteur avec l'identifiant et !important empêche les feuilles
+         * globales du thème de remplacer le décor calculé selon l'heure.
+         */
+        #fsLoginBrand.fs-login-brand {
+            background: var(--brand-background) !important;
+            color: var(--brand-text) !important;
+        }
+
+        .fs-login-brand::before,
+        .fs-login-brand::after {
+            content: "";
+            position: absolute;
+            border-radius: 999px;
+            z-index: -1;
+            transition: .45s ease;
+        }
+
+        .fs-login-brand::before {
+            width: 280px;
+            height: 280px;
+            left: -95px;
+            top: -80px;
+            background: rgba(255, 255, 255, .14);
+            filter: blur(2px);
+        }
+
+        .fs-login-brand::after {
+            width: 240px;
+            height: 240px;
+            right: -95px;
+            bottom: -80px;
+            background: rgba(255, 255, 255, .18);
+            filter: blur(4px);
+        }
+
+        #fsLoginBrand.fs-login-brand.fs-time-morning {
+            --brand-text: #102033;
+            --brand-muted: rgba(15, 23, 42, .72);
+            --brand-background:
+                radial-gradient(circle at 18% 18%, rgba(255, 243, 196, .95) 0 12%, transparent 13%),
+                linear-gradient(145deg, #fef3c7 0%, #7dd3fc 42%, #38bdf8 100%);
+        }
+
+        #fsLoginBrand.fs-login-brand.fs-time-afternoon {
+            --brand-text: #082f49;
+            --brand-muted: rgba(8, 47, 73, .74);
+            --brand-background:
+                radial-gradient(circle at 17% 16%, rgba(255, 255, 255, .85) 0 10%, transparent 11%),
+                linear-gradient(145deg, #dbeafe 0%, #38bdf8 48%, #2563eb 100%);
+        }
+
+        #fsLoginBrand.fs-login-brand.fs-time-evening {
+            --brand-text: #fff7ed;
+            --brand-muted: rgba(255, 247, 237, .86);
+            --brand-background:
+                radial-gradient(circle at 18% 18%, rgba(253, 186, 116, .85) 0 11%, transparent 12%),
+                linear-gradient(145deg, #7c2d12 0%, #f97316 46%, #4f46e5 100%);
+        }
+
+        #fsLoginBrand.fs-login-brand.fs-time-night {
+            --brand-text: #ffffff;
+            --brand-muted: rgba(255, 255, 255, .82);
+            --brand-background:
+                radial-gradient(circle at 18% 18%, rgba(226, 232, 240, .92) 0 9%, transparent 10%),
+                linear-gradient(145deg, #020617 0%, #172554 56%, #312e81 100%);
+        }
+
+        .fs-brand-logo {
+            position: absolute;
+            top: 30px;
+            right: 32px;
+            z-index: 3;
+            max-width: 158px;
+            margin: 0;
+            filter: drop-shadow(0 14px 20px rgba(15, 23, 42, .20));
+        }
+
+        .fs-sky-widget {
+            position: absolute;
+            top: 28px;
+            left: 32px;
+            width: 96px;
+            height: 96px;
+            border-radius: 999px;
+            display: grid;
+            place-items: center;
+            background: rgba(255, 255, 255, .20);
+            backdrop-filter: blur(12px);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .22), 0 20px 34px rgba(15, 23, 42, .15);
+        }
+
+        .fs-sky-icon {
+            font-size: 48px;
+            line-height: 1;
+            animation: fsFloat 4s ease-in-out infinite;
+        }
+
+        .fs-sky-stars {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity .35s ease;
+        }
+
+        .fs-time-night .fs-sky-stars,
+        .fs-time-evening .fs-sky-stars {
+            opacity: 1;
+        }
+
+        .fs-star {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .86);
+            box-shadow: 0 0 12px rgba(255, 255, 255, .8);
+        }
+
+        .fs-star:nth-child(1) { left: 22px; top: 22px; }
+        .fs-star:nth-child(2) { right: 24px; top: 30px; width: 4px; height: 4px; }
+        .fs-star:nth-child(3) { left: 30px; bottom: 22px; width: 3px; height: 3px; }
+
+        .fs-brand-copy {
+            position: relative;
+            z-index: 2;
+            margin-top: 0;
+            transform: none;
+            width: 100%;
+        }
+
+        .fs-greeting {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding: 8px 13px;
+            border-radius: 999px;
+            font-weight: 900;
+            background: rgba(255, 255, 255, .18);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .20);
+            backdrop-filter: blur(10px);
+        }
+
+        .fs-login-brand h1 {
+            font-size: 31px;
+            line-height: 1.12;
+            font-weight: 900;
+            margin-bottom: 14px;
+            letter-spacing: -.035em;
+            color: var(--brand-text);
+        }
+
+        .fs-login-brand p {
+            font-size: 14px;
+            color: var(--brand-muted);
+            line-height: 1.7;
+            margin-bottom: 0;
+        }
+
+        .fs-login-form {
+            position: relative;
+            padding: 42px 38px;
+            background:
+                radial-gradient(circle at top right, rgba(99, 102, 241, .08), transparent 30%),
+                #fff;
+        }
+
+        .fs-login-form h2 {
+            font-size: 25px;
+            font-weight: 900;
+            color: #0f172a;
+            letter-spacing: -.025em;
+        }
+
+        .fs-login-form .form-label {
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .fs-login-form .form-control,
+        .fs-login-form .form-select {
+            min-height: 48px;
+            border-radius: 14px;
+            border: 1px solid #dbe3ef;
+            color: #0f172a;
+            font-weight: 700;
+            transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+        }
+
+        .fs-login-form .form-control:focus,
+        .fs-login-form .form-select:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 .2rem rgba(37, 99, 235, .12);
+        }
+
+        .fs-choice {
+            border: 1px solid #dbe3ef;
+            border-radius: 14px;
+            padding: 12px 14px;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: .2s ease;
+            width: 100%;
+            font-weight: 800;
+        }
+
+        .fs-choice:hover {
+            border-color: #2563eb;
+            background: #eff6ff;
+        }
+
+        .selectgroup-input:checked + .fs-choice {
+            border-color: #2563eb;
+            color: #1d4ed8;
+            background: #eff6ff;
+            box-shadow: inset 0 0 0 1px #2563eb;
+        }
+
+        .fs-submit {
+            min-height: 50px;
+            border-radius: 14px;
+            font-weight: 900;
+            box-shadow: 0 14px 30px rgba(79, 70, 229, .28);
+        }
+
         .error {
-            color: red;
+            color: #dc2626;
             font-size: 12px;
+            font-weight: 800;
+            margin-top: 6px;
+        }
+
+        .fs-field-error,
+        .fs-field-error .form-control,
+        .fs-field-error .form-select,
+        .form-control.fs-field-error,
+        .form-select.fs-field-error,
+        .fs-choice.fs-field-error {
+            border-color: #ef4444 !important;
+            background: #fff1f2 !important;
+            box-shadow: 0 0 0 .18rem rgba(239, 68, 68, .14) !important;
+        }
+
+        .fs-shake {
+            animation: fsShake .42s ease-in-out;
+        }
+
+        @keyframes fsShake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-7px); }
+            40% { transform: translateX(7px); }
+            60% { transform: translateX(-5px); }
+            80% { transform: translateX(5px); }
+        }
+
+        @keyframes fsFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-7px) rotate(4deg); }
+        }
+
+        @media (max-width: 767px) {
+            .fs-login-shell {
+                padding: 22px 12px;
             }
 
-            .valid {
-            color: green;
-            font-size: 12px;
+            .fs-login-brand {
+                min-height: 330px;
+                padding: 34px 26px;
             }
-        {# input[type="radio"].error {
-            outline: 2px solid red;
-        } #}
 
-        {# input[type="radio"].valid {
-            outline: 2px solid green;
-        } #}
+            .fs-brand-logo {
+                top: 24px;
+                right: 24px;
+                max-width: 138px;
+            }
+
+            .fs-sky-widget {
+                top: 22px;
+                left: 24px;
+                width: 78px;
+                height: 78px;
+            }
+
+            .fs-sky-icon {
+                font-size: 38px;
+            }
+
+            .fs-brand-copy {
+                margin-top: 0;
+                transform: none;
+            }
+            .fs-login-form {
+                padding: 32px 24px;
+            }
+        }
+
+        /* COMPACT LOGIN FORM - réduit réellement la hauteur verticale */
+.login-right,
+.auth-right,
+.form-section,
+.card-login-right,
+.login-form-container {
+    padding-top: 24px !important;
+    padding-bottom: 18px !important;
+}
+
+/* Titre Connexion */
+.login-right h1,
+.login-right h2,
+.auth-right h1,
+.auth-right h2,
+.form-section h1,
+.form-section h2 {
+    font-size: 26px !important;
+    line-height: 1.1 !important;
+    margin-bottom: 16px !important;
+}
+
+/* Labels */
+.login-right label,
+.auth-right label,
+.form-section label {
+    margin-bottom: 6px !important;
+    font-size: 13px !important;
+    line-height: 1.1 !important;
+}
+
+/* Espacement entre les blocs */
+.login-right .form-group,
+.auth-right .form-group,
+.form-section .form-group,
+.login-right .mb-3,
+.login-right .mb-4,
+.auth-right .mb-3,
+.auth-right .mb-4,
+.form-section .mb-3,
+.form-section .mb-4 {
+    margin-bottom: 10px !important;
+}
+
+/* Boutons Anglophone / Francophone */
+.login-right .sub-system button,
+.login-right .subsystem button,
+.login-right .language-card,
+.login-right .choice-card,
+.auth-right .sub-system button,
+.auth-right .subsystem button,
+.auth-right .language-card,
+.auth-right .choice-card,
+.form-section .sub-system button,
+.form-section .subsystem button,
+.form-section .language-card,
+.form-section .choice-card {
+    min-height: 54px !important;
+    height: 54px !important;
+    padding: 8px 14px !important;
+}
+
+/* Champs select + input */
+.login-right input,
+.login-right select,
+.auth-right input,
+.auth-right select,
+.form-section input,
+.form-section select {
+    height: 42px !important;
+    min-height: 42px !important;
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+    font-size: 14px !important;
+}
+
+/* Si tu utilises Choices.js / select custom */
+.login-right .choices__inner,
+.auth-right .choices__inner,
+.form-section .choices__inner {
+    min-height: 38px !important;
+    height: 38px !important;
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+}
+
+.login-right .choices__list--single,
+.auth-right .choices__list--single,
+.form-section .choices__list--single {
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+}
+
+/* Input password avec icône */
+.login-right .input-group,
+.auth-right .input-group,
+.form-section .input-group {
+    height: 42px !important;
+}
+
+.login-right .input-group input,
+.auth-right .input-group input,
+.form-section .input-group input {
+    height: 42px !important;
+}
+
+/* Bouton Login */
+.login-right button[type="submit"],
+.auth-right button[type="submit"],
+.form-section button[type="submit"],
+.login-right .btn-login,
+.auth-right .btn-login,
+.form-section .btn-login {
+    height: 46px !important;
+    min-height: 46px !important;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    margin-top: 8px !important;
+}
+
+/* Password forgotten */
+.login-right .forgot-password,
+.login-right .password-forgotten,
+.auth-right .forgot-password,
+.auth-right .password-forgotten,
+.form-section .forgot-password,
+.form-section .password-forgotten {
+    margin-top: 8px !important;
+    margin-bottom: 0 !important;
+    padding: 7px 12px !important;
+    font-size: 11px !important;
+}
+
+.login-form-compact {
+    padding-top: 22px !important;
+    padding-bottom: 16px !important;
+}
+
+.login-form-compact h1,
+.login-form-compact h2 {
+    font-size: 26px !important;
+    line-height: 1.1 !important;
+    margin-bottom: 14px !important;
+}
+
+.login-form-compact label {
+    font-size: 13px !important;
+    margin-bottom: 5px !important;
+}
+
+.login-form-compact .form-group,
+.login-form-compact .mb-3,
+.login-form-compact .mb-4 {
+    margin-bottom: 9px !important;
+}
+
+.login-form-compact input,
+.login-form-compact select {
+    height: 40px !important;
+    min-height: 40px !important;
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+}
+
+.login-form-compact .choice-card,
+.login-form-compact .language-card,
+.login-form-compact .sub-system button {
+    height: 52px !important;
+    min-height: 52px !important;
+    padding: 8px 14px !important;
+}
+
+.login-form-compact button[type="submit"] {
+    height: 44px !important;
+    min-height: 44px !important;
+    margin-top: 6px !important;
+}
+
+.login-form-compact .forgot-password,
+.login-form-compact .password-forgotten {
+    margin-top: 7px !important;
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+}
+
+/* Réduction finale pour enlever le scroller vertical */
+.fs-login-shell {
+    padding-top: 18px !important;
+    padding-bottom: 18px !important;
+}
+
+.fs-login-form {
+    padding-top: 26px !important;
+    padding-bottom: 16px !important;
+}
+
+.login-form-compact {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* Réduit l'espace avant et après le titre Connexion */
+.fs-login-form h2 {
+    margin-top: 0 !important;
+    margin-bottom: 6px !important;
+    line-height: 1.05 !important;
+}
+
+/* Réduit l'espace autour du mot de passe oublié */
+.fs-forgot-wrapper {
+    margin-top: 6px !important;
+    margin-bottom: 0 !important;
+    line-height: 1 !important;
+}
+
+.fs-forgot-wrapper a {
+    font-size: 10px !important;
+    line-height: 1 !important;
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+}
+
+/* Réduit le gros espace avant le bouton oublié */
+.fs-login-form .mb-4 {
+    margin-bottom: 10px !important;
+}
     </style>
+
+    
 {% endblock %}
 
 {% block body %}
-
-    <div class="row" style="margin-top: 100px;">
-        <div class="col mx-auto">
-            <div class="row justify-content-center">
-                <div class="col-xl-6 col-lg-12">
-                    <div class="row p-0 m-0">
-                        <div class="col-md-4 col-lg-4 p-0 mx-auto">
-                            <div class="text-justified text-white p-5 register-1 overflow-hidden" >
-                                <div class="custom-content">
-                                    <div class="mb-5 br-7 text-center">
-                                        <img src="{{asset('build/custom2/images/brand/logo_white.png')}}" class="header-brand-img desktop-lgo" alt="Freedom logo">
-                                    </div>
-                                    <div class="ms-5" style="text-align: center;">
-                                        <div class="fs-18 mb-6 text-white">{% trans %}Welcome to Freeschool!{% endtrans %}
-                                        </div>
-                                        <div class="fs-11 mb-6 text-white">
-                                        {% trans %}The best school management software since 2019{% endtrans %} 
-                                        </div>
-                                        <h6 class="text-white">
-                                            <a href="javascript:void(0);" class="btn btn-white text-primary text-transparent font-weight-bold ">{% trans %}The Best{% endtrans %} <i class="fa fa-thumbs-up"></i></a>
-                                        </h6>     
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-8 col-lg-8 p-0 mx-auto" style="margin-left: auto !important; margin-right: auto !important; text-align:center !important;">
-                            <div class="bg-white text-dark br-7 br-tl-0 br-bl-0 border-primary">
-                                
-                                <div class="card-body">
-                                    <div class="text-center mb-3">
-                                        {# <h4 class="mb-2">{% trans %}L.B NGUELEMENDOUKA {% endtrans %}</h4> #}
-                                        {# <h4 class="mb-2">{% trans %}G.B.H.S NGUELEMENDOUKA{% endtrans %}</h4> #}
-                                        {# <h4 class="mb-2">{% trans %}LYCEE DE MARTAP / G.H.S MARTAP{% endtrans %}</h4> #}
-                                        <h4 class="mb-2">{% trans %}LYCEE BILINGUE D'ODZA / G.B.H.S ODZA{% endtrans %}</h4>
-                                        {# <h4 class="mb-2">{% trans %}LYCEE TECHNIQUE D'AYOS/ G.T.H.S AYOS{% endtrans %}</h4> #}
-                                        <br>
-                                    </div>
-                                    <form id="login-form" class="row g-3 needs-validation" novalidate action="{{ path('home_mainMenu') }}" method="post">
-                                        
-                                        <div class="form-group ">
-                                            <label for="validationCustom01" class="form-label" style="font-weight: bold !important;">{% trans %}Sub System / Sous Système{% endtrans %}
-                                            </label>
-                                                    
-                                            <div class="selectgroup selectgroup-pills ">
-                                                <label class="selectgroup-item">
-                                                    <input type="radio" name="subSystem" value="1" required class="selectgroup-input">
-                                                    <span class="selectgroup-button">
-                                                        <img src="{{asset('build/custom/images/en.png')}}" alt="img" class="me-2 country">
-                                                        {% trans %}English Speaker{% endtrans %}
-                                                    </span>
-                                                </label>
-                                                <label class="selectgroup-item">
-                                                    <input type="radio" name="subSystem" value="2" required class="selectgroup-input">
-                                                    <span class="selectgroup-button">
-                                                        <img src="{{asset('build/custom/images/fr.png')}}" alt="img" class="me-2 country">
-                                                        {% trans %}French Speaker{% endtrans %} 
-                                                    </span>
-                                                </label>
-                                            </div>
-                                            <div id="subSystem-error" class="error"></div>
-
-                                            {# <div id="valid-message" style="color: green; display: none;">{% trans %}Good.{% endtrans %}</div> #}
-                                            
-                                            <div class="invalid-feedback">
-                                                {% trans %}Please choose a sub system{% endtrans %}
-                                            </div>
-                                            <label class="form-label" style="font-weight: bold !important;">{% trans %}School Year{% endtrans %}</label>
-                                            <select class="form-select border" data-placeholder="Choisir" name="schoolYear" id="schoolYear" required>
-                                                <option value="" label={% trans %}"School Year / Année Scolaire"{% endtrans %}></option>
-                                                    {% for schoolYear in schoolYears %}
-                                                        <option value="{{ schoolYear.id }}">
-                                                            {{ schoolYear.schoolYear }}
-                                                        </option>
-                                                    {% endfor %}
-                                            </select>
-                                            <div class="invalid-feedback">
-                                                {% trans %}Please choose school year{% endtrans %}
-                                            </div>
-                                        </div>
-                                        <div class="form-group text-center m">
-                                            <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" id="soumission" ><i class="fe fe-unlock me-2"></i> {% trans %}Enter{% endtrans %}</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
+    <div class="fs-login-shell">
+        <div class="fs-login-card">
+            <div class="row g-0">
+                <div class="col-md-5">
+                    <div class="fs-login-brand" id="fsLoginBrand">
+                        <div class="fs-sky-widget" aria-hidden="true">
+                            <span class="fs-sky-icon" id="fsSkyIcon">☀️</span>
+                            <span class="fs-sky-stars">
+                                <span class="fs-star"></span>
+                                <span class="fs-star"></span>
+                                <span class="fs-star"></span>
+                            </span>
                         </div>
 
-                        
+                        <img class="fs-brand-logo" src="{{ asset('build/custom2/images/brand/logo_white.png') }}" alt="FreeSchool">
+
+                        <div class="fs-brand-copy">
+                            <div class="fs-greeting">
+                                <span id="fsGreetingIcon">👋</span>
+                                <span id="fsGreetingText">{% trans %}Hello{% endtrans %}</span>
+                            </div>
+
+                            <h1>{% trans %}Welcome to Freeschool!{% endtrans %}</h1>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-7">
+                    <div class="fs-login-form">
+                        <div class="login-form-compact">
+                            <div class="mb-4 text-center text-md-start">
+                                <h2>{% trans %}Login{% endtrans %}</h2>
+                            </div>
+
+                            {% if error %}
+                                <div class="alert alert-danger">
+                                    {{ error.messageKey|trans(error.messageData, 'security') }}
+                                </div>
+                            {% endif %}
+
+                            {% for message in app.flashes('info') %}
+                                <div class="alert alert-success">{{ message }}</div>
+                            {% endfor %}
+                            {% for message in app.flashes('warning') %}
+                                <div class="alert alert-warning">{{ message }}</div>
+                            {% endfor %}
+
+                            <form id="login-form" class="needs-validation" novalidate action="{{ path('login') }}" method="post">
+                                <div class="mb-3" data-required-group="subSystem">
+                                    <label class="form-label">{% trans %}Sub System{% endtrans %}</label>
+                                    <div class="row g-2">
+                                        {% for subSystem in subSystems %}
+                                            <div class="col-sm-6">
+                                                <label class="selectgroup-item w-100 mb-0">
+                                                    <input type="radio" name="subSystem" value="{{ subSystem.id }}" required class="selectgroup-input fs-login-filter">
+                                                    <span class="fs-choice d-flex align-items-center justify-content-center">
+                                                        {% if 'English' in subSystem.subSystem or 'Anglo' in subSystem.subSystem %}
+                                                            <img src="{{ asset('build/custom/images/en.png') }}" alt="EN" class="me-2 country">
+                                                                {% trans %}Anglophone{% endtrans %}
+                                                        {% elseif 'French' in subSystem.subSystem or 'Franco' in subSystem.subSystem %}
+                                                            <img src="{{ asset('build/custom/images/fr.png') }}" alt="FR" class="me-2 country">
+                                                                {% trans %}Francophone{% endtrans %}
+                                                        {% endif %}
+                                                        {# {{ subSystem.subSystem }} #}
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div id="subSystem-error" class="error"></div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label" for="schoolYear">{% trans %}School Year{% endtrans %}</label>
+                                    <select class="form-select fs-login-filter" name="schoolYear" id="schoolYear" required>
+                                        <option value="">{% trans %}School Year{% endtrans %}</option>
+                                        {% for schoolYear in schoolYears %}
+                                            <option value="{{ schoolYear.id }}">{{ schoolYear.schoolYear }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <div class="invalid-feedback">{% trans %}Please choose school year{% endtrans %}</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label" for="inputUsername">{% trans %}Staff{% endtrans %}</label>
+                                    <select class="form-select select2-show-search" name="username" id="inputUsername" autocomplete="username" required disabled>
+                                        <option value="">{% trans %}Choose sub-system and school year first{% endtrans %}</option>
+                                        {% for user in users|default([]) %}
+                                            {% set teacher = user.teacher %}
+                                            <option value="{{ user.username }}"
+                                                data-school-year="{{ teacher and teacher.schoolYear ? teacher.schoolYear.id : '' }}"
+                                                data-sub-system="{{ teacher and teacher.subSystem ? teacher.subSystem.id : '' }}"
+                                                data-admin="{{ teacher ? '0' : '1' }}"
+                                                {% if user.username == last_username|default('') %}selected{% endif %}>
+                                                {{ user.fullName }}{% if teacher and teacher.duty %} - {{ teacher.duty.duty }}{% endif %}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label" for="inputPassword">{% trans %}Password{% endtrans %}</label>
+                                    <div class="input-group" id="Password-toggle">
+                                        <a href="" class="input-group-text"><i class="fe fe-eye" aria-hidden="true"></i></a>
+                                        <input class="form-control" type="password" placeholder="{% trans %}Password{% endtrans %}" name="password" id="inputPassword" autocomplete="current-password" required>
+                                    </div>
+                                </div>
+
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                                <button type="submit" class="btn btn-primary w-100 fs-submit" id="soumission">
+                                    <i class="fe fe-unlock me-2"></i> {% trans %}Login{% endtrans %}
+                                </button>
+
+                                <div class="text-center mt-1 fs-forgot-wrapper">
+                                    {# <a href="{{ path('mot_de_passe_oublie') }}" class="badge badge-gradient-danger px-2 py-1"> #}
+                                    <a href="javascript:void(0);" class="badge badge-gradient-danger px-2 py-1">
+                                        {% trans %}Password forgotten ?{% endtrans %}
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-	<script src="{{ asset ('build/custom/js/verificationChampRadio.js')}}"></script>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        (function () {
+            const schoolYearSelect = document.getElementById('schoolYear');
+            const userSelect = document.getElementById('inputUsername');
+            const subSystemInputs = document.querySelectorAll('input[name="subSystem"]');
+            const initialOptions = Array.from(userSelect.querySelectorAll('option')).slice(1).map(option => option.cloneNode(true));
+
+            function selectedSubSystem() {
+                const checked = document.querySelector('input[name="subSystem"]:checked');
+                return checked ? checked.value : '';
+            }
+
+            function refreshUsers() {
+                const schoolYear = schoolYearSelect.value;
+                const subSystem = selectedSubSystem();
+                userSelect.innerHTML = '';
+
+                const placeholder = new Option(schoolYear && subSystem ? '{{ 'Choose personnel'|trans|e('js') }}' : '{{ 'Choose sub-system and school year first'|trans|e('js') }}', '');
+                userSelect.add(placeholder);
+
+                if (!schoolYear || !subSystem) {
+                    userSelect.disabled = true;
+                    return;
+                }
+
+                let count = 0;
+                initialOptions.forEach(option => {
+                    const isAdmin = option.dataset.admin === '1';
+                    const sameYear = option.dataset.schoolYear === schoolYear;
+                    const sameSubSystem = option.dataset.subSystem === subSystem;
+                    if (isAdmin || (sameYear && sameSubSystem)) {
+                        userSelect.add(option.cloneNode(true));
+                        count++;
+                    }
+                });
+
+                userSelect.disabled = count === 0;
+                if (count === 0) {
+                    userSelect.innerHTML = '';
+                    userSelect.add(new Option('{{ 'No personnel found for this choice'|trans|e('js') }}', ''));
+                }
+            }
+
+            schoolYearSelect.addEventListener('change', refreshUsers);
+            subSystemInputs.forEach(input => input.addEventListener('change', refreshUsers));
+            refreshUsers();
+        })();
+
+        (function () {
+            const brand = document.getElementById('fsLoginBrand');
+            const skyIcon = document.getElementById('fsSkyIcon');
+            const greetingIcon = document.getElementById('fsGreetingIcon');
+            const greetingText = document.getElementById('fsGreetingText');
+
+            if (!brand || !skyIcon || !greetingIcon || !greetingText) {
+                return;
+            }
+
+            const timeClasses = [
+                'fs-time-morning',
+                'fs-time-afternoon',
+                'fs-time-evening',
+                'fs-time-night'
+            ];
+
+            /**
+             * Met à jour le décor avec l'heure locale de l'appareil.
+             * La fonction est rappelée automatiquement afin que le thème ne
+             * reste pas figé lorsqu'un onglet demeure ouvert longtemps.
+             */
+            function applyTimeTheme() {
+                const hour = new Date().getHours();
+                let theme;
+
+                if (hour >= 5 && hour < 12) {
+                    theme = {
+                        className: 'fs-time-morning',
+                        skyIcon: '🌤️',
+                        greeting: '{% trans %}Hello{% endtrans %}',
+                        greetingIcon: '👋'
+                    };
+                } else if (hour >= 12 && hour < 17) {
+                    theme = {
+                        className: 'fs-time-afternoon',
+                        skyIcon: '☀️',
+                        greeting: '{% trans %}Good afternoon{% endtrans %}',
+                        greetingIcon: '😊'
+                    };
+                } else if (hour >= 17 && hour < 20) {
+                    theme = {
+                        className: 'fs-time-evening',
+                        skyIcon: '🌇',
+                        greeting: '{% trans %}Good evening{% endtrans %}',
+                        greetingIcon: '👋'
+                    };
+                } else {
+                    theme = {
+                        className: 'fs-time-night',
+                        skyIcon: '🌙',
+                        greeting: '{% trans %}Good evening{% endtrans %}',
+                        greetingIcon: '✨'
+                    };
+                }
+
+                brand.classList.remove(...timeClasses);
+                brand.classList.add(theme.className);
+                brand.dataset.localHour = String(hour);
+                skyIcon.textContent = theme.skyIcon;
+                greetingText.textContent = theme.greeting;
+                greetingIcon.textContent = theme.greetingIcon;
+            }
+
+            applyTimeTheme();
+
+            /* Évite plusieurs minuteurs si la page est restaurée par Turbo. */
+            if (window.fsLoginThemeTimer) {
+                window.clearInterval(window.fsLoginThemeTimer);
+            }
+            window.fsLoginThemeTimer = window.setInterval(applyTimeTheme, 60 * 1000);
+
+            window.addEventListener('pageshow', applyTimeTheme);
+            document.addEventListener('visibilitychange', function () {
+                if (!document.hidden) {
+                    applyTimeTheme();
+                }
+            });
+        })();
+
+        (function () {
+            const form = document.getElementById('login-form');
+
+            if (!form) {
+                return;
+            }
+
+            function clearFieldError(element) {
+                if (!element) {
+                    return;
+                }
+
+                element.classList.remove('fs-field-error', 'fs-shake');
+
+                const inputGroup = element.closest('.input-group');
+                if (inputGroup) {
+                    inputGroup.classList.remove('fs-field-error', 'fs-shake');
+                }
+
+                if (element.classList.contains('selectgroup-input')) {
+                    document.querySelectorAll('.fs-choice.fs-field-error').forEach(choice => {
+                        choice.classList.remove('fs-field-error', 'fs-shake');
+                    });
+
+                    const subSystemError = document.getElementById('subSystem-error');
+                    if (subSystemError) {
+                        subSystemError.textContent = '';
+                    }
+                }
+
+                if (window.jQuery && jQuery.fn.select2 && element.classList.contains('select2-show-search')) {
+                    const container = jQuery(element).next('.select2-container');
+                    container.removeClass('fs-field-error fs-shake');
+                }
+            }
+
+            function markFieldError(element) {
+                if (!element) {
+                    return;
+                }
+
+                const target = element.closest('.input-group') || element;
+                target.classList.remove('fs-shake');
+                target.classList.add('fs-field-error');
+
+                void target.offsetWidth;
+                target.classList.add('fs-shake');
+
+                if (window.jQuery && jQuery.fn.select2 && element.classList.contains('select2-show-search')) {
+                    const container = jQuery(element).next('.select2-container');
+                    container.removeClass('fs-shake');
+                    container.addClass('fs-field-error');
+                    void container[0]?.offsetWidth;
+                    container.addClass('fs-shake');
+                }
+            }
+
+            function markRadioGroupError() {
+                const choices = document.querySelectorAll('input[name="subSystem"] + .fs-choice');
+                choices.forEach(choice => {
+                    choice.classList.remove('fs-shake');
+                    choice.classList.add('fs-field-error');
+                    void choice.offsetWidth;
+                    choice.classList.add('fs-shake');
+                });
+
+                const subSystemError = document.getElementById('subSystem-error');
+                if (subSystemError) {
+                    subSystemError.textContent = '{{ 'Please choose sub-system'|trans|e('js') }}';
+                }
+            }
+
+            form.addEventListener('submit', function (event) {
+                let hasError = false;
+
+                const requiredFields = form.querySelectorAll('select[required], input[required]:not([type="radio"])');
+                requiredFields.forEach(field => {
+                    clearFieldError(field);
+
+                    if (!field.value || field.disabled) {
+                        hasError = true;
+                        markFieldError(field);
+                    }
+                });
+
+                const selectedSubSystem = form.querySelector('input[name="subSystem"]:checked');
+                if (!selectedSubSystem) {
+                    hasError = true;
+                    markRadioGroupError();
+                }
+
+                if (hasError) {
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    const firstError = form.querySelector('.fs-field-error');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            });
+
+            form.querySelectorAll('select, input').forEach(field => {
+                field.addEventListener('change', () => clearFieldError(field));
+                field.addEventListener('input', () => clearFieldError(field));
+            });
+        })();
+    </script>
 {% endblock %}

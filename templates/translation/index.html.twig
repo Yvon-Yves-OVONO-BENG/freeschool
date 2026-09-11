@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello TranslationController!{% endblock %}
+{% block title %}{% trans %}Hello TranslationController!{% endtrans %}{% endblock %}
 
 {% block body %}
 <style>
@@ -9,12 +9,12 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <h1>{% trans %}Hello{% endtrans %} {{ controller_name }}! ✅</h1>
 
-    This friendly message is coming from:
+    {% trans %}This friendly message is coming from:{% endtrans %}
     <ul>
-        <li>Your controller at <code><a href="{{ 'C:/wamp64/www/freeschool/src/Controller/TranslationController.php'|file_link(0) }}">src/Controller/TranslationController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/wamp64/www/freeschool/templates/translation/index.html.twig'|file_link(0) }}">templates/translation/index.html.twig</a></code></li>
+        <li>{% trans %}Your controller at{% endtrans %} <code><a href="{{ 'C:/wamp64/www/freeschool/src/Controller/TranslationController.php'|file_link(0) }}">{% trans %}src/Controller/TranslationController.php{% endtrans %}</a></code></li>
+        <li>{% trans %}Your template at{% endtrans %} <code><a href="{{ 'C:/wamp64/www/freeschool/templates/translation/index.html.twig'|file_link(0) }}">{% trans %}templates/translation/index.html.twig{% endtrans %}</a></code></li>
     </ul>
 </div>
 {% endblock %}

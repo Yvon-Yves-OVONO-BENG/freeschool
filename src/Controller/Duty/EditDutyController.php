@@ -15,11 +15,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/duty")]
 class EditDutyController extends AbstractController
 {
@@ -62,9 +58,14 @@ class EditDutyController extends AbstractController
             return $this->redirectToRoute('home_mainMenu');
         }
 
-        $duty = $this->dutyRepository->findOneBySlug([
+        $duty = $this->dutyRepository->findOneBy([
             'slug' => $slug
         ]);
+
+        if (!$duty) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
 
         $form = $this->createForm(DutyType::class, $duty);
 

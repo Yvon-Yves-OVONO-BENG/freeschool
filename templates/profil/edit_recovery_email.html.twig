@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Recovery email{% endtrans %}{% endblock %}
+
+{% block subTitle %}
+    {% trans %}MY PROFILE{% endtrans %}
+{% endblock %}
+
+{% block body %}
+    <div class="row justify-content-center">
+        <div class="col-xl-7 col-lg-8">
+            <div class="card border-primary shadow-sm">
+                <div class="card-header">
+                    <h3 class="card-title mb-0">
+                        <i class="fa fa-envelope-open-o me-2"></i>{% trans %}Recovery email{% endtrans %}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        {% trans %}This email address will be used to send your 5-digit recovery code when you forget your password.{% endtrans %}
+                    </div>
+
+                    {{ form_start(userForm) }}
+                        <div class="mb-4">
+                            {{ form_row(userForm.email, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="{{ path('home_dashboard') }}" class="btn btn-outline-secondary">
+                                <i class="fa fa-arrow-left me-2"></i>{% trans %}Back{% endtrans %}
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-save me-2"></i>{% trans %}Save{% endtrans %}
+                            </button>
+                        </div>
+                    {{ form_end(userForm) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

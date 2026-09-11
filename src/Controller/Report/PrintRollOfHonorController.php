@@ -9,17 +9,14 @@ use App\Repository\ReportRepository;
 use App\Repository\SchoolRepository;
 use App\Repository\ClassroomRepository;
 use App\Repository\StudentRepository;
+use App\Service\ReportRefreshService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/report")]
 class PrintRollOfHonorController extends AbstractController
 {
@@ -31,6 +28,7 @@ class PrintRollOfHonorController extends AbstractController
         protected StudentRepository $studentRepository,
         protected RollOfHonorService $rollOfHonorService,
         protected ClassroomRepository $classroomRepository, 
+        protected ReportRefreshService $reportRefreshService,
         )
     {}
 
@@ -58,20 +56,40 @@ class PrintRollOfHonorController extends AbstractController
         $school = $this->schoolRepository->findOneBySchoolYear(['schoolYear' => $schoolYear]);
         
         // trimestre sélectionné
-        $selectedTerm = $this->termRepository->findOneBySlug(['slug' => $slugTerm]);
+        $selectedTerm = $this->termRepository->findOneBy(['slug' => $slugTerm]);
         // classe sélectionnée
-        $selectedClassroom = $this->classroomRepository->findOneBySlug(['slug' => $slug]);
+        $selectedClassroom = $this->classroomRepository->findOneBy(['slug' => $slug]);
+
+        if (!$selectedTerm || !$selectedClassroom) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
+
         //Effectif de la classe
         $numberOfStudents = $this->generalService->getNumberOfStudents($selectedClassroom);
+
+        $this->reportRefreshService->refreshForReport($selectedClassroom, $selectedTerm);
 
         $reports = $this->reportRepository->findStudentToPrintRollOfHonor($selectedClassroom, $selectedTerm);
 
         
         if($slugStudent != null)
         {
-            $student = $this->studentRepository->findOneBySlug(['slug' => $slugStudent ]);
-            $idS = $this->studentRepository->findOneBySlug(['slug' => $slugStudent ])->getId();
-            $reports = [clone $reports[$this->rollOfHonorService->getStudentIndex($reports, $idS)]];
+            $student = $this->studentRepository->findOneBy(['slug' => $slugStudent ]);
+            $idS = $this->studentRepository->findOneBy(['slug' => $slugStudent ])->getId();
+
+            if (!$student || !$idS) 
+            {
+                return $this->redirectToRoute('page_error');
+            }
+
+            $studentIndex = $this->rollOfHonorService->getStudentIndex($reports, $idS);
+
+            if ($studentIndex === null) {
+                return $this->redirectToRoute('page_error');
+            }
+
+            $reports = [clone $reports[$studentIndex]];
         }
 
         // on imprime les tableaux d'honneur

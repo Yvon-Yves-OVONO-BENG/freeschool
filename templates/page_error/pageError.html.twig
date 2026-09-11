@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+	<head>
+
+		<!-- Meta data -->
+		<meta charset="UTF-8">
+		<meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=0'>
+		<meta content="Freeschool - Application complète de gestions scolaire" name="description">
+		<meta content="Yvon Yves Noel OVONO BENG" name="author">
+		<meta name="keywords" content="admin, admin template, dashboard, admin dashboard, responsive, bootstrap, bootstrap 5, admin theme, admin themes, bootstrap admin template, scss, ui, crm, modern, flat">
+
+		<!-- Title -->
+		<title>{% trans %}Page error{% endtrans %}</title>
+
+		<!--Favicon -->
+		<link rel="icon" href="{{ asset ('build/custom2/images/brand/favicon.png')}}" type="image/x-icon"/>
+
+		<!--Bootstrap css -->
+		<link href="{{ asset ('build/custom2/plugins/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+
+		<!-- Style css -->
+		<link href="{{ asset ('build/custom2/css/style.css')}}" rel="stylesheet"/>
+		<link href="{{ asset ('build/custom2/css/dark.css')}}" rel="stylesheet"/>
+		<link href="{{ asset ('build/custom2/css/skin-modes.css')}}" rel="stylesheet"/>
+
+		<!-- Animate css -->
+		<link href="{{ asset ('build/custom2/css/animated.css')}}" rel="stylesheet" />
+
+		<!---Icons css-->
+		<link href="{{ asset ('build/custom2/css/icons.css')}}" rel="stylesheet" />
+
+	    <!-- Color Skin css -->
+		<link id="theme" href="{{ asset ('build/custom2/colors/color1.css')}}" rel="stylesheet" type="text/css"/>
+
+	</head>
+
+	<body class="h-100vh bg-light">
+
+		<div class="box">
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+		</div>
+
+		<div class="page">
+			<div class="page-content">
+				<div class="container text-center">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="">
+								<div class="text-primary">
+									<div class="display-1 mb-5 font-weight-bold error-text">4<i class="fa fa-frown-o"></i>4</div>
+									<h1 class="h3  mb-3 font-weight-bold">{% trans %}Sorry, an error has occured, Requested Page not found !{% endtrans %}</h1>
+									<a class="btn text-primary border-primary mb-5 ms-2 fs-18" href="{{ path ('home_dashboard') }}"><i class="fa fa-home me-2"></i> {% trans %}Back to Home{% endtrans %}</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Jquery js-->
+		<script src="{{ asset ('build/custom2/js/jquery.min.js')}}"></script>
+
+		<!-- Bootstrap5 js-->
+		<script src="{{ asset ('build/custom2/plugins/bootstrap/popper.min.js')}}"></script>
+		<script src="{{ asset ('build/custom2/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
+
+		<!--Othercharts js-->
+		<script src="{{ asset ('build/custom2/plugins/othercharts/jquery.sparkline.min.js')}}"></script>
+
+		<!-- Circle-progress js-->
+		<script src="{{ asset ('build/custom2/js/circle-progress.min.js')}}"></script>
+
+		<!-- Jquery-rating js-->
+		<script src="{{ asset ('build/custom2/plugins/rating/jquery.rating-stars.js')}}"></script>
+
+		<!-- Custom js-->
+		<script src="{{ asset ('build/custom2/js/custom.js')}}"></script>
+
+	</body>
+</html>

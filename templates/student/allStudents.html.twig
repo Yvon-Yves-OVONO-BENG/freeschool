@@ -100,42 +100,42 @@
                         {% trans %}Girls{% endtrans %}
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                             {{ numberOfGirls }}
-                            <span class="visually-hidden">unread messages</span>
+                            <span class="visually-hidden">{% trans %}unread messages{% endtrans %}</span>
                         </span>
                     </button>
                     <button type="button" class="btn btn-primary position-relative me-5 mb-2">
                         {% trans %}Boys{% endtrans %}
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                             {{ numberOfBoys }}
-                            <span class="visually-hidden">unread messages</span>
+                            <span class="visually-hidden">{% trans %}unread messages{% endtrans %}</span>
                         </span>
                     </button>
                     <button type="button" class="btn btn-primary position-relative me-5 mb-2">
-                        Total
+                        {% trans %}Total{% endtrans %}
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                             {{ numberOfGirls + numberOfBoys }}
-                            <span class="visually-hidden">unread messages</span>
+                            <span class="visually-hidden">{% trans %}unread messages{% endtrans %}</span>
                         </span>
                     </button>
                     <button type="button" class="btn btn-teal position-relative me-5 mb-2">
                         {% trans %}Eff. New Girls{% endtrans %}
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                             {{ numberNewOfGirls }}
-                            <span class="visually-hidden">unread messages</span>
+                            <span class="visually-hidden">{% trans %}unread messages{% endtrans %}</span>
                         </span>
                     </button>
                     <button type="button" class="btn btn-teal position-relative me-5 mb-2">
                         {% trans %}Eff. New Boys{% endtrans %}
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                             {{ numberNewOfBoys }}
-                            <span class="visually-hidden">unread messages</span>
+                            <span class="visually-hidden">{% trans %}unread messages{% endtrans %}</span>
                         </span>
                     </button>
                     <button type="button" class="btn btn-teal position-relative me-5 mb-2">
-                        Total
+                        {% trans %}Total{% endtrans %}
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                             {{ numberNewOfGirls + numberNewOfBoys }}
-                            <span class="visually-hidden">unread messages</span>
+                            <span class="visually-hidden">{% trans %}unread messages{% endtrans %}</span>
                         </span>
                     </button>
 
@@ -144,21 +144,21 @@
                         {% trans %}Eff. Repeat Girls{% endtrans %}
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                             {{ numberRepeaterOfGirls }}
-                            <span class="visually-hidden">unread messages</span>
+                            <span class="visually-hidden">{% trans %}unread messages{% endtrans %}</span>
                         </span>
                     </button>
                     <button type="button" class="btn btn-info position-relative me-5 mb-2">
                         {% trans %}Eff. Repeat Boys{% endtrans %}
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                             {{ numberRepeaterOfBoys }}
-                            <span class="visually-hidden">unread messages</span>
+                            <span class="visually-hidden">{% trans %}unread messages{% endtrans %}</span>
                         </span>
                     </button>
                     <button type="button" class="btn btn-info position-relative me-5 mb-2">
-                        Total
+                        {% trans %}Total{% endtrans %}
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                             {{ numberRepeaterOfGirls + numberRepeaterOfBoys }}
-                            <span class="visually-hidden">unread messages</span>
+                            <span class="visually-hidden">{% trans %}unread messages{% endtrans %}</span>
                         </span>
                     </button>
                         
@@ -216,7 +216,7 @@
                                             {% endif %}
                                             
                                         </td>
-                                        <td style="vertical-align: middle;">{{ student.birthday|date('d-m-Y') }} à {{ student.birthplace }}</td>
+                                        <td style="vertical-align: middle;">{{ student.birthday|date('d-m-Y') }} {% trans %}in{% endtrans %} {{ student.birthplace }}</td>
                                         
 
                                         <td style="vertical-align: middle; text-align: center !important;">

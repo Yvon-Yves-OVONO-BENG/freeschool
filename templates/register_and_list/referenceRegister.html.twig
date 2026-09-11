@@ -3,111 +3,210 @@
 {% block title %}{% trans %}Reference register{% endtrans %}{% endblock %}
 
 {% block subTitle %}
-    {% if pv == 0 %}
-    {% trans %}REFERENCE REGISTER MANAGMENT{% endtrans %}
-    {% else %}
-    {% trans %}MINUTES MANAGMENT{% endtrans %}
-    {% endif %}
+	{% if pv == 0 %}
+		{% trans %}REFERENCE REGISTER MANAGMENT{% endtrans %}
+	{% else %}
+		{% trans %}MINUTES MANAGMENT{% endtrans %}
+	{% endif %}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-reference-register-premium.css') }}">
 {% endblock %}
 
 {% block body %}
-<!-- App-Content -->
-	<div class="hor-content main-content">
+	<div class="hor-content main-content fs-reference-page">
 		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary"></h4>
-                </div>
-                <div class="page-rightheader">
-                    <div class="btn-list">
-                        
-                    </div>
-                </div>
-            </div>
-            <!--End Page header-->
+			<div class="fs-reference-menu-safe-space" aria-hidden="true"></div>
 
-            <div class="card border-primary">
-                <div class="card-header">
-                    <span class="page-title mb-0 text-primary">
-                    <i class="fa fa-book me-2"></i>
-                        {% if pv == 0 %}
-                            {% trans %}Reference register printing{% endtrans %}
-                        {% else %}
-                            {% trans %}Minutes printing{% endtrans %}
-                        {% endif %}
-                    </span>
-                </div>
-                <div class="card-body pt-5 ">
-                    <form action="{{ path('register_and_list_printReferenceRegister', {'pv': pv}) }}" method="post" target="_blank">
-                        <div class="row">
-                            <div class="col-md-1">
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <select name="classroom" id="classroom" class="form-control select2-show-search" data-placeholder="Choose a classroom" required>
-                                        <option label="Choose a classroom">
-                                            {% trans %}Choose a classroom{% endtrans %}
-                                        </option>
-                                        {% if is_granted('ROLE_PROVISEUR') or is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') %}
-                                        <option value="0">{% trans %}All the classrooms{% endtrans %}</option>
-                                        {% endif %}
+			<section class="fs-reference-hero">
+				<div class="fs-reference-hero__content">
+					<div>
+						<span class="fs-reference-eyebrow">
+							<i class="fa fa-book"></i>
+							{% if pv == 0 %}
+								{% trans %}Reference register workspace{% endtrans %}
+							{% else %}
+								{% trans %}Minutes workspace{% endtrans %}
+							{% endif %}
+						</span>
 
-                                        {% if subSystem == 'Francophone / French Speaker' %}
-                                            {% if school.education.education == 'Général' %}
-                                                {% include "includes/_selectClassroomsWithoutSelected.html.twig" %}
-                                                {% else %}
-                                                    {% include "includes/_selectClassroomsWithoutSelectedTech.html.twig" %}
-                                            {% endif %}
-                                            {% else %}
-                                                {% include "includes/_selectClassroomsWithoutSelectedEn.html.twig" %}
-                                        {% endif %}
+						<h1 class="fs-reference-title">
+							{% if pv == 0 %}
+								{% trans %}Reference register printing{% endtrans %}
+							{% else %}
+								{% trans %}Minutes printing{% endtrans %}
+							{% endif %}
+						</h1>
 
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <select name="period" id="period" class="form-control select2-show-search" data-placeholder="Choose a period" required>
-                                        <option label="Choose a period">
-                                            {% trans %}Choose a period{% endtrans %}
-                                        </option>
-                                        <optgroup label="Evaluations">
-                                            {% for sequence in sequences %}
-                                                <option value="s{{ sequence.id }}">{% trans %}Evaluation{% endtrans %} {{ sequence.sequence }}</option>
-                                            {% endfor %}
-                                        </optgroup>
-                                        <optgroup label="Trimestres">
-                                            {% for term in terms %}
-                                                {% if term.term != annualTerm %}
-                                                    <option value="t{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </optgroup>
-                                            {% for term in terms %}
-                                                {% if term.term == annualTerm %}
-                                                    <option value="a{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
-                                                {% endif %}
-                                            {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printReferenceRegister">
-                                        <i class="fa fa-print"></i>
-                                        {% trans %}Print{% endtrans %}</button>
-                                </div>
-                            </div>
-                            <div class="col-md-1">
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+						<p class="fs-reference-subtitle">
+							{% trans %}Print reference registers or minutes by classroom and period through a clean, responsive and premium workspace.{% endtrans %}
+						</p>
+					</div>
 
+					<div class="fs-reference-hero__actions">
+						<div class="fs-reference-hero-stat">
+							<span class="fs-reference-hero-stat__icon">
+								<i class="fe fe-book-open"></i>
+							</span>
+							<span class="fs-reference-hero-stat__label">
+								{% if pv == 0 %}
+									{% trans %}Register{% endtrans %}
+								{% else %}
+									{% trans %}Minutes{% endtrans %}
+								{% endif %}
+							</span>
+							<strong class="fs-reference-hero-stat__value">{% trans %}PDF{% endtrans %}</strong>
+						</div>
+
+						<div class="fs-reference-hero-stat fs-reference-hero-stat--soft">
+							<span class="fs-reference-hero-stat__icon">
+								<i class="fe fe-calendar"></i>
+							</span>
+							<span class="fs-reference-hero-stat__label">{% trans %}Period{% endtrans %}</span>
+							<strong class="fs-reference-hero-stat__value">{% trans %}Ready{% endtrans %}</strong>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="fs-reference-card">
+				<div class="fs-reference-card__header">
+					<div>
+						<span class="fs-reference-chip">
+							<i class="fe fe-filter"></i>
+							{% trans %}Printing filters{% endtrans %}
+						</span>
+
+						<h2>
+							{% if pv == 0 %}
+								{% trans %}Reference register printing{% endtrans %}
+							{% else %}
+								{% trans %}Minutes printing{% endtrans %}
+							{% endif %}
+						</h2>
+
+						<p>
+							{% trans %}Choose a classroom and a period before printing the document.{% endtrans %}
+						</p>
+					</div>
+
+					<span class="fs-reference-card__icon">
+						<i class="fa fa-book"></i>
+					</span>
+				</div>
+
+				<form action="{{ path('register_and_list_printReferenceRegister', {'pv': pv}) }}" method="post" target="_blank" class="fs-reference-form needs-validation" novalidate data-no-spinner="1">
+					<div class="fs-floating-field fs-required-field">
+						<select name="classroom" id="classroom" class="form-control select2-show-search fs-floating-control" data-placeholder="" required>
+							<option label="" value=""></option>
+
+							{% if is_granted('ROLE_PROVISEUR') or is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
+								<option value="0">{% trans %}All the classrooms{% endtrans %}</option>
+							{% endif %}
+
+							{% if subSystem == 'Francophone / French Speaker' %}
+								{% if school.education.education == 'Général' %}
+									{% include "includes/_selectClassroomsWithoutSelected.html.twig" %}
+								{% else %}
+									{% include "includes/_selectClassroomsWithoutSelectedTech.html.twig" %}
+								{% endif %}
+							{% else %}
+								{% include "includes/_selectClassroomsWithoutSelectedEn.html.twig" %}
+							{% endif %}
+						</select>
+
+						<label class="fs-floating-label" for="classroom">
+							<i class="fe fe-home"></i>
+							{% trans %}Classroom{% endtrans %}
+						</label>
+
+						<div class="invalid-feedback">
+							{% trans %}Please choose a classroom !{% endtrans %}
+						</div>
+					</div>
+
+					<div class="fs-floating-field fs-required-field">
+						<select name="period" id="period" class="form-control select2-show-search fs-floating-control" data-placeholder="" required>
+							<option label="" value=""></option>
+
+							<optgroup label="{% trans %}Evaluations{% endtrans %}">
+								{% for sequence in sequences %}
+									<option value="s{{ sequence.id }}">{% trans %}Evaluation{% endtrans %} {{ sequence.sequence }}</option>
+								{% endfor %}
+							</optgroup>
+
+							<optgroup label="{% trans %}Trimestres{% endtrans %}">
+								{% for term in terms %}
+									{% if term.term != annualTerm %}
+										<option value="t{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
+									{% endif %}
+								{% endfor %}
+							</optgroup>
+
+							{% for term in terms %}
+								{% if term.term == annualTerm %}
+									<option value="a{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
+								{% endif %}
+							{% endfor %}
+						</select>
+
+						<label class="fs-floating-label" for="period">
+							<i class="fe fe-calendar"></i>
+							{% trans %}Period{% endtrans %}
+						</label>
+
+						<div class="invalid-feedback">
+							{% trans %}Please choose a period !{% endtrans %}
+						</div>
+					</div>
+
+					<div class="fs-reference-form__actions">
+						<button class="fs-reference-btn fs-reference-btn--primary fs-reference-submit-btn" type="submit" name="printReferenceRegister">
+							<i class="fa fa-print fs-reference-submit-icon"></i>
+							<span>{% trans %}Print{% endtrans %}</span>
+						</button>
+					</div>
+				</form>
+			</section>
+
+			<section class="fs-reference-info-panel">
+				<div class="fs-reference-info-item">
+					<span class="fs-reference-info-icon">
+						<i class="fe fe-check-circle"></i>
+					</span>
+					<div>
+						<strong>{% trans %}Route preserved{% endtrans %}</strong>
+						<small>{% trans %}The form keeps register_and_list_printReferenceRegister with pv parameter.{% endtrans %}</small>
+					</div>
+				</div>
+
+				<div class="fs-reference-info-item">
+					<span class="fs-reference-info-icon fs-reference-info-icon--violet">
+						<i class="fe fe-layers"></i>
+					</span>
+					<div>
+						<strong>{% trans %}Classroom includes preserved{% endtrans %}</strong>
+						<small>{% trans %}All Francophone, technical and Anglophone classroom lists remain unchanged.{% endtrans %}</small>
+					</div>
+				</div>
+
+				<div class="fs-reference-info-item">
+					<span class="fs-reference-info-icon fs-reference-info-icon--gold">
+						<i class="fe fe-shield"></i>
+					</span>
+					<div>
+						<strong>{% trans %}Role condition preserved{% endtrans %}</strong>
+						<small>{% trans %}All classrooms option remains available only for authorized roles.{% endtrans %}</small>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-reference-register-premium.js') }}"></script>
 {% endblock %}

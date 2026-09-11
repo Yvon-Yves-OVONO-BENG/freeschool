@@ -11,10 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route('/student')]
 class RepertoryParentClassroomController extends AbstractController
 {
@@ -49,9 +46,14 @@ class RepertoryParentClassroomController extends AbstractController
 
         $school = $this->schoolRepository->findOneBySchoolYear($schoolYear);
 
-        $classroom = $this->classroomRepository->findOneBySlug([
+        $classroom = $this->classroomRepository->findOneBy([
             'slug' => $slug
         ]);
+
+        if (!$classroom) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
 
         $pdf = $this->repertoryClassroomService->printRepertoryParentClassroom($school, $schoolYear, $classroom);
 

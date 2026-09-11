@@ -26,9 +26,6 @@ class AbsenceTeacher
     #[ORM\ManyToOne(inversedBy: 'absenceTeachers')]
     private ?User $createdBy = null;
 
-    #[ORM\ManyToOne(inversedBy: 'absenceTeachers')]
-    private ?User $updatedBy = null;
-
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $createdAt = null;
 
@@ -40,6 +37,9 @@ class AbsenceTeacher
 
     #[ORM\Column]
     private ?bool $supprime = null;
+
+    #[ORM\ManyToOne]
+    private ?User $updateBy = null;
 
     public function getId(): ?int
     {
@@ -94,18 +94,6 @@ class AbsenceTeacher
         return $this;
     }
 
-    public function getUpdatedBy(): ?User
-    {
-        return $this->updatedBy;
-    }
-
-    public function setUpdatedBy(?User $updatedBy): self
-    {
-        $this->updatedBy = $updatedBy;
-
-        return $this;
-    }
-
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
@@ -153,4 +141,20 @@ class AbsenceTeacher
 
         return $this;
     }
+
+    public function getUpdateBy(): ?User
+    {
+        return $this->updateBy;
+    }
+
+    public function setUpdateBy(?User $updateBy): self
+    {
+        $this->updateBy = $updateBy;
+
+        return $this;
+    }
+
+    
+
+    
 }

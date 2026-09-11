@@ -1,76 +1,159 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    {% trans %}{% trans %}Teacher Identification{% endtrans %}{% endtrans %}
+	{% trans %}Teacher Identification{% endtrans %}
 {% endblock %}
 
 {% block subTitle %}
+	{% for key, messages in app.flashes %}
+		{% for message in messages %}
+			<span class="fs-teacher-login-flash-inline">{{ message }}</span>
+		{% endfor %}
+	{% endfor %}
+{% endblock %}
 
-    {% for key, messages in app.flashes %}
-        
-        {% for message in messages %}
-            <span style="color: #fba;">{{ message }}</span>
-        {% endfor %}
-
-    {% endfor %}
-					
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-teacher-identification-premium.css') }}">
 {% endblock %}
 
 {% block body %}
+	<div class="fs-teacher-login-page">
+		<div class="fs-teacher-login-bg">
+			<span class="fs-teacher-login-orb fs-teacher-login-orb--one"></span>
+			<span class="fs-teacher-login-orb fs-teacher-login-orb--two"></span>
+			<span class="fs-teacher-login-orb fs-teacher-login-orb--three"></span>
+		</div>
 
-            <div class="card card-register mx-auto">
-                <div class="card-header text-center header-perso">
-                    <div class="row">
-                        <div class="col-md-4">
-                            Freedom Sofware
-                        </div>
-                        <div class="col-md-5">
-                        </div>
-                        <div class="col-md-3">
-                            {{ mySession.schoolYear.schoolYear }}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12 h2 mt-2"> 
-                            {% if mySession.local == 'fr' %}
-                                {{ mySession.school.frenchName }}
-                            {% elseif mySession.local == 'en' %}
-                                {{ mySession.school.englishName }}
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body body-perso">
-                    <form method="post" action="{{ path('teacher_teacherIdentification', {'duty': duty}) }}">
-                        <div class="form-group">
-                            <label for="teacherId"> 
-                                {% trans %}Select your name{% endtrans %}
-                            </label>
-                            <select name="teacher" id="teacher" class="form-control" required autofocus>
-                                <option value="">---</option>
-                                {% for teacher in teachers %}
-                                    <option value="{{ teacher.id }}" {% if selectedTeacherId == teacher.id %} selected {% endif %}>
-                                        {{teacher.fullName}}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="password">
-                                {% trans %}Password{% endtrans %}
-                            </label>
-                            <input type="password" name="password" id="password"  class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <button class="btn btn-outline-primary btn-block btn-perso" type="submit" name="teacherIdentification">
-                                {% trans %}Log in{% endtrans %}
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+		<div class="fs-teacher-login-shell">
+			<section class="fs-teacher-login-brand">
+				<div class="fs-teacher-login-brand__top">
+					<span class="fs-teacher-login-brand__logo">
+						<i class="fe fe-user-check"></i>
+					</span>
 
+					<div>
+						<span class="fs-teacher-login-eyebrow">{% trans %}Freedom Software{% endtrans %}</span>
+						<h1>{% trans %}Teacher Identification{% endtrans %}</h1>
+					</div>
+				</div>
+
+				<p>
+					{% trans %}Secure access for teachers and school staff. Select your name, enter your password and continue to your workspace.{% endtrans %}
+				</p>
+
+				<div class="fs-teacher-login-school-card">
+					<span class="fs-teacher-login-school-card__icon">
+						<i class="fe fe-home"></i>
+					</span>
+
+					<div>
+						<span>{% trans %}School{% endtrans %}</span>
+						<strong>
+							{% if mySession.local == 'fr' %}
+								{{ mySession.school.frenchName }}
+							{% elseif mySession.local == 'en' %}
+								{{ mySession.school.englishName }}
+							{% endif %}
+						</strong>
+					</div>
+				</div>
+
+				<div class="fs-teacher-login-meta-grid">
+					<div class="fs-teacher-login-meta">
+						<i class="fe fe-calendar"></i>
+						<div>
+							<span>{% trans %}School year{% endtrans %}</span>
+							<strong>{{ mySession.schoolYear.schoolYear }}</strong>
+						</div>
+					</div>
+
+					<div class="fs-teacher-login-meta">
+						<i class="fe fe-users"></i>
+						<div>
+							<span>{% trans %}Teachers{% endtrans %}</span>
+							<strong>{{ teachers|length }}</strong>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="fs-teacher-login-card">
+				<div class="fs-teacher-login-card__header">
+					<span class="fs-teacher-login-chip">
+						<i class="fe fe-lock"></i>
+						{% trans %}Authentication{% endtrans %}
+					</span>
+
+					<h2>{% trans %}Log in{% endtrans %}</h2>
+
+					<p>{% trans %}Please select your name and enter your password to continue.{% endtrans %}</p>
+				</div>
+
+				{% for key, messages in app.flashes %}
+					{% for message in messages %}
+						<div class="fs-teacher-login-alert" role="alert">
+							<i class="fe fe-alert-circle"></i>
+							<span>{{ message }}</span>
+						</div>
+					{% endfor %}
+				{% endfor %}
+
+				<form method="post" action="{{ path('teacher_teacherIdentification', {'duty': duty}) }}" class="fs-teacher-login-form needs-validation" novalidate>
+					<div class="fs-floating-field fs-required-field">
+						<select name="teacher" id="teacher" class="form-control fs-floating-control" required autofocus>
+							<option value="">---</option>
+							{% for teacher in teachers %}
+								<option value="{{ teacher.id }}" {% if selectedTeacherId == teacher.id %} selected {% endif %}>
+									{{ teacher.fullName }}
+								</option>
+							{% endfor %}
+						</select>
+
+						<label class="fs-floating-label" for="teacher">
+							<i class="fe fe-user"></i>
+							{% trans %}Select your name{% endtrans %}
+						</label>
+
+						<div class="invalid-feedback">
+							{% trans %}Please select your name !{% endtrans %}
+						</div>
+					</div>
+
+					<div class="fs-floating-field fs-required-field">
+						<input type="password" name="password" id="password" class="form-control fs-floating-control" required>
+
+						<label class="fs-floating-label" for="password">
+							<i class="fe fe-lock"></i>
+							{% trans %}Password{% endtrans %}
+						</label>
+
+						<button type="button" class="fs-teacher-login-password-toggle" aria-label="{% trans %}Show or hide password{% endtrans %}">
+							<i class="fe fe-eye"></i>
+						</button>
+
+						<div class="invalid-feedback">
+							{% trans %}Please enter your password !{% endtrans %}
+						</div>
+					</div>
+
+					<button class="fs-teacher-login-btn fs-teacher-login-submit-btn" type="submit" name="teacherIdentification">
+						<span class="fs-teacher-login-submit-spinner" aria-hidden="true"></span>
+						<i class="fe fe-log-in fs-teacher-login-submit-icon"></i>
+						<span>{% trans %}Log in{% endtrans %}</span>
+					</button>
+				</form>
+
+				<div class="fs-teacher-login-footer-note">
+					<i class="fe fe-shield"></i>
+					<span>{% trans %}Your existing controller route and button name are preserved.{% endtrans %}</span>
+				</div>
+			</section>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-teacher-identification-premium.js') }}"></script>
 {% endblock %}

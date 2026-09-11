@@ -19,11 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/register_and_list")]
 class PrintReferenceRegisterController extends AbstractController
 {
@@ -50,6 +46,7 @@ class PrintReferenceRegisterController extends AbstractController
         $mySession->set('suppression', null);
         $mySession->set('miseAjour', null);
         $mySession->set('saisiNotes', null);
+        
         if($mySession)
         {
             $schoolYear = $mySession->get('schoolYear');
@@ -190,7 +187,7 @@ class PrintReferenceRegisterController extends AbstractController
             }
 
             // Moyennes trimestrielles des élèves classés et moyennes par groupe et classement par order de mérite trimestriel
-            $allRankedStudents = $this->reportService->getRankedStudents($studentMarkTerm, $selectedClassroom, $selectedTerm, $pv);
+            $allRankedStudents = $this->reportService->getRankedStudents($studentMarkTerm, $selectedClassroom, $selectedTerm, $school, $pv);
 
             // On reupère le classement trimetriel
             $rankedStudents = $allRankedStudents['rankedTerm'];
@@ -199,6 +196,7 @@ class PrintReferenceRegisterController extends AbstractController
             $rankedStudentsCategory1 = $allRankedStudents['rankedCategory1'];
             $rankedStudentsCategory2 = $allRankedStudents['rankedCategory2'];
             $rankedStudentsCategory3 = $allRankedStudents['rankedCategory3'];
+            $rankedStudentsCategory4 = $allRankedStudents['rankedCategory4'];
             
             //  Notes des élèves par Lesson classées par order de mérite
             // $rankPerLesson = $this->reportService->getRankPerLesson($studentMarkTerm, $selectedClassroom, $selectedTerm);
@@ -236,6 +234,8 @@ class PrintReferenceRegisterController extends AbstractController
                                                                                                     $rankedStudentsCategory2, 
                                                                                                     $rankedStudentsCategory3,   
                                                                                                     $subSystem, 
+                                                                                                    $school,
+                                                                                                    $rankedStudentsCategory4,   
                                                                                                     $selectedTerm,
                                                                                                     $rankPerLesson = [],
                                                                                                     $studentMarkSequence3 = []));
@@ -255,6 +255,8 @@ class PrintReferenceRegisterController extends AbstractController
                                                                                                     $rankedStudentsCategory2, 
                                                                                                     $rankedStudentsCategory3,  
                                                                                                     $subSystem, 
+                                                                                                    $school,
+                                                                                                    $rankedStudentsCategory4,  
                                                                                                     $selectedTerm,
                                                                                                     $rankPerLesson = [], 
                                                                                                     $studentMarkSequence3 = []));
@@ -273,6 +275,8 @@ class PrintReferenceRegisterController extends AbstractController
                                                                                                     $rankedStudentsCategory2, 
                                                                                                     $rankedStudentsCategory3, 
                                                                                                     $subSystem, 
+                                                                                                    $school,
+                                                                                                    $rankedStudentsCategory4, 
                                                                                                     $selectedTerm,
                                                                                                     $rankPerLesson = [], 
                                                                                                     $studentMarkSequence3 = [],

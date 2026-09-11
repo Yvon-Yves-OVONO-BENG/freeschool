@@ -17,12 +17,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
- #[Route("/timetable")]
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
+#[Route("/timetable")]
 class SaveTimeTableController extends AbstractController
 {
     public function __construct(

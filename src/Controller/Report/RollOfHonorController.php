@@ -7,6 +7,7 @@ use App\Entity\Classroom;
 use App\Entity\ConstantsClass;
 use App\Service\GeneralService;
 use App\Service\ClassroomService;
+use App\Service\ReportRefreshService;
 use App\Repository\TermRepository;
 use App\Repository\ReportRepository;
 use App\Repository\SchoolRepository;
@@ -17,11 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/report")]
 class RollOfHonorController extends AbstractController
 {
@@ -32,6 +29,7 @@ class RollOfHonorController extends AbstractController
         protected ClassroomService $classroomService, 
         protected SchoolRepository $schoolRepository,
         protected ClassroomRepository $classroomRepository, 
+        protected ReportRefreshService $reportRefreshService,
         )
     {}
 
@@ -73,6 +71,12 @@ class RollOfHonorController extends AbstractController
             
             $selectedClassroom = $this->classroomRepository->find($idc);
             $selectedTerm = $this->termRepository->find($request->request->get('term'));
+
+            if (!$selectedClassroom || !$selectedTerm) {
+                return $this->redirectToRoute('page_error');
+            }
+
+            $this->reportRefreshService->refreshForReport($selectedClassroom, $selectedTerm);
             
             $reports = $this->reportRepository->findStudentToDisplayRollOfHonor($selectedClassroom, $selectedTerm);
 

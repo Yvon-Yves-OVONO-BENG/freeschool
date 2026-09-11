@@ -1,0 +1,951 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Administrative statistics{% endtrans %}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .fs-admin-stats-shell {
+            padding-bottom: 2rem;
+        }
+
+        .fs-stats-hero {
+            border-radius: 26px;
+            padding: 1.4rem 1.55rem;
+            color: #fff;
+            background:
+                radial-gradient(circle at top left, rgba(34, 211, 238, .30), transparent 34%),
+                linear-gradient(135deg, #08111f 0%, #1d4ed8 56%, #06b6d4 100%);
+            box-shadow: 0 24px 60px rgba(15, 23, 42, .16);
+            margin-bottom: 1.2rem;
+        }
+
+        .fs-stats-hero h2,
+        .fs-stats-hero p {
+            color: #fff;
+        }
+
+        .fs-stats-hero h2 {
+            margin: 0;
+            font-weight: 950;
+            letter-spacing: -.03em;
+        }
+
+        .fs-stats-hero p {
+            margin: .35rem 0 0;
+            opacity: .82;
+            font-weight: 700;
+        }
+
+        .fs-stats-filter-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: .45rem;
+            border-radius: 999px;
+            padding: .55rem .85rem;
+            background: rgba(255,255,255,.16);
+            border: 1px solid rgba(255,255,255,.18);
+            color: #fff;
+            font-weight: 850;
+            white-space: nowrap;
+        }
+
+        .fs-stats-card-row {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .fs-kpi-card {
+            border: 0;
+            border-radius: 22px;
+            background: #fff;
+            box-shadow: 0 14px 38px rgba(15, 23, 42, .08);
+            padding: 1rem;
+            min-height: 116px;
+            display: grid;
+            grid-template-columns: 52px minmax(0, 1fr);
+            gap: .85rem;
+            align-items: center;
+        }
+
+        .fs-kpi-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 17px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .fs-kpi-label {
+            color: #475569;
+            font-size: .82rem;
+            font-weight: 900;
+            line-height: 1.15;
+        }
+
+        .fs-kpi-value {
+            margin-top: .15rem;
+            color: #020617;
+            font-size: 1.35rem;
+            font-weight: 950;
+            line-height: 1.05;
+            letter-spacing: -.025em;
+        }
+
+        .fs-kpi-helper {
+            margin-top: .25rem;
+            color: #94a3b8;
+            font-size: .72rem;
+            font-weight: 750;
+            line-height: 1.2;
+        }
+
+        .bg-primary-soft { background: #dbeafe; color: #2563eb; }
+        .bg-success-soft { background: #dcfce7; color: #16a34a; }
+        .bg-warning-soft { background: #fef3c7; color: #f59e0b; }
+        .bg-info-soft { background: #cffafe; color: #0891b2; }
+        .bg-secondary-soft { background: #e0e7ff; color: #4f46e5; }
+        .bg-danger-soft { background: #fee2e2; color: #ef4444; }
+
+        .fs-chart-card {
+            border: 0;
+            border-radius: 24px;
+            background: #fff;
+            box-shadow: 0 14px 38px rgba(15, 23, 42, .08);
+            padding: 1.15rem;
+            min-height: 100%;
+        }
+
+        .fs-chart-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: .9rem;
+            margin-bottom: .9rem;
+        }
+
+        .fs-chart-title {
+            margin: 0;
+            color: #0f172a;
+            font-size: 1rem;
+            font-weight: 950;
+            letter-spacing: -.02em;
+        }
+
+        .fs-chart-subtitle {
+            margin: .2rem 0 0;
+            color: #64748b;
+            font-size: .78rem;
+            font-weight: 750;
+            line-height: 1.35;
+        }
+
+        .fs-chart-badge {
+            border-radius: 999px;
+            background: #eff6ff;
+            color: #2563eb;
+            padding: .45rem .7rem;
+            font-size: .75rem;
+            font-weight: 950;
+            white-space: nowrap;
+        }
+
+        .fs-chart-box {
+            position: relative;
+            width: 100%;
+            height: 325px;
+        }
+
+        .fs-chart-box-sm {
+            height: 280px;
+        }
+
+        .fs-chart-box-lg {
+            height: 390px;
+        }
+
+        .fs-table-card {
+            border: 0;
+            border-radius: 24px;
+            background: #fff;
+            box-shadow: 0 14px 38px rgba(15, 23, 42, .08);
+            overflow: hidden;
+        }
+
+        .fs-table-card-header {
+            padding: 1.1rem 1.2rem;
+            border-bottom: 1px solid #eef2f7;
+        }
+
+        .fs-table-card-header h4 {
+            margin: 0;
+            color: #0f172a;
+            font-size: 1rem;
+            font-weight: 950;
+        }
+
+        .fs-table-card-header p {
+            margin: .2rem 0 0;
+            color: #64748b;
+            font-size: .8rem;
+            font-weight: 700;
+        }
+
+        .fs-stats-table {
+            margin: 0;
+        }
+
+        .fs-stats-table th {
+            border-top: 0 !important;
+            color: #64748b;
+            font-size: .74rem;
+            font-weight: 950;
+            text-transform: uppercase;
+            background: #f8fafc;
+        }
+
+        .fs-stats-table td {
+            vertical-align: middle;
+            color: #0f172a;
+            font-size: .84rem;
+            font-weight: 750;
+        }
+
+        .fs-progress-track {
+            height: 9px;
+            min-width: 120px;
+            border-radius: 999px;
+            overflow: hidden;
+            background: #e5e7eb;
+        }
+
+        .fs-progress-bar {
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #22c55e, #2563eb);
+        }
+
+        .fs-empty-chart {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            font-weight: 800;
+            text-align: center;
+            border-radius: 18px;
+            background: #f8fafc;
+        }
+
+        @media (max-width: 1399px) {
+            .fs-stats-card-row {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 767px) {
+            .fs-stats-card-row {
+                grid-template-columns: 1fr;
+            }
+
+            .fs-stats-hero {
+                padding: 1.1rem;
+                border-radius: 22px;
+            }
+
+            .fs-chart-box,
+            .fs-chart-box-sm,
+            .fs-chart-box-lg {
+                height: 300px;
+            }
+
+            .fs-chart-head {
+                flex-direction: column;
+            }
+        }
+
+        /* Graphiques liés aux classes : pleine largeur */
+        .fs-chart-class-full {
+            height: 520px;
+        }
+
+        @media (max-width: 767px) {
+            .fs-chart-class-full {
+                height: 420px;
+            }
+        }
+
+        
+    </style>
+
+    <style>
+        /* Espace entre le menu horizontal et le contenu statistiques */
+        .fs-admin-stats-shell {
+            padding-top: 24px !important;
+        }
+
+        .fs-admin-stats-shell .container {
+            padding-top: 0 !important;
+        }
+
+        .fs-stats-hero {
+            margin-top: 0 !important;
+        }
+
+        @media (max-width: 991.98px) {
+            .fs-admin-stats-shell {
+                padding-top: 16px !important;
+            }
+        }
+    </style>
+
+    <style>
+        /* =========================================================
+        FIX ADMIN STATS : pousser le contenu sous le menu fixe
+        ========================================================= */
+        @media (min-width: 992px) {
+            body.fs4-has-header.fs4-has-menu
+            .hor-content.main-content.fs-admin-stats-shell,
+            body.fs4-has-header.fs4-has-menu
+            .fs-admin-stats-shell {
+                padding-top: 85px !important; /* ajuste 75/95 si besoin */
+                margin-top: 0 !important;
+            }
+
+            body.fs4-has-header.fs4-has-menu
+            .fs-admin-stats-shell .container {
+                padding-top: 0 !important;
+                margin-top: 0 !important;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="hor-content main-content fs-admin-stats-shell">
+    <div class="container">
+        <div class="fs-stats-hero">
+            <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3">
+                <div>
+                    <h2>{% trans %}Administrative statistics{% endtrans %}</h2>
+                    {% trans %}Charts connected to the database: students, staff, grades, success rates, finances and academic progress.{% endtrans %}
+                </div>
+                <div class="d-flex flex-wrap gap-2">
+                    <span class="fs-stats-filter-pill"><i class="fe fe-calendar"></i>{{ schoolYear ? schoolYear.schoolYear : 'Année non définie' }}</span>
+                    {% if subSystem %}
+                        <span class="fs-stats-filter-pill"><i class="fe fe-layers"></i>{{ subSystem }}</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="fs-stats-card-row">
+            {% for card in cards %}
+                <div class="fs-kpi-card">
+                    <div class="fs-kpi-icon bg-{{ card.variant }}-soft">
+                        <i class="{{ card.icon }}"></i>
+                    </div>
+                    <div>
+                        <div class="fs-kpi-label">{{ card.label }}</div>
+                        <div class="fs-kpi-value">{{ card.value }}</div>
+                        <div class="fs-kpi-helper">{{ card.helper }}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-xl-8">
+                <div class="fs-chart-card">
+                    <div class="fs-chart-head">
+                        <div>
+                            <h3 class="fs-chart-title">{% trans %}Grade Entry by Assessment{% endtrans %}</h3>
+                            <p class="fs-chart-subtitle">
+                                {% trans %}Expected grades, entered grades and remaining grades for each assessment.{% endtrans %}
+                            </p>
+                        </div>
+                        <span class="fs-chart-badge">{% trans %}Grouped Bars{% endtrans %}</span>
+                    </div>
+                    <div class="fs-chart-box"><canvas id="marksBySequenceChart"></canvas></div>
+                </div>
+            </div>
+            <div class="col-xl-4">
+                <div class="fs-chart-card">
+                    <div class="fs-chart-head">
+                        <div>
+                            <h3 class="fs-chart-title">{% trans %}Grade Entry Percentage{% endtrans %}</h3>
+                            <p class="fs-chart-subtitle">
+                                {% trans %}Percentage of grades entered for each assessment.{% endtrans %}
+                            </p>
+                        </div>
+                        <span class="fs-chart-badge">%</span>
+                    </div>
+                    <div class="fs-chart-box"><canvas id="completionBySequenceChart"></canvas></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-xl-12">
+                <div class="fs-chart-card">
+                    <div class="fs-chart-head">
+                        <div>
+                            <h3 class="fs-chart-title">{% trans %}Student Enrollment by Class{% endtrans %}</h3>
+                            <p class="fs-chart-subtitle">
+                                {% trans %}Actual distribution of registered students by class. Full-width display for schools with a large number of classes.{% endtrans %}
+                            </p>
+                        </div>
+                        <span class="fs-chart-badge">{% trans %}Barres horizontales{% endtrans %}</span>
+                    </div>
+                    <div class="fs-chart-box fs-chart-class-full">
+                        <canvas id="studentsByClassroomChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-xl-6">
+                <div class="fs-chart-card">
+                    <div class="fs-chart-head">
+                        <div>
+                            <h3 class="fs-chart-title">{% trans %}Students by Gender{% endtrans %}</h3>
+                            <p class="fs-chart-subtitle">{% trans %}Pie chart.{% endtrans %}</p>
+                        </div>
+                    </div>
+                    <div class="fs-chart-box-sm">
+                        <canvas id="studentsBySexChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-6">
+                <div class="fs-chart-card">
+                    <div class="fs-chart-head">
+                        <div>
+                            <h3 class="fs-chart-title">{% trans %}Staff by Gender{% endtrans %}</h3>
+                            <p class="fs-chart-subtitle">{% trans %}Staff distribution.{% endtrans %}</p>
+                        </div>
+                    </div>
+                    <div class="fs-chart-box-sm">
+                        <canvas id="staffBySexChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-xl-12">
+                <div class="fs-chart-card">
+                    <div class="fs-chart-head">
+                        <div>
+                            <h3 class="fs-chart-title">{% trans %}Grade Entry Rate by Class{% endtrans %}</h3>
+                            <p class="fs-chart-subtitle">
+                                {% trans %}Overall percentage of grades entered for each class. Full-width display to improve readability when many classes are present.{% endtrans %}
+                            </p>
+                        </div>
+                        <span class="fs-chart-badge">{% trans %}Classs{% endtrans %}</span>
+                    </div>
+                    <div class="fs-chart-box fs-chart-class-full">
+                        <canvas id="completionByClassroomChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-xl-12">
+                <div class="fs-chart-card">
+                    <div class="fs-chart-head">
+                        <div>
+                            <h3 class="fs-chart-title">{% trans %}Pass Rate by Assessment{% endtrans %}</h3>
+                            <p class="fs-chart-subtitle">
+                                {% trans %}Percentage of grades equal to or above 10/20.{% endtrans %}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="fs-chart-box">
+                        <canvas id="successBySequenceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-xl-12">
+                <div class="fs-chart-card">
+                    <div class="fs-chart-head">
+                        <div>
+                            <h3 class="fs-chart-title">{% trans %}Pass Rate by Class{% endtrans %}</h3>
+                            <p class="fs-chart-subtitle">
+                                {% trans %}Classs ranked by pass rate. Full-width display for schools with multiple classes.{% endtrans %}
+                            </p>
+                        </div>
+                        <span class="fs-chart-badge">{% trans %}Classs{% endtrans %}</span>
+                    </div>
+                    <div class="fs-chart-box fs-chart-class-full">
+                        <canvas id="successByClassroomChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-xl-12">
+                <div class="fs-chart-card">
+                    <div class="fs-chart-head">
+                        <div>
+                            <h3 class="fs-chart-title">{% trans %}Average Score by Subject{% endtrans %}</h3>
+                            <p class="fs-chart-subtitle">
+                                {% trans %}Top 15 subjects by overall average score.{% endtrans %}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="fs-chart-box">
+                        <canvas id="subjectAveragesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-xl-8">
+                <div class="fs-chart-card">
+                    <div class="fs-chart-head">
+                        <div>
+                            <h3 class="fs-chart-title">{% trans %}Monthly Income and Expenses{% endtrans %}</h3>
+                            <p class="fs-chart-subtitle">
+                                {% trans %}Monthly trend of income and expenditures.{% endtrans %}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="fs-chart-box">
+                        <canvas id="financeMonthlyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-4">
+                <div class="fs-chart-card">
+                    <div class="fs-chart-head">
+                        <div>
+                            <h3 class="fs-chart-title">{% trans %}Fee Breakdown{% endtrans %}</h3>
+                            <p class="fs-chart-subtitle">
+                                {% trans %}Distribution of collected fees by fee type.{% endtrans %}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="fs-chart-box">
+                        <canvas id="feesBreakdownChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-xl-6">
+                <div class="fs-chart-card">
+                    <div class="fs-chart-head">
+                        <div>
+                            <h3 class="fs-chart-title">{% trans %}Academic Progress{% endtrans %}</h3>
+                            <p class="fs-chart-subtitle">
+                                {% trans %}Planned hours, completed hours, and coverage rate by assessment.{% endtrans %}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="fs-chart-box"><canvas id="lessonCoverageChart"></canvas></div>
+                </div>
+            </div>
+
+            <div class="col-xl-6">
+                <div class="fs-chart-card">
+                    <div class="fs-chart-head">
+                        <div>
+                            <h3 class="fs-chart-title">{% trans %}Staff by Position{% endtrans %}</h3>
+                            <p class="fs-chart-subtitle">
+                                {% trans %}Distribution of staff by position.{% endtrans %}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="fs-chart-box"><canvas id="staffByDutyChart"></canvas></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-xl-6">
+                <div class="fs-table-card">
+                    <div class="fs-table-card-header">
+                        <h4>{% trans %}Assessment Entry Details{% endtrans %}</h4>
+                        <p>{% trans %}Based on expected students for each lesson and assessment.{% endtrans %}</p>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table fs-stats-table">
+                            <thead>
+                            <tr>
+                                <th>{% trans %}Assessment{% endtrans %}</th>
+                                <th>{% trans %}Expected{% endtrans %}</th>
+                                <th>{% trans %}Entered{% endtrans %}</th>
+                                <th>{% trans %}Remaining{% endtrans %}</th>
+                                <th>%</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for row in tables.evaluationProgressRows %}
+                                <tr>
+                                    <td>{{ row.label }}</td>
+                                    <td>{{ row.expected }}</td>
+                                    <td>{{ row.submitted }}</td>
+                                    <td>{{ row.pending }}</td>
+                                    <td style="min-width: 170px;">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="fs-progress-track"><div class="fs-progress-bar" style="width: {{ row.completionRate }}%;"></div></div>
+                                            <strong>{{ row.completionRate }}%</strong>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted py-4">
+                                        {% trans %}No data available.{% endtrans %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-6">
+                <div class="fs-table-card">
+                    <div class="fs-table-card-header">
+                        <h4>{% trans %}Subject Averages{% endtrans %}</h4>
+                        <p>{% trans %}Overall average calculated from grades actually entered.{% endtrans %}</p>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table fs-stats-table">
+                            <thead>
+                            <tr>
+                                <th>{% trans %}Subject{% endtrans %}</th>
+                                <th>{% trans %}Average{% endtrans %}</th>
+                                <th>{% trans %}Grades{% endtrans %}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for row in tables.subjectAverageRows %}
+                                <tr>
+                                    <td>{{ row.label }}</td>
+                                    <td><strong>{{ row.average }}/20</strong></td>
+                                    <td>{{ row.markCount }}</td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted py-4">
+                                        {% trans %}No grades entered.{% endtrans %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-xl-12">
+                <div class="fs-table-card">
+                    <div class="fs-table-card-header">
+                        <h4>{% trans %}Curriculum Coverage{% endtrans %}</h4>
+                        <p>
+                            {% trans %}Comparison of planned hours, completed hours, and completed hours with resources.{% endtrans %}
+                        </p>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table fs-stats-table">
+                            <thead>
+                            <tr>
+                                <th>{% trans %}Assessment{% endtrans %}</th>
+                                <th>{% trans %}Planned Hours{% endtrans %}</th>
+                                <th>{% trans %}Completed Hours{% endtrans %}</th>
+                                <th>{% trans %}With Resources{% endtrans %}</th>
+                                <th>{% trans %}Coverage{% endtrans %}</th>
+                                <th>{% trans %}Resources{% endtrans %}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for row in tables.lessonCoverageRows %}
+                                <tr>
+                                    <td>{{ row.label }}</td>
+                                    <td>{{ row.planned }}</td>
+                                    <td>{{ row.done }}</td>
+                                    <td>{{ row.doneWithResource }}</td>
+                                    <td>{{ row.coverageRate }}%</td>
+                                    <td>{{ row.resourceRate }}%</td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted py-4">
+                                        {% trans %}No academic progress data available.{% endtrans %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {#
+        Important : ton base.html.twig charge parfois Chart.js après les blocks,
+        ou le fichier local peut être absent. Ce loader évite les graphiques vides.
+    #}
+    <script>
+        (function () {
+            function loadChartJs(callback) {
+                if (window.Chart) {
+                    callback();
+                    return;
+                }
+
+                var localScript = document.createElement('script');
+                localScript.src = "{{ asset('build/custom2/plugins/chart/chart.bundle.js') }}";
+                localScript.onload = function () {
+                    callback();
+                };
+                localScript.onerror = function () {
+                    var cdnScript = document.createElement('script');
+                    cdnScript.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js';
+                    cdnScript.onload = function () {
+                        callback();
+                    };
+                    cdnScript.onerror = function () {
+                        document.querySelectorAll('.fs-chart-box, .fs-chart-box-sm, .fs-chart-box-lg').forEach(function (box) {
+                            box.innerHTML = '<div class="fs-empty-chart">{% trans %}Chart.js is not loaded. Check the local chart.bundle.js file or your CDN connection.{% endtrans %}</div>';
+                        });
+                    };
+                    document.head.appendChild(cdnScript);
+                };
+                document.head.appendChild(localScript);
+            }
+
+            function bootStatsCharts() {
+                var charts = {{ charts|default({})|json_encode|raw }};
+
+                var colors = ['#2563eb', '#22c55e', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#ec4899', '#64748b', '#14b8a6', '#f97316'];
+                var softColors = ['rgba(37, 99, 235, .18)', 'rgba(34, 197, 94, .18)', 'rgba(245, 158, 11, .20)', 'rgba(239, 68, 68, .18)', 'rgba(139, 92, 246, .18)', 'rgba(6, 182, 212, .18)', 'rgba(236, 72, 153, .18)', 'rgba(100, 116, 139, .18)'];
+
+                function toNumber(value) {
+                    if (value === null || value === undefined || value === '') {
+                        return 0;
+                    }
+                    var number = Number(String(value).replace(',', '.'));
+                    return isNaN(number) ? 0 : number;
+                }
+
+                function normalizeData(data) {
+                    data = data || {};
+                    data.labels = Array.isArray(data.labels) ? data.labels : [];
+                    data.datasets = Array.isArray(data.datasets) ? data.datasets : [];
+
+                    data.datasets = data.datasets.map(function (dataset) {
+                        dataset = dataset || {};
+                        dataset.data = Array.isArray(dataset.data) ? dataset.data.map(toNumber) : [];
+                        return dataset;
+                    });
+
+                    return data;
+                }
+
+                function hasData(data) {
+                    data = normalizeData(data);
+                    if (!data.labels.length || !data.datasets.length) {
+                        return false;
+                    }
+
+                    return data.datasets.some(function (dataset) {
+                        return dataset.data.some(function (value) {
+                            return toNumber(value) > 0;
+                        });
+                    });
+                }
+
+                function renderEmpty(canvasId, text) {
+                    var canvas = document.getElementById(canvasId);
+                    if (!canvas || !canvas.parentElement) {
+                        return;
+                    }
+                    canvas.parentElement.innerHTML = '<div class="fs-empty-chart">' + text + '</div>';
+                }
+
+                function buildDatasets(data, fillMode) {
+                    data = normalizeData(data);
+
+                    return data.datasets.map(function (dataset, index) {
+                        var color = colors[index % colors.length];
+                        var soft = softColors[index % softColors.length];
+                        var isLine = dataset.type === 'line';
+                        var isPie = fillMode === 'multi';
+
+                        var output = Object.assign({}, dataset);
+                        output.data = dataset.data.map(toNumber);
+                        output.borderColor = isPie ? colors : color;
+                        output.backgroundColor = isPie
+                            ? data.labels.map(function (_, labelIndex) { return colors[labelIndex % colors.length]; })
+                            : (isLine ? color : soft);
+                        output.borderWidth = isLine ? 3 : 1;
+                        output.tension = .35;
+                        output.fill = false;
+                        output.pointRadius = isLine ? 4 : 0;
+                        output.pointHoverRadius = isLine ? 6 : 0;
+                        output.borderRadius = isLine ? 0 : 10;
+
+                        return output;
+                    });
+                }
+
+                function baseOptions(type, extraOptions) {
+                    var options = {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    usePointStyle: true,
+                                    boxWidth: 8,
+                                    font: { weight: '700' }
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: '#0f172a',
+                                titleFont: { weight: '800' },
+                                bodyFont: { weight: '700' },
+                                padding: 12,
+                                cornerRadius: 12
+                            }
+                        }
+                    };
+
+                    if (type !== 'doughnut' && type !== 'pie') {
+                        options.scales = {
+                            x: {
+                                grid: { display: false },
+                                ticks: { font: { weight: '700' } }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                grid: { color: 'rgba(148, 163, 184, .20)' },
+                                ticks: { font: { weight: '700' } }
+                            }
+                        };
+                    }
+
+                    return Object.assign(options, extraOptions || {});
+                }
+
+                function createChart(canvasId, type, data, extraOptions, fillMode) {
+                    var canvas = document.getElementById(canvasId);
+                    if (!canvas) {
+                        return;
+                    }
+
+                    data = normalizeData(data);
+
+                    if (!hasData(data)) {
+                        renderEmpty(canvasId, '{% trans %}No data is available for this chart.{% endtrans %}');
+                        return;
+                    }
+
+                    try {
+                        new Chart(canvas, {
+                            type: type,
+                            data: {
+                                labels: data.labels,
+                                datasets: buildDatasets(data, fillMode || 'single')
+                            },
+                            options: baseOptions(type, extraOptions)
+                        });
+                    } catch (error) {
+                        console.error('{% trans %}Chart error{% endtrans %} ' + canvasId, error);
+                        renderEmpty(canvasId, '{% trans %}Unable to display this chart. Open the console for details.{% endtrans %}');
+                    }
+                }
+
+                createChart('marksBySequenceChart', 'bar', charts.marksBySequence);
+
+                createChart('completionBySequenceChart', 'bar', charts.completionBySequence, {
+                    scales: {
+                        x: { grid: { display: false }, ticks: { font: { weight: '700' } } },
+                        y: { beginAtZero: true, max: 100, ticks: { callback: function (value) { return value + '%'; } } }
+                    }
+                });
+
+                createChart('studentsByClassroomChart', 'bar', charts.studentsByClassroom, {
+                    indexAxis: 'y'
+                });
+
+                createChart('studentsBySexChart', 'doughnut', charts.studentsBySex, {}, 'multi');
+                createChart('staffBySexChart', 'pie', charts.staffBySex, {}, 'multi');
+
+                createChart('completionByClassroomChart', 'bar', charts.completionByClassroom, {
+                    indexAxis: 'y',
+                    scales: {
+                        x: { beginAtZero: true, max: 100, ticks: { callback: function (value) { return value + '%'; } } },
+                        y: { grid: { display: false }, ticks: { font: { weight: '700' } } }
+                    }
+                });
+
+                createChart('successBySequenceChart', 'line', charts.successBySequence, {
+                    scales: {
+                        y: { beginAtZero: true, max: 100, ticks: { callback: function (value) { return value + '%'; } } }
+                    }
+                });
+
+                createChart('successByClassroomChart', 'bar', charts.successByClassroom, {
+                    indexAxis: 'y',
+                    scales: {
+                        x: { beginAtZero: true, max: 100, ticks: { callback: function (value) { return value + '%'; } } },
+                        y: { grid: { display: false }, ticks: { font: { weight: '700' } } }
+                    }
+                });
+
+                createChart('subjectAveragesChart', 'bar', charts.subjectAverages, {
+                    indexAxis: 'y',
+                    scales: {
+                        x: { beginAtZero: true, max: 20 },
+                        y: { grid: { display: false }, ticks: { font: { weight: '700' } } }
+                    }
+                });
+
+                createChart('financeMonthlyChart', 'bar', charts.financeMonthly);
+                createChart('feesBreakdownChart', 'doughnut', charts.feesBreakdown, {}, 'multi');
+
+                createChart('lessonCoverageChart', 'bar', charts.lessonCoverage, {
+                    scales: {
+                        y: { beginAtZero: true, position: 'left' },
+                        y1: { beginAtZero: true, max: 100, position: 'right', grid: { drawOnChartArea: false }, ticks: { callback: function (value) { return value + '%'; } } }
+                    }
+                });
+
+                createChart('staffByDutyChart', 'doughnut', charts.staffByDuty, {}, 'multi');
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                loadChartJs(bootStatsCharts);
+            });
+        })();
+    </script>
+{% endblock %}

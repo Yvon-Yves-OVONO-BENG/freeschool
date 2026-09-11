@@ -66,6 +66,9 @@ class SchoolYear
     #[ORM\OneToMany(mappedBy: 'schoolYear', targetEntity: Operateur::class)]
     private Collection $operateurs;
 
+    #[ORM\OneToMany(mappedBy: 'schoolYear', targetEntity: UserLog::class)]
+    private Collection $userLogs;
+
     public function __construct()
     {
         $this->fees = new ArrayCollection();
@@ -84,6 +87,7 @@ class SchoolYear
         $this->departments = new ArrayCollection();
         $this->verrouSequences = new ArrayCollection();
         $this->operateurs = new ArrayCollection();
+        $this->userLogs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -579,6 +583,36 @@ class SchoolYear
             // set the owning side to null (unless already changed)
             if ($operateur->getSchoolYear() === $this) {
                 $operateur->setSchoolYear(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserLog>
+     */
+    public function getUserLogs(): Collection
+    {
+        return $this->userLogs;
+    }
+
+    public function addUserLog(UserLog $userLog): self
+    {
+        if (!$this->userLogs->contains($userLog)) {
+            $this->userLogs->add($userLog);
+            $userLog->setSchoolYear($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserLog(UserLog $userLog): self
+    {
+        if ($this->userLogs->removeElement($userLog)) {
+            // set the owning side to null (unless already changed)
+            if ($userLog->getSchoolYear() === $this) {
+                $userLog->setSchoolYear(null);
             }
         }
 

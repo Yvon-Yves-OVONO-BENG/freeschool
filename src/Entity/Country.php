@@ -21,9 +21,16 @@ class Country
     #[ORM\OneToMany(mappedBy: 'country', targetEntity: Student::class)]
     private Collection $students;
 
+    #[ORM\OneToMany(mappedBy: 'country', targetEntity: UserLog::class)]
+    private Collection $userLogs;
+
+    #[ORM\Column(length: 255)]
+    private ?string $logo = null;
+
     public function __construct()
     {
         $this->students = new ArrayCollection();
+        $this->userLogs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -69,6 +76,48 @@ class Country
                 $student->setCountry(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserLog>
+     */
+    public function getUserLogs(): Collection
+    {
+        return $this->userLogs;
+    }
+
+    public function addUserLog(UserLog $userLog): self
+    {
+        if (!$this->userLogs->contains($userLog)) {
+            $this->userLogs->add($userLog);
+            $userLog->setCountry($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserLog(UserLog $userLog): self
+    {
+        if ($this->userLogs->removeElement($userLog)) {
+            // set the owning side to null (unless already changed)
+            if ($userLog->getCountry() === $this) {
+                $userLog->setCountry(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getLogo(): ?string
+    {
+        return $this->logo;
+    }
+
+    public function setLogo(string $logo): self
+    {
+        $this->logo = $logo;
 
         return $this;
     }

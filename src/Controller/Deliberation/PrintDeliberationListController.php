@@ -13,23 +13,14 @@ use App\Repository\SchoolRepository;
 use App\Service\DeliberationService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
-/**
- * @Route("/deliberation")
- */
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
+#[Route('/deliberation')]
 class PrintDeliberationListController extends AbstractController
 {
     public function __construct(protected ClassroomRepository $classroomRepository,  protected DeliberationService $deliberationService, protected DecisionRepository $decisionRepository, protected SchoolRepository $schoolRepository )
-    {
-    }
+    {}
 
-    /**
-     * @Route("/printDeliberationList", name="deliberation_printDeliberationList")
-     */
+    #[Route('/printDeliberationList', name: 'deliberation_printDeliberationList')]
     public function printDeliberationList(Request $request): Response
     {
         $mySession = $request->getSession();

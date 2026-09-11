@@ -3,160 +3,320 @@
 {% block title %}{% trans %}Update Fees{% endtrans %}{% endblock %}
 
 {% block subTitle %}
-        {% trans %}UPDATING FEES{% endtrans %}
+	{% trans %}UPDATING FEES{% endtrans %}
 {% endblock %}
+
 {% block infoMessage %}
-    {% include "includes/_info_message.html.twig" %}
+	{% include "includes/_info_message.html.twig" %}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-fees-premium.css') }}">
 {% endblock %}
 
 {% block body %}
-   
-<!-- App-Content -->
-	<div class="hor-content main-content">
+	<div class="hor-content main-content fs-fees-page">
 		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary"><i class="fa fa-money"></i> {% trans %}Fees Management{% endtrans %}</h4>
-                </div>
-                <div class="page-rightheader">
-                    <div class="btn-list">
-                        
-                    </div>
-                </div>
-            </div>
-            
-            <!--End Page header-->
-            {% for message in app.flashes('info')  %}
-                <div class="alert alert-danger" role="alert">
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true">×</button>
-                    <i class="fa fa-frown-o me-2" aria-hidden="true"></i>
-                    {{ message }}
-                </div>
-            {% endfor %}
+			<div class="fs-fees-menu-safe-space" aria-hidden="true"></div>
 
-            <div class="card border-primary">
-                <div class="my-card-header">
-                </div>  
-                <div class="card-body ">
-                    <div class="row">
-                        <div class="col-md-12">
-                            {{ form_start(formFees) }}
-                                <div class="row mb-4 mt-4">
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            {{ form_row(formFees.schoolFees1, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            {{ form_row(formFees.apeeFees1, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            {{ form_row(formFees.computerFees1, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                </div>
+			<section class="fs-fees-hero">
+				<div class="fs-fees-hero__content">
+					<div>
+						<span class="fs-fees-eyebrow">
+							<i class="fe fe-credit-card"></i>
+							{% trans %}Financial workspace{% endtrans %}
+						</span>
 
-                                <div class="row mb-3">
-                                        <div class="col-md-4">
-                                        <div class="form-group">
-                                            {{ form_row(formFees.schoolFees2, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            {{ form_row(formFees.apeeFees2, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            {{ form_row(formFees.computerFees2, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                </div>
+						<h1 class="fs-fees-title">{% trans %}UPDATING FEES{% endtrans %}</h1>
 
-                                <div class="row mb-3">
-                                        <div class="col-md-4">
-                                        <div class="form-group">
-                                            {{ form_row(formFees.medicalBookletFees, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            {{ form_row(formFees.cleanSchoolFees, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            {{ form_row(formFees.photoFees, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                </div>
+						<p class="fs-fees-subtitle">
+							{% trans %}Configure school fees, APEE fees, computer fees and examination charges through a refined premium workspace.{% endtrans %}
+						</p>
+					</div>
 
-                                <div class="row mb-3">
-                                        <div class="col-md-4">
-                                        <div class="form-group">
-                                            {{ form_row(formFees.stampFees3eme, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            {{ form_row(formFees.stampFees1ere, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            {{ form_row(formFees.stampFeesTle, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                </div>
+					<div class="fs-fees-hero__right">
+						<div class="fs-fees-stat">
+							<span class="fs-fees-stat__icon">
+								<i class="fe fe-layers"></i>
+							</span>
+							<span class="fs-fees-stat__label">{% trans %}Fee groups{% endtrans %}</span>
+							<strong class="fs-fees-stat__value">5</strong>
+						</div>
 
-                                <div class="row mb-3">
-                                        <div class="col-md-4">
-                                        <div class="form-group">
-                                            {{ form_row(formFees.examFees3eme, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            {{ form_row(formFees.examFees1ere, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            {{ form_row(formFees.examFeesTle, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                </div>
+						<div class="fs-fees-stat">
+							<span class="fs-fees-stat__icon">
+								<i class="fe fe-edit"></i>
+							</span>
+							<span class="fs-fees-stat__label">{% trans %}Mode{% endtrans %}</span>
+							<strong class="fs-fees-stat__value fs-fees-stat__value--small">{% trans %}Update{% endtrans %}</strong>
+						</div>
+					</div>
+				</div>
+			</section>
 
-                                <div class="row mb-3">
-                                    <div class="col-md-8">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label style="color: #fff;">
-                                                {% trans %}Save{% endtrans %}
-                                            </label>
-                                            <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="editFees">
-                                                <i class="fa fa-save"></i>
-                                            {% trans %}Save changes{% endtrans %}
-                                        </button>
+			{% for message in app.flashes('error') %}
+				<div class="fs-fees-alert fs-fees-alert--danger" role="alert">
+					<i class="fe fe-alert-triangle"></i>
+					<span>{{ message }}</span>
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true">×</button>
+				</div>
+			{% endfor %}
 
-                                        </div>
-                                    </div> 
-                                </div>
+			<section class="fs-fees-card">
+				<div class="fs-fees-card__header">
+					<div>
+						<span class="fs-fees-card-badge">
+							<i class="fe fe-edit-3"></i>
+							{% trans %}Fees Management{% endtrans %}
+						</span>
 
-                            {{ form_end(formFees) }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+						<h2 class="fs-fees-card-title">{% trans %}Update fee configuration{% endtrans %}</h2>
+					</div>
 
+					<div class="fs-fees-soft-note">
+						<i class="fe fe-info"></i>
+						<span>{% trans %}Review each amount carefully before saving changes.{% endtrans %}</span>
+					</div>
+				</div>
+
+				<div class="fs-fees-card__body">
+					{{ form_start(formFees, {'attr': {'class': 'fs-fees-form needs-validation', 'novalidate': 'novalidate'}}) }}
+
+						<div class="fs-fees-section is-open">
+							<button type="button" class="fs-fees-section__button" data-fs-fees-collapse>
+								<span class="fs-fees-section-title">
+									<span class="fs-fees-section-icon fs-fees-section-icon--primary">
+										<i class="fe fe-home"></i>
+									</span>
+									<span>
+										<strong>{% trans %}School fees{% endtrans %}</strong>
+										<small>{% trans %}Main tuition, APEE and computer fee settings{% endtrans %}</small>
+									</span>
+								</span>
+								<i class="fe fe-chevron-down"></i>
+							</button>
+
+							<div class="fs-fees-section__body">
+								<div class="fs-fees-grid">
+									<div class="fs-floating-field">
+										{{ form_widget(formFees.schoolFees1, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+										<label class="fs-floating-label">
+											<i class="fe fe-credit-card"></i>
+											{% trans %}School fees 1{% endtrans %}
+										</label>
+										<div class="fs-field-error">{{ form_errors(formFees.schoolFees1) }}</div>
+									</div>
+
+									<div class="fs-floating-field">
+										{{ form_widget(formFees.apeeFees1, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+										<label class="fs-floating-label">
+											<i class="fe fe-users"></i>
+											{% trans %}APEE fees 1{% endtrans %}
+										</label>
+										<div class="fs-field-error">{{ form_errors(formFees.apeeFees1) }}</div>
+									</div>
+
+									<div class="fs-floating-field">
+										{{ form_widget(formFees.computerFees1, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+										<label class="fs-floating-label">
+											<i class="fe fe-monitor"></i>
+											{% trans %}Computer fees 1{% endtrans %}
+										</label>
+										<div class="fs-field-error">{{ form_errors(formFees.computerFees1) }}</div>
+									</div>
+
+									<div class="fs-floating-field">
+										{{ form_widget(formFees.schoolFees2, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+										<label class="fs-floating-label">
+											<i class="fe fe-credit-card"></i>
+											{% trans %}School fees 2{% endtrans %}
+										</label>
+										<div class="fs-field-error">{{ form_errors(formFees.schoolFees2) }}</div>
+									</div>
+
+									<div class="fs-floating-field">
+										{{ form_widget(formFees.apeeFees2, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+										<label class="fs-floating-label">
+											<i class="fe fe-users"></i>
+											{% trans %}APEE fees 2{% endtrans %}
+										</label>
+										<div class="fs-field-error">{{ form_errors(formFees.apeeFees2) }}</div>
+									</div>
+
+									<div class="fs-floating-field">
+										{{ form_widget(formFees.computerFees2, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+										<label class="fs-floating-label">
+											<i class="fe fe-monitor"></i>
+											{% trans %}Computer fees 2{% endtrans %}
+										</label>
+										<div class="fs-field-error">{{ form_errors(formFees.computerFees2) }}</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="fs-fees-section is-open">
+							<button type="button" class="fs-fees-section__button" data-fs-fees-collapse>
+								<span class="fs-fees-section-title">
+									<span class="fs-fees-section-icon fs-fees-section-icon--success">
+										<i class="fe fe-file-text"></i>
+									</span>
+									<span>
+										<strong>{% trans %}Administrative and service fees{% endtrans %}</strong>
+										<small>{% trans %}Medical booklet, clean school and photo charges{% endtrans %}</small>
+									</span>
+								</span>
+								<i class="fe fe-chevron-down"></i>
+							</button>
+
+							<div class="fs-fees-section__body">
+								<div class="fs-fees-grid">
+									<div class="fs-floating-field">
+										{{ form_widget(formFees.medicalBookletFees, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+										<label class="fs-floating-label">
+											<i class="fe fe-file-text"></i>
+											{% trans %}Medical booklet fees{% endtrans %}
+										</label>
+										<div class="fs-field-error">{{ form_errors(formFees.medicalBookletFees) }}</div>
+									</div>
+
+									<div class="fs-floating-field">
+										{{ form_widget(formFees.cleanSchoolFees, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+										<label class="fs-floating-label">
+											<i class="fe fe-check-circle"></i>
+											{% trans %}Clean school fees{% endtrans %}
+										</label>
+										<div class="fs-field-error">{{ form_errors(formFees.cleanSchoolFees) }}</div>
+									</div>
+
+									<div class="fs-floating-field">
+										{{ form_widget(formFees.photoFees, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+										<label class="fs-floating-label">
+											<i class="fe fe-image"></i>
+											{% trans %}Photo fees{% endtrans %}
+										</label>
+										<div class="fs-field-error">{{ form_errors(formFees.photoFees) }}</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="fs-fees-section is-open">
+							<button type="button" class="fs-fees-section__button" data-fs-fees-collapse>
+								<span class="fs-fees-section-title">
+									<span class="fs-fees-section-icon fs-fees-section-icon--violet">
+										<i class="fe fe-award"></i>
+									</span>
+									<span>
+										<strong>{% trans %}Stamp fees{% endtrans %}</strong>
+										<small>{% trans %}Stamp charges for examination classes{% endtrans %}</small>
+									</span>
+								</span>
+								<i class="fe fe-chevron-down"></i>
+							</button>
+
+							<div class="fs-fees-section__body">
+								<div class="fs-fees-grid">
+									<div class="fs-floating-field">
+										{{ form_widget(formFees.stampFees3eme, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+										<label class="fs-floating-label">
+											<i class="fe fe-award"></i>
+											{% trans %}Stamp fees 3eme{% endtrans %}
+										</label>
+										<div class="fs-field-error">{{ form_errors(formFees.stampFees3eme) }}</div>
+									</div>
+
+									<div class="fs-floating-field">
+										{{ form_widget(formFees.stampFees1ere, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+										<label class="fs-floating-label">
+											<i class="fe fe-award"></i>
+											{% trans %}Stamp fees 1ere{% endtrans %}
+										</label>
+										<div class="fs-field-error">{{ form_errors(formFees.stampFees1ere) }}</div>
+									</div>
+
+									<div class="fs-floating-field">
+										{{ form_widget(formFees.stampFeesTle, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+										<label class="fs-floating-label">
+											<i class="fe fe-award"></i>
+											{% trans %}Stamp fees Tle{% endtrans %}
+										</label>
+										<div class="fs-field-error">{{ form_errors(formFees.stampFeesTle) }}</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="fs-fees-section is-open">
+							<button type="button" class="fs-fees-section__button" data-fs-fees-collapse>
+								<span class="fs-fees-section-title">
+									<span class="fs-fees-section-icon fs-fees-section-icon--warning">
+										<i class="fe fe-clipboard"></i>
+									</span>
+									<span>
+										<strong>{% trans %}Exam fees{% endtrans %}</strong>
+										<small>{% trans %}Examination charges by level{% endtrans %}</small>
+									</span>
+								</span>
+								<i class="fe fe-chevron-down"></i>
+							</button>
+
+							<div class="fs-fees-section__body">
+								<div class="fs-fees-grid">
+									<div class="fs-floating-field">
+										{{ form_widget(formFees.examFees3eme, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+										<label class="fs-floating-label">
+											<i class="fe fe-clipboard"></i>
+											{% trans %}Exam fees 3eme{% endtrans %}
+										</label>
+										<div class="fs-field-error">{{ form_errors(formFees.examFees3eme) }}</div>
+									</div>
+
+									<div class="fs-floating-field">
+										{{ form_widget(formFees.examFees1ere, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+										<label class="fs-floating-label">
+											<i class="fe fe-clipboard"></i>
+											{% trans %}Exam fees 1ere{% endtrans %}
+										</label>
+										<div class="fs-field-error">{{ form_errors(formFees.examFees1ere) }}</div>
+									</div>
+
+									<div class="fs-floating-field">
+										{{ form_widget(formFees.examFeesTle, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+										<label class="fs-floating-label">
+											<i class="fe fe-clipboard"></i>
+											{% trans %}Exam fees Tle{% endtrans %}
+										</label>
+										<div class="fs-field-error">{{ form_errors(formFees.examFeesTle) }}</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="fs-fees-submit-zone">
+							<div class="fs-fees-submit-zone__hint">
+								<i class="fe fe-shield"></i>
+								<span>{% trans %}Please review all fee amounts before saving changes.{% endtrans %}</span>
+							</div>
+
+							<div class="fs-fees-submit-zone__actions">
+								<button type="submit" class="fs-fees-btn fs-fees-btn--primary fs-fees-submit-btn" name="editFees" value="1">
+									<span class="fs-fees-submit-spinner" aria-hidden="true"></span>
+									<i class="fe fe-save fs-fees-submit-icon"></i>
+									<span>{% trans %}Save changes{% endtrans %}</span>
+								</button>
+							</div>
+						</div>
+
+					{{ form_end(formFees) }}
+				</div>
+			</section>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-fees-premium.js') }}"></script>
 {% endblock %}

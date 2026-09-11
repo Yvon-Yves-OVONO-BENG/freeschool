@@ -3,72 +3,151 @@
 {% block title %}{% trans %}Student List{% endtrans %}{% endblock %}
 
 {% block subTitle %}
-    {% trans %}MANAGEMENT OF PROVISIONAL LISTS{% endtrans %}
+	{% trans %}MANAGEMENT OF PROVISIONAL LISTS{% endtrans %}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-student-provisory-list-premium.css') }}">
 {% endblock %}
 
 {% block body %}
-<!-- App-Content -->
-	<div class="hor-content main-content">
+	<div class="hor-content main-content fs-provisory-list-page">
 		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary"></h4>
-                </div>
-                <div class="page-rightheader">
-                    <div class="btn-list">
-                        
-                    </div>
-                </div>
-            </div>
-            <!--End Page header-->
+			<div class="fs-provisory-list-menu-safe-space" aria-hidden="true"></div>
 
-            <div class="card border-primary">
-                <div class="card-header">
-                    <span class="page-title mb-0 text-primary">
-                        {% trans %}Printing of provisional lists{% endtrans %}
-                    </span>
-                </div>
-                <div class="card-body">
-                    <form action="{{ path('deliberation_printStudentProvisoryList') }}" method="post" target="_blank">
-                        <div class="row">
-                            <div class="col-md-3">
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <select name="classroom" id="classroom" class="form-control select2-show-search" data-placeholder="Choose a classroom" required>
-                                        <option label="Choose a classroom"></option>
-                                        <option value="0">{% trans %}All Classes{% endtrans %}</option>
-                                        
-                                        {% if subSystem == 'Francophone / French Speaker' %}
-                                            {% if school.education.education == 'Général' %}
-                                                {% include "includes/_selectClassroomsWithoutSelected.html.twig" %}
-                                                {% else %}
-                                                    {% include "includes/_selectClassroomsWithoutSelectedTech.html.twig" %}
-                                            {% endif %}
-                                            {% else %}
-                                                {% include "includes/_selectClassroomsWithoutSelectedEn.html.twig" %}
-                                        {% endif %}
+			<section class="fs-provisory-list-hero">
+				<div class="fs-provisory-list-hero__content">
+					<div>
+						<span class="fs-provisory-list-eyebrow">
+							<i class="fa fa-list-alt"></i>
+							{% trans %}Provisional lists workspace{% endtrans %}
+						</span>
 
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printStudentList">
-                                        <i class="fa fa-print"></i>
-                                        {% trans %}Print{% endtrans %}</button>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+						<h1 class="fs-provisory-list-title">
+							{% trans %}Printing of provisional lists{% endtrans %}
+						</h1>
 
+						<p class="fs-provisory-list-subtitle">
+							{% trans %}Generate provisional student lists by classroom or for all classes with a clean, refined and responsive premium interface.{% endtrans %}
+						</p>
+					</div>
+
+					<div class="fs-provisory-list-hero__actions">
+						<div class="fs-provisory-list-hero-stat">
+							<span class="fs-provisory-list-hero-stat__icon">
+								<i class="fe fe-home"></i>
+							</span>
+							<span class="fs-provisory-list-hero-stat__label">{% trans %}Scope{% endtrans %}</span>
+							<strong class="fs-provisory-list-hero-stat__value">{% trans %}Classroom{% endtrans %}</strong>
+						</div>
+
+						<div class="fs-provisory-list-hero-stat fs-provisory-list-hero-stat--soft">
+							<span class="fs-provisory-list-hero-stat__icon">
+								<i class="fe fe-printer"></i>
+							</span>
+							<span class="fs-provisory-list-hero-stat__label">{% trans %}Output{% endtrans %}</span>
+							<strong class="fs-provisory-list-hero-stat__value">{% trans %}PDF{% endtrans %}</strong>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="fs-provisory-list-card">
+				<div class="fs-provisory-list-card__header">
+					<div>
+						<span class="fs-provisory-list-chip">
+							<i class="fe fe-filter"></i>
+							{% trans %}Printing filter{% endtrans %}
+						</span>
+
+						<h2>{% trans %}Choose classroom{% endtrans %}</h2>
+
+						<p>
+							{% trans %}Select one classroom or all classes, then print the provisional student list in a new tab.{% endtrans %}
+						</p>
+					</div>
+
+					<span class="fs-provisory-list-card__icon">
+						<i class="fa fa-print"></i>
+					</span>
+				</div>
+
+				<form action="{{ path('deliberation_printStudentProvisoryList') }}" method="post" target="_blank" class="fs-provisory-list-form needs-validation" novalidate data-no-spinner="1">
+					<div class="fs-floating-field fs-required-field">
+						<select name="classroom" id="classroom" class="form-control select2-show-search fs-floating-control" data-placeholder="" required>
+							<option value="" label="">
+								
+							</option>
+
+							<option value="0">{% trans %}All Classs{% endtrans %}</option>
+
+							{% if subSystem == 'Francophone / French Speaker' %}
+								{% if school.education.education == 'Général' %}
+									{% include "includes/_selectClassroomsWithoutSelected.html.twig" %}
+								{% else %}
+									{% include "includes/_selectClassroomsWithoutSelectedTech.html.twig" %}
+								{% endif %}
+							{% else %}
+								{% include "includes/_selectClassroomsWithoutSelectedEn.html.twig" %}
+							{% endif %}
+						</select>
+
+						<label class="fs-floating-label" for="classroom">
+							<i class="fe fe-home"></i>
+							{% trans %}Classroom{% endtrans %}
+						</label>
+
+						<div class="invalid-feedback">
+							{% trans %}Please choose a classroom !{% endtrans %}
+						</div>
+					</div>
+
+					<div class="fs-provisory-list-form__actions">
+						<button class="fs-provisory-list-btn fs-provisory-list-btn--primary fs-provisory-list-submit-btn" type="submit" name="printStudentList">
+							<i class="fa fa-print fs-provisory-list-submit-icon"></i>
+							<span>{% trans %}Print{% endtrans %}</span>
+						</button>
+					</div>
+				</form>
+			</section>
+
+			<section class="fs-provisory-list-info-grid">
+				<div class="fs-provisory-list-info-card">
+					<span class="fs-provisory-list-info-card__icon">
+						<i class="fe fe-layers"></i>
+					</span>
+					<div>
+						<span>{% trans %}Subsystem support{% endtrans %}</span>
+						<strong>{% trans %}French, technical and English classroom includes are preserved.{% endtrans %}</strong>
+					</div>
+				</div>
+
+				<div class="fs-provisory-list-info-card">
+					<span class="fs-provisory-list-info-card__icon fs-provisory-list-info-card__icon--cyan">
+						<i class="fe fe-users"></i>
+					</span>
+					<div>
+						<span>{% trans %}All classes{% endtrans %}</span>
+						<strong>{% trans %}The All Classs option is preserved exactly as in your original template.{% endtrans %}</strong>
+					</div>
+				</div>
+
+				<div class="fs-provisory-list-info-card">
+					<span class="fs-provisory-list-info-card__icon fs-provisory-list-info-card__icon--gold">
+						<i class="fe fe-printer"></i>
+					</span>
+					<div>
+						<span>{% trans %}Print output{% endtrans %}</span>
+						<strong>{% trans %}The form still opens the generated provisional list in a new tab.{% endtrans %}</strong>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-student-provisory-list-premium.js') }}"></script>
 {% endblock %}

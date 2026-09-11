@@ -79,6 +79,9 @@ class Classroom
     #[ORM\OneToMany(mappedBy: 'classroom', targetEntity: HistoriqueTeacher::class)]
     private Collection $historiqueTeachers;
 
+    #[ORM\ManyToOne]
+    private ?Teacher $censorEnsGen = null;
+
     public function __construct()
     {
         $this->students = new ArrayCollection();
@@ -450,6 +453,18 @@ class Classroom
                 $historiqueTeacher->setClassroom(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCensorEnsGen(): ?Teacher
+    {
+        return $this->censorEnsGen;
+    }
+
+    public function setCensorEnsGen(?Teacher $censorEnsGen): self
+    {
+        $this->censorEnsGen = $censorEnsGen;
 
         return $this;
     }

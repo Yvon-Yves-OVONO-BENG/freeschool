@@ -18,13 +18,15 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class ClassroomType extends AbstractType
 {
-    public function __construct(protected RequestStack $request, protected TranslatorInterface $translator)
-    {
-    }
+    public function __construct(
+        protected RequestStack $request, 
+        protected TranslatorInterface $translator)
+    {}
    
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
+        $school = $options['school'];
+        
         $builder
             ->add('classroom', TextType::class, [
                 'label' => $this->translator->trans('Classroom'),
@@ -46,7 +48,6 @@ class ClassroomType extends AbstractType
                         return $levelRepository->findLevelForFormEn();
                     }
                     
-                    
                 },
                 'choice_label' => 'level'
             ])
@@ -60,18 +61,51 @@ class ClassroomType extends AbstractType
                     return $teacherRepository->findTeacherForForm($schoolYear, $subSystem);
                 },
                 'choice_label' => 'fullName'
-            ])
-            ->add('censor', EntityType::class, [
-                'label' => $this->translator->trans('Attached Vice Principal'),
-                'class' => Teacher::class,
-                'query_builder' => function(TeacherRepository $teacherRepository){
-                    $mySession = $this->request->getSession();
-                    $schoolYear = $mySession->get('schoolYear');
-                    $subSystem = $mySession->get('subSystem');
-                    return $teacherRepository->findCensorForForm($schoolYear, $subSystem);
-                },
-                'choice_label' => 'fullName'
-            ])
+            ]);
+            
+            if ($school->getEducation()->getEducation() == "Général") 
+            {
+                $builder
+                    ->add('censor', EntityType::class, [
+                        'label' => $this->translator->trans('Attached Vice Principal'),
+                        'class' => Teacher::class,
+                        'query_builder' => function(TeacherRepository $teacherRepository){
+                            $mySession = $this->request->getSession();
+                            $schoolYear = $mySession->get('schoolYear');
+                            $subSystem = $mySession->get('subSystem');
+                            return $teacherRepository->findCensorForForm($schoolYear, $subSystem);
+                        },
+                        'choice_label' => 'fullName'
+                    ]);
+            } 
+            else 
+            {
+                $builder
+                    ->add('censor', EntityType::class, [
+                        'label' => $this->translator->trans('Attached Vice Principal'),
+                        'class' => Teacher::class,
+                        'query_builder' => function(TeacherRepository $teacherRepository){
+                            $mySession = $this->request->getSession();
+                            $schoolYear = $mySession->get('schoolYear');
+                            $subSystem = $mySession->get('subSystem');
+                            return $teacherRepository->findCensorForForm($schoolYear, $subSystem);
+                        },
+                        'choice_label' => 'fullName'
+                    ])
+                    ->add('censorEnsGen', EntityType::class, [
+                        'label' => $this->translator->trans('Attached Vice Principal of general teaching'),
+                        'class' => Teacher::class,
+                        'query_builder' => function(TeacherRepository $teacherRepository){
+                            $mySession = $this->request->getSession();
+                            $schoolYear = $mySession->get('schoolYear');
+                            $subSystem = $mySession->get('subSystem');
+                            return $teacherRepository->findCensorForForm($schoolYear, $subSystem);
+                        },
+                        'choice_label' => 'fullName'
+                    ]);
+            }
+            
+            $builder
             ->add('supervisor', EntityType::class, [
                 'label' => $this->translator->trans('Attached supervisor'),
                 'class' => Teacher::class,
@@ -112,6 +146,9 @@ class ClassroomType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Classroom::class,
+            'school' => null,
         ]);
+
+        // $resolver->setRequired('school');
     }
 }

@@ -16,14 +16,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
-/**
- * @Route("/timetable")
- */
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
+#[Route('/timetable')]
 class EditTimeTableController extends AbstractController
 {
     public function __construct(protected TimeTableRepository $timeTableRepository, protected EntityManagerInterface $em, protected TranslatorInterface $translator, protected SchoolYearRepository $schoolYearRepository, protected SchoolRepository $schoolRepository,)
@@ -52,38 +46,45 @@ class EditTimeTableController extends AbstractController
 
         $schoolYear = $this->schoolYearRepository->find($mySession->get('schoolYear')->getId());
 
-        $timeTable = $this->timeTableRepository->findOneBySlug(['slug' => $slug]);
+        $timeTable = $this->timeTableRepository->findOneBy(['slug' => $slug]);
 
-        $form = $this->createForm(TimeTableType::class, $timeTable);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) 
+        if ($timeTable) 
         {
-
-            $timeTable
-                ->setStartTime($request->get('startTime'))
-                ->setEndTime($request->get('endTime'))
-                ->setSchoolYear($schoolYear)
-                ->setSubSystem($subSystem)
-                ;
-
-            $this->em->persist($timeTable);
-            $this->em->flush();
-
-            $this->addFlash('info', $this->translator->trans("Time table updated with success ! !"));
-            $mySession->set('miseAjour', 1);
-
-            // on initialise le formulaire
-            $timeTable = new TimeTable;
             $form = $this->createForm(TimeTableType::class, $timeTable);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) 
+            {
+
+                $timeTable
+                    ->setStartTime($request->get('startTime'))
+                    ->setEndTime($request->get('endTime'))
+                    ->setSchoolYear($schoolYear)
+                    ->setSubSystem($subSystem)
+                    ;
+
+                $this->em->persist($timeTable);
+                $this->em->flush();
+
+                $this->addFlash('info', $this->translator->trans("Time table updated with success ! !"));
+                $mySession->set('miseAjour', 1);
+
+                // on initialise le formulaire
+                $timeTable = new TimeTable;
+                $form = $this->createForm(TimeTableType::class, $timeTable);
+                
+            }
             
-            
+            return $this->render('timetable/saveTimeTable.html.twig', [
+                'timeTableForm' => $form->createView(),
+                'slug' => $slug,
+                'school' => $school,
+            ]);
+        } 
+        else {
+            return $this->redirectToRoute('page_error');
         }
         
-        return $this->render('timetable/saveTimeTable.html.twig', [
-            'timeTableForm' => $form->createView(),
-            'slug' => $slug,
-            'school' => $school,
-        ]);
+        
     }
 }

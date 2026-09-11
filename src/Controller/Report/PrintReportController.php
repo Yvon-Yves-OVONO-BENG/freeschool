@@ -7,6 +7,7 @@ use App\Service\ReportService;
 use App\Service\GeneralService;
 use App\Service\TeacherService;
 use App\Service\StatisticService;
+use App\Service\ReportRefreshService;
 use App\Repository\TermRepository;
 use App\Repository\ReportRepository;
 use App\Repository\SchoolRepository;
@@ -22,11 +23,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/report")]
 class PrintReportController extends AbstractController
 {
@@ -43,6 +40,7 @@ class PrintReportController extends AbstractController
         protected SequenceRepository $sequenceRepository, 
         protected ClassroomRepository $classroomRepository, 
         protected EvaluationRepository $evaluationRepository, 
+        protected ReportRefreshService $reportRefreshService,
         )
         {}
         
@@ -68,8 +66,13 @@ class PrintReportController extends AbstractController
        
         if ($slug != null && $slugTerm != null) 
         {
-            $idC = $this->classroomRepository->findOneBySlug(['slug' => $slug ])->getId();
-            $idT = $this->termRepository->findOneBySlug(['slug' => $slugTerm ])->getId();
+            $idC = $this->classroomRepository->findOneBy(['slug' => $slug ])->getId();
+            $idT = $this->termRepository->findOneBy(['slug' => $slugTerm ])->getId();
+
+            if (!$idC || !$idT) 
+            {
+                return $this->redirectToRoute('page_error');
+            }
         }
         
         // dd($idT);
@@ -98,6 +101,10 @@ class PrintReportController extends AbstractController
 
         // classe sélectionnée
         $selectedClassroom = $this->classroomRepository->find($idC);
+
+        // Synchronise immédiatement les moyennes/rangs avant de construire le
+        // bulletin. Aucun passage préalable par un PV ou un registre n'est requis.
+        $this->reportRefreshService->refreshForReport($selectedClassroom, $selectedTerm);
         //Effectif de la classe
         $numberOfStudents = $this->generalService->getNumberOfStudents($selectedClassroom);
         // Effectif garçons
@@ -145,19 +152,32 @@ class PrintReportController extends AbstractController
             $studentMarkTerm3 = $this->generalService->getStudentMarkTerm($studentMarkSequence5, $studentMarkSequence6);
 
             // Notes annuelles des élèves
-            $studentMarkTerm = $this->generalService->getAnnualMarks( $studentMarkTerm1, $studentMarkTerm2, $studentMarkTerm3);
+            $studentMarkTerm = $this->generalService->getAnnualMarks($studentMarkTerm1, $studentMarkTerm2, $studentMarkTerm3);
         }
         
         // Moyennes trimestrielles des élèves classés et moyennes par groupe et classement par order de mérite trimestriel
-        $allRankedStudents = $this->reportService->getRankedStudents($studentMarkTerm, $selectedClassroom, $selectedTerm);
+        $allRankedStudents = $this->reportService->getRankedStudents($studentMarkTerm, $selectedClassroom, $selectedTerm, $school,);
         
         // On reupère le classement trimetriel
         $rankedStudents = $allRankedStudents['rankedTerm'];
 
+        $printOrder = $request->request->get('printOrder', $request->query->get('printOrder', 'merit'));
+        $printIndexes = array_keys($rankedStudents);
+
+        if (!$slugStudent && $printOrder === 'alphabetical') {
+            usort($printIndexes, function (int $leftIndex, int $rightIndex) use ($rankedStudents): int {
+                return strcasecmp(
+                    $rankedStudents[$leftIndex]['student']->getFullName(),
+                    $rankedStudents[$rightIndex]['student']->getFullName()
+                );
+            });
+        }
+        
         // on recupère les classements par category
         $rankedStudentsCategory1 = $allRankedStudents['rankedCategory1'];
         $rankedStudentsCategory2 = $allRankedStudents['rankedCategory2'];
         $rankedStudentsCategory3 = $allRankedStudents['rankedCategory3'];
+        $rankedStudentsCategory4 = $allRankedStudents['rankedCategory4'];
         
         //  Notes des élèves par Lesson classées par order de mérite
         $rankPerLesson = $this->reportService->getRankPerLesson($studentMarkTerm, $selectedClassroom, $selectedTerm);
@@ -182,11 +202,15 @@ class PrintReportController extends AbstractController
         if(!empty($studentMarkTerm))
         {
             // On construit le bulletin de chaque élève
-            for($index = 0; $index < $numberOfStudents; $index++)
+            foreach($printIndexes as $index)
             {
                 if($slugStudent) // Si on veut imprimer un seul bulletin
                 {
-                    $idS = $this->studentRepository->findOneBySlug(['slug' => $slugStudent ])->getId();
+                    $idS = $this->studentRepository->findOneBy(['slug' => $slugStudent ])->getId();
+                    if (!$idS) 
+                    {
+                        return $this->redirectToRoute('page_error');
+                    }
                     $studentIndex = $this->reportService->getStudentPositionForOneReport($rankedStudents, $idS);
                     
                     $index = $studentIndex['index'];
@@ -204,11 +228,45 @@ class PrintReportController extends AbstractController
 
                 if($selectedTerm->getTerm() != 0)
                 {
-                    $studentReport->setReportBody($this->reportService->getStudentReportBody($studentMarkSequence1, $studentMarkSequence2, $studentMarkTerm, $rankedStudents,  $index, $numberOfLessons,  $numberOfStudents, $rankedStudentsCategory1, $rankedStudentsCategory2, $rankedStudentsCategory3, $subSystem, $selectedTerm, $rankPerLesson, [], $schoolYear));
+                    $studentReport->setReportBody($this->reportService->getStudentReportBody(
+                        $studentMarkSequence1, 
+                        $studentMarkSequence2, 
+                        $studentMarkTerm, 
+                        $rankedStudents,  
+                        $index, 
+                        $numberOfLessons,  
+                        $numberOfStudents, 
+                        $rankedStudentsCategory1, 
+                        $rankedStudentsCategory2, 
+                        $rankedStudentsCategory3, 
+                        $subSystem, 
+                        $school, 
+                        $rankedStudentsCategory4, 
+                        $selectedTerm, 
+                        $rankPerLesson, 
+                        [], 
+                        $schoolYear));
 
                 }else
                 {
-                    $studentReport->setReportBody($this->reportService->getStudentReportBody($studentMarkTerm1, $studentMarkTerm2, $studentMarkTerm, $rankedStudents, $index, $numberOfLessons, $numberOfStudents, $rankedStudentsCategory1, $rankedStudentsCategory2, $rankedStudentsCategory3, $subSystem, $selectedTerm, $rankPerLesson, $studentMarkTerm3, $schoolYear));
+                    $studentReport->setReportBody($this->reportService->getStudentReportBody(
+                        $studentMarkTerm1, 
+                        $studentMarkTerm2, 
+                        $studentMarkTerm, 
+                        $rankedStudents, 
+                        $index, 
+                        $numberOfLessons, 
+                        $numberOfStudents, 
+                        $rankedStudentsCategory1, 
+                        $rankedStudentsCategory2, 
+                        $rankedStudentsCategory3, 
+                        $subSystem, 
+                        $school, 
+                        $rankedStudentsCategory4, 
+                        $selectedTerm, 
+                        $rankPerLesson, 
+                        $studentMarkTerm3, 
+                        $schoolYear));
                 }
 
                 // On sauvegarde le Report pour rappels
@@ -217,21 +275,18 @@ class PrintReportController extends AbstractController
                 if($report !== null)
                 {
                     $report->setMoyenne($rankedStudents[$index]['moyenne'])
-                        // ->setRang(1)
-                        ->setRang($rankedStudents[$index]['rang'])
-                        ;
+                        ->setRang($rankedStudents[$index]['rang']);
                     
                     $this->em->persist($report);
                     $this->em->flush();
-                }else
+                }
+                else
                 {
                     $report = new Report();
                     $report->setStudent($student)
                         ->setTerm($selectedTerm)
                         ->setMoyenne($rankedStudents[$index]['moyenne'])
-                        // ->setRang(1)
-                        ->setRang($rankedStudents[$index]['rang'])
-                        ;
+                        ->setRang($rankedStudents[$index]['rang']);
                     
                     $this->em->persist($report);
                     $this->em->flush();
@@ -263,7 +318,6 @@ class PrintReportController extends AbstractController
             
             }
             
-        
         }else
         {
             // On imprime les bulletins
@@ -311,7 +365,8 @@ class PrintReportController extends AbstractController
             if ($slugStudent) 
             {
                 return new Response($pdf->Output('Bulletin de notes de '.$student->getFullName().' - '.$selectedClassroom->getClassroom()." - ".$trimestre ,'I'), 200, ['Content-Type' => 'application/pdf']) ;
-            } else 
+            } 
+            else 
             {
                 return new Response($pdf->Output('Bulletin de la classe de '.$selectedClassroom->getClassroom()." - ".$trimestre ,'I'), 200, ['Content-Type' => 'application/pdf']) ;
             }

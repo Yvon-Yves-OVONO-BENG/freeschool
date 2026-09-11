@@ -1,778 +1,1052 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-{% if slug != 0 %}
-    {% trans %}Updating Student{% endtrans %}
-    {% else %}
-    {% trans %}Save Student{% endtrans %}
-{% endif %}
-
+	{% if slug != 0 %}
+		{% trans %}Updating Student{% endtrans %}
+	{% else %}
+		{% trans %}Save Student{% endtrans %}
+	{% endif %}
 {% endblock %}
 
 {% block subTitle %}
-     {% if slug != 0 %}
-        {% trans %}UPDATING STUDENT{% endtrans %}
-    {% else %}
-        {% trans %}ADDING NEW STUDENT{% endtrans %}
-    {% endif %}
+	{% if slug != 0 %}
+		{% trans %}UPDATING STUDENT{% endtrans %}
+	{% else %}
+		{% trans %}ADDING NEW STUDENT{% endtrans %}
+	{% endif %}
 {% endblock %}
+
 {% block infoMessage %}
-    {% include "includes/_info_message.html.twig" %}
+	{% include "includes/_info_message.html.twig" %}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-student-form-premium.css') }}">
+	<style>
+		.fs-photo-source-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+		.fs-camera-open-btn{appearance:none;border:0;cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:10px 15px;border-radius:10px;background:#1769e0;color:#fff;font-weight:700;box-shadow:0 7px 18px rgba(23,105,224,.18);transition:.2s ease}
+		.fs-camera-open-btn:hover{background:#0e56bd;transform:translateY(-1px)}
+		.fs-photo-processing{display:block;margin-top:8px;color:#68758a;font-size:.78rem}
+		.fs-photo-processing.is-error{color:#c0392b}
+		.fs-camera-modal[hidden]{display:none!important}
+		.fs-camera-modal{position:fixed;inset:0;z-index:10050;display:grid;place-items:center;padding:18px}
+		.fs-camera-modal__backdrop{position:absolute;inset:0;background:rgba(9,17,31,.78);backdrop-filter:blur(5px)}
+		.fs-camera-modal__dialog{position:relative;width:min(94vw,620px);height:min(94vh,760px);max-height:94vh;overflow:hidden;border-radius:20px;background:#fff;box-shadow:0 28px 70px rgba(0,0,0,.35);display:flex;flex-direction:column}
+		.fs-camera-modal__header{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid #edf0f5}
+		.fs-camera-modal__header h3{margin:0;font-size:1.05rem;color:#182235}
+		.fs-camera-close{border:0;background:#eef2f7;border-radius:50%;width:36px;height:36px;cursor:pointer;color:#26364d}
+		.fs-camera-stage{position:relative;flex:1;min-height:280px;background:#0b1018;overflow:hidden}
+		.fs-camera-stage video{display:block;width:100%;height:100%;object-fit:cover}
+		.fs-camera-stage video.is-front-camera{transform:scaleX(-1)}
+		.fs-camera-message{position:absolute;inset:0;display:none;place-content:center;gap:20px;padding:30px;text-align:center;color:#fff;background:#101827;z-index:2}
+		.fs-camera-message.is-visible{display:grid}
+		.fs-camera-controls{position:sticky;bottom:0;z-index:5;flex:0 0 auto;display:flex;justify-content:center;align-items:center;gap:14px;padding:18px;background:#07162f;border-top:1px solid rgba(255,255,255,.12);box-shadow:0 -10px 30px rgba(0,0,0,.24)}
+		.fs-camera-control{border:0;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 17px;font-weight:700}
+		.fs-camera-control--switch{background:#fff;color:#1458b4}
+		.fs-camera-control--capture{min-width:210px;height:58px;padding:0 24px;background:#0875f5!important;color:#fff!important;border:4px solid #cfe3ff;box-shadow:0 0 0 2px #0875f5,0 10px 26px rgba(8,117,245,.42);font-size:1rem;font-weight:900}
+		.fs-camera-control[disabled]{opacity:.45;cursor:not-allowed}
+		body.fs-camera-open{overflow:hidden}
+		@media(max-width:576px){.fs-camera-modal{padding:0}.fs-camera-modal__dialog{width:100vw;max-height:100vh;height:100%;border-radius:0}.fs-camera-stage{flex:1;max-height:none}.fs-camera-controls{gap:10px;padding:14px 12px}.fs-camera-control{padding-left:13px;padding-right:13px}.fs-camera-control--capture{min-width:0;flex:1}.fs-camera-open-btn,.fs-photo-upload-btn{flex:1;justify-content:center}}
+	</style>
 {% endblock %}
 
 {% block body %}
-<!-- App-Content -->
-	<div class="hor-content main-content">
+	<div class="hor-content main-content fs-student-page">
 		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary">
-                        {% if slug != 0 %}
-                            <i class="fe fe-edit me-2"></i> {% trans %}UPDATING STUDENT{% endtrans %}
-                        {% else %}
-                            <i class="fa fa-plus me-2"></i> {% trans %}ADDING NEW STUDENT{% endtrans %}
-                        {% endif %}
-                    </h4>
-                </div>
-                <div class="page-rightheader">
-                    <div class="btn-list">
-                        <button type="button" class="btn btn-primary">
-                            <span>{% trans %}Total Effective{% endtrans %}</span>
-                            <span class="badge bg-white text-dark rounded-pill">{{ numberOfStudentInSchool }}</span>
-                        </button>
-                        <a href="{{ path('student_displayStudent') }}" class="btn btn-outline-primary">
-                            <i class="fa fa-list"></i>
-                            {% trans %}Display registered students{% endtrans %}
-                        </a>
+			<div class="fs-student-menu-safe-space" aria-hidden="true"></div>
 
-                        {# {% if etatVerrouExclu %}
-                            <a href="{{ path('desactive_save_expelled') }}" class="btn btn-outline-primary">
-                                <i class="fe fe-check-circle"></i>
-                                {% trans %}Enable registration of exclusions{% endtrans %}
-                            </a>
-                            {% else %}
-                                <a href="{{ path('activate_save_expelled') }}" class="btn btn-outline-danger">
-                                    <i class="fe fe-x-circle"></i>
-                                    {% trans %}Disable recording of exclusions{% endtrans %}
-                                </a>
-                        {% endif %} #}
-                        
+			<section class="fs-student-hero">
+				<div class="fs-student-hero__content">
+					<span class="fs-student-eyebrow">
+						<i class="fe fe-user"></i>
+						{% trans %}Student workspace{% endtrans %}
+					</span>
 
-                    </div>
-                </div>
-            </div>
-            <!--End Page header-->
-            {% if slug != 0 %}  
-                <div class="card border-danger">
-                {% else %}
-                <div class="card border-primary">
-            {% endif %}
-                <div class="card-header">
-                    <div class="card-title">
-                        {% if slug != 0 %} 
-                            <div class="col-md-12">
-                                {% if student.sex.sex == 'F' %}
-                                    <img src="{{ student.photo ? asset('images/students/' ~ student.photo) : asset('images/students/fille.jpg')}}" alt="photo" width="70" height="80"> 
-                                    {% else %} 
-                                    <img src="{{ student.photo ? asset('images/students/' ~ student.photo) : asset('images/students/garcon.jpg')}}" alt="photo" width="70" height="80"> 
-                                {% endif %}
-                                    <button type="button" class="btn btn-primary mt-1 mb-1 me-3">
-                                        <span>{% trans %}Updating student information of : {% endtrans %} </span>
-                                        <span class="badge bg-white text-dark">{{ student.fullName }}</span>
-                                    </button>
-                                {# <h2 class="text-blue">{% trans %}Update of{% endtrans %}<span class="badge bg-primary">{{ student.fullName }}</span></h2> #}
-                            </div>
-                            
-                        {% endif %}
-                        
-                        <div class="col-md-2"> 
-                            {% if storedClassroom.classroom is not null %}
-                            <button type="button" class="btn btn-info  mt-1 mb-1 me-3 form-control-sm">
-                                <span>{% trans %}Effective{% endtrans %} {{ storedClassroom.classroom }}</span>
-                                <span class="badge bg-white text-dark rounded-pill">{{registeredStudents|length}}</span>
-                            </button>
-                            {% endif %}
-                        </div>
+					<h1 class="fs-student-title">
+						{% if slug != 0 %}
+							{% trans %}UPDATING STUDENT{% endtrans %}
+						{% else %}
+							{% trans %}ADDING NEW STUDENT{% endtrans %}
+						{% endif %}
+					</h1>
 
-                        <div class="col-md-3">
-                            {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
-                                {% if is_granted('ROLE_INTENDANT') %}
+					<p class="fs-student-subtitle">
+						{% trans %}Register and update student information through a clean, guided and responsive form.{% endtrans %}
+					</p>
+				</div>
 
-                                    <a href="{{ path('registration_feesStatement') }}" class="btn btn-outline-secondary">
-                                    <i class="fa fa-money"></i> {% trans %}Validate a receipt{% endtrans %}</a>
-                                {% endif %}
-                            {% endif %}
-                        </div>
-                    </div>
+				<div class="fs-student-hero__right">
+					<div class="fs-student-stat">
+						<span class="fs-student-stat__icon">
+							<i class="fe fe-users"></i>
+						</span>
+						<span class="fs-student-stat__label">{% trans %}Total Effective{% endtrans %}</span>
+						<strong class="fs-student-stat__value">{{ numberOfStudentInSchool }}</strong>
+					</div>
 
-                </div>
-                <div class="card-body ">
-                    <div aria-multiselectable="true" class="accordion" id="accordion" role="tablist">
-                        {{ form_start(formStudent, {'attr': {'class':'row g-4 needs-validation', 'novalidate':""}})}}
-                            <div class="acc-card mb-2">
-                                <div class="acc-header" id="headingOne" role="tab">
-                                    <h5 class="mb-0">
-                                        <a aria-controls="collapseOne" aria-expanded="true" data-bs-toggle="collapse" href="#identification"><i class="fe fe-user me-2"></i> <b> {% trans %}IDENTIFICATION{% endtrans %}</b></a>
-                                    </h5>
-                                </div>
-                                <div aria-labelledby="headingOne" class="collapse show" data-parent="#accordion" id="identification" role="tabpanel">
-                                    <div class="acc-body">
-                                        <div class="row mb-1">
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.classroom, {'attr': {'class': 'form-control select2-show-search'}}) }}
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.fullName, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.birthday, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                                </div>
-                                            </div> 
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.birthplace, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                                </div>
-                                            </div>
-                                        </div>
+					<a href="{{ path('student_displayStudent') }}" class="fs-student-btn fs-student-btn--hero">
+						<i class="fe fe-list"></i>
+						<span>{% trans %}Display registered students{% endtrans %}</span>
+					</a>
+				</div>
+			</section>
 
-                                        <div class="row mb-1">
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.sex, {'attr': {'class': 'form-control select2 custom-select'}}) }}
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.repeater, {'attr': {'class': 'form-control select2 custom-select'}}) }}
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.registrationNumber, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                                </div>
-                                            </div>
+			{% if slug != 0 %}
+				<div class="fs-student-edit-banner">
+					<div class="fs-student-edit-banner__photo">
+						{% if student.sex.sex == 'F' %}
+							<img src="{{ student.photo ? asset('images/students/' ~ student.photo) : asset('images/students/fille.jpg')}}" alt="photo">
+						{% else %}
+							<img src="{{ student.photo ? asset('images/students/' ~ student.photo) : asset('images/students/garcon.jpg')}}" alt="photo">
+						{% endif %}
+					</div>
 
-                                            <div class="col-md-3">
-                                                <label for="validationCustom01" class="form-label">{% trans %} Native ?{% endtrans %}</label>
-                                                
-                                                <div class="form-group" id="">
-                                                    <div class="selectgroup selectgroup-pills">
-                                                        <label class="selectgroup-item" id="">
-                                                            <input type="radio" name="autochtone" value="1" class="selectgroup-input" >
-                                                            <span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span>
+					<div>
+						<span>{% trans %}Updating student information of : {% endtrans %}</span>
+						<strong>{{ student.fullName }}</strong>
+					</div>
+				</div>
+			{% endif %}
+
+			<div class="fs-student-card {% if slug != 0 %}fs-student-card--edit{% else %}fs-student-card--create{% endif %}">
+				<div class="fs-student-card__header">
+					<div>
+						<span class="fs-student-card__badge">
+							{% if slug != 0 %}
+								<i class="fe fe-edit"></i>
+								{% trans %}Edit mode{% endtrans %}
+							{% else %}
+								<i class="fe fe-plus"></i>
+								{% trans %}Creation mode{% endtrans %}
+							{% endif %}
+						</span>
+
+						<h2 class="fs-student-card__title">
+							{% if slug != 0 %}
+								{% trans %}UPDATING STUDENT{% endtrans %}
+							{% else %}
+								{% trans %}ADDING NEW STUDENT{% endtrans %}
+							{% endif %}
+						</h2>
+					</div>
+
+					<div class="fs-student-card__actions">
+						{% if storedClassroom.classroom is not null %}
+							<div class="fs-student-mini-stat">
+								<span>{% trans %}Effective{% endtrans %} {{ storedClassroom.classroom }}</span>
+								<strong>{{ registeredStudents|length }}</strong>
+							</div>
+						{% endif %}
+
+						{% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+							{% if is_granted('ROLE_INTENDANT') %}
+								<a href="{{ path('registration_feesStatement') }}" class="fs-student-btn fs-student-btn--soft">
+									<i class="fe fe-credit-card"></i>
+									<span>{% trans %}Validate a receipt{% endtrans %}</span>
+								</a>
+							{% endif %}
+						{% endif %}
+					</div>
+				</div>
+
+				<div class="fs-student-card__body">
+					<div aria-multiselectable="true" class="accordion fs-student-accordion" id="accordion" role="tablist">
+
+						{{ form_start(formStudent, {'attr': {'class': 'fs-student-form needs-validation', 'novalidate': 'novalidate'}}) }}
+
+							<div class="acc-card fs-accordion-card mb-2">
+								<div class="acc-header fs-accordion-header" id="headingRequired" role="tab">
+									<h5 class="mb-0">
+										<a aria-controls="requiredStudentInfo" aria-expanded="true" data-bs-toggle="collapse" href="#requiredStudentInfo">
+											<i class="fe fe-user-check"></i>
+											<b>{% trans %}REQUIRED STUDENT INFORMATION{% endtrans %}</b>
+										</a>
+									</h5>
+								</div>
+
+								<div aria-labelledby="headingRequired" class="collapse show" data-parent="#accordion" id="requiredStudentInfo" role="tabpanel">
+									<div class="acc-body fs-accordion-body">
+										<div class="fs-required-grid">
+
+											<div class="fs-floating-field fs-required-field">
+												{{ form_widget(formStudent.classroom, {'attr': {'class': 'form-control select2-show-search fs-floating-control', 'placeholder': ' ', 'required': 'required'}}) }}
+												<label class="fs-floating-label">{% trans %}Classroom{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.classroom) }}</div>
+											</div>
+
+											<div class="fs-floating-field fs-required-field">
+												{{ form_widget(formStudent.fullName, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' ', 'required': 'required'}}) }}
+												<label class="fs-floating-label">{% trans %}Full name{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.fullName) }}</div>
+											</div>
+
+											<div class="fs-floating-field fs-required-field">
+												{{ form_widget(formStudent.birthday, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' ', 'required': 'required'}}) }}
+												<label class="fs-floating-label">{% trans %}Birthday{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.birthday) }}</div>
+											</div>
+
+											<div class="fs-floating-field fs-required-field">
+												{{ form_widget(formStudent.birthplace, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' ', 'required': 'required'}}) }}
+												<label class="fs-floating-label">{% trans %}Birthplace{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.birthplace) }}</div>
+											</div>
+
+											<div class="fs-floating-field fs-required-field">
+												{{ form_widget(formStudent.sex, {'attr': {'class': 'form-control select2 custom-select fs-floating-control', 'placeholder': ' ', 'required': 'required'}}) }}
+												<label class="fs-floating-label">{% trans %}Gender{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.sex) }}</div>
+											</div>
+
+											<div class="fs-floating-field fs-required-field">
+												{{ form_widget(formStudent.repeater, {'attr': {'class': 'form-control select2 custom-select fs-floating-control', 'placeholder': ' ', 'required': 'required'}}) }}
+												<label class="fs-floating-label">{% trans %}Repeater{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.repeater) }}</div>
+											</div>
+
+											<div class="fs-floating-field fs-required-field">
+												{{ form_widget(formStudent.registrationNumber, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' ', 'required': 'required'}}) }}
+												<label class="fs-floating-label">{% trans %}NIU{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.registrationNumber) }}</div>
+											</div>
+
+											<div class="fs-photo-field fs-photo-field--premium">
+                                                <div class="fs-photo-preview" id="fsStudentPhotoPreview">
+                                                    {% if slug != 0 %}
+                                                        {% if student.sex.sex == 'F' %}
+                                                            <img src="{{ student.photo ? asset('images/students/' ~ student.photo) : asset('images/students/fille.jpg')}}" alt="photo">
+                                                        {% else %}
+                                                            <img src="{{ student.photo ? asset('images/students/' ~ student.photo) : asset('images/students/garcon.jpg')}}" alt="photo">
+                                                        {% endif %}
+                                                    {% else %}
+                                                        <div class="fs-photo-preview__empty">
+                                                            <i class="fe fe-camera"></i>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+
+                                                <div class="fs-photo-content">
+                                                    <label class="fs-photo-label">
+                                                        <i class="fe fe-camera"></i>
+                                                        <span>{% trans %}Photo{% endtrans %}</span>
+                                                    </label>
+
+                                                    <div class="fs-photo-source-actions">
+                                                        <label class="fs-photo-upload-btn">
+                                                            <i class="fe fe-upload"></i>
+                                                            <span>{% trans %}Choose photo{% endtrans %}</span>
+                                                            {{ form_widget(formStudent.imageFile, {'attr': {'class': 'fs-photo-input', 'accept': 'image/*'}}) }}
                                                         </label>
-                                                        <label class="selectgroup-item" id="">
-                                                            <input type="radio" name="autochtone" value="0" class="selectgroup-input">
-                                                            <span class="selectgroup-button">{% trans %}No{% endtrans %}</span>
-                                                        </label>
+
+                                                        <button type="button" class="fs-camera-open-btn" id="fsOpenStudentCamera">
+                                                            <i class="fe fe-camera"></i>
+                                                            <span>{{ app.request.locale|slice(0, 2) == 'fr' ? 'Prendre une photo' : 'Take a photo' }}</span>
+                                                        </button>
                                                     </div>
-                                                </div>
-                                            </div>
-                                            
-                                            
-                                        </div>
 
-                                        <div class="row mb-1">
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.country, {'attr': {'class': 'form-control select2-show-search'}}) }}
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.ethnicGroup, {'attr': {'class': 'form-control select2-show-search'}}) }}
-                                                </div>
-                                            </div>
+                                                    <small class="fs-photo-processing" id="fsPhotoProcessingStatus" aria-live="polite"></small>
 
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.movement, {'attr': {'class': 'form-control select2 custom-select'}}) }}
-                                                </div>
-                                            </div>
+                                                    <div class="fs-photo-actions">
+                                                        <button type="button" class="fs-photo-remove-btn" id="fsRemoveSelectedPhoto">
+                                                            <i class="fe fe-x"></i>
+                                                            <span>{% trans %}Remove{% endtrans %}</span>
+                                                        </button>
 
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.numeroHcr, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                        
-                                        <div class="row mb-1">
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.responsability, {'attr': {'class': 'form-control select2 custom-select'}}) }}
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.numeroWhatsapp, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.handicap, {'attr': {'class': 'form-control select2 custom-select'}}) }}
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.handicapType, {'attr': {'class': 'form-control select2 custom-select'}}) }}
-                                                </div>
-                                            </div>
-
-                                        </div>
-
-                                        <div class="row mb-1">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.fatherName, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.professionPere, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.telephonePere, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row mb-1">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.motherName, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.professionMere, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.telephoneMere, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row mb-1">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.tuteur, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.professionTuteur, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.telephoneTuteur, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row mb-1">
-
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.emailParent, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.personneAContacterEnCasUergence, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.telephonePersonneEnCasUrgence, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                                </div>
-                                            </div>
-
-                                        </div>
-
-                                        <div class="row mb-1">
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    <label for="validationCustom03" class="form-label">Photo</label>
-                                                    {{ form_row(formStudent.imageFile) }}
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="acc-card mb-2">
-                                <div class="acc-header" id="headingTwo" role="tab">
-                                    <h5 class="mb-0">
-                                        <a aria-controls="collapseTwo" aria-expanded="false" class="collapsed" data-bs-toggle="collapse" href="#scolarite"><i class="fa fa-leanpub me-2"></i> <b>{% trans %}SCHOOLING{% endtrans %}</b> </a>
-                                    </h5>
-                                </div>
-                                <div aria-labelledby="headingTwo" class="collapse" data-parent="#accordion" id="scolarite" role="tabpanel">
-                                    <div class="acc-body">
-                                        <div class="row mb-1">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.datePremiereEntreeEtablissementAt, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.classeEntree, {'attr': {'class': 'form-control select2-show-search'}}) }}
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row mb-1">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.etablisementFrequenteAnDernier, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.operateur, {'attr': {'class': 'form-control select2-show-search'}}) }}
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.modeAdmission, {'attr': {'class': 'form-control select2-show-search'}}) }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="acc-card mb-2">
-                                <div class="acc-header" id="headingThree" role="tab">
-                                    <h5 class="mb-0">
-                                        <a aria-controls="collapseThree" aria-expanded="false" class="collapsed" data-bs-toggle="collapse" href="#dossierMedical">
-                                        <i class="fa fa-user-md me-2"></i> <b>{% trans %}MEDICAL FILE{% endtrans %}<b></a>
-                                    </h5>
-                                </div>
-                                <div aria-labelledby="headingThree" class="collapse" data-parent="#accordion" id="dossierMedical" role="tabpanel">
-                                    <div class="acc-body">
-                                        <div class="row mb-1">
-                                            <div class="col-md-3">
-                                                <label for="validationCustom01" class="form-label">{% trans %}Sickle cell disease ?{% endtrans %}</label>
-                                                
-                                                <div class="form-group" id="">
-                                                    <div class="selectgroup selectgroup-pills">
-                                                        <label class="selectgroup-item" id="">
-                                                            <input type="radio" name="drepanocytose" value="1" class="selectgroup-input" >
-                                                            <span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span>
-                                                        </label>
-                                                        <label class="selectgroup-item" id="">
-                                                            <input type="radio" name="drepanocytose" value="0" class="selectgroup-input">
-                                                            <span class="selectgroup-button">{% trans %}No{% endtrans %}</span>
-                                                        </label>
+                                                        {% if slug != 0 and student.photo %}
+                                                            <label class="fs-photo-delete-existing">
+                                                                <input type="checkbox" name="removeStudentPhoto" value="1">
+                                                                <span>{% trans %}Delete current photo{% endtrans %}</span>
+                                                            </label>
+                                                        {% endif %}
                                                     </div>
+
+                                                    <div class="fs-field-error">{{ form_errors(formStudent.imageFile) }}</div>
                                                 </div>
                                             </div>
 
-                                            <div class="col-md-3">
-                                                <label for="validationCustom01" class="form-label">{% trans %}SPORTS FITNESS{% endtrans %}</label>
-                                                
-                                                <div class="form-group" id="">
-                                                    <div class="selectgroup selectgroup-pills">
-                                                        <label class="selectgroup-item" id="">
-                                                            <input type="radio" name="apte" value="1" class="selectgroup-input" >
-                                                            <span class="selectgroup-button">{% trans %}Apt{% endtrans %}</span>
-                                                        </label>
-                                                        <label class="selectgroup-item" id="">
-                                                            <input type="radio" name="apte" value="0" class="selectgroup-input">
-                                                            <span class="selectgroup-button">{% trans %}Unfit{% endtrans %}</span>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
+											<div class="fs-camera-modal" id="fsStudentCameraModal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="fsCameraTitle">
+												<div class="fs-camera-modal__backdrop" data-camera-close></div>
+												<div class="fs-camera-modal__dialog">
+													<div class="fs-camera-modal__header">
+														<h3 id="fsCameraTitle">{{ app.request.locale|slice(0, 2) == 'fr' ? "Photo de l'élève" : 'Student photo' }}</h3>
+														<button type="button" class="fs-camera-close" data-camera-close aria-label="{{ app.request.locale|slice(0, 2) == 'fr' ? 'Fermer' : 'Close' }}"><i class="fe fe-x"></i></button>
+													</div>
 
-                                            <div class="col-md-3">
-                                                <label for="validationCustom01" class="form-label">{% trans %}Asthma ?{% endtrans %}</label>
-                                                
-                                                <div class="form-group" id="">
-                                                    <div class="selectgroup selectgroup-pills">
-                                                        <label class="selectgroup-item" id="">
-                                                            <input type="radio" name="asthme" value="1" class="selectgroup-input" >
-                                                            <span class="selectgroup-button">{% trans %}Apt{% endtrans %}</span>
-                                                        </label>
-                                                        <label class="selectgroup-item" id="">
-                                                            <input type="radio" name="asthme" value="0" class="selectgroup-input">
-                                                            <span class="selectgroup-button">{% trans %}Unfit{% endtrans %}</span>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
+													<div class="fs-camera-stage">
+														<video id="fsStudentCameraVideo" autoplay playsinline muted></video>
+														<div class="fs-camera-message" id="fsCameraMessage">
+															<span id="fsCameraMessageText"></span>
+														</div>
+													</div>
 
-                                            <div class="col-md-3">
-                                                <label for="validationCustom01" class="form-label">{% trans %}COVID-19 TEST{% endtrans %}</label>
-                                                
-                                                <div class="form-group" id="">
-                                                    <div class="selectgroup selectgroup-pills">
-                                                        <label class="selectgroup-item" id="">
-                                                            <input type="radio" name="covid" value="1" class="selectgroup-input" >
-                                                            <span class="selectgroup-button">{% trans %}Positive{% endtrans %}</span>
-                                                        </label>
-                                                        <label class="selectgroup-item" id="">
-                                                            <input type="radio" name="covid" value="0" class="selectgroup-input">
-                                                            <span class="selectgroup-button">{% trans %}Negative{% endtrans %}</span>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+													<div class="fs-camera-controls">
+														<button type="button" class="fs-camera-control fs-camera-control--switch" id="fsSwitchStudentCamera">
+															<i class="fe fe-refresh-cw"></i>
+															<span>{{ app.request.locale|slice(0, 2) == 'fr' ? 'Retourner' : 'Switch' }}</span>
+														</button>
+														<button type="button" class="fs-camera-control fs-camera-control--capture" id="fsCaptureStudentPhoto" aria-label="{{ app.request.locale|slice(0, 2) == 'fr' ? 'Capturer la photo' : 'Capture photo' }}">
+															<i class="fe fe-camera"></i>
+															<span>{{ app.request.locale|slice(0, 2) == 'fr' ? 'Prendre la photo' : 'Take photo' }}</span>
+														</button>
+													</div>
+												</div>
+											</div>
 
-                                        <div class="row mb-1">
-                                            <div class="col-md-3">
-                                                <label for="validationCustom01" class="form-label">{% trans %}Allergy ?{% endtrans %}</label>
-                                                
-                                                <div class="form-group" id="">
-                                                    <div class="selectgroup selectgroup-pills">
-                                                        <label class="selectgroup-item" id="">
-                                                            <input type="radio" name="allergie" value="1" class="selectgroup-input" >
-                                                            <span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span>
-                                                        </label>
-                                                        <label class="selectgroup-item" id="">
-                                                            <input type="radio" name="allergie" value="0" class="selectgroup-input">
-                                                            <span class="selectgroup-button">{% trans %}No{% endtrans %}</span>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
+										</div>
+									</div>
+								</div>
+							</div>
 
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.siOuiAllergie, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.groupeSanguin, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                                </div>
-                                            </div>
+							<div class="acc-card fs-accordion-card mb-2">
+								<div class="acc-header fs-accordion-header" id="headingOther" role="tab">
+									<h5 class="mb-0">
+										<a aria-controls="studentOtherInfo" aria-expanded="false" class="collapsed" data-bs-toggle="collapse" href="#studentOtherInfo">
+											<i class="fe fe-info"></i>
+											<b>{% trans %}OTHER STUDENT INFORMATION{% endtrans %}</b>
+										</a>
+									</h5>
+								</div>
 
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.rhesus, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                                </div>
-                                            </div>
-                                        </div>
+								<div aria-labelledby="headingOther" class="collapse" data-parent="#accordion" id="studentOtherInfo" role="tabpanel">
+									<div class="acc-body fs-accordion-body">
+										<div class="fs-other-grid">
 
-                                        <div class="row mb-1">
+											<div class="fs-choice-field">
+												<label class="fs-choice-label">{% trans %}Native ?{% endtrans %}</label>
+												<div class="selectgroup selectgroup-pills">
+													<label class="selectgroup-item">
+														<input type="radio" name="autochtone" value="1" class="selectgroup-input">
+														<span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span>
+													</label>
+													<label class="selectgroup-item">
+														<input type="radio" name="autochtone" value="0" class="selectgroup-input">
+														<span class="selectgroup-button">{% trans %}No{% endtrans %}</span>
+													</label>
+												</div>
+											</div>
 
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.autresMaladies, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div><!-- collapse -->
-                            </div>
-                            <div class="acc-card mb-2">
-                                <div class="acc-header" id="headingThree" role="tab">
-                                    <h5 class="mb-0">
-                                        <a aria-controls="collapseThree" aria-expanded="false" class="collapsed" data-bs-toggle="collapse" href="#activites">
-                                        <i class="fa fa-ravelry me-2"></i> <b>{% trans %}MANDATORY CHOICE / POST AND EXTRA-CURRICULAR ACTIVITIES{% endtrans %}<b></a>
-                                    </h5>
-                                </div>
-                                <div aria-labelledby="headingThree" class="collapse" data-parent="#accordion" id="activites" role="tabpanel">
-                                    <div class="acc-body">
-                                        <div class="row mb-1">
-                                            <div class="col-md-3 text-center">
-                                                <label for="validationCustom01" class="form-label">{% trans %}Part of the bilingual club ?{% endtrans %}</label>
-                                                <div class="form-group" id="">
-                                                    <div class="selectgroup selectgroup-pills">
-                                                        <label class="selectgroup-item" id="">
-                                                            <input type="radio" name="clubBilingue" value="1" class="selectgroup-input" >
-                                                            <span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span>
-                                                        </label>
-                                                        <label class="selectgroup-item" id="">
-                                                            <input type="radio" name="clubBilingue" value="0" class="selectgroup-input">
-                                                            <span class="selectgroup-button">{% trans %}No{% endtrans %}</span>
-                                                        </label>
-                                                    </div>
-                                                </div>
+											<div class="fs-floating-field">
+												{{ form_widget(formStudent.country, {'attr': {'class': 'form-control select2-show-search fs-floating-control', 'placeholder': ' '}}) }}
+												<label class="fs-floating-label">{% trans %}Country{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.country) }}</div>
+											</div>
 
-                                            </div>
+											<div class="fs-floating-field">
+												{{ form_widget(formStudent.ethnicGroup, {'attr': {'class': 'form-control select2-show-search fs-floating-control', 'placeholder': ' '}}) }}
+												<label class="fs-floating-label">{% trans %}Ethnic group{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.ethnicGroup) }}</div>
+											</div>
 
-                                            <div class="col-md-3 text-center">
-                                                <label for="validationCustom01" class="form-label">{% trans %}Part of the multicultural club ?{% endtrans %}</label>
-                                                <div class="form-group" id="">
-                                                    <div class="selectgroup selectgroup-pills">
-                                                        <label class="selectgroup-item" id="">
-                                                            <input type="radio" name="clubMulticulturel" value="1" class="selectgroup-input" >
-                                                            <span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span>
-                                                        </label>
-                                                        <label class="selectgroup-item" id="">
-                                                            <input type="radio" name="clubMulticulturel" value="0" class="selectgroup-input">
-                                                            <span class="selectgroup-button">{% trans %}No{% endtrans %}</span>
-                                                        </label>
-                                                    </div>
-                                                </div>
+											<div class="fs-floating-field">
+												{{ form_widget(formStudent.movement, {'attr': {'class': 'form-control select2 custom-select fs-floating-control', 'placeholder': ' '}}) }}
+												<label class="fs-floating-label">{% trans %}Movement{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.movement) }}</div>
+											</div>
 
-                                            </div>
+											<div class="fs-floating-field">
+												{{ form_widget(formStudent.numeroHcr, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+												<label class="fs-floating-label">{% trans %}HCR number{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.numeroHcr) }}</div>
+											</div>
 
-                                            <div class="col-md-3 text-center">
-                                                <label for="validationCustom01" class="form-label">{% trans %}Been part of the science club ?{% endtrans %}</label>
-                                                <div class="form-group" id="">
-                                                    <div class="selectgroup selectgroup-pills">
-                                                        <label class="selectgroup-item" id="">
-                                                            <input type="radio" name="clubScience" value="1" class="selectgroup-input" >
-                                                            <span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span>
-                                                        </label>
-                                                        <label class="selectgroup-item" id="">
-                                                            <input type="radio" name="clubScience" value="0" class="selectgroup-input">
-                                                            <span class="selectgroup-button">{% trans %}No{% endtrans %}</span>
-                                                        </label>
-                                                    </div>
-                                                </div>
+											<div class="fs-floating-field">
+												{{ form_widget(formStudent.responsability, {'attr': {'class': 'form-control select2 custom-select fs-floating-control', 'placeholder': ' '}}) }}
+												<label class="fs-floating-label">{% trans %}Responsability{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.responsability) }}</div>
+											</div>
 
-                                            </div>
+											<div class="fs-floating-field">
+												{{ form_widget(formStudent.numeroWhatsapp, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+												<label class="fs-floating-label">{% trans %}WhatsApp number{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.numeroWhatsapp) }}</div>
+											</div>
 
-                                            <div class="col-md-3 text-center">
-                                                <label for="validationCustom01" class="form-label">{% trans %}Be part of the newspaper club ?{% endtrans %}</label>
-                                                <div class="form-group" id="">
-                                                    <div class="selectgroup selectgroup-pills">
-                                                        <label class="selectgroup-item" id="">
-                                                            <input type="radio" name="clubJournal" value="1" class="selectgroup-input" >
-                                                            <span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span>
-                                                        </label>
-                                                        <label class="selectgroup-item" id="">
-                                                            <input type="radio" name="clubJournal" value="0" class="selectgroup-input">
-                                                            <span class="selectgroup-button">{% trans %}No{% endtrans %}</span>
-                                                        </label>
-                                                    </div>
-                                                </div>
+											<div class="fs-floating-field">
+												{{ form_widget(formStudent.handicap, {'attr': {'class': 'form-control select2 custom-select fs-floating-control', 'placeholder': ' '}}) }}
+												<label class="fs-floating-label">{% trans %}Handicap{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.handicap) }}</div>
+											</div>
 
-                                            </div>
-                                        </div>
+											<div class="fs-floating-field">
+												{{ form_widget(formStudent.handicapType, {'attr': {'class': 'form-control select2 custom-select fs-floating-control', 'placeholder': ' '}}) }}
+												<label class="fs-floating-label">{% trans %}Handicap type{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.handicapType) }}</div>
+											</div>
 
-                                        <div class="row mb-1">
-                                            <div class="col-md-3 text-center">
-                                                <label for="validationCustom01" class="form-label">{% trans %}Be part of the environment club ?{% endtrans %}</label>
-                                                <div class="form-group" id="">
-                                                    <div class="selectgroup selectgroup-pills">
-                                                        <label class="selectgroup-item" id="">
-                                                            <input type="radio" name="clubEnvironnement" value="1" class="selectgroup-input" >
-                                                            <span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span>
-                                                        </label>
-                                                        <label class="selectgroup-item" id="">
-                                                            <input type="radio" name="clubEnvironnement" value="0" class="selectgroup-input">
-                                                            <span class="selectgroup-button">{% trans %}No{% endtrans %}</span>
-                                                        </label>
-                                                    </div>
-                                                </div>
+											<div class="fs-floating-field">
+												{{ form_widget(formStudent.fatherName, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+												<label class="fs-floating-label">{% trans %}Father name{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.fatherName) }}</div>
+											</div>
 
-                                            </div>
+											<div class="fs-floating-field">
+												{{ form_widget(formStudent.professionPere, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+												<label class="fs-floating-label">{% trans %}Father profession{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.professionPere) }}</div>
+											</div>
 
-                                            <div class="col-md-3 text-center">
-                                                <label for="validationCustom01" class="form-label">{% trans %}Be part of the health club ?{% endtrans %}</label>
-                                                <div class="form-group" id="">
-                                                    <div class="selectgroup selectgroup-pills">
-                                                        <label class="selectgroup-item" id="">
-                                                            <input type="radio" name="clubSante" value="1" class="selectgroup-input" >
-                                                            <span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span>
-                                                        </label>
-                                                        <label class="selectgroup-item" id="">
-                                                            <input type="radio" name="clubSante" value="0" class="selectgroup-input">
-                                                            <span class="selectgroup-button">{% trans %}No{% endtrans %}</span>
-                                                        </label>
-                                                    </div>
-                                                </div>
+											<div class="fs-floating-field">
+												{{ form_widget(formStudent.telephonePere, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+												<label class="fs-floating-label">{% trans %}Father phone{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.telephonePere) }}</div>
+											</div>
 
-                                            </div>
+											<div class="fs-floating-field">
+												{{ form_widget(formStudent.motherName, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+												<label class="fs-floating-label">{% trans %}Mother name{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.motherName) }}</div>
+											</div>
 
-                                            <div class="col-md-3 text-center">
-                                                <label for="validationCustom01" class="form-label">{% trans %}Be part of the rethoric club ?{% endtrans %}</label>
-                                                <div class="form-group" id="">
-                                                    <div class="selectgroup selectgroup-pills">
-                                                        <label class="selectgroup-item" id="">
-                                                            <input type="radio" name="clubRethorique" value="1" class="selectgroup-input" >
-                                                            <span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span>
-                                                        </label>
-                                                        <label class="selectgroup-item" id="">
-                                                            <input type="radio" name="clubRethorique" value="0" class="selectgroup-input">
-                                                            <span class="selectgroup-button">{% trans %}No{% endtrans %}</span>
-                                                        </label>
-                                                    </div>
-                                                </div>
+											<div class="fs-floating-field">
+												{{ form_widget(formStudent.professionMere, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+												<label class="fs-floating-label">{% trans %}Mother profession{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.professionMere) }}</div>
+											</div>
 
-                                            </div>
+											<div class="fs-floating-field">
+												{{ form_widget(formStudent.telephoneMere, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+												<label class="fs-floating-label">{% trans %}Mother phone{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.telephoneMere) }}</div>
+											</div>
 
-                                            <div class="col-md-3 text-center">
-                                                <label for="validationCustom01" class="form-label">{% trans %}Be part of the LV II club ?{% endtrans %}</label>
-                                                <div class="form-group" id="">
-                                                    <div class="selectgroup selectgroup-pills">
-                                                        <label class="selectgroup-item" id="">
-                                                            <input type="radio" name="clubLv2" value="1" class="selectgroup-input" >
-                                                            <span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span>
-                                                        </label>
-                                                        <label class="selectgroup-item" id="">
-                                                            <input type="radio" name="clubLv2" value="0" class="selectgroup-input">
-                                                            <span class="selectgroup-button">{% trans %}No{% endtrans %}</span>
-                                                        </label>
-                                                    </div>
-                                                </div>
+											<div class="fs-floating-field">
+												{{ form_widget(formStudent.tuteur, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+												<label class="fs-floating-label">{% trans %}Guardian{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.tuteur) }}</div>
+											</div>
 
-                                            </div>
-                                        </div>
-                                        <div class="row mb-1">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.autreClub, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div><!-- collapse -->
-                            </div>
-                            <div class="acc-card mb-2">
-                                <div class="acc-header" id="headingThree" role="tab">
-                                    <h5 class="mb-0">
-                                        <a aria-controls="collapseThree" aria-expanded="false" class="collapsed" data-bs-toggle="collapse" href="#personne">
-                                        <i class="fa fa-user-o me-2"></i> <b>{% trans %}IDENTIFICATION OF AN ACQUAINTANCE IN THE ESTABLISHMENT{% endtrans %}<b></a>
-                                    </h5>
-                                </div>
-                                <div aria-labelledby="headingThree" class="collapse" data-parent="#accordion" id="personne" role="tabpanel">
-                                    <div class="acc-body">
-                                        
-                                        <div class="row mb-1">
-                                            <div class="col-md-3 text-center">
-                                                <label for="validationCustom01" class="form-label">{% trans %}Brother ?{% endtrans %}</label>
-                                                <div class="form-group" id="">
-                                                    <div class="selectgroup selectgroup-pills">
-                                                        <label class="selectgroup-item" id="">
-                                                            <input type="radio" name="frere" value="1" class="selectgroup-input" >
-                                                            <span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span>
-                                                        </label>
-                                                        <label class="selectgroup-item" id="">
-                                                            <input type="radio" name="frere" value="0" class="selectgroup-input">
-                                                            <span class="selectgroup-button">{% trans %}No{% endtrans %}</span>
-                                                        </label>
-                                                    </div>
-                                                </div>
+											<div class="fs-floating-field">
+												{{ form_widget(formStudent.professionTuteur, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+												<label class="fs-floating-label">{% trans %}Guardian profession{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.professionTuteur) }}</div>
+											</div>
 
-                                            </div>
+											<div class="fs-floating-field">
+												{{ form_widget(formStudent.telephoneTuteur, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+												<label class="fs-floating-label">{% trans %}Guardian phone{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.telephoneTuteur) }}</div>
+											</div>
 
-                                            <div class="col-md-3 text-center">
-                                                <label for="validationCustom01" class="form-label">{% trans %}Sister ?{% endtrans %}</label>
-                                                <div class="form-group" id="">
-                                                    <div class="selectgroup selectgroup-pills">
-                                                        <label class="selectgroup-item" id="">
-                                                            <input type="radio" name="soeur" value="1" class="selectgroup-input" >
-                                                            <span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span>
-                                                        </label>
-                                                        <label class="selectgroup-item" id="">
-                                                            <input type="radio" name="soeur" value="0" class="selectgroup-input">
-                                                            <span class="selectgroup-button">{% trans %}No{% endtrans %}</span>
-                                                        </label>
-                                                    </div>
-                                                </div>
+											<div class="fs-floating-field">
+												{{ form_widget(formStudent.emailParent, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+												<label class="fs-floating-label">{% trans %}Parent email{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.emailParent) }}</div>
+											</div>
 
-                                            </div>
+											<div class="fs-floating-field">
+												{{ form_widget(formStudent.personneAContacterEnCasUergence, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+												<label class="fs-floating-label">{% trans %}Emergency contact{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.personneAContacterEnCasUergence) }}</div>
+											</div>
 
-                                            <div class="col-md-3 text-center">
-                                                <label for="validationCustom01" class="form-label">{% trans %}Teacher ?{% endtrans %}</label>
-                                                <div class="form-group" id="">
-                                                    <div class="selectgroup selectgroup-pills">
-                                                        <label class="selectgroup-item" id="">
-                                                            <input type="radio" name="enseignant" value="1" class="selectgroup-input" >
-                                                            <span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span>
-                                                        </label>
-                                                        <label class="selectgroup-item" id="">
-                                                            <input type="radio" name="enseignant" value="0" class="selectgroup-input">
-                                                            <span class="selectgroup-button">{% trans %}No{% endtrans %}</span>
-                                                        </label>
-                                                    </div>
-                                                </div>
+											<div class="fs-floating-field">
+												{{ form_widget(formStudent.telephonePersonneEnCasUrgence, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+												<label class="fs-floating-label">{% trans %}Emergency phone{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.telephonePersonneEnCasUrgence) }}</div>
+											</div>
 
-                                            </div>
+										</div>
+									</div>
+								</div>
+							</div>
 
-                                            <div class="col-md-3 text-center">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.classeFrereSoeur, {'attr': {'class': 'form-control select2-show-search'}}) }}
-                                                </div>
+							<div class="acc-card fs-accordion-card mb-2">
+								<div class="acc-header fs-accordion-header" id="headingSchooling" role="tab">
+									<h5 class="mb-0">
+										<a aria-controls="schoolingInfo" aria-expanded="false" class="collapsed" data-bs-toggle="collapse" href="#schoolingInfo">
+											<i class="fe fe-book-open"></i>
+											<b>{% trans %}SCHOOLING{% endtrans %}</b>
+										</a>
+									</h5>
+								</div>
 
-                                            </div>
-                                        </div>
+								<div aria-labelledby="headingSchooling" class="collapse" data-parent="#accordion" id="schoolingInfo" role="tabpanel">
+									<div class="acc-body fs-accordion-body">
+										<div class="fs-other-grid">
 
-                                        <div class="row mb-1">
+											<div class="fs-floating-field">
+												{{ form_widget(formStudent.datePremiereEntreeEtablissementAt, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+												<label class="fs-floating-label">{% trans %}First entry date{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.datePremiereEntreeEtablissementAt) }}</div>
+											</div>
 
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.autreConnaisanceEtablissement, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.nomPersonneEtablissement, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    {{ form_row(formStudent.telephonePersonneEtablissement, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                                </div>
-                                            </div>
+											<div class="fs-floating-field">
+												{{ form_widget(formStudent.classeEntree, {'attr': {'class': 'form-control select2-show-search fs-floating-control', 'placeholder': ' '}}) }}
+												<label class="fs-floating-label">{% trans %}Entry class{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.classeEntree) }}</div>
+											</div>
 
-                                        </div>
+											<div class="fs-floating-field">
+												{{ form_widget(formStudent.etablisementFrequenteAnDernier, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+												<label class="fs-floating-label">{% trans %}Previous school{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.etablisementFrequenteAnDernier) }}</div>
+											</div>
 
+											<div class="fs-floating-field">
+												{{ form_widget(formStudent.operateur, {'attr': {'class': 'form-control select2-show-search fs-floating-control', 'placeholder': ' '}}) }}
+												<label class="fs-floating-label">{% trans %}Operator{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.operateur) }}</div>
+											</div>
 
-                                    </div>
-                                </div><!-- collapse -->
-                            </div>
-                            <div class="row mb-1">
-                                <div class="col-md-3">
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label style="color: #fff;">
-                                            {% trans %}Save{% endtrans %}
-                                        </label>
-                                            {% if slug == 0 %}
-                                                <button type="submit" class="btn btn-outline-primary btn-lg w-100 br-7" name="addStudent">
-                                                    <i class="fa fa-save"></i>
-                                                    {% trans %}Save{% endtrans %}
-                                            {% else %}
-                                                <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="editStudent">
-                                                    <i class="fa fa-save"></i>
-                                                    {% trans %}Save changes{% endtrans %}
-                                                </button>
-                                            {% endif %}
-                                    </div>
-                                </div>
-                                 <div class="col-md-3">
-                                </div>
-                            </div>
-                        {{ form_end(formStudent) }}
-                    </div><!-- accordion -->
+											<div class="fs-floating-field">
+												{{ form_widget(formStudent.modeAdmission, {'attr': {'class': 'form-control select2-show-search fs-floating-control', 'placeholder': ' '}}) }}
+												<label class="fs-floating-label">{% trans %}Admission mode{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.modeAdmission) }}</div>
+											</div>
 
+										</div>
+									</div>
+								</div>
+							</div>
 
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+							<div class="acc-card fs-accordion-card mb-2">
+								<div class="acc-header fs-accordion-header" id="headingMedical" role="tab">
+									<h5 class="mb-0">
+										<a aria-controls="medicalFile" aria-expanded="false" class="collapsed" data-bs-toggle="collapse" href="#medicalFile">
+											<i class="fe fe-heart"></i>
+											<b>{% trans %}MEDICAL FILE{% endtrans %}</b>
+										</a>
+									</h5>
+								</div>
+
+								<div aria-labelledby="headingMedical" class="collapse" data-parent="#accordion" id="medicalFile" role="tabpanel">
+									<div class="acc-body fs-accordion-body">
+										<div class="fs-other-grid">
+
+											<div class="fs-choice-field">
+												<label class="fs-choice-label">{% trans %}Sickle cell disease ?{% endtrans %}</label>
+												<div class="selectgroup selectgroup-pills">
+													<label class="selectgroup-item"><input type="radio" name="drepanocytose" value="1" class="selectgroup-input"><span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span></label>
+													<label class="selectgroup-item"><input type="radio" name="drepanocytose" value="0" class="selectgroup-input"><span class="selectgroup-button">{% trans %}No{% endtrans %}</span></label>
+												</div>
+											</div>
+
+											<div class="fs-choice-field">
+												<label class="fs-choice-label">{% trans %}SPORTS FITNESS{% endtrans %}</label>
+												<div class="selectgroup selectgroup-pills">
+													<label class="selectgroup-item"><input type="radio" name="apte" value="1" class="selectgroup-input"><span class="selectgroup-button">{% trans %}Apt{% endtrans %}</span></label>
+													<label class="selectgroup-item"><input type="radio" name="apte" value="0" class="selectgroup-input"><span class="selectgroup-button">{% trans %}Unfit{% endtrans %}</span></label>
+												</div>
+											</div>
+
+											<div class="fs-choice-field">
+												<label class="fs-choice-label">{% trans %}Asthma ?{% endtrans %}</label>
+												<div class="selectgroup selectgroup-pills">
+													<label class="selectgroup-item"><input type="radio" name="asthme" value="1" class="selectgroup-input"><span class="selectgroup-button">{% trans %}Apt{% endtrans %}</span></label>
+													<label class="selectgroup-item"><input type="radio" name="asthme" value="0" class="selectgroup-input"><span class="selectgroup-button">{% trans %}Unfit{% endtrans %}</span></label>
+												</div>
+											</div>
+
+											<div class="fs-choice-field">
+												<label class="fs-choice-label">{% trans %}COVID-19 TEST{% endtrans %}</label>
+												<div class="selectgroup selectgroup-pills">
+													<label class="selectgroup-item"><input type="radio" name="covid" value="1" class="selectgroup-input"><span class="selectgroup-button">{% trans %}Positive{% endtrans %}</span></label>
+													<label class="selectgroup-item"><input type="radio" name="covid" value="0" class="selectgroup-input"><span class="selectgroup-button">{% trans %}Negative{% endtrans %}</span></label>
+												</div>
+											</div>
+
+											<div class="fs-choice-field">
+												<label class="fs-choice-label">{% trans %}Allergy ?{% endtrans %}</label>
+												<div class="selectgroup selectgroup-pills">
+													<label class="selectgroup-item"><input type="radio" name="allergie" value="1" class="selectgroup-input"><span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span></label>
+													<label class="selectgroup-item"><input type="radio" name="allergie" value="0" class="selectgroup-input"><span class="selectgroup-button">{% trans %}No{% endtrans %}</span></label>
+												</div>
+											</div>
+
+											<div class="fs-floating-field">
+												{{ form_widget(formStudent.siOuiAllergie, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+												<label class="fs-floating-label">{% trans %}If yes allergy{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.siOuiAllergie) }}</div>
+											</div>
+
+											<div class="fs-floating-field">
+												{{ form_widget(formStudent.groupeSanguin, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+												<label class="fs-floating-label">{% trans %}Blood group{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.groupeSanguin) }}</div>
+											</div>
+
+											<div class="fs-floating-field">
+												{{ form_widget(formStudent.rhesus, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+												<label class="fs-floating-label">{% trans %}Rhesus{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.rhesus) }}</div>
+											</div>
+
+											<div class="fs-floating-field fs-col-span-4">
+												{{ form_widget(formStudent.autresMaladies, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+												<label class="fs-floating-label">{% trans %}Other diseases{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.autresMaladies) }}</div>
+											</div>
+
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="acc-card fs-accordion-card mb-2">
+								<div class="acc-header fs-accordion-header" id="headingActivities" role="tab">
+									<h5 class="mb-0">
+										<a aria-controls="activities" aria-expanded="false" class="collapsed" data-bs-toggle="collapse" href="#activities">
+											<i class="fe fe-grid"></i>
+											<b>{% trans %}MANDATORY CHOICE / POST AND EXTRA-CURRICULAR ACTIVITIES{% endtrans %}</b>
+										</a>
+									</h5>
+								</div>
+
+								<div aria-labelledby="headingActivities" class="collapse" data-parent="#accordion" id="activities" role="tabpanel">
+									<div class="acc-body fs-accordion-body">
+										<div class="fs-other-grid">
+
+											{% set clubs = [
+												{'name':'clubBilingue','label':'Part of the bilingual club ?'},
+												{'name':'clubMulticulturel','label':'Part of the multicultural club ?'},
+												{'name':'clubScience','label':'Been part of the science club ?'},
+												{'name':'clubJournal','label':'Be part of the newspaper club ?'},
+												{'name':'clubEnvironnement','label':'Be part of the environment club ?'},
+												{'name':'clubSante','label':'Be part of the health club ?'},
+												{'name':'clubRethorique','label':'Be part of the rethoric club ?'},
+												{'name':'clubLv2','label':'Be part of the LV II club ?'}
+											] %}
+
+											{% for club in clubs %}
+												<div class="fs-choice-field">
+													<label class="fs-choice-label">{{ club.label }}</label>
+													<div class="selectgroup selectgroup-pills">
+														<label class="selectgroup-item">
+															<input type="radio" name="{{ club.name }}" value="1" class="selectgroup-input">
+															<span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span>
+														</label>
+														<label class="selectgroup-item">
+															<input type="radio" name="{{ club.name }}" value="0" class="selectgroup-input">
+															<span class="selectgroup-button">{% trans %}No{% endtrans %}</span>
+														</label>
+													</div>
+												</div>
+											{% endfor %}
+
+											<div class="fs-floating-field fs-col-span-4">
+												{{ form_widget(formStudent.autreClub, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+												<label class="fs-floating-label">{% trans %}Other club{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.autreClub) }}</div>
+											</div>
+
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="acc-card fs-accordion-card mb-2">
+								<div class="acc-header fs-accordion-header" id="headingAcquaintance" role="tab">
+									<h5 class="mb-0">
+										<a aria-controls="acquaintance" aria-expanded="false" class="collapsed" data-bs-toggle="collapse" href="#acquaintance">
+											<i class="fe fe-users"></i>
+											<b>{% trans %}IDENTIFICATION OF AN ACQUAINTANCE IN THE ESTABLISHMENT{% endtrans %}</b>
+										</a>
+									</h5>
+								</div>
+
+								<div aria-labelledby="headingAcquaintance" class="collapse" data-parent="#accordion" id="acquaintance" role="tabpanel">
+									<div class="acc-body fs-accordion-body">
+										<div class="fs-other-grid">
+
+											<div class="fs-choice-field">
+												<label class="fs-choice-label">{% trans %}Brother ?{% endtrans %}</label>
+												<div class="selectgroup selectgroup-pills">
+													<label class="selectgroup-item"><input type="radio" name="frere" value="1" class="selectgroup-input"><span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span></label>
+													<label class="selectgroup-item"><input type="radio" name="frere" value="0" class="selectgroup-input"><span class="selectgroup-button">{% trans %}No{% endtrans %}</span></label>
+												</div>
+											</div>
+
+											<div class="fs-choice-field">
+												<label class="fs-choice-label">{% trans %}Sister ?{% endtrans %}</label>
+												<div class="selectgroup selectgroup-pills">
+													<label class="selectgroup-item"><input type="radio" name="soeur" value="1" class="selectgroup-input"><span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span></label>
+													<label class="selectgroup-item"><input type="radio" name="soeur" value="0" class="selectgroup-input"><span class="selectgroup-button">{% trans %}No{% endtrans %}</span></label>
+												</div>
+											</div>
+
+											<div class="fs-choice-field">
+												<label class="fs-choice-label">{% trans %}Teacher ?{% endtrans %}</label>
+												<div class="selectgroup selectgroup-pills">
+													<label class="selectgroup-item"><input type="radio" name="enseignant" value="1" class="selectgroup-input"><span class="selectgroup-button">{% trans %}Yes{% endtrans %}</span></label>
+													<label class="selectgroup-item"><input type="radio" name="enseignant" value="0" class="selectgroup-input"><span class="selectgroup-button">{% trans %}No{% endtrans %}</span></label>
+												</div>
+											</div>
+
+											<div class="fs-floating-field">
+												{{ form_widget(formStudent.classeFrereSoeur, {'attr': {'class': 'form-control select2-show-search fs-floating-control', 'placeholder': ' '}}) }}
+												<label class="fs-floating-label">{% trans %}Sibling class{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.classeFrereSoeur) }}</div>
+											</div>
+
+											<div class="fs-floating-field">
+												{{ form_widget(formStudent.autreConnaisanceEtablissement, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+												<label class="fs-floating-label">{% trans %}Other acquaintance{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.autreConnaisanceEtablissement) }}</div>
+											</div>
+
+											<div class="fs-floating-field">
+												{{ form_widget(formStudent.nomPersonneEtablissement, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+												<label class="fs-floating-label">{% trans %}Acquaintance name{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.nomPersonneEtablissement) }}</div>
+											</div>
+
+											<div class="fs-floating-field">
+												{{ form_widget(formStudent.telephonePersonneEtablissement, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+												<label class="fs-floating-label">{% trans %}Acquaintance phone{% endtrans %}</label>
+												<div class="fs-field-error">{{ form_errors(formStudent.telephonePersonneEtablissement) }}</div>
+											</div>
+
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="fs-student-submitbar">
+								<div class="fs-student-submitbar__hint">
+									<i class="fe fe-info"></i>
+									<span>{% trans %}Please verify the required information before saving.{% endtrans %}</span>
+								</div>
+
+								<div class="fs-student-submitbar__actions">
+									<a href="{{ path('student_displayStudent') }}" class="fs-student-btn fs-student-btn--ghost">
+										<i class="fe fe-arrow-left"></i>
+										<span>{% trans %}Back{% endtrans %}</span>
+									</a>
+
+									{% if slug == 0 %}
+										<button type="submit" class="fs-student-btn fs-student-btn--primary fs-submit-btn" name="addStudent">
+											<span class="fs-submit-spinner" aria-hidden="true"></span>
+											<i class="fe fe-save fs-submit-icon"></i>
+											<span class="fs-submit-text">{% trans %}Save{% endtrans %}</span>
+										</button>
+									{% else %}
+										<button type="submit" class="fs-student-btn fs-student-btn--primary fs-submit-btn" name="editStudent">
+											<span class="fs-submit-spinner" aria-hidden="true"></span>
+											<i class="fe fe-save fs-submit-icon"></i>
+											<span class="fs-submit-text">{% trans %}Save changes{% endtrans %}</span>
+										</button>
+									{% endif %}
+								</div>
+							</div>
+
+						{{ form_end(formStudent) }}
+
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-student-form-premium.js') }}"></script>
+	<script>
+	(function () {
+		'use strict';
+
+		const initStudentPhoto = function () {
+			const photoField = document.querySelector('.fs-photo-field--premium');
+			if (!photoField) return;
+
+			const fileInput = photoField.querySelector('.fs-photo-input input[type="file"], input.fs-photo-input[type="file"], input[type="file"]');
+			const preview = document.getElementById('fsStudentPhotoPreview');
+			const status = document.getElementById('fsPhotoProcessingStatus');
+			const openButton = document.getElementById('fsOpenStudentCamera');
+			const modal = document.getElementById('fsStudentCameraModal');
+			const video = document.getElementById('fsStudentCameraVideo');
+			const cameraMessage = document.getElementById('fsCameraMessage');
+			const cameraMessageText = document.getElementById('fsCameraMessageText');
+			const switchButton = document.getElementById('fsSwitchStudentCamera');
+			const captureButton = document.getElementById('fsCaptureStudentPhoto');
+			const removeButton = document.getElementById('fsRemoveSelectedPhoto');
+			const form = photoField.closest('form');
+			const isFrench = (document.documentElement.lang || '{{ app.request.locale }}').toLowerCase().startsWith('fr');
+			const words = isFrench ? {
+				compressing: 'Compression de la photo…',
+				ready: 'Photo optimisée : ',
+				camera: "Ouverture de la caméra…",
+				denied: "Impossible d'accéder à la caméra. Autorisez la caméra dans le navigateur puis réessayez.",
+				noCamera: "Aucune caméra ou webcam n'a été détectée.",
+				captureError: "La photo n'a pas pu être capturée.",
+				formatError: "Ce format ne peut pas être compressé par ce navigateur. Le serveur essaiera de l'optimiser.",
+				selected: 'Photo sélectionnée'
+			} : {
+				compressing: 'Compressing photo…',
+				ready: 'Optimized photo: ',
+				camera: 'Opening camera…',
+				denied: 'Camera access failed. Allow camera access in your browser and try again.',
+				noCamera: 'No camera or webcam was detected.',
+				captureError: 'The photo could not be captured.',
+				formatError: 'This browser cannot compress this format. The server will try to optimize it.',
+				selected: 'Photo selected'
+			};
+
+			if (!fileInput || !modal || !video) return;
+			// La fiche élève est elle-même affichée dans une modale Bootstrap.
+			// Placer la caméra directement sous <body> empêche la modale parente
+			// de masquer les boutons situés sous l'aperçu vidéo.
+			document.body.appendChild(modal);
+			fileInput.setAttribute('accept', 'image/*');
+
+			let stream = null;
+			let facingMode = 'environment';
+			let videoDevices = [];
+			let currentDeviceIndex = -1;
+			let processing = false;
+			let previewUrl = null;
+
+			const showCameraMessage = function (message) {
+				cameraMessageText.textContent = message || '';
+				cameraMessage.classList.toggle('is-visible', Boolean(message));
+			};
+
+			const humanSize = function (bytes) {
+				if (bytes < 1024) return bytes + ' o';
+				if (bytes < 1048576) return Math.round(bytes / 1024) + ' Ko';
+				return (bytes / 1048576).toFixed(1) + ' Mo';
+			};
+
+			const setStatus = function (message, error) {
+				status.textContent = message || '';
+				status.classList.toggle('is-error', Boolean(error));
+			};
+
+			const setProcessing = function (active) {
+				processing = active;
+				if (!form) return;
+				form.querySelectorAll('button[type="submit"]').forEach(function (button) {
+					button.disabled = active;
+				});
+			};
+
+			const showPreview = function (file) {
+				if (previewUrl) URL.revokeObjectURL(previewUrl);
+				previewUrl = URL.createObjectURL(file);
+				preview.innerHTML = '';
+				const image = document.createElement('img');
+				image.src = previewUrl;
+				image.alt = words.selected;
+				preview.appendChild(image);
+			};
+
+			const putFileInForm = function (file) {
+				const transfer = new DataTransfer();
+				transfer.items.add(file);
+				fileInput.files = transfer.files;
+				showPreview(file);
+			};
+
+			const canvasBlob = function (canvas, quality) {
+				return new Promise(function (resolve) {
+					canvas.toBlob(resolve, 'image/jpeg', quality);
+				});
+			};
+
+			const loadBitmap = async function (file) {
+				if ('createImageBitmap' in window) {
+					return createImageBitmap(file, {imageOrientation: 'from-image'});
+				}
+
+				return new Promise(function (resolve, reject) {
+					const image = new Image();
+					const url = URL.createObjectURL(file);
+					image.onload = function () { URL.revokeObjectURL(url); resolve(image); };
+					image.onerror = function () { URL.revokeObjectURL(url); reject(new Error('image')); };
+					image.src = url;
+				});
+			};
+
+			const compressImage = async function (file) {
+				const source = await loadBitmap(file);
+				const sourceWidth = source.width || source.naturalWidth;
+				const sourceHeight = source.height || source.naturalHeight;
+				const ratio = Math.min(1, 1200 / sourceWidth, 1600 / sourceHeight);
+				let width = Math.max(1, Math.round(sourceWidth * ratio));
+				let height = Math.max(1, Math.round(sourceHeight * ratio));
+				const canvas = document.createElement('canvas');
+				const context = canvas.getContext('2d', {alpha: false});
+
+				canvas.width = width;
+				canvas.height = height;
+				context.fillStyle = '#fff';
+				context.fillRect(0, 0, width, height);
+				context.drawImage(source, 0, 0, width, height);
+				if (source.close) source.close();
+
+				let quality = 0.82;
+				let blob = await canvasBlob(canvas, quality);
+				while (blob && blob.size > 500 * 1024 && quality > 0.52) {
+					quality -= 0.08;
+					blob = await canvasBlob(canvas, quality);
+				}
+
+				// Si la qualité seule ne suffit pas, réduire progressivement les dimensions.
+				while (blob && blob.size > 500 * 1024 && width > 480 && height > 640) {
+					const copy = document.createElement('canvas');
+					copy.width = canvas.width;
+					copy.height = canvas.height;
+					copy.getContext('2d').drawImage(canvas, 0, 0);
+					width = Math.round(width * 0.82);
+					height = Math.round(height * 0.82);
+					canvas.width = width;
+					canvas.height = height;
+					context.fillStyle = '#fff';
+					context.fillRect(0, 0, width, height);
+					context.drawImage(copy, 0, 0, width, height);
+					blob = await canvasBlob(canvas, 0.62);
+				}
+
+				if (!blob) throw new Error('compression');
+				const baseName = (file.name || 'photo-eleve').replace(/\.[^.]+$/, '').replace(/[^a-zA-Z0-9_-]+/g, '-');
+				return new File([blob], baseName + '.jpg', {type: 'image/jpeg', lastModified: Date.now()});
+			};
+
+			const optimizeAndSelect = async function (file) {
+				if (!file || !file.type.startsWith('image/')) return;
+				setProcessing(true);
+				setStatus(words.compressing, false);
+				try {
+					const optimized = await compressImage(file);
+					putFileInForm(optimized);
+					setStatus(words.ready + humanSize(file.size) + ' → ' + humanSize(optimized.size), false);
+				} catch (error) {
+					try { putFileInForm(file); } catch (ignored) {}
+					setStatus(words.formatError, true);
+				} finally {
+					setProcessing(false);
+				}
+			};
+
+			fileInput.addEventListener('change', function () {
+				if (fileInput.files && fileInput.files[0]) optimizeAndSelect(fileInput.files[0]);
+			});
+
+			const stopCamera = function () {
+				if (stream) stream.getTracks().forEach(function (track) { track.stop(); });
+				stream = null;
+				video.srcObject = null;
+			};
+
+			const refreshDevices = async function () {
+				if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) return;
+				videoDevices = (await navigator.mediaDevices.enumerateDevices()).filter(function (device) {
+					return device.kind === 'videoinput';
+				});
+				switchButton.disabled = videoDevices.length < 2;
+			};
+
+			const startCamera = async function (deviceId) {
+				stopCamera();
+				showCameraMessage(words.camera);
+				captureButton.disabled = true;
+				try {
+					const videoConstraint = deviceId ? {
+						deviceId: {exact: deviceId}, width: {ideal: 1280}, height: {ideal: 1600}
+					} : {
+						facingMode: {ideal: facingMode}, width: {ideal: 1280}, height: {ideal: 1600}
+					};
+					stream = await navigator.mediaDevices.getUserMedia({video: videoConstraint, audio: false});
+					video.srcObject = stream;
+					await video.play();
+					showCameraMessage('');
+					captureButton.disabled = false;
+					video.classList.toggle('is-front-camera', facingMode === 'user');
+					await refreshDevices();
+					const activeId = stream.getVideoTracks()[0].getSettings().deviceId;
+					currentDeviceIndex = videoDevices.findIndex(function (device) { return device.deviceId === activeId; });
+				} catch (error) {
+					showCameraMessage(error && error.name === 'NotFoundError' ? words.noCamera : words.denied);
+					captureButton.disabled = true;
+				}
+			};
+
+			const openCamera = function () {
+				modal.hidden = false;
+				modal.setAttribute('aria-hidden', 'false');
+				document.body.classList.add('fs-camera-open');
+				if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+					showCameraMessage(words.noCamera);
+					captureButton.disabled = true;
+					return;
+				}
+				facingMode = 'environment';
+				startCamera();
+			};
+
+			const closeCamera = function () {
+				stopCamera();
+				modal.hidden = true;
+				modal.setAttribute('aria-hidden', 'true');
+				document.body.classList.remove('fs-camera-open');
+				openButton.focus();
+			};
+
+			openButton.addEventListener('click', openCamera);
+			modal.querySelectorAll('[data-camera-close]').forEach(function (element) {
+				element.addEventListener('click', closeCamera);
+			});
+
+			switchButton.addEventListener('click', function () {
+				facingMode = facingMode === 'environment' ? 'user' : 'environment';
+				if (videoDevices.length > 1) {
+					currentDeviceIndex = (currentDeviceIndex + 1 + videoDevices.length) % videoDevices.length;
+					startCamera(videoDevices[currentDeviceIndex].deviceId);
+				} else {
+					startCamera();
+				}
+			});
+
+			captureButton.addEventListener('click', async function () {
+				if (!stream || !video.videoWidth) return;
+				captureButton.disabled = true;
+				try {
+					const canvas = document.createElement('canvas');
+					canvas.width = video.videoWidth;
+					canvas.height = video.videoHeight;
+					const context = canvas.getContext('2d');
+					if (facingMode === 'user') {
+						context.translate(canvas.width, 0);
+						context.scale(-1, 1);
+					}
+					context.drawImage(video, 0, 0);
+					const blob = await canvasBlob(canvas, 0.9);
+					if (!blob) throw new Error('capture');
+					closeCamera();
+					await optimizeAndSelect(new File([blob], 'photo-eleve.jpg', {type: 'image/jpeg', lastModified: Date.now()}));
+				} catch (error) {
+					showCameraMessage(words.captureError);
+					captureButton.disabled = false;
+				}
+			});
+
+			if (removeButton) {
+				removeButton.addEventListener('click', function () {
+					fileInput.value = '';
+					setStatus('', false);
+					if (previewUrl) URL.revokeObjectURL(previewUrl);
+					previewUrl = null;
+				});
+			}
+
+			document.addEventListener('keydown', function (event) {
+				if (event.key === 'Escape' && !modal.hidden) closeCamera();
+			});
+
+			if (form) {
+				form.addEventListener('submit', function (event) {
+					if (processing) event.preventDefault();
+				});
+			}
+		};
+
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', initStudentPhoto);
+		} else {
+			initStudentPhoto();
+		}
+	})();
+	</script>
 {% endblock %}

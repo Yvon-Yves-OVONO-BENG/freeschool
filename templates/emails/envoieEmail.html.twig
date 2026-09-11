@@ -32,30 +32,30 @@
             <h1>{{ school.frenchName }} / {{ school.englishName }}</h1>
         </div>
         <div class="content">
-            <p>Bonjour Chèr Parent / Hello dear parent</p>
+            <p>{% trans %}Dear Parent / Hello dear parent{% endtrans %}</p>
             <p>
-                Tout en espérant que vous allez bien, vous trouverez en pièce jointe le relevé de notes de votre enfant <b> {{ student ? student.fullName : studentName }}</b> en classe de <b>{{ student ? student.classroom.classroom : classroom.classroom }}</b> pour le compte
+                {% trans %}We hope you are well. Please find attached your child's report card{% endtrans %} <b> {{ student ? student.fullName : studentName }}</b> {% trans %}in class{% endtrans %} <b>{{ student ? student.classroom.classroom : classroom.classroom }}</b> {% trans %}for{% endtrans %}
                 {% if sequence %}
-                    de la 
+                    {% trans %}of the{% endtrans %} 
                     {{ sequence.sequence }}
                     {% if sequence.sequence == 1 %}
-                        ère 
+                        {% trans %}st{% endtrans %} 
                         {% else %}
-                        ème
+                        {% trans %}th{% endtrans %}
                     {% endif %} 
-                    évaluation.
+                    {% trans %}assessment.{% endtrans %}
                 {% endif %}
 
                 {% if term %}
-                    du
+                    {% trans %}of the{% endtrans %}
                     {{ term.term }} 
                     {% if term.term == 1 %}
-                        er trimestre
+                        {% trans %}er Term{% endtrans %}
                         {% else %}
                         {% if term.term == 2 or term.term == 3%}
-                            ème  trimestre.
+                            {% trans %}th  term.{% endtrans %}
                             {% else %}
-                            Annuel.
+                            {% trans %}Annual.{% endtrans %}
                         {% endif %}
                         
                     {% endif %}
@@ -64,36 +64,36 @@
 
                 <br>
                 <br>
-                Hoping tha you are well, you will find attached the transcript of you child marks <b>{{ student ? student.fullName : studentName }}</b> in class <b>{{ student ? student.classroom.classroom : classroom.classroom }} </b> for the 
+                {% trans %}Hoping tha you are well, you will find attached the transcript of you child marks{% endtrans %} <b>{{ student ? student.fullName : studentName }}</b> {% trans %}in class{% endtrans %} <b>{{ student ? student.classroom.classroom : classroom.classroom }} </b> {% trans %}for the{% endtrans %} 
                 {% if sequence %}
                     {{ sequence.sequence }}
                     {% if sequence.sequence == 1 %}
-                        st 
+                        {% trans %}st{% endtrans %} 
                         {% else %}
                         {% if sequence.sequence == 2 %}
-                            nd
+                            {% trans %}nd{% endtrans %}
                             {% else %}
                             {% if sequence.sequence == 3 %}
-                                rd 
+                                {% trans %}rd{% endtrans %} 
                                 {% else %}
-                                th
+                                {% trans %}th{% endtrans %}
                             {% endif %}
                         {% endif %}
-                    {% endif %} assessment.
+                    {% endif %} {% trans %}assessment.{% endtrans %}
                 {% endif %}
                 
                 {% if term %}
                     {{ term.term }} 
                     {% if term.term == 1 %}
-                        st term.
+                        {% trans %}st term.{% endtrans %}
                         {% else %}
                         {% if term.term == 2 %}
-                            nd term.
+                            {% trans %}nd term.{% endtrans %}
                             {% else %}
                             {% if term.term == 3 %}
-                                rd term.
+                                {% trans %}rd term.{% endtrans %}
                                 {% else %}
-                                Annual.
+                                {% trans %}Annual.{% endtrans %}
                             {% endif %}
                         {% endif %}
                     {% endif %} 
@@ -102,12 +102,12 @@
             </p>
             
             <p>
-                L'administration de l'établissement / School administration.
+                {% trans %}School administration / School administration.{% endtrans %}
             </p>
-            <p>Merci de votre confiance. / Thank you for your confidence.</p>
+            <p>{% trans %}Thank you for your trust. / Thank you for your confidence.{% endtrans %}</p>
         </div>
         <div class="footer">
-            <p>&copy; {{ "now"|date("Y") }} | Freeschool | Tous droits réservés / All rights reserved.</p>
+            <p>{% trans %}&copy;{% endtrans %} {{ "now"|date("Y") }} {% trans %}| Freeschool | All rights reserved / All rights reserved.{% endtrans %}</p>
         </div>
     </body>
 </html>

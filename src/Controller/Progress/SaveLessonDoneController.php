@@ -16,11 +16,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/progress")]
 class SaveLessonDoneController extends AbstractController
 {
@@ -59,12 +55,15 @@ class SaveLessonDoneController extends AbstractController
         
 
         //////Je récupère l'enseignant, la matière et la classe
-        $teacher = $this->teacherRepository->findOneBySlug(['slug' => $slugTeacher]);
-        $subject = $this->subjectReposirory->findOneBySlug(['slug' => $slugSubject]);
-        $classroom = $this->classroomRepository->findOneBySlug(['slug' => $slugClassroom]);
-        // dump($teacher);
-        // dump($subject);
-        // dd($classroom);
+        $teacher = $this->teacherRepository->findOneBy(['slug' => $slugTeacher]);
+        $subject = $this->subjectReposirory->findOneBy(['slug' => $slugSubject]);
+        $classroom = $this->classroomRepository->findOneBy(['slug' => $slugClassroom]);
+        
+        if (!$teacher || !$subject || !$classroom) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
+
         ////je récupère la lecçon prévue en fonction de l'enseigant, 
         ////la matière et la classe d'une année scolaire
         $lessonPlain = $this->lessonRepository->findBy([

@@ -18,56 +18,95 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
-#[Route("/etat-finance")]
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
+#[Route('/etat-finance')]
 class EtatFinanceController extends AbstractController
 {
     public function __construct(
-        protected EntityManagerInterface $em, 
-        protected TranslatorInterface $translator, 
+        protected EntityManagerInterface $em,
+        protected TranslatorInterface $translator,
         protected SchoolRepository $schoolRepository,
-        protected SchoolYearService $schoolYearService, 
-        protected DepenseRepository $depenseRepository, 
-        protected SchoolYearRepository $schoolYearRepository, 
-        protected EtatFinanceRepository $etatFinanceRepository, 
-        protected EtatDepenseRepository $etatDepenseRepository, 
-        protected RegistrationRepository $registrationRepository, 
-        )
-    {}
+        protected SchoolYearService $schoolYearService,
+        protected DepenseRepository $depenseRepository,
+        protected SchoolYearRepository $schoolYearRepository,
+        protected EtatFinanceRepository $etatFinanceRepository,
+        protected EtatDepenseRepository $etatDepenseRepository,
+        protected RegistrationRepository $registrationRepository,
+    ) {
+    }
 
-    #[Route("/finance", name:"etat_finance")]
+    #[Route('/finance', name: 'etat_finance')]
     public function etatFinance(Request $request): Response
     {
         $mySession = $request->getSession();
-        $mySession->set('ajout',null);
+
+        $mySession->set('ajout', null);
         $mySession->set('suppression', null);
         $mySession->set('miseAjour', null);
         $mySession->set('saisiNotes', null);
-        if($mySession)
-        {
-            $schoolYear = $mySession->get('schoolYear');
-            $subSystem = $mySession->get('subSystem');
 
-        }else 
-        {
-            return $this->redirectToRoute("app_logout");
-        }
-        
-        $school = $this->schoolRepository->findOneBySchoolYear(['schoolYear' => $schoolYear]);
-        
+        /*
+         * Vérification de l'année scolaire enregistrée en session.
+         */
         $sessionSchoolYear = $mySession->get('schoolYear');
-  
-        $schoolYear = $this->schoolYearRepository->findOneBy(['schoolYear' => $sessionSchoolYear->getSchoolYear() ]);
 
-        //je récupère l'etat financier
-        $etatFinance = $this->registrationRepository->getEtatFinancier($schoolYear);
+        if ($sessionSchoolYear === null) {
+            return $this->redirectToRoute('app_logout');
+        }
 
-        //je récupère l'etat des dépenses
-        $etatDepenses = $this->depenseRepository->getSumSpendingPerRubrique($schoolYear);
+        $subSystem = $mySession->get('subSystem');
+
+        /*
+         * Récupération de l'établissement lié à l'année scolaire.
+         */
+        $school = $this->schoolRepository->findOneBySchoolYear([
+            'schoolYear' => $sessionSchoolYear,
+        ]);
+
+        /*
+         * Récupération de l'entité SchoolYear depuis la base de données.
+         */
+        $schoolYear = $this->schoolYearRepository->findOneBy([
+            'schoolYear' => $sessionSchoolYear->getSchoolYear(),
+        ]);
+
+        if ($schoolYear === null) {
+            throw $this->createNotFoundException(
+                $this->translator->trans('The selected school year does not exist.')
+            );
+        }
+
+        /*
+         * Récupération de toutes les dépenses de l'année scolaire.
+         *
+         * Si, dans ton entité Depense, la propriété ne s'appelle pas
+         * "schoolYear", remplace-la ici par le vrai nom de la propriété.
+         */
+        $depenses = $this->depenseRepository->findBy(
+            [
+                'schoolYear' => $schoolYear,
+            ],
+            [
+                'createdAt' => 'DESC',
+            ]
+        );
+
+        /*
+         * Nombre total de dépenses affichées dans la page.
+         */
+        $numberOfDepenses = count($depenses);
+
+        /*
+         * Récupération de l'état financier.
+         */
+        $etatFinance = $this->registrationRepository
+            ->getEtatFinancier($schoolYear);
+
+        /*
+         * Récupération des sommes dépensées par rubrique.
+         */
+        $etatDepenses = $this->depenseRepository
+            ->getSumSpendingPerRubrique($schoolYear);
 
         $apee = 0;
         $computer = 0;
@@ -76,38 +115,32 @@ class EtatFinanceController extends AbstractController
         $stamp = 0;
         $photo = 0;
 
-        for ($i=0; $i < count($etatDepenses); $i++) 
-        { 
-            if ($etatDepenses[$i]['RUBRIQUE'] == ConstantsClass::APEE) 
-            {
-                $apee = $etatDepenses[$i]['SOMME'];
+        foreach ($etatDepenses as $etatDepense) {
+            $rubrique = $etatDepense['RUBRIQUE'] ?? null;
+            $somme = $etatDepense['SOMME'] ?? 0;
 
-            }elseif ($etatDepenses[$i]['RUBRIQUE'] == ConstantsClass::COMPUTER)
-            {
-                $computer = $etatDepenses[$i]['SOMME'];
-
-            }elseif ($etatDepenses[$i]['RUBRIQUE'] == ConstantsClass::CLEAN_SCHOOL)
-            {
-                $cleanSchool = $etatDepenses[$i]['SOMME'];
-
-            }elseif ($etatDepenses[$i]['RUBRIQUE'] == ConstantsClass::MEDICAL_BOOKLET)
-            {
-                $medicalBooklet = $etatDepenses[$i]['SOMME'];
-
-            }elseif($etatDepenses[$i]['RUBRIQUE'] == ConstantsClass::STAMP)
-            {
-                $stamp = $etatDepenses[$i]['SOMME'];
-
-            }elseif ($etatDepenses[$i]['RUBRIQUE'] == ConstantsClass::PHOTO) 
-            {
-                $photo = $etatDepenses[$i]['SOMME'];
+            if ($rubrique === ConstantsClass::APEE) {
+                $apee = $somme;
+            } elseif ($rubrique === ConstantsClass::COMPUTER) {
+                $computer = $somme;
+            } elseif ($rubrique === ConstantsClass::CLEAN_SCHOOL) {
+                $cleanSchool = $somme;
+            } elseif ($rubrique === ConstantsClass::MEDICAL_BOOKLET) {
+                $medicalBooklet = $somme;
+            } elseif ($rubrique === ConstantsClass::STAMP) {
+                $stamp = $somme;
+            } elseif ($rubrique === ConstantsClass::PHOTO) {
+                $photo = $somme;
             }
         }
-        
 
-        // dd($etatDepenses[0]);
         return $this->render('etat_finance/displayEtatFinance.html.twig', [
-            'etatFinance' => $etatFinance[0],
+            'etatFinance' => $etatFinance[0] ?? null,
+
+            // Variables nécessaires au tableau Twig
+            'depenses' => $depenses,
+            'numberOfDepenses' => $numberOfDepenses,
+
             'apee' => $apee,
             'computer' => $computer,
             'cleanSchool' => $cleanSchool,
@@ -115,6 +148,9 @@ class EtatFinanceController extends AbstractController
             'stamp' => $stamp,
             'photo' => $photo,
             'school' => $school,
+
+            // Envoyée explicitement pour éviter une autre variable Twig absente
+            'mySession' => $mySession,
         ]);
     }
 }

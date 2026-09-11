@@ -1,0 +1,21 @@
+FREESCHOOL — REFONTE UI/UX SAAS PREMIUM++
+Date : 23 juillet 2026
+
+MODIFICATIONS VISUELLES UNIQUEMENT
+- Nouvelle identité visuelle SaaS premium, moderne et épurée.
+- Typographie système moderne, plus douce et moins grasse.
+- Harmonisation des cartes, panneaux, formulaires, boutons, tableaux et modales.
+- Amélioration du header et du menu horizontal, desktop et mobile.
+- Responsive renforcé pour téléphone, tablette et grand écran.
+- Styles d'impression protégés pour les bulletins, PV, registres et états.
+- Compatibilité avec les classes Bootstrap, Select2 et DataTables existantes.
+
+LOGIQUE CONSERVÉE
+- Aucune route modifiée.
+- Aucun contrôleur modifié.
+- Aucune variable Twig modifiée.
+- Aucun nom de champ modifié.
+- Aucun script fonctionnel supprimé.
+
+FICHIER PRINCIPAL AJOUTÉ
+- templates/includes/_saas_premium_theme.html.twig

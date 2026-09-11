@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\TimeTableRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TimeTableRepository::class)]
@@ -14,36 +13,54 @@ class TimeTable
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'timeTables')]
-    private ?Classroom $classroom = null;
-
-    #[ORM\ManyToOne(inversedBy: 'timeTables')]
-    private ?Teacher $teacher = null;
-
-    #[ORM\ManyToOne(inversedBy: 'timeTables')]
-    private ?Subject $subject = null;
-
-    #[ORM\ManyToOne(inversedBy: 'timeTables')]
-    private ?Day $day = null;
-
-    #[ORM\ManyToOne(inversedBy: 'timeTables')]
-    private ?SchoolYear $schoolYear = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $startTime = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $endTime = null;
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $slug = null;
 
-    #[ORM\ManyToOne(inversedBy: 'timeTables')]
+    #[ORM\ManyToOne]
+    private ?Classroom $classroom = null;
+
+    #[ORM\ManyToOne]
+    private ?Teacher $teacher = null;
+
+    #[ORM\ManyToOne]
+    private ?Subject $subject = null;
+
+    #[ORM\ManyToOne]
+    private ?Day $day = null;
+
+    #[ORM\ManyToOne]
+    private ?SchoolYear $schoolYear = null;
+
+    #[ORM\ManyToOne]
     private ?SubSystem $subSystem = null;
+
+    #[ORM\Column(length: 8, nullable: true)]
+    private ?string $startTime = null;
+
+    #[ORM\Column(length: 8, nullable: true)]
+    private ?string $endTime = null;
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    /*
+     * Très important :
+     * Ne jamais ajouter de setId() dans cette entity.
+     * L'id doit être généré automatiquement par MySQL AUTO_INCREMENT.
+     */
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(?string $slug): self
+    {
+        $this->slug = $slug;
+
+        return $this;
     }
 
     public function getClassroom(): ?Classroom
@@ -106,42 +123,6 @@ class TimeTable
         return $this;
     }
 
-    public function getStartTime(): ?string
-    {
-        return $this->startTime;
-    }
-
-    public function setStartTime(string $startTime): self
-    {
-        $this->startTime = $startTime;
-
-        return $this;
-    }
-
-    public function getEndTime(): ?string
-    {
-        return $this->endTime;
-    }
-
-    public function setEndTime(string $endTime): self
-    {
-        $this->endTime = $endTime;
-
-        return $this;
-    }
-
-    public function getSlug(): ?string
-    {
-        return $this->slug;
-    }
-
-    public function setSlug(?string $slug): self
-    {
-        $this->slug = $slug;
-
-        return $this;
-    }
-
     public function getSubSystem(): ?SubSystem
     {
         return $this->subSystem;
@@ -154,4 +135,27 @@ class TimeTable
         return $this;
     }
 
+    public function getStartTime(): ?string
+    {
+        return $this->startTime;
+    }
+
+    public function setStartTime(?string $startTime): self
+    {
+        $this->startTime = $startTime;
+
+        return $this;
+    }
+
+    public function getEndTime(): ?string
+    {
+        return $this->endTime;
+    }
+
+    public function setEndTime(?string $endTime): self
+    {
+        $this->endTime = $endTime;
+
+        return $this;
+    }
 }

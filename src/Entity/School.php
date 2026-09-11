@@ -157,6 +157,9 @@ class School implements \Serializable
     #[ORM\OneToMany(mappedBy: 'school', targetEntity: VerrouSequence::class)]
     private Collection $verrouSequences;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $matricule = null;
+
     public function __construct()
     {
         $this->classrooms = new ArrayCollection();
@@ -693,6 +696,18 @@ class School implements \Serializable
     public function getVerrouSequences(): Collection
     {
         return $this->verrouSequences;
+    }
+
+    public function getMatricule(): ?string
+    {
+        return $this->matricule;
+    }
+
+    public function setMatricule(?string $matricule): self
+    {
+        $this->matricule = $matricule;
+
+        return $this;
     }
 
 }

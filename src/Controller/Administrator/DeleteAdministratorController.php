@@ -12,10 +12,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route('/administrators')]
 class DeleteAdministratorController extends AbstractController
 {
@@ -49,17 +46,23 @@ class DeleteAdministratorController extends AbstractController
 
         $administrator = $this->userRepository->findOneBy(['slug' => $slug ]);
         
-        $administrator->setSupprime(1);
+        if ($administrator) 
+        {
+            $administrator->setSupprime(1);
 
-        $this->em->persist($administrator);
-        $this->em->flush();
+            $this->em->persist($administrator);
+            $this->em->flush();
 
-        $this->addFlash('info', $this->translator->trans('Administrator deleted with success !'));
-            
-        $mySession->set('suppression', 1);
+            $this->addFlash('info', $this->translator->trans('Administrator deleted with success !'));
+                
+            $mySession->set('suppression', 1);
 
-        return $this->redirectToRoute('list_administrators', ['s' => 1 ]);
-            
-        
+            return $this->redirectToRoute('list_administrators', ['s' => 1 ]);
+        } 
+        else 
+        {
+            return $this->redirectToRoute('page_error');
+        }
+         
     }
 }

@@ -7,470 +7,962 @@
 {% endblock %}
 
 {% block currentUser %}
-    {{teacher.fullName }}
+    {{ teacher.fullName }}
 {% endblock %}
 
 {% block stylesheets %}
+    {{ parent() }}
+
     <style>
-        input{
-            background-color: rgba(62, 128, 235, 0.2) !important;
-            color: #3e80eb !important;
+        .fs-plan-form-page {
+            padding-bottom: 2rem;
         }
+
+        .fs-plan-hero {
+            position: relative;
+            overflow: hidden;
+            border-radius: 28px;
+            padding: 1.35rem;
+            margin-bottom: 1.25rem;
+            color: #fff;
+            background:
+                radial-gradient(circle at top right, rgba(255, 255, 255, .22), transparent 30%),
+                linear-gradient(135deg, #0f172a 0%, #1d4ed8 52%, #06b6d4 100%);
+            box-shadow: 0 22px 55px rgba(15, 23, 42, .18);
+        }
+
+        .fs-plan-hero::before {
+            content: "";
+            position: absolute;
+            width: 280px;
+            height: 280px;
+            right: -130px;
+            bottom: -150px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .16);
+        }
+
+        .fs-plan-hero-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .fs-plan-title {
+            display: flex;
+            align-items: center;
+            gap: .85rem;
+        }
+
+        .fs-plan-title-icon {
+            width: 54px;
+            height: 54px;
+            border-radius: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, .16);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .22);
+            backdrop-filter: blur(10px);
+            font-size: 1.35rem;
+        }
+
+        .fs-plan-title h4 {
+            margin: 0;
+            color: #fff;
+            font-weight: 900;
+            letter-spacing: -.02em;
+        }
+
+        .fs-plan-title p {
+            margin: .25rem 0 0;
+            color: rgba(255, 255, 255, .82);
+            font-weight: 700;
+            font-size: .9rem;
+        }
+
+        .fs-plan-hero .btn {
+            border: 0;
+            border-radius: 999px;
+            font-weight: 900;
+            box-shadow: 0 14px 30px rgba(15, 23, 42, .22);
+        }
+
+        .fs-plan-shell {
+            border-radius: 28px;
+            overflow: hidden;
+            background: #fff;
+            box-shadow: 0 18px 50px rgba(15, 23, 42, .09);
+        }
+
+        .fs-plan-shell-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 1.15rem 1.25rem;
+            border-bottom: 1px solid #eef2f7;
+            background:
+                radial-gradient(circle at top left, rgba(79, 70, 229, .08), transparent 34%),
+                #fff;
+        }
+
+        .fs-plan-shell-title {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+        }
+
+        .fs-plan-shell-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #eef2ff;
+            color: #4f46e5;
+            font-size: 1.05rem;
+        }
+
+        .fs-plan-shell-title h5 {
+            margin: 0;
+            color: #0f172a;
+            font-weight: 900;
+        }
+
+        .fs-plan-shell-title small {
+            display: block;
+            margin-top: .15rem;
+            color: #64748b;
+            font-weight: 700;
+        }
+
+        .fs-plan-form-body {
+            padding: 1.25rem;
+            background: linear-gradient(180deg, #f8fafc 0%, #fff 42%);
+        }
+
+        .fs-form-section {
+            border-radius: 24px;
+            padding: 1.15rem;
+            margin-bottom: 1.15rem;
+            background: #fff;
+            border: 1px solid #eef2f7;
+            box-shadow: 0 10px 28px rgba(15, 23, 42, .055);
+        }
+
+        .fs-section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: .85rem;
+            border-bottom: 1px solid #eef2f7;
+        }
+
+        .fs-section-title {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+        }
+
+        .fs-section-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 15px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            background: #eef2ff;
+            color: #4f46e5;
+        }
+
+        .fs-section-title h5 {
+            margin: 0;
+            color: #0f172a;
+            font-weight: 900;
+        }
+
+        .fs-section-title small {
+            display: block;
+            margin-top: .15rem;
+            color: #64748b;
+            font-weight: 700;
+        }
+
+        .fs-sequence-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .fs-sequence-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 24px;
+            padding: 1rem;
+            background:
+                radial-gradient(circle at top right, rgba(79, 70, 229, .08), transparent 35%),
+                #fff;
+            border: 1px solid #eef2f7;
+            box-shadow: 0 14px 34px rgba(15, 23, 42, .07);
+        }
+
+        .fs-sequence-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: .75rem;
+            margin-bottom: 1rem;
+            padding-bottom: .9rem;
+            border-bottom: 1px solid #eef2f7;
+        }
+
+        .fs-sequence-heading {
+            display: flex;
+            align-items: center;
+            gap: .7rem;
+        }
+
+        .fs-sequence-number {
+            width: 46px;
+            height: 46px;
+            border-radius: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 900;
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            box-shadow: 0 12px 24px rgba(79, 70, 229, .22);
+        }
+
+        .fs-sequence-heading h6 {
+            margin: 0;
+            color: #0f172a;
+            font-weight: 900;
+            font-size: 1rem;
+        }
+
+        .fs-sequence-heading small {
+            display: block;
+            margin-top: .15rem;
+            color: #64748b;
+            font-weight: 700;
+            font-size: .75rem;
+        }
+
+        .fs-sequence-badge {
+            border-radius: 999px;
+            padding: .4rem .7rem;
+            background: #0f172a;
+            color: #fff;
+            font-size: .72rem;
+            font-weight: 900;
+        }
+
+        .fs-sequence-content {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 1rem;
+            align-items: stretch;
+        }
+
+        .fs-panel {
+            border-radius: 20px;
+            padding: 1rem;
+            border: 1px solid #eef2f7;
+            background: #f8fafc;
+            height: 100%;
+        }
+
+        .fs-panel-planned {
+            background:
+                radial-gradient(circle at top right, rgba(79, 70, 229, .08), transparent 35%),
+                #f8fafc;
+        }
+
+        .fs-panel-done {
+            background:
+                radial-gradient(circle at top right, rgba(22, 163, 74, .10), transparent 35%),
+                #f8fafc;
+        }
+
+        .fs-panel-title {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            margin-bottom: .85rem;
+            font-size: .82rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+        }
+
+        .fs-panel-title.planned {
+            color: #4f46e5;
+        }
+
+        .fs-panel-title.done {
+            color: #16a34a;
+        }
+
+        .fs-fields-grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: .85rem;
+        }
+
+        .fs-fields-grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: .85rem;
+        }
+
+        .fs-field {
+            margin-bottom: 0;
+        }
+
+        .fs-field label {
+            color: #334155;
+            font-size: .76rem;
+            font-weight: 900;
+            margin-bottom: .35rem;
+            line-height: 1.25;
+        }
+
+        .fs-field .form-control,
+        .fs-field .form-select,
+        .fs-field input,
+        .fs-field select {
+            width: 100%;
+            min-height: 50px;
+            border-radius: 16px !important;
+            border: 1px solid #dbe3ef !important;
+            background-color: #fff !important;
+            color: #0f172a !important;
+            font-size: 1rem;
+            font-weight: 900;
+            text-align: center;
+            box-shadow: none !important;
+            transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+        }
+
+        .fs-field .form-control:focus,
+        .fs-field .form-select:focus,
+        .fs-field input:focus,
+        .fs-field select:focus {
+            border-color: #4f46e5 !important;
+            box-shadow: 0 0 0 .22rem rgba(79, 70, 229, .12) !important;
+            transform: translateY(-1px);
+        }
+
+        .fs-field .select2-container {
+            width: 100% !important;
+        }
+
+        .fs-field .select2-container--default .select2-selection--single {
+            min-height: 50px;
+            border-radius: 16px;
+            border: 1px solid #dbe3ef;
+            display: flex;
+            align-items: center;
+        }
+
+        .fs-field .select2-container--default .select2-selection--single .select2-selection__rendered {
+            color: #0f172a;
+            font-weight: 900;
+            line-height: 50px;
+            padding-left: 14px;
+        }
+
+        .fs-field .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 50px;
+        }
+
+        .fs-submit-zone {
+            position: sticky;
+            bottom: 0;
+            z-index: 20;
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 22px;
+            background: rgba(255, 255, 255, .9);
+            border: 1px solid #eef2f7;
+            backdrop-filter: blur(14px);
+            box-shadow: 0 -8px 30px rgba(15, 23, 42, .08);
+        }
+
+        .fs-submit-zone-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .fs-submit-note {
+            color: #64748b;
+            font-size: .82rem;
+            font-weight: 800;
+        }
+
+        .fs-submit-btn {
+            min-height: 50px;
+            border-radius: 16px;
+            border: 0;
+            color: #fff;
+            font-weight: 900;
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            box-shadow: 0 16px 34px rgba(79, 70, 229, .25);
+        }
+
+        .fs-submit-btn:hover {
+            color: #fff;
+            transform: translateY(-1px);
+            box-shadow: 0 20px 42px rgba(79, 70, 229, .32);
+        }
+
+        @media (max-width: 1199px) {
+            .fs-sequence-content {
+                grid-template-columns: 1fr;
+            }
+
+            .fs-fields-grid-4 {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 991px) {
+            .fs-plan-hero-content,
+            .fs-plan-shell-header,
+            .fs-submit-zone-inner {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .fs-plan-hero .btn,
+            .fs-submit-btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .hor-content.main-content.fs-plan-form-page {
+                padding-top: 8px !important;
+                margin-top: 0 !important;
+            }
+
+            .fs-plan-form-page .container {
+                padding-top: 0 !important;
+                margin-top: 0 !important;
+            }
+
+            .fs-plan-hero,
+            .fs-plan-shell,
+            .fs-form-section,
+            .fs-sequence-card,
+            .fs-panel {
+                border-radius: 20px;
+            }
+
+            .fs-plan-hero,
+            .fs-plan-form-body,
+            .fs-form-section,
+            .fs-sequence-card,
+            .fs-panel {
+                padding: 1rem;
+            }
+
+            .fs-plan-hero {
+                margin-bottom: 12px;
+            }
+
+            .fs-plan-title {
+                align-items: flex-start;
+            }
+
+            .fs-plan-title-icon {
+                width: 44px;
+                height: 44px;
+                border-radius: 14px;
+            }
+
+            .fs-plan-title h4 {
+                font-size: 17px;
+                line-height: 1.15;
+            }
+
+            .fs-plan-title p {
+                font-size: 12px;
+                line-height: 1.25;
+            }
+
+            .fs-fields-grid-2,
+            .fs-fields-grid-4 {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .fs-field .form-control,
+            .fs-field input {
+                min-height: 48px;
+                font-size: 15px;
+            }
+
+            .fs-submit-zone {
+                position: static;
+            }
+        }
+
+		/* Espace entre le menu horizontal et le contenu - page Management Lesson Planned */
+.hor-content.main-content.fs-plan-form-page {
+    padding-top: 24px !important;
+    margin-top: 0 !important;
+}
+
+.fs-plan-form-page .container {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+}
+
+.fs-plan-hero {
+    margin-top: 0 !important;
+}
+
+/* Mobile : compact mais pas collé */
+@media (max-width: 767px) {
+    .hor-content.main-content.fs-plan-form-page {
+        padding-top: 10px !important;
+        margin-top: 0 !important;
+    }
+
+    .fs-plan-form-page .container {
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+    }
+
+    .fs-plan-hero {
+        margin-top: 0 !important;
+        margin-bottom: 12px !important;
+    }
+}
     </style>
 {% endblock %}
 
 {% block body %}
-<!-- App-Content -->
-	<div class="hor-content main-content">
-		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary">
-                        <i class="fe fe-activity me-2"></i>{% trans %}MANAGEMENT LESSON PLANNED{% endtrans %}
-                    </h4>
+<div class="hor-content main-content fs-plan-form-page">
+    <div class="container">
+
+        <div class="fs-plan-hero">
+            <div class="fs-plan-hero-content">
+                <div class="fs-plan-title">
+                    <div class="fs-plan-title-icon">
+                        <i class="fe fe-activity"></i>
+                    </div>
+
+                    <div>
+                        <h4>{% trans %}MANAGEMENT LESSON PLANNED{% endtrans %}</h4>
+                        <p>{% trans %}Plan and update theory/practical lessons for each sequence.{% endtrans %}</p>
+                    </div>
+                </div>
+
+                <a href="{{ path('display_lesson_plain') }}" class="btn btn-light btn-sm">
+                    <i class="fe fe-list me-1"></i>
+                    {% trans %}Display planned lessons{% endtrans %}
+                </a>
+            </div>
+        </div>
+
+        <div class="fs-plan-shell">
+            <div class="fs-plan-shell-header">
+                <div class="fs-plan-shell-title">
+                    <span class="fs-plan-shell-icon">
+                        <i class="fe fe-plus-circle"></i>
+                    </span>
+
+                    <div>
+                        <h5>{% trans %}Addition of the number of planned lessons{% endtrans %}</h5>
+                        <small>{% trans %}Fields are grouped by sequence for faster and clearer entry.{% endtrans %}</small>
+                    </div>
                 </div>
             </div>
-			
-			<div class="row">
-				<div class="col-md-12 col-lg-12">
-					<div class="card font-weight-bold border-primary">
-						<div class="card-header">
-							
-								<div class="col-md-8">
-									<h3 class="card-title"><i class="fe fe-plus-circle me-2"></i> {% trans %}Addition of the number of planned lessons{% endtrans %}</h3></div>
-								<div class="col-md-4 text-right">
-									<a href="{{ path('display_lesson_plain') }}" class="btn btn-outline-primary">
-										<i class="fe fe-list me-2"></i>
-										{% trans %}Display planned lessons{% endtrans %}
-									</a>
-								</div>
-							
-						</div>
-						<div class="card-body">
-							{{ form_start(formProgressLessonPrevue, {'attr': {'class': 'row g-3 needs-validation'}}) }}
-						
-								<div class="row mt-4">
-									<div class="col-lg-12">
-										<div class="expanel expanel-primary border-primary">
-											<div class="expanel-heading">
-												<h3 class="expanel-title">{% trans %}Classroom and subject{% endtrans %}</h3>
-											</div>
-											<div class="expanel-body">
-												<div class="row">
-													<div class="col-md-2"></div>
-													<div class="col-md-4">
-														{{form_row(formProgressLessonPrevue.classroom)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-													<div class="col-md-4">
-														{{form_row(formProgressLessonPrevue.subject)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-													<div class="col-md-2"></div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								{# SEQUENCE 1  #}
-								<div class="row mt-4">
-									<div class="col-lg-4">
-										<div class="expanel expanel-primary border-primary">
-											<div class="expanel-heading">
-												<h3 class="expanel-title">{% trans %}Lessons planned for the 1st sequence{% endtrans %}</h3>
-											</div>
-											<div class="expanel-body">
-												<div class="row">
-													<div class="col-md-2"></div>
-													<div class="col-md-4">
-														{{form_row(formProgressLessonPrevue.nbreLessonTheoriquePrevueSeq1)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-													<div class="col-md-4">
-														{{form_row(formProgressLessonPrevue.nbreLessonPratiquePrevueSeq1)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-													<div class="col-md-2"></div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-lg-8">
-										<div class="expanel expanel-success border-success">
-											<div class="expanel-heading">
-												<h3 class="expanel-title">{% trans %}Lessons done for the 1st sequence{% endtrans %}</h3>
-											</div>
-											<div class="expanel-body">
-												<div class="row">
-													<div class="col-md-3">
-														{{form_row(formProgressLessonPrevue.nbreLessonTheoriqueFaiteSeq1)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-													<div class="col-md-3">
-														{{form_row(formProgressLessonPrevue.nbreLessonPratiqueFaiteSeq1)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-													<div class="col-md-3">
-														{{form_row(formProgressLessonPrevue.nbreLessonTheoriqueFaiteAvecRessourceSeq1)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-													<div class="col-md-3">
-														{{form_row(formProgressLessonPrevue.nbreLessonPratiqueFaiteAvecRessourceSeq1)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
 
-								{# SEQUENCE 2 #}
-								<div class="row mt-4">
-									<div class="col-lg-4">
-										<div class="expanel expanel-primary border-primary">
-											<div class="expanel-heading">
-												<h3 class="expanel-title">{% trans %}Lessons planned for the 2nd sequence{% endtrans %}</h3>
-											</div>
-											<div class="expanel-body">
-												<div class="row">
-													<div class="col-md-2"></div>
-													<div class="col-md-4">
-														{{form_row(formProgressLessonPrevue.nbreLessonTheoriquePrevueSeq2)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-													<div class="col-md-4">
-														{{form_row(formProgressLessonPrevue.nbreLessonPratiquePrevueSeq2)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-													<div class="col-md-2"></div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-lg-8">
-										<div class="expanel expanel-success border-success">
-											<div class="expanel-heading">
-												<h3 class="expanel-title">{% trans %}Lessons done for the 2nd sequence{% endtrans %}</h3>
-											</div>
-											<div class="expanel-body">
-												<div class="row">
-													<div class="col-md-3">
-														{{form_row(formProgressLessonPrevue.nbreLessonTheoriqueFaiteSeq2)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-													<div class="col-md-3">
-														{{form_row(formProgressLessonPrevue.nbreLessonPratiqueFaiteSeq2)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-													<div class="col-md-3">
-														{{form_row(formProgressLessonPrevue.nbreLessonTheoriqueFaiteAvecRessourceSeq2)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-													<div class="col-md-3">
-														{{form_row(formProgressLessonPrevue.nbreLessonPratiqueFaiteAvecRessourceSeq2)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								{# SEQUENCE 3 #}
-								<div class="row mt-4">
-									<div class="col-lg-4">
-										<div class="expanel expanel-primary border-primary">
-											<div class="expanel-heading">
-												<h3 class="expanel-title">{% trans %}Lessons planned for the 3rd sequence{% endtrans %}</h3>
-											</div>
-											<div class="expanel-body">
-												<div class="row">
-													<div class="col-md-2"></div>
-													<div class="col-md-4">
-														{{form_row(formProgressLessonPrevue.nbreLessonTheoriquePrevueSeq3)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-													<div class="col-md-4">
-														{{form_row(formProgressLessonPrevue.nbreLessonPratiquePrevueSeq3)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-													<div class="col-md-2"></div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-lg-8">
-										<div class="expanel expanel-success boder-success">
-											<div class="expanel-heading">
-												<h3 class="expanel-title">{% trans %}Number of lessons done for the 3rd sequence{% endtrans %}</h3>
-											</div>
-											<div class="expanel-body">
-												<div class="row">
-													<div class="col-md-3">
-														{{form_row(formProgressLessonPrevue.nbreLessonTheoriqueFaiteSeq3)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-													<div class="col-md-3">
-														{{form_row(formProgressLessonPrevue.nbreLessonPratiqueFaiteSeq3)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-													<div class="col-md-3">
-														{{form_row(formProgressLessonPrevue.nbreLessonTheoriqueFaiteAvecRessourceSeq3)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-													<div class="col-md-3">
-														{{form_row(formProgressLessonPrevue.nbreLessonPratiqueFaiteAvecRessourceSeq3)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								{# SEQUENCE 4 #}
-								<div class="row mt-4">
-									<div class="col-lg-4">
-										<div class="expanel expanel-primary border-parimary">
-											<div class="expanel-heading">
-												<h3 class="expanel-title">{% trans %}Lessons planned for the 4th sequence{% endtrans %}</h3>
-											</div>
-											<div class="expanel-body">
-												<div class="row">
-													<div class="col-md-2"></div>
-													<div class="col-md-4">
-														{{form_row(formProgressLessonPrevue.nbreLessonTheoriquePrevueSeq4)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-													<div class="col-md-4">
-														{{form_row(formProgressLessonPrevue.nbreLessonPratiquePrevueSeq4)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-													<div class="col-md-2"></div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-lg-8">
-										<div class="expanel expanel-success border-success">
-											<div class="expanel-heading">
-												<h3 class="expanel-title">{% trans %}Number of lessons done for the 4th sequence{% endtrans %}</h3>
-											</div>
-											<div class="expanel-body">
-												<div class="row">
-													<div class="col-md-3">
-														{{form_row(formProgressLessonPrevue.nbreLessonTheoriqueFaiteSeq4)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-													<div class="col-md-3">
-														{{form_row(formProgressLessonPrevue.nbreLessonPratiqueFaiteSeq4)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-													<div class="col-md-3">
-														{{form_row(formProgressLessonPrevue.nbreLessonTheoriqueFaiteAvecRessourceSeq4)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-													<div class="col-md-3">
-														{{form_row(formProgressLessonPrevue.nbreLessonPratiqueFaiteAvecRessourceSeq4)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								{# SEQUENCE 5 #}
-								<div class="row mt-4">
-									<div class="col-lg-4">
-										<div class="expanel expanel-primary border-primary">
-											<div class="expanel-heading">
-												<h3 class="expanel-title">{% trans %}Lessons planned for the 5th sequence{% endtrans %}</h3>
-											</div>
-											<div class="expanel-body">
-												<div class="row">
-													<div class="col-md-2"></div>
-													<div class="col-md-4">
-														{{form_row(formProgressLessonPrevue.nbreLessonTheoriquePrevueSeq5)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-													<div class="col-md-4">
-														{{form_row(formProgressLessonPrevue.nbreLessonPratiquePrevueSeq5)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-													<div class="col-md-2"></div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-lg-8">
-										<div class="expanel expanel-success border-success">
-											<div class="expanel-heading">
-												<h3 class="expanel-title">{% trans %}Number of lessons done for the 5th sequence{% endtrans %}</h3>
-											</div>
-											<div class="expanel-body">
-												<div class="row">
-													<div class="col-md-3">
-														{{form_row(formProgressLessonPrevue.nbreLessonTheoriqueFaiteSeq5)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-													<div class="col-md-3">
-														{{form_row(formProgressLessonPrevue.nbreLessonPratiqueFaiteSeq5)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-													<div class="col-md-3">
-														{{form_row(formProgressLessonPrevue.nbreLessonTheoriqueFaiteAvecRessourceSeq5)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-													<div class="col-md-3">
-														{{form_row(formProgressLessonPrevue.nbreLessonPratiqueFaiteAvecRessourceSeq5)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								{# SEQUENCE 6 #}
-								<div class="row mt-4">
-									<div class="col-lg-4">
-										<div class="expanel expanel-primary border-primary">
-											<div class="expanel-heading">
-												<h3 class="expanel-title">{% trans %}Lessons planned for the 6th sequence{% endtrans %}</h3>
-											</div>
-											<div class="expanel-body">
-												<div class="row">
-													<div class="col-md-2"></div>
-													<div class="col-md-4">
-														{{form_row(formProgressLessonPrevue.nbreLessonTheoriquePrevueSeq6)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-													<div class="col-md-4">
-														{{form_row(formProgressLessonPrevue.nbreLessonPratiquePrevueSeq6)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-													<div class="col-md-2"></div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-lg-8">
-										<div class="expanel expanel-success border-success">
-											<div class="expanel-heading">
-												<h3 class="expanel-title">{% trans %}Lessons done for the 6th sequence{% endtrans %}</h3>
-											</div>
-											<div class="expanel-body">
-												<div class="row">
-													<div class="col-md-3">
-														{{form_row(formProgressLessonPrevue.nbreLessonTheoriqueFaiteSeq6)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-													<div class="col-md-3">
-														{{form_row(formProgressLessonPrevue.nbreLessonPratiqueFaiteSeq6)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-													<div class="col-md-3">
-														{{form_row(formProgressLessonPrevue.nbreLessonTheoriqueFaiteAvecRessourceSeq6)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-													<div class="col-md-3">
-														{{form_row(formProgressLessonPrevue.nbreLessonPratiqueFaiteAvecRessourceSeq6)}}
-														<div class="valid-feedback">
-															Veuillez remplir ce champ !
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							
-								<div class="row" style="margin-bottom: 25px ;">
-									<div class="col-md-4"></div>
-									<div class="col-md-4" style="text-align: center;">
-										<button class="btn btn-outline-primary btn-lg btn-block" type="submit"><i class="fa fa-save"></i> {% trans %}Save{% endtrans %}</button></div>
-									<div class="col-md-4"></div>
-								</div>
-							{{ form_end(formProgressLessonPrevue) }}
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+            <div class="fs-plan-form-body">
+                {{ form_start(formProgressLessonPrevue, {'attr': {'class': 'needs-validation'}}) }}
+
+                    <div class="fs-form-section">
+                        <div class="fs-section-header">
+                            <div class="fs-section-title">
+                                <span class="fs-section-icon">
+                                    <i class="fe fe-book-open"></i>
+                                </span>
+
+                                <div>
+                                    <h5>{% trans %}Classroom and subject{% endtrans %}</h5>
+                                    <small>{% trans %}Choose the class and the subject concerned by this planning.{% endtrans %}</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6 mb-3 mb-lg-0">
+                                <div class="fs-field">
+                                    {{ form_row(formProgressLessonPrevue.classroom) }}
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="fs-field">
+                                    {{ form_row(formProgressLessonPrevue.subject) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="fs-sequence-list">
+
+                        <div class="fs-sequence-card">
+                            <div class="fs-sequence-card-header">
+                                <div class="fs-sequence-heading">
+                                    <span class="fs-sequence-number">1</span>
+                                    <div>
+                                        <h6>{% trans %}1st sequence{% endtrans %}</h6>
+                                        <small>{% trans %}Planned and completed lessons{% endtrans %}</small>
+                                    </div>
+                                </div>
+                                <span class="fs-sequence-badge">{% trans %}S1{% endtrans %}</span>
+                            </div>
+
+                            <div class="fs-sequence-content">
+                                <div class="fs-panel fs-panel-planned">
+                                    <div class="fs-panel-title planned">
+                                        <i class="fe fe-target"></i>
+                                        {% trans %}Planned{% endtrans %}
+                                    </div>
+
+                                    <div class="fs-fields-grid-2">
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonTheoriquePrevueSeq1) }}
+                                        </div>
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonPratiquePrevueSeq1) }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="fs-panel fs-panel-done">
+                                    <div class="fs-panel-title done">
+                                        <i class="fe fe-check-circle"></i>
+                                        {% trans %}Done{% endtrans %}
+                                    </div>
+
+                                    <div class="fs-fields-grid-4">
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonTheoriqueFaiteSeq1) }}
+                                        </div>
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonPratiqueFaiteSeq1) }}
+                                        </div>
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonTheoriqueFaiteAvecRessourceSeq1) }}
+                                        </div>
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonPratiqueFaiteAvecRessourceSeq1) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="fs-sequence-card">
+                            <div class="fs-sequence-card-header">
+                                <div class="fs-sequence-heading">
+                                    <span class="fs-sequence-number">2</span>
+                                    <div>
+                                        <h6>{% trans %}2nd sequence{% endtrans %}</h6>
+                                        <small>{% trans %}Planned and completed lessons{% endtrans %}</small>
+                                    </div>
+                                </div>
+                                <span class="fs-sequence-badge">{% trans %}S2{% endtrans %}</span>
+                            </div>
+
+                            <div class="fs-sequence-content">
+                                <div class="fs-panel fs-panel-planned">
+                                    <div class="fs-panel-title planned">
+                                        <i class="fe fe-target"></i>
+                                        {% trans %}Planned{% endtrans %}
+                                    </div>
+
+                                    <div class="fs-fields-grid-2">
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonTheoriquePrevueSeq2) }}
+                                        </div>
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonPratiquePrevueSeq2) }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="fs-panel fs-panel-done">
+                                    <div class="fs-panel-title done">
+                                        <i class="fe fe-check-circle"></i>
+                                        {% trans %}Done{% endtrans %}
+                                    </div>
+
+                                    <div class="fs-fields-grid-4">
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonTheoriqueFaiteSeq2) }}
+                                        </div>
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonPratiqueFaiteSeq2) }}
+                                        </div>
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonTheoriqueFaiteAvecRessourceSeq2) }}
+                                        </div>
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonPratiqueFaiteAvecRessourceSeq2) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="fs-sequence-card">
+                            <div class="fs-sequence-card-header">
+                                <div class="fs-sequence-heading">
+                                    <span class="fs-sequence-number">3</span>
+                                    <div>
+                                        <h6>{% trans %}3rd sequence{% endtrans %}</h6>
+                                        <small>{% trans %}Planned and completed lessons{% endtrans %}</small>
+                                    </div>
+                                </div>
+                                <span class="fs-sequence-badge">{% trans %}S3{% endtrans %}</span>
+                            </div>
+
+                            <div class="fs-sequence-content">
+                                <div class="fs-panel fs-panel-planned">
+                                    <div class="fs-panel-title planned">
+                                        <i class="fe fe-target"></i>
+                                        {% trans %}Planned{% endtrans %}
+                                    </div>
+
+                                    <div class="fs-fields-grid-2">
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonTheoriquePrevueSeq3) }}
+                                        </div>
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonPratiquePrevueSeq3) }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="fs-panel fs-panel-done">
+                                    <div class="fs-panel-title done">
+                                        <i class="fe fe-check-circle"></i>
+                                        {% trans %}Done{% endtrans %}
+                                    </div>
+
+                                    <div class="fs-fields-grid-4">
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonTheoriqueFaiteSeq3) }}
+                                        </div>
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonPratiqueFaiteSeq3) }}
+                                        </div>
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonTheoriqueFaiteAvecRessourceSeq3) }}
+                                        </div>
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonPratiqueFaiteAvecRessourceSeq3) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="fs-sequence-card">
+                            <div class="fs-sequence-card-header">
+                                <div class="fs-sequence-heading">
+                                    <span class="fs-sequence-number">4</span>
+                                    <div>
+                                        <h6>{% trans %}4th sequence{% endtrans %}</h6>
+                                        <small>{% trans %}Planned and completed lessons{% endtrans %}</small>
+                                    </div>
+                                </div>
+                                <span class="fs-sequence-badge">{% trans %}S4{% endtrans %}</span>
+                            </div>
+
+                            <div class="fs-sequence-content">
+                                <div class="fs-panel fs-panel-planned">
+                                    <div class="fs-panel-title planned">
+                                        <i class="fe fe-target"></i>
+                                        {% trans %}Planned{% endtrans %}
+                                    </div>
+
+                                    <div class="fs-fields-grid-2">
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonTheoriquePrevueSeq4) }}
+                                        </div>
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonPratiquePrevueSeq4) }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="fs-panel fs-panel-done">
+                                    <div class="fs-panel-title done">
+                                        <i class="fe fe-check-circle"></i>
+                                        {% trans %}Done{% endtrans %}
+                                    </div>
+
+                                    <div class="fs-fields-grid-4">
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonTheoriqueFaiteSeq4) }}
+                                        </div>
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonPratiqueFaiteSeq4) }}
+                                        </div>
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonTheoriqueFaiteAvecRessourceSeq4) }}
+                                        </div>
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonPratiqueFaiteAvecRessourceSeq4) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="fs-sequence-card">
+                            <div class="fs-sequence-card-header">
+                                <div class="fs-sequence-heading">
+                                    <span class="fs-sequence-number">5</span>
+                                    <div>
+                                        <h6>{% trans %}5th sequence{% endtrans %}</h6>
+                                        <small>{% trans %}Planned and completed lessons{% endtrans %}</small>
+                                    </div>
+                                </div>
+                                <span class="fs-sequence-badge">{% trans %}S5{% endtrans %}</span>
+                            </div>
+
+                            <div class="fs-sequence-content">
+                                <div class="fs-panel fs-panel-planned">
+                                    <div class="fs-panel-title planned">
+                                        <i class="fe fe-target"></i>
+                                        {% trans %}Planned{% endtrans %}
+                                    </div>
+
+                                    <div class="fs-fields-grid-2">
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonTheoriquePrevueSeq5) }}
+                                        </div>
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonPratiquePrevueSeq5) }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="fs-panel fs-panel-done">
+                                    <div class="fs-panel-title done">
+                                        <i class="fe fe-check-circle"></i>
+                                        {% trans %}Done{% endtrans %}
+                                    </div>
+
+                                    <div class="fs-fields-grid-4">
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonTheoriqueFaiteSeq5) }}
+                                        </div>
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonPratiqueFaiteSeq5) }}
+                                        </div>
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonTheoriqueFaiteAvecRessourceSeq5) }}
+                                        </div>
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonPratiqueFaiteAvecRessourceSeq5) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="fs-sequence-card">
+                            <div class="fs-sequence-card-header">
+                                <div class="fs-sequence-heading">
+                                    <span class="fs-sequence-number">6</span>
+                                    <div>
+                                        <h6>{% trans %}6th sequence{% endtrans %}</h6>
+                                        <small>{% trans %}Planned and completed lessons{% endtrans %}</small>
+                                    </div>
+                                </div>
+                                <span class="fs-sequence-badge">{% trans %}S6{% endtrans %}</span>
+                            </div>
+
+                            <div class="fs-sequence-content">
+                                <div class="fs-panel fs-panel-planned">
+                                    <div class="fs-panel-title planned">
+                                        <i class="fe fe-target"></i>
+                                        {% trans %}Planned{% endtrans %}
+                                    </div>
+
+                                    <div class="fs-fields-grid-2">
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonTheoriquePrevueSeq6) }}
+                                        </div>
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonPratiquePrevueSeq6) }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="fs-panel fs-panel-done">
+                                    <div class="fs-panel-title done">
+                                        <i class="fe fe-check-circle"></i>
+                                        {% trans %}Done{% endtrans %}
+                                    </div>
+
+                                    <div class="fs-fields-grid-4">
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonTheoriqueFaiteSeq6) }}
+                                        </div>
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonPratiqueFaiteSeq6) }}
+                                        </div>
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonTheoriqueFaiteAvecRessourceSeq6) }}
+                                        </div>
+                                        <div class="fs-field">
+                                            {{ form_row(formProgressLessonPrevue.nbreLessonPratiqueFaiteAvecRessourceSeq6) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="fs-submit-zone">
+                        <div class="fs-submit-zone-inner">
+                            <div class="fs-submit-note">
+                                {% trans %}Please review all sequence values before saving.{% endtrans %}
+                            </div>
+
+                            <button class="btn fs-submit-btn px-5" type="submit">
+                                <i class="fa fa-save me-1"></i>
+                                {% trans %}Save{% endtrans %}
+                            </button>
+                        </div>
+                    </div>
+
+                {{ form_end(formProgressLessonPrevue) }}
+            </div>
+        </div>
+
+    </div>
 </div>
-
 {% endblock %}

@@ -13,11 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/teacher")]
 class PrintTimetableTeacherController extends AbstractController
 {
@@ -58,10 +54,16 @@ class PrintTimetableTeacherController extends AbstractController
             return $this->redirectToRoute('home_mainMenu');
         }
 
-        $teacher = $this->teacherRepository->findOneBySlug([
-            'slug' => $slug
+        $teacher = $this->teacherRepository->findOneBy([
+            'slug' => $slug,
+            'schoolYear' => $schoolYear,
         ]);
         
+        if (!$teacher) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
+
         $timeTables = $this->timeTableRepository->findBy([
                 'teacher' => $teacher,
                 'schoolYear' => $schoolYear,

@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\ConstantsClass;
 use App\Entity\Education;
 use App\Entity\Skill;
+use App\Entity\Student;
 use App\Entity\Lesson;
 use App\Entity\Sequence;
 use App\Entity\Evaluation;
@@ -36,8 +37,64 @@ class MarkManagerService
         protected StudentRepository $studentRepository, 
         protected SequenceRepository $sequenceRepository, 
         protected EvaluationRepository $evaluationRepository, 
+        protected ReportRefreshService $reportRefreshService,
         )
     {}
+
+
+    /**
+     * Initialise à 0.1 les notes manquantes d'un nouvel élève pour toutes les
+     * leçons/séquences déjà saisies dans sa classe.
+     */
+    public function initializeMissingMarksForNewStudent(Student $student): int
+    {
+        $classroom = $student->getClassroom();
+
+        if ($classroom === null) {
+            return 0;
+        }
+
+        $created = 0;
+        $now = new DateTime('now');
+
+        foreach ($this->evaluationRepository->findRecordedLessonSequencesForClassroom($classroom) as $recordedEvaluation) {
+            $lesson = $this->lessonRepository->find((int) $recordedEvaluation['lessonId']);
+            $sequence = $this->sequenceRepository->find((int) $recordedEvaluation['sequenceId']);
+
+            if ($lesson === null || $sequence === null) {
+                continue;
+            }
+
+            $existingEvaluation = $this->evaluationRepository->findOneBy([
+                'lesson' => $lesson,
+                'sequence' => $sequence,
+                'student' => $student,
+            ]);
+
+            if ($existingEvaluation !== null) {
+                continue;
+            }
+
+            $evaluation = new Evaluation();
+            $evaluation->setLesson($lesson)
+                ->setSequence($sequence)
+                ->setStudent($student)
+                ->setMark(ConstantsClass::UNRANKED_MARK)
+                ->setCreatedBy($this->security->getUser())
+                ->setCreatedAt($now)
+            ;
+
+            $this->em->persist($evaluation);
+            $created++;
+        }
+
+        if ($created > 0) {
+            $this->em->flush();
+            $this->reportRefreshService->refreshAllTerms($classroom);
+        }
+
+        return $created;
+    }
 
     /**
      * Save marks in the database
@@ -203,6 +260,7 @@ class MarkManagerService
         {
             // Si l'enregistrement des notes s'est bien passé, on définit les messages d'information
             $this->em->flush();
+            $this->reportRefreshService->refreshAfterSequence($selectedSequence, $selectedLesson->getClassroom());
             if($notEvaluated == false)
             {
                 $flashBag->add('info', $this->translator->trans('Marks saved with success !'));
@@ -265,6 +323,10 @@ class MarkManagerService
                 ->setUpdatedAt($now);
             
             $this->em->flush();
+            $this->reportRefreshService->refreshAfterSequence(
+                $updatedEvaluation->getSequence(),
+                $updatedEvaluation->getLesson()->getClassroom()
+            );
 
             $flashBag->add('info', $this->translator->trans('Mark updated with success !'));
             $mySession = $this->request->getSession();
@@ -372,6 +434,7 @@ class MarkManagerService
         if($elementIsRemoved)
         {
             $this->em->flush();
+            $this->reportRefreshService->refreshAfterSequence($sequenceToRemove, $lessonToRemove->getClassroom());
             $flashBag->add('info', $this->translator->trans('Marks deleted with success !'));
 
             $mySession = $this->request->getSession();
@@ -467,6 +530,7 @@ class MarkManagerService
         if($elementIsPersisted)
         {
             $this->em->flush();
+            $this->reportRefreshService->refreshAfterSequence($newSequence, $selectedLesson->getClassroom());
             $flashBag->add('info', $this->translator->trans('Marks renewed with success !'));
             $mySession = $this->request->getSession();
             $mySession->set('saisiNotes', 1);

@@ -196,43 +196,43 @@
 		</style>
 	</head>
 
-	<body class="fixed-nav sticky-footer bg-dark" id="page-top" style="font-family: Arial;">
+	<body class="fixed-nav sticky-footer bg-dark fs-saas-premium" id="page-top">
 		
 		<!-- Navigation-->
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
 			<img src="{{asset('build/custom/images/logo_white.png')}}" alt="logo">
-			<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+			<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="{% trans %}Toggle navigation{% endtrans %}">
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			<div class="collapse navbar-collapse" id="navbarResponsive">
 				<ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
-                    <li class="nav-item text-center" id="menu" data-toggle="tooltip" data-placement="right" title="Menu">
+                    <li class="nav-item text-center" id="menu" data-toggle="tooltip" data-placement="right" title="{% trans %}Menu{% endtrans %}">
                         <a class="nav-link">
                             <i class="fa fa-fw fa-bars">
                             </i>
                             <span class="nav-link-text">
-                                MENU
+                                {% trans %}MENU{% endtrans %}
                             </span>
                         </a>
                     </li>
-                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Gestion des Données">
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="{% trans %}Data Management{% endtrans %}">
                         <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseComponents" data-parent="#exampleAccordion">
                             <i class="fa fa-fw fa-wrench">
                             </i>
                             <span class="nav-link-text">
-                                Super administration
+                                {% trans %}Super administration{% endtrans %}
                             </span>
                         </a>
                         <ul class="sidenav-second-level collapse" id="collapseComponents">
 
                             <li>
                                 <a href="{{ path('super_admin_addSchool') }}">
-                                    Add school
+                                    {% trans %}Add school{% endtrans %}
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ path('super_admin_chooseSchoolYear') }}">
-                                    Add headmaster
+                                    {% trans %}Add headmaster{% endtrans %}
                                 </a>
                             </li>
                             <li>
@@ -256,15 +256,15 @@
 
 				<div class="row" id="school-name">
 					<div class="col-md-3 text-right">
-							<b>The best</b> <i class="fa fa-fw fa-thumbs-up"></i>
+							<b>{% trans %}The best{% endtrans %}</b> <i class="fa fa-fw fa-thumbs-up"></i>
 					</div>
 					<div class="col-md-6 text-center h5 font-weight-bold">
-								<b>Be free with Freeschool</b>
+								<b>{% trans %}Be free with Freeschool{% endtrans %}</b>
 					</div>
 					<div class="col-md-3">
 						<div class="row">
 							<div class="col-md-12 text-right">
-								<a title="Cliquez pour mettre à jour votre profil" href="" class="nav-link" id="logout" data-toggle="modal" data-target="#exampleModal">
+								<a title="{% trans %}Click to update your profile{% endtrans %}" href="" class="nav-link" id="logout" data-toggle="modal" data-target="#exampleModal">
 
 									<i class="fa fa-fw fa-user-circle"></i>
 
@@ -299,7 +299,7 @@
 				<div class="container">
 					<div class="text-center">
 						<small>
-							Copyright © Freedom Software Enterprise 2019 All Rights Reserved
+							{% trans %}Copyright © Freedom Software Enterprise 2019 All Rights Reserved{% endtrans %}
 						</small>
 					</div>
 				</div>
@@ -315,23 +315,23 @@
 					<div class="modal-content">
 						<div class="modal-header" id="espace-admin1">
 							<h5 class="modal-title" id="exampleModalLabel">
-								Administrator's space
+								{% trans %}Administrator's space{% endtrans %}
 							</h5>
-							<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+							<button class="close" type="button" data-dismiss="modal" aria-label="{% trans %}Close{% endtrans %}">
 								<span aria-hidden="true">
 									×
 								</span>
 							</button>
 						</div>
 						<div class="modal-body espace-admin2">
-							Choose an action
+							{% trans %}Choose an action{% endtrans %}
 						</div>
 						<div class="modal-footer espace-admin2">
 							{# <a class="btn btn-perso" href="{{ path('home_adminProfile') }}">
 								Modifier le Profil
 							</a> #}
 							<button class="btn btn-secondary" type="button" data-dismiss="modal">
-								Cancel
+								{% trans %}Cancel{% endtrans %}
 							</button>
 							{# <a class="btn btn-perso" href="{{ path('home_adminIdentification') }}">
 								Se Déconnecter
@@ -355,5 +355,10 @@
 
 			{% block javascripts %}{% endblock %}
 		</div>
+		{% include "includes/_saas_premium_theme.html.twig" %}
+
+	
+		{% include "includes/_premium_layout_behaviour.html.twig" %}
+
 	</body>
 </html>

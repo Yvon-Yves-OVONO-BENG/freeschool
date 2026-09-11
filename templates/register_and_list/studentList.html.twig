@@ -31,15 +31,15 @@
                     </span>
                 </div>
                 <div class="card-bodyp ">
-                    <form action="{{ path('register_and_list_printStudentList') }}" method="post" target="_blank">
+                    <form action="{{ path('register_and_list_printStudentList') }}" method="post" target="_blank" class="row g-3 needs-validation mt-4" novalidate data-no-spinner="1">
                         <div class="row" style="margin-top: 20px;">
                             <div class="col-md-3">
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <select name="classroom" id="classroom" class="form-control select2-show-search" data-placeholder="Choose a classroom" required>
-                                        <option label="Choose a classroom">
-                                            {% trans %}Choose a classroom{% endtrans %}
+                                    <select name="classroom" id="classroom" class="form-control select2-show-search" data-placeholder="" required>
+                                        <option value="" label="">
+                                            
                                         </option>
                                         <option value="0">{% trans %}All classrooms{% endtrans %}</option>
                                         
@@ -54,6 +54,9 @@
                                         {% endif %}
 
                                     </select>
+                                    <div class="invalid-feedback">
+                                        {% trans %}Please choose a classroom !{% endtrans %}
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -78,15 +81,13 @@
                     </span>
                 </div>
                 <div class="card-body ">
-                    <form action="{{ path('register_and_list_printStudentListParticulary') }}" method="post" target="_blank">
+                    <form action="{{ path('register_and_list_printStudentListParticulary') }}" method="post" target="_blank" data-no-spinner="1">
                         <div class="row mb-3">
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="classroom">{% trans %}Classroom{% endtrans %}</label>
-                                    <select name="classroom" id="classroom" class="form-control select2-show-search" data-placeholder="Choose a classroom" required>
-                                        <option label="Choose a classroom">
-                                            {% trans %}Choose classroom{% endtrans %}
-                                        </option>
+                                    <select name="classroom" id="classroom" class="form-control select2-show-search" data-placeholder="" required>
+                                        <option label=""></option>
                                         <option value="0">{% trans %}All classrooms{% endtrans %}</option>
                                         
                                         {% if subSystem == 'Francophone / French Speaker' %}
@@ -96,13 +97,16 @@
                                         {% endif %}
 
                                     </select>
+                                    <div class="invalid-feedback">
+                                        {% trans %}Please choose a classroom !{% endtrans %}
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="country">{% trans %}Country of origin{% endtrans %}</label>
-                                    <select name="country" id="country" class="form-control select2-show-search" data-placeholder="Choose a country" required>
-                                        <option label="Choose a country">
+                                    <select name="country" id="country" class="form-control select2-show-search" data-placeholder="{% trans %}Choose a country{% endtrans %}" required>
+                                        <option label="{% trans %}Choose a country{% endtrans %}">
                                             {% trans %}Choose a country{% endtrans %}
                                         </option>
                                         <option value="0">{% trans %}All countries{% endtrans %}</option>
@@ -115,8 +119,8 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="ethnicGroup">{% trans %}Ethnic group{% endtrans %}</label>
-                                    <select name="ethnicGroup" id="ethnicGroup" class="form-control select2-show-search" data-placeholder="Choose an ethnic" required>
-                                        <option label="Choose an ethnic">
+                                    <select name="ethnicGroup" id="ethnicGroup" class="form-control select2-show-search" data-placeholder="{% trans %}Choose an ethnic{% endtrans %}" required>
+                                        <option label="{% trans %}Choose an ethnic{% endtrans %}">
                                             {% trans %}Choose an ethnic{% endtrans %}
                                         </option>
                                         <option value="0">{% trans %}All ethnics groups{% endtrans %}</option>
@@ -131,8 +135,8 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="movement">{% trans %}Displaced or refugees{% endtrans %}</label>
-                                    <select name="movement" id="movement" class="form-control select2 custom-select" data-placeholder="Choose a movement"  required>
-                                        <option label="Choose a movement">
+                                    <select name="movement" id="movement" class="form-control select2 custom-select" data-placeholder="{% trans %}Choose a movement{% endtrans %}"  required>
+                                        <option label="{% trans %}Choose a movement{% endtrans %}">
                                             {% trans %}Choose a movement{% endtrans %}
                                         </option>
                                         <option value="0">{% trans %}All{% endtrans %}</option>
@@ -145,8 +149,8 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="handicap">{% trans %}Disabled or not disabled{% endtrans %}</label>
-                                    <select name="handicap" id="handicap" class="form-control select2 custom-select" data-placeholder="Choose" required>
-                                        <option label="Choose">
+                                    <select name="handicap" id="handicap" class="form-control select2 custom-select" data-placeholder="{% trans %}Choose{% endtrans %}" required>
+                                        <option label="{% trans %}Choose{% endtrans %}">
                                             {% trans %}Choose{% endtrans %}
                                         </option>
                                         <option value="0">{% trans %}All{% endtrans %}</option>
@@ -159,8 +163,8 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="handicapType">{% trans %}Type of disability{% endtrans %}</label>
-                                    <select name="handicapType" id="handicapType" class="form-control select2 custom-select" data-placeholder="Choose a handicap type" required>
-                                        <option label="Choose a handicap type">
+                                    <select name="handicapType" id="handicapType" class="form-control select2 custom-select" data-placeholder="{% trans %}Choose a handicap type{% endtrans %}" required>
+                                        <option label="{% trans %}Choose a handicap type{% endtrans %}">
                                             {% trans %}Choose a handicap type{% endtrans %}
                                         </option>
                                         <option value="0">{% trans %}All{% endtrans %}</option>

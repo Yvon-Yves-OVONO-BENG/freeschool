@@ -3,74 +3,213 @@
 {% block title %}{% trans %}Registration school fees{% endtrans %}{% endblock %}
 
 {% block subTitle %}
-    {% trans %}MANAGEMENT OF FEES PAYABLE{% endtrans %}
+	{% trans %}MANAGEMENT OF FEES PAYABLE{% endtrans %}
 {% endblock %}
+
 {% block infoMessage %}
-    {% include "includes/_info_message.html.twig" %}
+	{% include "includes/_info_message.html.twig" %}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-registration-history-edit-premium.css') }}">
 {% endblock %}
 
 {% block body %}
+	<div class="hor-content main-content fs-reg-history-page">
+		<div class="container">
+			<div class="fs-reg-history-menu-safe-space" aria-hidden="true"></div>
 
-<div class="container">
+			<section class="fs-reg-history-hero">
+				<div class="fs-reg-history-hero__content">
+					<div>
+						<span class="fs-reg-history-eyebrow">
+							<i class="fa fa-money"></i>
+							{% trans %}Payment history correction{% endtrans %}
+						</span>
 
-    {{form_start(registrationHistoryForm)}}
-        <div class="row">
-            <div class="col-md-3 border-bottom-0 indigo-gradient">
-                <div class="form-group">
-                    {{form_row(registrationHistoryForm.schoolFees)}}
-                </div>
-            </div>
-            <div class="col-md-3 border-bottom-0 green-gradient">
-                <div class="form-group">
-                    {{form_row(registrationHistoryForm.apeeFees)}}
-                </div>
-            </div>
-            <div class="col-md-3 border-bottom-0 orange-gradient">
-                <div class="form-group">
-                    {{form_row(registrationHistoryForm.computerFees)}}
-                </div>
-            </div>
-            <div class="col-md-3 border-bottom-0 blue-gradient">
-                <div class="form-group">
-                    {{form_row(registrationHistoryForm.medicalBookletFees)}}
-                </div>
-            </div>
-        </div>
-        <div class="row mt-1">
-            <div class="col-md-3 border-bottom-0 blue-gradient">
-                <div class="form-group">
-                    {{form_row(registrationHistoryForm.cleanSchoolFees)}}
-                </div>
-            </div>
-            <div class="col-md-3 border-bottom-0 orange-gradient">
-                <div class="form-group">
-                    {{form_row(registrationHistoryForm.photoFees)}}
-                </div>
-            </div>
-            <div class="col-md-3 border-bottom-0 green-gradient">
-                <div class="form-group">
-                    {{form_row(registrationHistoryForm.examFees)}}
-                </div>
-            </div>
-            <div class="col-md-3 border-bottom-0 indigo-gradient">
-                <div class="form-group">
-                    {{form_row(registrationHistoryForm.stampFees)}}
-                </div>
-            </div>
-        </div>
-        <div class="row mt-5">
-            <div class="col-md-3">
-                 <a class="btn btn-outline-success" data-bs-toggle="tooltip" title="Gérer les frais de {{ student.fullName }}" href="{{ path('registration_schoolFees', {'slugStudent': student.slug, 'headmasterFees': headmasterFees}) }}">{% trans %}Manage{% endtrans %}</a>
-            </div>
-            <div class="col-md-6">
-            </div>
-            <div class="col-md-3">
-                <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7">
-                    <i class="fa fa-save"></i>
-                    {% trans %}Save modifications{% endtrans %}</button>
-            </div>
-        </div>
+						<h1 class="fs-reg-history-title">
+							{% trans %}Registration school fees{% endtrans %}
+						</h1>
 
-    {{form_end(registrationHistoryForm)}}
-</div>
+						<p class="fs-reg-history-subtitle">
+							{% trans %}Update the payment history of a student with a clean, secure and refined premium interface.{% endtrans %}
+						</p>
+					</div>
+
+					<div class="fs-reg-history-hero__actions">
+						<div class="fs-reg-history-hero-stat">
+							<span class="fs-reg-history-hero-stat__icon">
+								<i class="fe fe-user"></i>
+							</span>
+							<span class="fs-reg-history-hero-stat__label">{% trans %}Student{% endtrans %}</span>
+							<strong class="fs-reg-history-hero-stat__value fs-reg-history-hero-stat__value--small">{{ student.fullName }}</strong>
+						</div>
+
+						<div class="fs-reg-history-hero-stat fs-reg-history-hero-stat--soft">
+							<span class="fs-reg-history-hero-stat__icon">
+								<i class="fe fe-credit-card"></i>
+							</span>
+							<span class="fs-reg-history-hero-stat__label">{% trans %}Devise{% endtrans %}</span>
+							<strong class="fs-reg-history-hero-stat__value">{% trans %}F CFA{% endtrans %}</strong>
+						</div>
+
+						<a class="fs-reg-history-btn fs-reg-history-btn--light" data-bs-toggle="tooltip" title="{% trans %}Manage the fees for {{ student.fullName }}{% endtrans %}" href="{{ path('registration_schoolFees', {'slugStudent': student.slug, 'headmasterFees': headmasterFees}) }}">
+							<i class="fe fe-arrow-left-circle"></i>
+							<span>{% trans %}Manage{% endtrans %}</span>
+						</a>
+					</div>
+				</div>
+			</section>
+
+			<section class="fs-reg-history-card">
+				<div class="fs-reg-history-card__header">
+					<div>
+						<span class="fs-reg-history-chip">
+							<i class="fe fe-edit"></i>
+							{% trans %}Payment values{% endtrans %}
+						</span>
+
+						<h2>{% trans %}Save modifications{% endtrans %}</h2>
+
+						<p>
+							{% trans %}Modify each amount carefully, then save the changes. Your Symfony form structure is preserved.{% endtrans %}
+						</p>
+					</div>
+
+					<span class="fs-reg-history-card__icon">
+						<i class="fa fa-save"></i>
+					</span>
+				</div>
+
+				{{ form_start(registrationHistoryForm, {'attr': {'class': 'fs-reg-history-form needs-validation', 'novalidate': 'novalidate'}}) }}
+
+					<div class="fs-reg-history-grid">
+						<div class="fs-reg-history-field fs-reg-history-field--indigo">
+							<div class="fs-reg-history-field__icon">
+								<i class="fe fe-book-open"></i>
+							</div>
+							<div class="fs-floating-field fs-symfony-row">
+								{{ form_row(registrationHistoryForm.schoolFees, {'attr': {'class': 'form-control fs-floating-control'}}) }}
+							</div>
+						</div>
+
+						<div class="fs-reg-history-field fs-reg-history-field--green">
+							<div class="fs-reg-history-field__icon">
+								<i class="fe fe-users"></i>
+							</div>
+							<div class="fs-floating-field fs-symfony-row">
+								{{ form_row(registrationHistoryForm.apeeFees, {'attr': {'class': 'form-control fs-floating-control'}}) }}
+							</div>
+						</div>
+
+						<div class="fs-reg-history-field fs-reg-history-field--orange">
+							<div class="fs-reg-history-field__icon">
+								<i class="fe fe-monitor"></i>
+							</div>
+							<div class="fs-floating-field fs-symfony-row">
+								{{ form_row(registrationHistoryForm.computerFees, {'attr': {'class': 'form-control fs-floating-control'}}) }}
+							</div>
+						</div>
+
+						<div class="fs-reg-history-field fs-reg-history-field--blue">
+							<div class="fs-reg-history-field__icon">
+								<i class="fe fe-file-text"></i>
+							</div>
+							<div class="fs-floating-field fs-symfony-row">
+								{{ form_row(registrationHistoryForm.medicalBookletFees, {'attr': {'class': 'form-control fs-floating-control'}}) }}
+							</div>
+						</div>
+
+						<div class="fs-reg-history-field fs-reg-history-field--blue">
+							<div class="fs-reg-history-field__icon">
+								<i class="fe fe-shield"></i>
+							</div>
+							<div class="fs-floating-field fs-symfony-row">
+								{{ form_row(registrationHistoryForm.cleanSchoolFees, {'attr': {'class': 'form-control fs-floating-control'}}) }}
+							</div>
+						</div>
+
+						<div class="fs-reg-history-field fs-reg-history-field--orange">
+							<div class="fs-reg-history-field__icon">
+								<i class="fe fe-image"></i>
+							</div>
+							<div class="fs-floating-field fs-symfony-row">
+								{{ form_row(registrationHistoryForm.photoFees, {'attr': {'class': 'form-control fs-floating-control'}}) }}
+							</div>
+						</div>
+
+						<div class="fs-reg-history-field fs-reg-history-field--green">
+							<div class="fs-reg-history-field__icon">
+								<i class="fe fe-award"></i>
+							</div>
+							<div class="fs-floating-field fs-symfony-row">
+								{{ form_row(registrationHistoryForm.examFees, {'attr': {'class': 'form-control fs-floating-control'}}) }}
+							</div>
+						</div>
+
+						<div class="fs-reg-history-field fs-reg-history-field--indigo">
+							<div class="fs-reg-history-field__icon">
+								<i class="fe fe-bookmark"></i>
+							</div>
+							<div class="fs-floating-field fs-symfony-row">
+								{{ form_row(registrationHistoryForm.stampFees, {'attr': {'class': 'form-control fs-floating-control'}}) }}
+							</div>
+						</div>
+					</div>
+
+					<div class="fs-reg-history-actions">
+						<a class="fs-reg-history-btn fs-reg-history-btn--ghost" data-bs-toggle="tooltip" title="{% trans %}Manage the fees for {{ student.fullName }}{% endtrans %}" href="{{ path('registration_schoolFees', {'slugStudent': student.slug, 'headmasterFees': headmasterFees}) }}">
+							<i class="fe fe-arrow-left-circle"></i>
+							<span>{% trans %}Manage{% endtrans %}</span>
+						</a>
+
+						<button type="submit" class="fs-reg-history-btn fs-reg-history-btn--primary fs-reg-history-submit-btn">
+							<span class="fs-reg-history-submit-spinner" aria-hidden="true"></span>
+							<i class="fa fa-save fs-reg-history-submit-icon"></i>
+							<span>{% trans %}Save modifications{% endtrans %}</span>
+						</button>
+					</div>
+
+				{{ form_end(registrationHistoryForm) }}
+			</section>
+
+			<section class="fs-reg-history-info-grid">
+				<div class="fs-reg-history-info-card">
+					<span class="fs-reg-history-info-card__icon">
+						<i class="fe fe-lock"></i>
+					</span>
+					<div>
+						<span>{% trans %}Form preserved{% endtrans %}</span>
+						<strong>{% trans %}The Symfony form object registrationHistoryForm is conserved.{% endtrans %}</strong>
+					</div>
+				</div>
+
+				<div class="fs-reg-history-info-card">
+					<span class="fs-reg-history-info-card__icon fs-reg-history-info-card__icon--green">
+						<i class="fe fe-credit-card"></i>
+					</span>
+					<div>
+						<span>{% trans %}Amounts{% endtrans %}</span>
+						<strong>{% trans %}All editable fee fields remain available for correction.{% endtrans %}</strong>
+					</div>
+				</div>
+
+				<div class="fs-reg-history-info-card">
+					<span class="fs-reg-history-info-card__icon fs-reg-history-info-card__icon--gold">
+						<i class="fe fe-check-circle"></i>
+					</span>
+					<div>
+						<span>{% trans %}Safe saving{% endtrans %}</span>
+						<strong>{% trans %}The submit button keeps the original Symfony processing flow.{% endtrans %}</strong>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-registration-history-edit-premium.js') }}"></script>
 {% endblock %}

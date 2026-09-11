@@ -12,11 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/report")]
 class PrintSudentCardController extends AbstractController
 {
@@ -36,6 +32,7 @@ class PrintSudentCardController extends AbstractController
         $mySession->set('suppression', null);
         $mySession->set('miseAjour', null);
         $mySession->set('saisiNotes', null);
+        
         if($mySession)
         {
             $schoolYear = $mySession->get('schoolYear');
@@ -43,19 +40,31 @@ class PrintSudentCardController extends AbstractController
 
         }else 
         {
+
             return $this->redirectToRoute("app_logout");
         }
         
         $school = $this->schoolRepository->findOneBySchoolYear(['schoolYear' => $schoolYear]);
 
+        $student = null;
         $students = [];
-        $selectedClassroom = $this->classroomRepository->findOneBySlug(['slug' => $slugClassroom]);
+        $selectedClassroom = $this->classroomRepository->findOneBy(['slug' => $slugClassroom]);
+
+        if (!$selectedClassroom) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
 
         if ($slugStudent != null) 
         {
-            $students[] = $this->studentRepository->findBy([
+            $student = $this->studentRepository->findOneBy([
                 'slug' => $slugStudent,
             ]);
+
+            if (!$student) 
+            {
+                return $this->redirectToRoute('page_error');
+            }
         } 
         else 
         {
@@ -65,18 +74,18 @@ class PrintSudentCardController extends AbstractController
                 'fullName' => 'ASC'
             ]);
         }
-
-        $pdf = $this->reportService->printStudentCard($students, $school, $schoolYear, $selectedClassroom, $subSystem);
+    
+        $pdf = $this->reportService->printStudentCard($school, $schoolYear, $selectedClassroom, $subSystem, $students, $student);
 
         if($slugStudent != null)
         {
             if ($subSystem->getId() == 1 ) 
             {
-            return new Response($pdf->Output(utf8_decode("Student card of ".$students[0]->getFullName()), "I"), 200, ['content-type' => 'application/pdf']);
+                return new Response($pdf->Output(utf8_decode("Student card of ".$student->getFullName()), "I"), 200, ['content-type' => 'application/pdf']);
             } 
             else 
             {
-                return new Response($pdf->Output(utf8_decode("Carte d'idntité scolaire de ".$students[0]->getFullName()), "I"), 200, ['content-type' => 'application/pdf']);
+                return new Response($pdf->Output(utf8_decode("Carte d'idntité scolaire de ".$student->getFullName()), "I"), 200, ['content-type' => 'application/pdf']);
             }
         }
         else

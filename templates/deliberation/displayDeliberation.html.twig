@@ -1,552 +1,964 @@
 {% extends 'base.html.twig' %}
 
+{% set deliberationCompleted = isUpdate == false and selectedClassroom.id is not null and selectedClassroom.isDeliberated %}
+
 {% block title %}{% trans %}Deliberations{% endtrans %}{% endblock %}
 
 {% block subTitle %}
-    {% trans %}MANAGEMENT OF DELIBERATIONS{% endtrans %}
+	{% trans %}MANAGEMENT OF DELIBERATIONS{% endtrans %}
 {% endblock %}
+
 {% block infoMessage %}
-    {% include "includes/_info_message.html.twig" %}
+	{% include "includes/_info_message.html.twig" %}
 {% endblock %}
 
 {% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-deliberation-management-premium.css') }}">
 	<style>
-		th,
-		tfoot {
-			font-size: 15px !important;
-			text-align: center !important;
-			font-weight: bold !important;
-			background-color: #F1F1F1 !important;
+		/* Panneau autonome : il ne dépend pas de la grille du thème. */
+		
+
+		.fs-delib-page .fs-after-delib-form {
+			display: grid !important;
+			grid-template-columns: 320px auto !important;
+			align-items: center !important;
+			justify-content: end !important;
+			gap: 10px !important;
+			flex: 0 0 auto !important;
+			width: auto !important;
+			margin: 0 !important;
 		}
 
-		.infoTable {
-			text-align: center !important;
-			vertical-align: middle !important;
+		.fs-delib-page .fs-after-delib-form__field {
+			width: 100% !important;
+			min-width: 0 !important;
+			max-width: 320px !important;
 		}
 
-		tr:hover {
-			background-color: rgba(62, 128, 235, 0.2) !important;
-			color: #3e80eb !important;
+		.fs-delib-page .fs-after-delib-form__field .select2-container {
+			display: block !important;
+			width: 100% !important;
+			max-width: 320px !important;
 		}
 
-        /*Animation de vibration*/
-        @keyframes vibrate {
-            0% { transform: translateX(0);}
-            25% { transform: translateX(-2px);}
-            50% { transform: translateX(2px);}
-            75% { transform: translateX(-2px);}
-            100% { transform: translateX(0);}
-            
-        }
+		.fs-delib-page .fs-after-delib-form__actions,
+		.fs-delib-page .fs-after-delib-form__actions .fs-delib-btn {
+			margin: 0 !important;
+		}
 
-        .vibrate{
-            animation: vibrate 0.3s linear;
-        }
+		.fs-delib-page--completed .fs-delib-hero__content {
+			align-items: center !important;
+			gap: 22px !important;
+		}
 
-        /*style pour les champs renseignés*/
-        .filled-field{
-            border: 2px solid green !important;
-        }
+		.fs-delib-page--completed .fs-delib-hero-stat {
+			min-width: 128px !important;
+			max-width: 190px !important;
+		}
+
+		/* Flèche visible sur toutes les listes natives de la délibération. */
+		.fs-delib-page select.fs-floating-control,
+		.fs-delib-page select.form-select,
+		.fs-delib-page select.fs-delib-rows-per-page {
+			-webkit-appearance: none !important;
+			appearance: none !important;
+			padding-right: 38px !important;
+			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2364758b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") !important;
+			background-repeat: no-repeat !important;
+			background-position: right 13px center !important;
+			background-size: 14px 14px !important;
+		}
+
+		/* Flèche visible sur les sélecteurs transformés par Select2. */
+		.fs-delib-page .select2-container--default .select2-selection--single .select2-selection__arrow {
+			display: block !important;
+			right: 10px !important;
+			top: 50% !important;
+			width: 24px !important;
+			height: 24px !important;
+			transform: translateY(-50%);
+		}
+
+		.fs-delib-page .select2-container--default .select2-selection--single .select2-selection__arrow b {
+			display: block !important;
+			width: 7px !important;
+			height: 7px !important;
+			margin: -5px 0 0 -4px !important;
+			border: solid #64748b !important;
+			border-width: 0 2px 2px 0 !important;
+			transform: rotate(45deg);
+		}
+
+		/* =========================================================
+		FILTRE DE CLASSE + ACTIONS DE DÉLIBÉRATION
+		========================================================= */
+
+		.fs-delib-page .fs-after-delib-panel {
+			display: block !important;
+			width: 100% !important;
+			margin: 0 0 24px !important;
+			padding: 20px 28px !important;
+			background: #fff !important;
+			border: 1px solid #e6ebf4 !important;
+			border-radius: 22px !important;
+			box-shadow: 0 14px 34px rgba(15, 23, 42, .07) !important;
+			overflow: visible !important;
+		}
+
+		/*
+		* Une seule ligne :
+		* 1. présentation à gauche ;
+		* 2. actions au centre ;
+		* 3. liste + bouton Afficher à droite.
+		*/
+		.fs-delib-page .fs-after-delib-panel__main {
+			display: grid !important;
+			grid-template-columns: minmax(280px, 1fr) auto auto !important;
+			align-items: center !important;
+			gap: 18px !important;
+			width: 100% !important;
+		}
+
+		.fs-delib-page .fs-after-delib-panel__intro {
+			min-width: 0 !important;
+			max-width: 520px !important;
+		}
+
+		.fs-delib-page .fs-after-delib-panel__intro h2 {
+			margin: 10px 0 4px !important;
+			font-size: clamp(1.35rem, 2vw, 1.75rem) !important;
+			line-height: 1.2 !important;
+			color: #172033 !important;
+			white-space: normal !important;
+		}
+
+		.fs-delib-page .fs-after-delib-panel__intro p {
+			margin: 0 !important;
+			color: #64748b !important;
+			font-size: .94rem !important;
+			line-height: 1.5 !important;
+			white-space: normal !important;
+		}
+
+		/* Actions remontées au centre du panneau */
+		.fs-delib-page .fs-after-delib-top-actions {
+			display: flex !important;
+			align-items: center !important;
+			justify-content: flex-end !important;
+			gap: 8px !important;
+			margin: 0 !important;
+			padding: 0 !important;
+			border: 0 !important;
+			white-space: nowrap !important;
+		}
+
+		.fs-delib-page .fs-after-delib-top-actions .fs-delib-btn {
+			min-height: 42px !important;
+			height: 42px !important;
+			margin: 0 !important;
+			padding: 0 14px !important;
+			border-radius: 12px !important;
+			font-size: .82rem !important;
+			font-weight: 700 !important;
+			white-space: nowrap !important;
+		}
+
+		/* Empêche le bouton d’impression d’être blanc/invisible */
+		.fs-delib-page .fs-after-delib-top-actions .fs-delib-btn--light {
+			display: inline-flex !important;
+			align-items: center !important;
+			justify-content: center !important;
+			gap: 7px !important;
+			background: #f8fafc !important;
+			border: 1px solid #dbe3ef !important;
+			color: #334155 !important;
+			box-shadow: none !important;
+		}
+
+		.fs-delib-page .fs-after-delib-top-actions .fs-delib-btn--light:hover {
+			background: #eef2ff !important;
+			border-color: #c7d2fe !important;
+			color: #4338ca !important;
+		}
+
+		.fs-delib-page .fs-after-delib-top-actions .fs-delib-btn--danger-light {
+			display: inline-flex !important;
+			align-items: center !important;
+			justify-content: center !important;
+			gap: 7px !important;
+			background: #fff1f2 !important;
+			border: 1px solid #fecdd3 !important;
+			color: #e11d48 !important;
+			box-shadow: none !important;
+		}
+
+		.fs-delib-page .fs-after-delib-top-actions .fs-delib-btn--danger-light:hover {
+			background: #ffe4e6 !important;
+			border-color: #fda4af !important;
+			color: #be123c !important;
+		}
+
+		/* Boutons désactivés plus compacts */
+		.fs-delib-page .fs-after-delib-top-actions .fs-delib-btn--disabled {
+			display: inline-flex !important;
+			align-items: center !important;
+			justify-content: center !important;
+			gap: 7px !important;
+			background: #f8fafc !important;
+			border: 1px solid #e2e8f0 !important;
+			color: #94a3b8 !important;
+			opacity: .72 !important;
+			cursor: not-allowed !important;
+		}
+
+		/* Liste réduite et maintenue à droite */
+		.fs-delib-page .fs-after-delib-form {
+			display: grid !important;
+			grid-template-columns: 240px auto !important;
+			align-items: center !important;
+			justify-content: end !important;
+			gap: 10px !important;
+			width: auto !important;
+			margin: 0 !important;
+		}
+
+		.fs-delib-page .fs-after-delib-form__field {
+			width: 240px !important;
+			min-width: 240px !important;
+			max-width: 240px !important;
+			margin: 0 !important;
+		}
+
+		.fs-delib-page .fs-after-delib-form__field .select2-container {
+			display: block !important;
+			width: 240px !important;
+			min-width: 240px !important;
+			max-width: 240px !important;
+		}
+
+		.fs-delib-page .fs-after-delib-form__actions {
+			margin: 0 !important;
+			padding: 0 !important;
+		}
+
+		.fs-delib-page .fs-after-delib-form__actions .fs-delib-btn {
+			min-height: 44px !important;
+			height: 44px !important;
+			margin: 0 !important;
+			padding: 0 18px !important;
+			white-space: nowrap !important;
+		}
+
+		/* Flèche des listes natives */
+		.fs-delib-page select.fs-floating-control,
+		.fs-delib-page select.form-select,
+		.fs-delib-page select.fs-delib-rows-per-page {
+			-webkit-appearance: none !important;
+			appearance: none !important;
+			padding-right: 38px !important;
+			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2364758b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") !important;
+			background-repeat: no-repeat !important;
+			background-position: right 13px center !important;
+			background-size: 14px 14px !important;
+		}
+
+		/* Flèche Select2 */
+		.fs-delib-page
+		.select2-container--default
+		.select2-selection--single
+		.select2-selection__arrow {
+			display: block !important;
+			right: 10px !important;
+			top: 50% !important;
+			width: 24px !important;
+			height: 24px !important;
+			transform: translateY(-50%) !important;
+		}
+
+		.fs-delib-page
+		.select2-container--default
+		.select2-selection--single
+		.select2-selection__arrow b {
+			display: block !important;
+			width: 7px !important;
+			height: 7px !important;
+			margin: -5px 0 0 -4px !important;
+			border: solid #64748b !important;
+			border-width: 0 2px 2px 0 !important;
+			transform: rotate(45deg) !important;
+		}
+
+		/* Écrans intermédiaires */
+		@media (max-width: 1199px) {
+			.fs-delib-page .fs-after-delib-panel__main {
+				grid-template-columns: minmax(260px, 1fr) auto !important;
+			}
+
+			.fs-delib-page .fs-after-delib-top-actions {
+				grid-column: 1 / -1 !important;
+				grid-row: 2 !important;
+				justify-content: flex-end !important;
+				padding-top: 14px !important;
+				border-top: 1px solid #edf1f7 !important;
+			}
+
+			.fs-delib-page .fs-after-delib-form {
+				grid-column: 2 !important;
+				grid-row: 1 !important;
+			}
+		}
+
+		/* Tablettes */
+		@media (max-width: 767px) {
+			.fs-delib-page .fs-after-delib-panel {
+				padding: 18px !important;
+				border-radius: 18px !important;
+			}
+
+			.fs-delib-page .fs-after-delib-panel__main {
+				display: flex !important;
+				flex-direction: column !important;
+				align-items: stretch !important;
+				gap: 16px !important;
+			}
+
+			.fs-delib-page .fs-after-delib-panel__intro {
+				max-width: none !important;
+			}
+
+			.fs-delib-page .fs-after-delib-form {
+				grid-template-columns: minmax(0, 1fr) auto !important;
+				width: 100% !important;
+			}
+
+			.fs-delib-page .fs-after-delib-form__field,
+			.fs-delib-page .fs-after-delib-form__field .select2-container {
+				width: 100% !important;
+				min-width: 0 !important;
+				max-width: none !important;
+			}
+
+			.fs-delib-page .fs-after-delib-top-actions {
+				grid-column: auto !important;
+				grid-row: auto !important;
+				justify-content: flex-end !important;
+				width: 100% !important;
+				padding-top: 14px !important;
+				border-top: 1px solid #edf1f7 !important;
+			}
+		}
+
+		/* Téléphones */
+		@media (max-width: 575px) {
+			.fs-delib-page .fs-after-delib-form {
+				display: grid !important;
+				grid-template-columns: minmax(0, 1fr) !important;
+			}
+
+			.fs-delib-page .fs-after-delib-form__actions,
+			.fs-delib-page .fs-after-delib-form__actions .fs-delib-btn {
+				width: 100% !important;
+				justify-content: center !important;
+			}
+
+			.fs-delib-page .fs-after-delib-top-actions {
+				display: grid !important;
+				grid-template-columns: minmax(0, 1fr) !important;
+			}
+
+			.fs-delib-page .fs-after-delib-top-actions .fs-delib-btn {
+				width: 100% !important;
+				justify-content: center !important;
+			}
+		}
+
+		@media (max-width: 991px) {
+
+			.fs-delib-page .fs-after-delib-form {
+				grid-template-columns: minmax(0, 320px) auto !important;
+				justify-content: stretch !important;
+				align-self: flex-end !important;
+				width: auto !important;
+			}
+
+			.fs-delib-page .fs-after-delib-form__field,
+			.fs-delib-page .fs-after-delib-form__field .select2-container {
+				max-width: 320px !important;
+			}
+		}
+
+		@media (max-width: 575px) {
+			.fs-delib-page .fs-after-delib-form__field,
+			.fs-delib-page .fs-after-delib-form__field .select2-container {
+				width: 100% !important;
+				max-width: none !important;
+			}
+		}
 	</style>
 {% endblock %}
 
 {% block body %}
-<!-- App-Content -->
-	<div class="hor-content main-content">
+	<div class="hor-content main-content fs-delib-page {{ deliberationCompleted ? 'fs-delib-page--completed' : '' }}">
 		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary">
-                        {% if isUpdate == false %}
-                            <i class="fa fa-gavel me-2"></i>{% trans %}Management of deliberations{% endtrans %}
-                        {% endif %}
-                    </h4>
-                </div>
-                <div class="page-rightheader">
-                    <div class="btn-list">
-                        {% if isUpdate == false %}
-                            {% if selectedClassroom.isDeliberated %}
-                                
-                                    <a href="{{ path('statistic_classCouncil_endYear', {'slug': selectedClassroom.slug }) }}" class="btn btn-outline-primary" target="_blank"><i class="fe fe-printer"></i> {% trans %}Print end of year class council{% endtrans %}</a>
-                                
-                                    <a href="{{ path('cancel_deliberation', {'idC': selectedClassroom.id }) }}" class="btn btn-outline-danger"><i class="fe fe-x-circle"></i> {% trans %}Cancel deliberation{% endtrans %}</a>
-                                    <a class="dropdown-item" href="javascript:void(0);" 
-                                        onclick="swal({
-                                            'title': '{% trans %}Warnning !{% endtrans %}', 
-                                            'type': 'warning', 
-                                            'text': '{% trans %}Do you want to delete this deliberation ?{% endtrans %}', 
-                                            'showCancelButton': true, 
-                                            'confirmButtonText': 'Oui', 
-                                            'confirmButtonColor': '#f00', 
-                                            'cancelButtonText': 'Non', 
-                                            'cancelButtonColor': '#186106', 
-                                            'confirmButtonPath': '{{ path('cancel_deliberation', {'idC': selectedClassroom.id }) }}'});">
-                                        <i class="fe fe-x-circle me-2"></i> {% trans %}Cancel deliberation{% endtrans %}
-                                    </a>
-                                {% else %}
-                                    
-                                    <a href="" class="btn btn-outline-primary disabled" target="_blank"><i class="fe fe-printer"></i> {% trans %}Print end of year class council{% endtrans %}</a>
-                                
-                                    <a href="" class="btn btn-outline-danger disabled"><i class="fe fe-x-circle"></i> {% trans %}Cancel deliberation{% endtrans %}</a>
-                                
-                            {% endif %} 
-                        {% endif %} 
-                    </div>
-                </div>
-            </div>
-            <!--End Page header-->
-            {% if isUpdate == false %}
-                <div class="card border-primary">
-                {% else %}
-                <div class="card border-danger">
-            {% endif %}
-                {# Card header #}
-                <div class="card-header">
-                    {% if isUpdate == false %}
-                        <div class="col-md-4">
-                            <form action="{{ path('deliberation_displayDeliberation') }}" method="post">
-                                <div class="row mt-4">
-                                    <div class="col-md-8">
-                                        <div class="form-group">
-                                            <select name="classroom" id="classroom" class="form-control select2-show-search" data-placeholder="Choose a classroom" required>
-                                                <option label="Choose a classroom">
-                                                    {% trans %}Choose a classroom{% endtrans %}
-                                                    {% if subSystem == 'Francophone / French Speaker' %}
-                                                        {% if school.education.education == 'Général' %}
-                                                            {% include "includes/_selectClassrooms.html.twig" %}
-                                                            {% else %}
-                                                                {% if school.education.education == 'Technique' %}
-                                                                    {% include "includes/_selectClassroomsTech.html.twig" %}
-                                                                    {% else %}
-                                                                    {% include "includes/_selectClassroomsEn.html.twig" %}
-                                                                {% endif %}
-                                                        {% endif %}
-                                                    {% endif %}
-                                                
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="displayDeliberation">
-                                                <i class="fe fe-menu me-2"></i>
-                                                {% trans %}Display{% endtrans %}
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    {% endif %}
-                    
-                    {% if selectedClassroom.id is not null %}
-                        {% if isUpdate == false %}
-                            
-                            <div class="col-md-2 text-right"> 
-                                <button type="button" class="btn btn-info  mt-1 mb-1 me-3 form-control-sm">
-                                    <span>{% trans %}Class{% endtrans %}</span>
-                                    <span class="badge bg-white text-dark rounded-pill">{{ selectedClassroom.classroom }}</span>
-                                </button>
-                            </div>
-                            
-                            <div class="col-md-2 text-right">
-                                <button type="button" class="btn btn-primary mt-1 mb-1 me-3">
-                                    <span>{% trans %}Boys{% endtrans %}</span>
-                                    <span class="badge bg-white text-dark">{{ boys }}</span>
-                                </button>
-                            </div>
-                            
-                            <div class="col-md-2 text-right">
-                                <button type="button" class="btn btn-primary mt-1 mb-1 me-3">
-                                    <span>{% trans %}Girls{% endtrans %}</span>
-                                    <span class="badge bg-white text-dark">{{ girls }}</span>
-                                </button>
-                            </div>
+			<div class="fs-delib-menu-safe-space" aria-hidden="true"></div>
 
-                            <div class="col-md-2 text-right">
-                                <button type="button" class="btn btn-primary mt-1 mb-1 me-3">
-                                    <span>{% trans %}Effective{% endtrans %}</span>
-                                    <span class="badge bg-white text-dark">{{ effectif }}</span>
-                                </button>
-                            </div>
-                            
-                        {% endif %}
-                    {% endif %}
-                
-                    {% if selectedClassroom.id is not null %}
-                        {# affichage de l'entête de modification d'un délibération#}
-                        
-                        {% if isUpdate == true %}
-                            <div class="col-md-9"> 
-                                 <h3 class="text-red"><i class="fe fe-edit me-2"></i> {% trans %}Update of the deliberation of {% endtrans %} : <span class="badge bg-danger"> <i class="fe fe-user me-2"></i> {{deliberation.student.fullName }}</span></h3> 
-                            </div>
-                            <div class="col-md-3 text-right"> 
-                                <button type="button" class="btn btn-danger me-3">
-                                <i class="fa fa-building"></i>
-                                    <span>{% trans %}Class{% endtrans %} : </span>
-                                    <span class="badge bg-white text-dark">{{ selectedClassroom.classroom }}</span>
-                                </button>
-                            </div>
-                        {% endif %}
-                        
-                        {# fin affichage en-tête #}
-                    {% endif %}
+			<section class="fs-delib-hero">
+				<div class="fs-delib-hero__content">
+					<div>
+						<span class="fs-delib-eyebrow">
+							<i class="fa fa-gavel"></i>
+							{% trans %}Deliberation workspace{% endtrans %}
+						</span>
 
-                </div>
-                {# Card header end #}
+						<h1 class="fs-delib-title">
+							{% if isUpdate == false %}
+								{% trans %}Management of deliberations{% endtrans %}
+							{% else %}
+								{% trans %}Update of the deliberation{% endtrans %}
+							{% endif %}
+						</h1>
 
-                {# Card header #}
-                {% if selectedClassroom.id is not null %}
-                    <div class="card-body ">
+						<p class="fs-delib-subtitle">
+							{% trans %}Review annual averages, apply final decisions and manage admission or exclusion reasons with a refined premium interface.{% endtrans %}
+						</p>
+					</div>
 
-                        {% if isUpdate == false %}
-                            {# Si ce n'est pas une modification #}
-                            {% if deliberations|length > 0 %}
-                                {# Si au moins un élève à délibérer existe #}
-                                {% if not selectedClassroom.isDeliberated %}
-                                    {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
-                                        {# Si le verrou n'est pas activé #}
-                                        <form method="post" action="{{ path('deliberation_saveDeliberation', {'idC': selectedClassroom.id}) }}">
-                                    {% endif %}
-                                {% endif %}
+					<div class="fs-delib-hero__actions">
+						{% if selectedClassroom.id is not null %}
+							<div class="fs-delib-hero-stat">
+								<span class="fs-delib-hero-stat__icon">
+									<i class="fe fe-home"></i>
+								</span>
+								<span class="fs-delib-hero-stat__label">{% trans %}Class{% endtrans %}</span>
+								<strong class="fs-delib-hero-stat__value fs-delib-hero-stat__value--small">{{ selectedClassroom.classroom }}</strong>
+							</div>
 
-                                <table border="1" class="table table-striped" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            {# <td></td> #}
-                                            {% if isUpdate == false %}
-                                                <th class="border-bottom-0 indigo-gradient">{% trans %}N°{% endtrans %}</th>
-                                            {% endif %}
-                                            <th class="border-bottom-0 indigo-gradient">{% trans %}Full name{% endtrans %}</th>
-                                            <th class="border-bottom-0 green-gradient">{% trans %}Term{% endtrans %} 1</th>
-                                            <th class="border-bottom-0 orange-gradient">{% trans %}Term{% endtrans %} 2</th>
-                                            <th class="border-bottom-0 blue-gradient">{% trans %}Term{% endtrans %} 3</th>
-                                            <th class="border-bottom-0 indigo-gradient">{% trans %}Annual{% endtrans %}</th>
-                                            <th class="border-bottom-0 green-gradient">{% trans %}Decision{% endtrans %}</th>
-                                            {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
-                                                {% if selectedClassroom.isDeliberated %}
-                                                    <th class="border-bottom-0 orange-gradient">{% trans %}Actions{% endtrans %}</th>
-                                                {% else %}
-                                                    <th class="border-bottom-0 blue-gradient">{% trans %}Admitted in{% endtrans %} / {% trans %}Reason{% endtrans %}</th>
-                                                {% endif %}
-                                            {% endif %}
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            {% if isUpdate == false %}
-                                                <th class="border-bottom-0 indigo-gradient">{% trans %}N°{% endtrans %}</th>
-                                            {% endif %}
-                                            <th class="border-bottom-0 indigo-gradient">{% trans %}Full name{% endtrans %}</th>
-                                            <th class="border-bottom-0 green-gradient">{% trans %}Term{% endtrans %} 1</th>
-                                            <th class="border-bottom-0 orange-gradient">{% trans %}Term{% endtrans %} 2</th>
-                                            <th class="border-bottom-0 blue-gradient">{% trans %}Term{% endtrans %} 3</th>
-                                            <th class="border-bottom-0 indigo-gradient">{% trans %}Annual{% endtrans %}</th>
-                                            <th class="border-bottom-0 green-gradient">{% trans %}Decision{% endtrans %}</th>
-                                            {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
-                                                {% if selectedClassroom.isDeliberated %}
-                                                    <th class="border-bottom-0 orange-gradient">{% trans %}Actions{% endtrans %}</th>
-                                                {% else %}
-                                                    <th class="border-bottom-0 blue-gradient">{% trans %}Admitted in{% endtrans %} / {% trans %}Reason{% endtrans %}</th>
-                                                {% endif %}
-                                            {% endif %}
-                                        </tr>
-                                    </tfoot>
-                                    <tbody>
-                                        {% set i = 1 %}
-                                        {% set nc1 = 0 %}
-                                        {% set nc2 = 0 %}
-                                        {% set nc3 = 0 %}
-                                        {% for deliberation in deliberations %}
-                                            <tr class="table-row">
-                                                {% if isUpdate == false %}
-                                                <td> 
-                                                {{ i }} 
-                                                </td>
-                                            {% endif %}
-                                                
-                                                    <input type="hidden" name="student{{i}}" value="{{ deliberation.student.id }}">
-                                                <td>
-                                                    {{ deliberation.student.fullName }}
-                                                </td>
-                                                <td style="text-align:center;">
-                                                
-                                                    {% if deliberation.moyenneTerm1 == unrankedAverage %}
-                                                        {% trans %}NC{% endtrans %}
-                                                        {% set nc1 = 1 %}
-                                                        
-                                                        {% else %}
-                                                        {{ deliberation.moyenneTerm1 }}
-                                                    {% endif %}
-                                                </td> 
-                                                <td style="text-align:center;">
-                                                    {% if deliberation.moyenneTerm2 == unrankedAverage %}
-                                                        {% trans %}NC{% endtrans %}
-                                                        {% set nc2 = 1 %}
-                                                        {% else %}
-                                                        {{ deliberation.moyenneTerm2 }}
-                                                    {% endif %}
-                                                </td> 
-                                                <td style="text-align:center;">
-                                                    {% if deliberation.moyenneTerm3 == unrankedAverage %}
-                                                        {% trans %}NC{% endtrans %}
-                                                        {% set nc3 = 1 %}
-                                                        {% else %}
-                                                        {{ deliberation.moyenneTerm3 }}
-                                                    {% endif %}
-                                                </td>
-                                                <td style="text-align:center;">
-                                                
-                                                    {% if deliberation.moyenneTerm0 == unrankedAverage %}
-                                                        <button type="button" class="btn btn-danger"><i class="fe fe-x-circle me-2"></i>{% trans %}NC{% endtrans %}</button>
-                                                        
-                                                        {% else %}
-                                                            {% if deliberation.moyenneTerm0 >= 10  %}
-                                                                <button type="button" class="btn btn-success"><i class="fe fe-heart me-2"></i>{{ deliberation.moyenneTerm0 }}</button>
-                                                                {% else %}
-                                                                    {% if deliberation.moyenneTerm0 >= 8 %}
-                                                                        <button type="button" class="btn btn-primary"><i class="fe fe-activity me-2"></i>{{ deliberation.moyenneTerm0 }}</button>
-                                                                        {% else %}
-                                                                            {% if deliberation.moyenneTerm0 >= 1 %}
-                                                                            <button type="button" class="btn btn-danger"><i class="fe fe-x-circle me-2"></i>{{ deliberation.moyenneTerm0 }}</button>
-                                                                            {% endif %}
-                                                                            
-                                                                    {% endif %}
-                                                                    
-                                                            {% endif %}
-                                                    {% endif %}
-                                                </td>
-                                                {% if selectedClassroom.isDeliberated %}
-                                                    <td style="text-align:center;">
-                                                        {{ deliberation.deliberationDecision }}
-                                                    </td>
-                                                    {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
-                                                        <td style="text-align:center;">
-                                                            <a href="{{ path('deliberation_displayDeliberation', {'idS': deliberation.student.id, 'idC': selectedClassroom.id}) }}" class="btn btn-outline-success" data-bs-toggle="tooltip" title="Modifier la décision de {{ deliberation.student.fullName }}"><i class="fa fa-pencil-square-o"></i></a>
-                                                        </td>
-                                                    {% endif %}
-                                                    {% else %}
-                                                            {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
-                                                            <td style="text-align:center;">
-                                                                <select class="form-select form-control-sm decision" name="decision{{i}}" required>
-                                                                <option value="">{% trans %}Decision{% endtrans %}</option>
-                                                                    {% for decision in decisions %}
-                                                                        <option value="{{ decision.id }}">{{ decision.decision }}</option>
-                                                                    {% endfor %}
-                                                                </select>
-                                                            </td>
-                                                            <td style="text-align:center;">
-                                                                <select style="display: none;" class="form-select form-control-sm nextClassroom" name="nextClassroom{{i}}">
-                                                                    <option value="">Classe sup</option>
-                                                                    {% for classroom in nextClassrooms %}
-                                                                        <option value="{{ classroom.id }}">{{ classroom.classroom }}</option>
-                                                                    {% endfor %}
-                                                                </select>
-                                                            
-                                                                <input style="display: none;" class="form-control form-control-sm motif" type="text" name="motif{{i}}" placeholder="Motif de l'exclusion">
-                                                            </td>
-                                                            {% endif %}
-                                                {% endif %}
-                                            </tr>
-                                            {% set i = i + 1 %}
-                                            {% set nc1 = 0 %}
-                                            {% set nc2 = 0 %}
-                                            {% set nc3 = 0 %}
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                                                
-                                <div class="row">
-                                    <div class="col-md-4">
-                                    </div>
-                                    <div class="col-md-4">
-                                        {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
-                                        {% if not selectedClassroom.isDeliberated %}
-                                            <button type="submit" class="bbtn btn-outline-primary btn-lg w-100 br-7" name="saveDeliberation">
-                                                <i class="fa fa-save me-2"></i>
-                                                {% trans %}Save{% endtrans %}
-                                            </button>
-                                        {% endif %}
-                                    {% endif %}
-                                    </div>
-                                    <div class="col-md-4">
-                                    </div>
-                                </div>
+							{% if isUpdate == false %}
+								<div class="fs-delib-hero-stat fs-delib-hero-stat--soft">
+									<span class="fs-delib-hero-stat__icon">
+										<i class="fe fe-users"></i>
+									</span>
+									<span class="fs-delib-hero-stat__label">{% trans %}Effective{% endtrans %}</span>
+									<strong class="fs-delib-hero-stat__value">{{ effectif }}</strong>
+								</div>
+							{% endif %}
+						{% endif %}
 
-                                {% if not selectedClassroom.isDeliberated %}
-                                    {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
-                                    </form>
-                                    {% endif %}
-                                {% endif %}
-                                {% else %}
-                                {# Si aucun élève à délibérer n'existe #}
-                                <div class="text-center h1 mt-4">
-                                    {% trans %}Deliberation not possible{% endtrans %} <br> {% trans %}Please print all quarterly and annual reports first{% endtrans %}
-                                </div>
-                            {% endif %}
+					</div>
+				</div>
+			</section>
 
-                            {% else %}
-                            {# Si c'est une modification #}
-                            {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
-                                {# Si le verrou n'est pas activé #}
-                                <form method="post" action="{{ path('deliberation_updateDeliberation', {'idS': deliberation.student.id, 'idC': selectedClassroom.id}) }}">
-                                    <table border="1" class="table table-striped" id="dataTable" width="100%" cellspacing="0">
-                                        <thead>
-                                            <tr>
-                                                {% if isUpdate == false %}
-                                                    <th class="border-bottom-0 indigo-gradient">{% trans %}N°{% endtrans %}</th>
-                                                {% endif %}
-                                                <th class="border-bottom-0 indigo-gradient">{% trans %}Full name{% endtrans %}</th>
-                                                <th class="border-bottom-0 green-gradient">{% trans %}Term{% endtrans %} 1</th>
-                                                <th class="border-bottom-0 orange-gradient">{% trans %}Term{% endtrans %} 2</th>
-                                                <th class="border-bottom-0 blue-gradient">{% trans %}Term{% endtrans %} 3</th>
-                                                <th class="border-bottom-0 indigo-gradient">{% trans %}Annual{% endtrans %}</th>
-                                                <th class="border-bottom-0 green-gradient">{% trans %}Decision{% endtrans %}</th>
-                                                <th class="border-bottom-0 orange-gradient">{% trans %}Admitted in{% endtrans %}</th>
-                                                <th class="border-bottom-0 blue-gradient">{% trans %}Reason{% endtrans %}</th>
-                                            </tr>
-                                        </thead>
-                                        <tfoot>
-                                            <tr>
-                                                {% if isUpdate == false %}
-                                                    <th class="border-bottom-0 indigo-gradient">{% trans %}N°{% endtrans %}</th>
-                                                {% endif %}
-                                                <th class="border-bottom-0 indigo-gradient">{% trans %}Full name{% endtrans %}</th>
-                                                <th class="border-bottom-0 green-gradient">{% trans %}Term{% endtrans %} 1</th>
-                                                <th class="border-bottom-0 orange-gradient">{% trans %}Term{% endtrans %} 2</th>
-                                                <th class="border-bottom-0 blue-gradient">{% trans %}Term{% endtrans %} 3</th>
-                                                <th class="border-bottom-0 indigo-gradient">{% trans %}Annual{% endtrans %}</th>
-                                                <th class="border-bottom-0 green-gradient">{% trans %}Decision{% endtrans %}</th>
-                                                <th class="border-bottom-0 orange-gradient">{% trans %}Admitted in{% endtrans %}</th>
-                                                <th class="border-bottom-0 blue-gradient">{% trans %}Reason{% endtrans %}</th>
-                                            </tr>
-                                        </tfoot>
-                                        <tbody>
-                                            <tr class="table-row">
-                                                {% set i = 0 %}
-                                                {% set nc1 = 0 %}
-                                                {% set nc2 = 0 %}
-                                                {% set nc3 = 0 %}
-                                                {% if isUpdate == false %}
-                                                    <td>  
-                                                        {{ i }}
-                                                        <input type="hidden" name="student" value="{{ deliberation.student.id }}">
-                                                    </td>
-                                                {% endif %}
-                                                <td>
-                                                    <h6  class="text-secondary"><span class="badge bg-secondary">{{ deliberation.student.fullName }}</span></h6>
-                                                    
-                                                </td>
-                                                <td>
-                                                    {% if deliberation.moyenneTerm1 == unrankedAverage %}
-                                                        {% trans %}NC{% endtrans %}
-                                                        {% set nc1 = 1 %}
-                                                    {% else %}
-                                                    {{ deliberation.moyenneTerm1 }}
-                                                    {% endif %}
-                                                </td> 
-                                                <td>
-                                                    {% if deliberation.moyenneTerm2 == unrankedAverage %}
-                                                        {% trans %}NC{% endtrans %}
-                                                        {% set nc1 = 1 %}
-                                                    {% else %}
-                                                    {{ deliberation.moyenneTerm2 }}
-                                                    {% endif %}
-                                                </td> 
-                                                <td>
-                                                    {% if deliberation.moyenneTerm3 == unrankedAverage %}
-                                                        {% trans %}NC{% endtrans %}
-                                                        {% set nc3 = 1 %}
-                                                    {% else %}
-                                                    {{ deliberation.moyenneTerm3 }}
-                                                    {% endif %}
-                                                </td>
-                                                <td style="text-align:center;">
-                                                    {% if deliberation.moyenneTerm0 == unrankedAverage %}
-                                                        <button type="button" class="btn btn-danger"><i class="fe fe-x-circle me-2"></i>
-                                                        {% trans %}NC{% endtrans %}
-                                                        </button>
-                                                        
-                                                        {% else %}
-                                                            {% if deliberation.moyenneTerm0 >= 10  %}
-                                                                <button type="button" class="btn btn-success"><i class="fe fe-heart me-2"></i>{{ deliberation.moyenneTerm0 }}</button>
-                                                                {% else %}
-                                                                    {% if deliberation.moyenneTerm0 >= 8 %}
-                                                                        <button type="button" class="btn btn-primary"><i class="fe fe-activity me-2"></i>{{ deliberation.moyenneTerm0 }}</button>
-                                                                        {% else %}
-                                                                            {% if deliberation.moyenneTerm0 >= 1 %}
-                                                                                <button type="button" class="btn btn-danger"><i class="fe fe-x-circle me-2"></i>{{ deliberation.moyenneTerm0 }}</button>
-                                                                            {% endif %}
-                                                                            
-                                                                    {% endif %}
-                                                                    
-                                                            {% endif %}
-                                                    {% endif %}
-                                                </td>
-                                                <td>
-                                                    <select class="form-select form-control-sm decision" name="decision" required>
-                                                        <option value="">---</option>
-                                                        {% for decision in decisions %}
-                                                            <option value="{{ decision.id }}" 
-                                                            {% if deliberation.decision.id == decision.id %}
-                                                                selected
-                                                            {% endif %}>
-                                                                {{ decision.decision }}
-                                                            </option>
-                                                        {% endfor %}
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                    <select class="form-select form-control-sm nextClassroom" name="nextClassroom">
-                                                        <option value="">---</option>
-                                                        {% for classroom in nextClassrooms %}
-                                                            <option value="{{ classroom.id }}"
-                                                                {% if deliberation.decision.decision == admis %}
-                                                                    {% if deliberation.nextClassroomName == classroom.classroom %}
-                                                                        selected
-                                                                    {% endif %}
-                                                                {% endif %}>
-                                                                {{ classroom.classroom }}
-                                                            </option>
-                                                        {% endfor %}
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                    <input class="form-control form-control-sm motif" type="text" name="motif" 
-                                                        {% if deliberation.decision.decision == exclu %}
-                                                            value="{{ deliberation.motif }}"
-                                                        {% endif %}>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                    </table>
-                                    <div class="row">
-                                        <div class="col-md-8">
-                                        </div>
-                                        <div class="col-md-4">
-                                            <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="updateDeliberation">
-                                                <i class="fe fe-edit me-2"></i>
-                                                {% trans %}Save Changes{% endtrans %}
-                                            </button>
-                                        </div>
-                                    </div>
-                                    
-                                </form>
-                            {% else %}
-                                {# Si le verrou est activé #}
-                                {% trans %}Access denied. The management of deliberations is blocked. Please contact your head teacher{% endtrans %}
-                            {% endif %}
-                        {% endif %}
-                    </div>
-                {% endif %}
-                {# Card header end #}
-            </div>
-        </div>
-    </div>
-</div>
-    <script src="{{ asset ('build/custom2/js/deliberation.js')}}"></script>
+			{% if isUpdate == false %}
+				<section class="fs-after-delib-panel">
+					<div class="fs-after-delib-panel__main">
+
+						<div class="fs-after-delib-panel__intro">
+							<span class="fs-delib-chip">
+								<i class="fe fe-filter"></i>
+								{% trans %}Classroom filter{% endtrans %}
+							</span>
+
+							<h2>{% trans %}Choose a classroom{% endtrans %}</h2>
+
+							<p>
+								{% trans %}
+									Select a classroom to display students eligible for deliberation.
+								{% endtrans %}
+							</p>
+						</div>
+
+						{# Actions remontées sur la même ligne #}
+						{% if selectedClassroom.id is not null %}
+							<div
+								class="fs-after-delib-top-actions"
+								aria-label="{% trans %}Deliberation actions{% endtrans %}"
+							>
+								{% if selectedClassroom.isDeliberated %}
+									<a
+										href="{{ path('statistic_classCouncil_endYear', {
+											'slug': selectedClassroom.slug
+										}) }}"
+										class="fs-delib-btn fs-delib-btn--light"
+										target="_blank"
+										rel="noopener"
+									>
+										<i class="fe fe-printer"></i>
+										<span>
+											{% trans %}Print end of year class council{% endtrans %}
+										</span>
+									</a>
+
+									<a
+										class="fs-delib-btn fs-delib-btn--danger-light"
+										href="javascript:void(0);"
+										onclick="swal({
+											'title': '{% trans %}Warnning !{% endtrans %}',
+											'type': 'warning',
+											'text': '{% trans %}Do you want to delete this deliberation ?{% endtrans %}',
+											'showCancelButton': true,
+											'confirmButtonText': '{% trans %}Yes{% endtrans %}',
+											'confirmButtonColor': '#f00',
+											'cancelButtonText': '{% trans %}No{% endtrans %}',
+											'cancelButtonColor': '#186106',
+											'confirmButtonPath': '{{ path('cancel_deliberation', {
+												'idC': selectedClassroom.id
+											}) }}'
+										});"
+									>
+										<i class="fe fe-x-circle"></i>
+										<span>
+											{% trans %}Cancel deliberation{% endtrans %}
+										</span>
+									</a>
+								{% else %}
+									<span class="fs-delib-btn fs-delib-btn--disabled">
+										<i class="fe fe-printer"></i>
+										<span>
+											{% trans %}Print end of year class council{% endtrans %}
+										</span>
+									</span>
+
+									<span class="fs-delib-btn fs-delib-btn--disabled">
+										<i class="fe fe-x-circle"></i>
+										<span>
+											{% trans %}Cancel deliberation{% endtrans %}
+										</span>
+									</span>
+								{% endif %}
+							</div>
+						{% endif %}
+
+						<form
+							action="{{ path('deliberation_displayDeliberation') }}"
+							method="post"
+							class="fs-after-delib-form needs-validation"
+							novalidate
+						>
+							<div class="fs-floating-field fs-required-field fs-after-delib-form__field">
+								<select
+									name="classroom"
+									id="classroom"
+									class="form-control select2-show-search fs-floating-control"
+									data-placeholder=""
+									required
+								>
+									<option value="" label=""></option>
+
+									{% if subSystem == 'Francophone / French Speaker' %}
+										{% if school.education.education == 'Général' %}
+											{% include "includes/_selectClassrooms.html.twig" %}
+										{% elseif school.education.education == 'Technique' %}
+											{% include "includes/_selectClassroomsTech.html.twig" %}
+										{% endif %}
+									{% else %}
+										{% include "includes/_selectClassroomsEn.html.twig" %}
+									{% endif %}
+								</select>
+
+								<label class="fs-floating-label" for="classroom">
+									<i class="fe fe-home"></i>
+									{% trans %}Classroom{% endtrans %}
+								</label>
+
+								<div class="invalid-feedback">
+									{% trans %}Please choose a classroom !{% endtrans %}
+								</div>
+							</div>
+
+							<div class="fs-after-delib-form__actions">
+								<button
+									class="fs-delib-btn fs-delib-btn--primary fs-delib-submit-btn"
+									type="submit"
+									name="displayDeliberation"
+								>
+									<span
+										class="fs-delib-submit-spinner"
+										aria-hidden="true"
+									></span>
+
+									<i class="fe fe-menu fs-delib-submit-icon"></i>
+
+									<span>{% trans %}Display{% endtrans %}</span>
+								</button>
+							</div>
+						</form>
+					</div>
+				</section>
+			{% endif %}
+
+			{% if selectedClassroom.id is not null %}
+				{% if isUpdate == false %}
+					<section class="fs-delib-stats">
+						<div class="fs-delib-stat-card">
+							<span class="fs-delib-stat-card__icon">
+								<i class="fe fe-home"></i>
+							</span>
+							<span class="fs-delib-stat-card__label">{% trans %}Class{% endtrans %}</span>
+							<strong class="fs-delib-stat-card__value">{{ selectedClassroom.classroom }}</strong>
+						</div>
+
+						<div class="fs-delib-stat-card">
+							<span class="fs-delib-stat-card__icon fs-delib-stat-card__icon--blue">
+								<i class="fe fe-user"></i>
+							</span>
+							<span class="fs-delib-stat-card__label">{% trans %}Boys{% endtrans %}</span>
+							<strong class="fs-delib-stat-card__value">{{ boys }}</strong>
+						</div>
+
+						<div class="fs-delib-stat-card">
+							<span class="fs-delib-stat-card__icon fs-delib-stat-card__icon--pink">
+								<i class="fe fe-user"></i>
+							</span>
+							<span class="fs-delib-stat-card__label">{% trans %}Girls{% endtrans %}</span>
+							<strong class="fs-delib-stat-card__value">{{ girls }}</strong>
+						</div>
+
+						<div class="fs-delib-stat-card">
+							<span class="fs-delib-stat-card__icon fs-delib-stat-card__icon--green">
+								<i class="fe fe-users"></i>
+							</span>
+							<span class="fs-delib-stat-card__label">{% trans %}Effective{% endtrans %}</span>
+							<strong class="fs-delib-stat-card__value">{{ effectif }}</strong>
+						</div>
+					</section>
+				{% endif %}
+
+				<section class="fs-delib-card {% if isUpdate == true %}fs-delib-card--update{% endif %}">
+					<div class="fs-delib-card__header">
+						<div>
+							<span class="fs-delib-chip {% if isUpdate == true %}fs-delib-chip--danger{% endif %}">
+								{% if isUpdate == false %}
+									<i class="fe fe-grid"></i>
+									{% trans %}Dynamic table{% endtrans %}
+								{% else %}
+									<i class="fe fe-edit"></i>
+									{% trans %}Update mode{% endtrans %}
+								{% endif %}
+							</span>
+
+							<h2>
+								{% if isUpdate == false %}
+									{% trans %}Students deliberation list{% endtrans %}
+								{% else %}
+									{% trans %}Update of the deliberation of {% endtrans %} {{ deliberation.student.fullName }}
+								{% endif %}
+							</h2>
+						</div>
+
+						{% if isUpdate == false %}
+							<div class="fs-delib-search">
+								<i class="fe fe-search"></i>
+								<input type="text" class="fs-delib-search-input" placeholder="{% trans %}Search student, decision, average...{% endtrans %}">
+							</div>
+						{% endif %}
+					</div>
+
+					<div class="fs-delib-card__body">
+						{% if isUpdate == false %}
+							{% if deliberations|length > 0 %}
+								{% if not selectedClassroom.isDeliberated %}
+									{% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+										<form method="post" action="{{ path('deliberation_saveDeliberation', {'idC': selectedClassroom.id}) }}" class="fs-delib-save-form needs-validation" novalidate>
+									{% endif %}
+								{% endif %}
+
+								<div class="fs-delib-table-wrap">
+									<table class="table fs-delib-table fs-delib-dynamic-table" id="fsDeliberationTable">
+										<thead>
+											<tr>
+												<th><button type="button" class="fs-delib-sort" data-sort-index="0"><span>{% trans %}N°{% endtrans %}</span><i class="fe fe-chevron-down"></i></button></th>
+												<th><button type="button" class="fs-delib-sort" data-sort-index="1"><span>{% trans %}Full name{% endtrans %}</span><i class="fe fe-chevron-down"></i></button></th>
+												<th><button type="button" class="fs-delib-sort" data-sort-index="2"><span>{% trans %}Term{% endtrans %} 1</span><i class="fe fe-chevron-down"></i></button></th>
+												<th><button type="button" class="fs-delib-sort" data-sort-index="3"><span>{% trans %}Term{% endtrans %} 2</span><i class="fe fe-chevron-down"></i></button></th>
+												<th><button type="button" class="fs-delib-sort" data-sort-index="4"><span>{% trans %}Term{% endtrans %} 3</span><i class="fe fe-chevron-down"></i></button></th>
+												<th><button type="button" class="fs-delib-sort" data-sort-index="5"><span>{% trans %}Annual{% endtrans %}</span><i class="fe fe-chevron-down"></i></button></th>
+												<th><button type="button" class="fs-delib-sort" data-sort-index="6"><span>{% trans %}Decision{% endtrans %}</span><i class="fe fe-chevron-down"></i></button></th>
+												{% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+													{% if selectedClassroom.isDeliberated %}
+														<th>{% trans %}Actions{% endtrans %}</th>
+													{% else %}
+														<th>{% trans %}Admitted in{% endtrans %} / {% trans %}Reason{% endtrans %}</th>
+													{% endif %}
+												{% endif %}
+											</tr>
+										</thead>
+
+										<tbody>
+											{% set i = 1 %}
+											{% for deliberation in deliberations %}
+												<tr class="table-row">
+													<td data-label="{% trans %}N°{% endtrans %}">
+														<span class="fs-delib-rank">{{ i }}</span>
+													</td>
+
+													<input type="hidden" name="student{{ i }}" value="{{ deliberation.student.id }}">
+
+													<td data-label="{% trans %}Full name{% endtrans %}">
+														<div class="fs-delib-student-cell">
+															<span class="fs-delib-avatar">{{ deliberation.student.fullName|slice(0, 1)|upper }}</span>
+															<div>
+																<strong>{{ deliberation.student.fullName }}</strong>
+																<span>
+																	{% trans %}Gender : {% endtrans %}
+																	{% if deliberation.student.sex.sex == "F" %}
+																		<b class="fs-delib-gender fs-delib-gender--female">{{ deliberation.student.sex.sex }}</b>
+																	{% else %}
+																		<b class="fs-delib-gender fs-delib-gender--male">{{ deliberation.student.sex.sex }}</b>
+																	{% endif %}
+																	· {% trans %}Age : {% endtrans %} {{ deliberation.student.birthday|age }} {% trans %}years old{% endtrans %}
+																</span>
+																<small>{% trans %}Born on : {% endtrans %} {{ deliberation.student.birthday|date('d M Y') }}</small>
+															</div>
+														</div>
+													</td>
+
+													<td data-label="{% trans %}Term{% endtrans %} 1">
+														<span class="fs-delib-mark {% if deliberation.moyenneTerm1 == unrankedAverage %}fs-delib-mark--muted{% endif %}">
+															{% if deliberation.moyenneTerm1 == unrankedAverage %}{% trans %}NC{% endtrans %}{% else %}{{ deliberation.moyenneTerm1 }}{% endif %}
+														</span>
+													</td>
+
+													<td data-label="{% trans %}Term{% endtrans %} 2">
+														<span class="fs-delib-mark {% if deliberation.moyenneTerm2 == unrankedAverage %}fs-delib-mark--muted{% endif %}">
+															{% if deliberation.moyenneTerm2 == unrankedAverage %}{% trans %}NC{% endtrans %}{% else %}{{ deliberation.moyenneTerm2 }}{% endif %}
+														</span>
+													</td>
+
+													<td data-label="{% trans %}Term{% endtrans %} 3">
+														<span class="fs-delib-mark {% if deliberation.moyenneTerm3 == unrankedAverage %}fs-delib-mark--muted{% endif %}">
+															{% if deliberation.moyenneTerm3 == unrankedAverage %}{% trans %}NC{% endtrans %}{% else %}{{ deliberation.moyenneTerm3 }}{% endif %}
+														</span>
+													</td>
+
+													<td data-label="{% trans %}Annual{% endtrans %}">
+														{% set t1 = deliberation.moyenneTerm1 %}
+														{% set t2 = deliberation.moyenneTerm2 %}
+														{% set t3 = deliberation.moyenneTerm3 %}
+														{% set notes = [] %}
+
+														{% if t1 is defined and t1 != unrankedAverage and t1 is not empty %}
+															{% set notes = notes|merge([t1]) %}
+														{% endif %}
+														{% if t2 is defined and t2 != unrankedAverage and t2 is not empty %}
+															{% set notes = notes|merge([t2]) %}
+														{% endif %}
+														{% if t3 is defined and t3 != unrankedAverage and t3 is not empty %}
+															{% set notes = notes|merge([t3]) %}
+														{% endif %}
+
+														{% if notes|length == 0 %}
+															<span class="fs-delib-average fs-delib-average--muted">{% trans %}NC{% endtrans %}</span>
+														{% else %}
+															{% set total = 0 %}
+															{% for note in notes %}
+																{% set total = total + note %}
+															{% endfor %}
+															{% set moyenne = (total / notes|length)|truncate_decimal %}
+															<span class="fs-delib-average {% if moyenne >= 10 %}fs-delib-average--success{% else %}{% if moyenne >= 8 %}fs-delib-average--primary{% else %}fs-delib-average--danger{% endif %}{% endif %}">
+																{{ moyenne }}
+															</span>
+														{% endif %}
+													</td>
+
+													{% if selectedClassroom.isDeliberated %}
+														<td data-label="">
+															<span class="fs-delib-decision-pill">{{ deliberation.deliberationDecision }}</span>
+														</td>
+
+														{% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+															<td data-label="{% trans %}Actions{% endtrans %}" class="fs-delib-actions">
+																<a href="{{ path('deliberation_displayDeliberation', {'idS': deliberation.student.id, 'idC': selectedClassroom.id}) }}"
+																	class="fs-delib-icon-btn fs-delib-icon-btn--primary"
+																	data-fs-modal="true"
+																	data-modal-size="lg"
+																	data-modal-title="{% trans %}Update of the deliberation{% endtrans %} — {{ deliberation.student.fullName }}"
+																	data-bs-toggle="tooltip"
+																	title="{% trans %}Edit the decision for{% endtrans %} {{ deliberation.student.fullName }}">
+																	<i class="fa fa-pencil-square-o"></i>
+																</a>
+															</td>
+														{% endif %}
+													{% else %}
+														{% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+															<td data-label="{% trans %}Decision{% endtrans %}">
+																<div class="fs-delib-decision-grid">
+																	<div class="fs-floating-field fs-required-field">
+																		<select class="form-select form-control-sm decision fs-floating-control" name="decision{{ i }}" required>
+																			<option value=""></option>
+																			{% for decision in decisions %}
+																				<option value="{{ decision.id }}">{{ decision.decision }}</option>
+																			{% endfor %}
+																		</select>
+																		<label class="fs-floating-label"></label>
+																		<div class="invalid-feedback">{% trans %}Required field{% endtrans %}</div>
+																	</div>
+
+																	<div class="fs-floating-field">
+																		<select style="display: none;" class="form-select form-control-sm nextClassroom fs-floating-control" name="nextClassroom{{ i }}">
+																			<option value=""></option>
+																			{% for classroom in nextClassrooms %}
+																				<option value="{{ classroom.id }}">{{ classroom.classroom }}</option>
+																			{% endfor %}
+																		</select>
+
+																		<input style="display: none;" class="form-control form-control-sm motif fs-floating-control" type="text" name="motif{{ i }}" placeholder="{% trans %}Reason for exclusion{% endtrans %}">
+																		<label class="fs-floating-label">{% trans %}Admitted in{% endtrans %} / {% trans %}Reason{% endtrans %}</label>
+																	</div>
+																</div>
+															</td>
+														{% endif %}
+													{% endif %}
+												</tr>
+												{% set i = i + 1 %}
+											{% endfor %}
+										</tbody>
+									</table>
+								</div>
+
+								<div class="fs-delib-table-footer">
+									<div class="fs-delib-result-count"></div>
+
+									<div class="fs-delib-footer-controls">
+										<label class="fs-delib-page-size">
+											<span>{% trans %}Rows{% endtrans %}</span>
+											<select class="fs-delib-rows-per-page">
+												<option value="5">5</option>
+												<option value="10" selected>10</option>
+												<option value="25">25</option>
+												<option value="50">50</option>
+											</select>
+										</label>
+
+										<div class="fs-delib-pagination" aria-label="{% trans %}Pagination{% endtrans %}"></div>
+									</div>
+								</div>
+
+								{% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+									{% if not selectedClassroom.isDeliberated %}
+										<div class="fs-delib-form-actions">
+											<button type="submit" class="fs-delib-btn fs-delib-btn--primary fs-delib-submit-btn" name="saveDeliberation">
+												<span class="fs-delib-submit-spinner" aria-hidden="true"></span>
+												<i class="fa fa-save fs-delib-submit-icon"></i>
+												<span>{% trans %}Save{% endtrans %}</span>
+											</button>
+										</div>
+									{% endif %}
+								{% endif %}
+
+								{% if not selectedClassroom.isDeliberated %}
+									{% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+										</form>
+									{% endif %}
+								{% endif %}
+							{% else %}
+								<div class="fs-delib-empty">
+									<i class="fe fe-alert-circle"></i>
+									<strong>{% trans %}Deliberation not possible{% endtrans %}</strong>
+									<span>{% trans %}Please print all quarterly and annual reports first{% endtrans %}</span>
+								</div>
+							{% endif %}
+						{% else %}
+							{% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
+								<form method="post"
+									action="{{ path('deliberation_updateDeliberation', {'idS': deliberation.student.id, 'idC': selectedClassroom.id}) }}"
+									class="fs-delib-update-form needs-validation"
+									data-fs-modal-close-on-success="deliberation-update"
+									novalidate>
+									<div class="fs-delib-update-grid">
+										<div class="fs-delib-student-cell fs-delib-update-student">
+											<span class="fs-delib-avatar">{{ deliberation.student.fullName|slice(0, 1)|upper }}</span>
+											<div>
+												<strong>{{ deliberation.student.fullName }}</strong>
+												<span>{% trans %}Class{% endtrans %} : {{ selectedClassroom.classroom }}</span>
+											</div>
+										</div>
+
+										<div class="fs-delib-update-marks">
+											<span class="fs-delib-mark {% if deliberation.moyenneTerm1 == unrankedAverage %}fs-delib-mark--muted{% endif %}">
+												{% trans %}T1 :{% endtrans %} {% if deliberation.moyenneTerm1 == unrankedAverage %}{% trans %}NC{% endtrans %}{% else %}{{ deliberation.moyenneTerm1 }}{% endif %}
+											</span>
+
+											<span class="fs-delib-mark {% if deliberation.moyenneTerm2 == unrankedAverage %}fs-delib-mark--muted{% endif %}">
+												{% trans %}T2 :{% endtrans %} {% if deliberation.moyenneTerm2 == unrankedAverage %}{% trans %}NC{% endtrans %}{% else %}{{ deliberation.moyenneTerm2 }}{% endif %}
+											</span>
+
+											<span class="fs-delib-mark {% if deliberation.moyenneTerm3 == unrankedAverage %}fs-delib-mark--muted{% endif %}">
+												{% trans %}T3 :{% endtrans %} {% if deliberation.moyenneTerm3 == unrankedAverage %}{% trans %}NC{% endtrans %}{% else %}{{ deliberation.moyenneTerm3 }}{% endif %}
+											</span>
+
+											<span class="fs-delib-average {% if deliberation.moyenneTerm0 == unrankedAverage %}fs-delib-average--muted{% else %}{% if deliberation.moyenneTerm0 >= 10 %}fs-delib-average--success{% else %}{% if deliberation.moyenneTerm0 >= 8 %}fs-delib-average--primary{% else %}fs-delib-average--danger{% endif %}{% endif %}{% endif %}">
+												{% trans %}Annual{% endtrans %} :
+												{% if deliberation.moyenneTerm0 == unrankedAverage %}{% trans %}NC{% endtrans %}{% else %}{{ deliberation.moyenneTerm0 }}{% endif %}
+											</span>
+										</div>
+
+										<div class="fs-floating-field fs-required-field">
+											<select class="form-select form-control-sm decision fs-floating-control" name="decision" required>
+												<option value="">---</option>
+												{% for decision in decisions %}
+													<option value="{{ decision.id }}"
+														{% if deliberation.decision.id == decision.id %}
+															selected
+														{% endif %}>
+														{{ decision.decision }}
+													</option>
+												{% endfor %}
+											</select>
+											<label class="fs-floating-label">{% trans %}Decision{% endtrans %}</label>
+											<div class="invalid-feedback">{% trans %}Required field{% endtrans %}</div>
+										</div>
+
+										<div class="fs-floating-field">
+											<select class="form-select form-control-sm nextClassroom fs-floating-control" name="nextClassroom">
+												<option value="">---</option>
+												{% for classroom in nextClassrooms %}
+													<option value="{{ classroom.id }}"
+														{% if deliberation.decision.decision == admis %}
+															{% if deliberation.nextClassroomName == classroom.classroom %}
+																selected
+															{% endif %}
+														{% endif %}>
+														{{ classroom.classroom }}
+													</option>
+												{% endfor %}
+											</select>
+											<label class="fs-floating-label">{% trans %}Admitted in{% endtrans %}</label>
+										</div>
+
+										<div class="fs-floating-field">
+											<input class="form-control form-control-sm motif fs-floating-control" type="text" name="motif"
+												{% if deliberation.decision.decision == exclu %}
+													value="{{ deliberation.motif }}"
+												{% endif %}>
+											<label class="fs-floating-label">{% trans %}Reason{% endtrans %}</label>
+										</div>
+									</div>
+
+									<div class="fs-delib-form-actions">
+										<button type="submit" class="fs-delib-btn fs-delib-btn--primary fs-delib-submit-btn" name="updateDeliberation">
+											<span class="fs-delib-submit-spinner" aria-hidden="true"></span>
+											<i class="fe fe-edit fs-delib-submit-icon"></i>
+											<span>{% trans %}Save Changes{% endtrans %}</span>
+										</button>
+									</div>
+								</form>
+							{% else %}
+								<div class="fs-delib-locked">
+									<i class="fe fe-lock"></i>
+									{% trans %}Access denied. The management of deliberations is blocked. Please contact your head teacher{% endtrans %}
+								</div>
+							{% endif %}
+						{% endif %}
+					</div>
+				</section>
+			{% endif %}
+		</div>
+	</div>
 {% endblock %}
 
-
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom2/js/deliberation.js') }}"></script>
+	<script src="{{ asset('build/custom/js/freeschool-deliberation-management-premium.js') }}"></script>
+{% endblock %}

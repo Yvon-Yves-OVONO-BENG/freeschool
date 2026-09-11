@@ -39,6 +39,7 @@ class SubjectRepository extends ServiceEntityRepository
             ->andWhere('s.subSystem = :subSystem')
             ->setParameters(['schoolYear' => $schoolYear, 'subSystem' => $subSystem])
             ->orderBy('s.subject')
+            
         ;
     }
 

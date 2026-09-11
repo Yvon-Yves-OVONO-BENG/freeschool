@@ -24,10 +24,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 class SendTranscriptAnnualController extends AbstractController
 {
     public function __construct(
@@ -47,7 +44,7 @@ class SendTranscriptAnnualController extends AbstractController
     #[Route("/send-transcript-annual-student/{slugStudent}/{slugTerm}", name:"send_transcript_annual_student")]
     #[Route("/send-transcript-annual-classroom/{slugClassroom}/{slugTerm}", name:"send_transcript_annual_classroom")]
     public function sendTranscriptAnnual(Request $request, 
-    MailerInterface $mailer, TransportInterface $transport,  string $slugStudent = null, string $slugClassroom = null, string $slugTerm = null): Response
+    MailerInterface $mailer, TransportInterface $transport,  ?string $slugStudent = null, ?string $slugClassroom = null, string $slugTerm = null): Response
     {
         $mySession = $request->getSession();
         $mySession->set('ajout',null);
@@ -83,6 +80,11 @@ class SendTranscriptAnnualController extends AbstractController
 
         $student = $this->studentRepository->findOneBy(['slug' => $slugStudent ]);
 
+        if (!$student) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
+
         $term = null;
         $sequence = null;
         $studentName = null;
@@ -90,6 +92,11 @@ class SendTranscriptAnnualController extends AbstractController
         if ($slugTerm && !$slugClassroom) 
         {
             $term = $this->termRepository->findOneBy(['slug' => $slugTerm]);
+
+            if (!$term) 
+            {
+                return $this->redirectToRoute('page_error');
+            }
 
             $releves = $this->lessonRepository->getAnnualReportByStudent($student->getId());
             
@@ -151,6 +158,11 @@ class SendTranscriptAnnualController extends AbstractController
         if ($request->request->has('slugClassroom') && $request->request->has('term')) 
         {
             $term = $this->termRepository->find($request->request->get('term'));
+            if (!$term) 
+            {
+                return $this->redirectToRoute('page_error');
+            }
+            
             $classroom = $this->classroomRepository->findOneBy(['slug' => $request->request->get('slugClassroom')] );
             
             $relevesTermClasse = $this->lessonRepository->getAnnualReportByClassroom($classroom->getId());

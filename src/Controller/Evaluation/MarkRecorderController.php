@@ -23,11 +23,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/evaluation")]
 class MarkRecorderController extends AbstractController
 {
@@ -49,7 +45,7 @@ class MarkRecorderController extends AbstractController
     {}
 
     #[Route("/markRecorder/{slugTeacher}/{a<[0-1]{1}>}/{m<[0-1]{1}>}/{s<[0-1]{1}>}/{deleteAllMarks}/{sequenceSelectionnee}/{lessonSelectionnee}", name:"evaluation_markRecorder")]
-    public function markRecorder(Request $request, string $slugTeacher = null, int $a = 0, int $m = 0, 
+    public function markRecorder(Request $request, ?string $slugTeacher = null, int $a = 0, int $m = 0, 
     int $s = 0, int $deleteAllMarks = 0, int $sequenceSelectionnee = 0, int $lessonSelectionnee = 0): Response
     {
         $mySession = $request->getSession();
@@ -172,7 +168,15 @@ class MarkRecorderController extends AbstractController
         $sequences = $this->sequenceService->removeSequence6($sequences, $schoolYear);
         
         // On recupère l'enseignant qui dispense
-        $teacher = $this->teacherRepository->findOneBySlug(['slug' => $slugTeacher]);
+        $teacher = $this->teacherRepository->findOneBy([
+            'slug' => $slugTeacher,
+            'schoolYear' => $schoolYear
+        ]);
+        
+        if (!$teacher) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
 
         // on recupère tous les cours de l'enseignant
         $lessons = $this->lessonRepository->findTeacherLessons($teacher);
@@ -235,9 +239,12 @@ class MarkRecorderController extends AbstractController
                     'lesson' => $lessonSelectionnee
                 ]);
 
-                $this->em->remove($skill);
-                $this->em->flush();
-
+                if ($skill) 
+                {
+                    $this->em->remove($skill);
+                    $this->em->flush();
+                }
+                
                 $selectedSequence = $this->sequenceRepository->find($sequenceId);
                 $selectedLesson = $this->lessonRepository->find($lessonId);
 
@@ -320,16 +327,16 @@ class MarkRecorderController extends AbstractController
             $students = $this->studentRepository->findBy([
                 'classroom' => $selectedLesson->getClassroom(),
                 'schoolYear' => $schoolYear
-            ], [
+                ], [
                 'fullName' => 'ASC'
-                ]);
+            ]);
             
                 // on recupère la compétence visée à afficher
             $skill = $this->skillRepository->findOneBy([
                 'lesson' => $selectedLesson,
                 // 'term' => $selectedSequence->getTerm()
                 'sequence' => $selectedSequence
-                ]);
+            ]);
             
             #je récupère les stats de la classe
             $noteMinMax = $this->evaluationRepository->getEvaluationStatisticsRaw($sequenceId, $lessonId);

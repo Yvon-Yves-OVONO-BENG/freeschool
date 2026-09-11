@@ -1,0 +1,168 @@
+{% extends "base.html.twig" %}
+
+{% block title %}{% trans %}Connection list{% endtrans %}{% endblock %}
+
+{% block stylesheets %}
+	<style>
+		th,
+		tfoot {
+			font-size: 15px !important;
+			text-align: center !important;
+			font-weight: bold !important;
+			background-color: #F1F1F1 !important;
+		}
+
+		tr:hover {
+			background-color: rgba(62, 128, 235, 0.2) !important;
+			color: #3e80eb !important;
+		}
+
+        td {
+            vertical-align: middle !important;
+        }
+	</style>
+{% endblock %}
+
+{% block body %}
+    <!-- App-Content -->
+	<div class="hor-content main-content">
+		<div class="container">
+        
+            <!--Page header-->
+            <div class="page-header">
+                <div class="page-leftheader">
+                    <h4 class="page-title mb-0 text-primary"><i class="fe fe-users me-2"></i>{% trans %}Connection list{% endtrans %}</h4>
+                </div>
+                <div class="page-rightheader">
+                    <div class="btn-list">
+                        <a href="{{ path ('teacher_displayTeacher') }}"  class="btn btn-outline-primary btn-pill">
+                            <i class="fa fa-users me-2 fs-14"></i> {% trans %}Staff{% endtrans %}
+                        </a>
+                        
+                    </div>
+                </div>
+            </div>
+            <!--End Page header-->
+
+            <div class="card border-primary">
+                <div class="card-header">
+                    <div class="col-md-3 col-lg-3 mt-3">
+                        <h3 class="card-title">{% trans %}Choose period{% endtrans %}</h3>
+                    </div>
+                    <div class="col-md-9 col-lg-9 mt-3">
+                        <form method="post" action="{{ path ('admin_user_log') }}" class="row g-3 needs-validation" novalidate>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <input type="date" name="dateDebut" class="form-control" id="validationCustom01" required>
+                                    <div class="invalid-feedback">
+                                        {% trans %}This field is required (start date){% endtrans %}
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="date" name="dateFin" class="form-control" id="validationCustom01" required>
+                                    <div class="invalid-feedback">
+                                        {% trans %}This field is required (end date){% endtrans %}
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="col-md-4">
+                                        <button class="btn btn-outline-primary" type="submit" name="afficherConnexionPeriode"><i class="fe fe-eye me-2"></i>{% trans %}Display{% endtrans %}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="card-body my-background">
+                    
+                    <div class="table-responsive">
+                        <table id="example" class="table table-bordered text-nowrap key-buttons">
+                            <thead>
+                                <tr>
+                                    <th>{% trans %}User{% endtrans %}</th>
+                                    <th>{% trans %}IP{% endtrans %}</th>
+                                    <th>{% trans %}Device{% endtrans %}</th>
+                                    <th>{% trans %}Operating system{% endtrans %}</th>
+                                    <th>{% trans %}Browser{% endtrans %}</th>
+                                    <th>{% trans %}Town{% endtrans %} - {% trans %}Country{% endtrans %}</th>
+                                    <th>{% trans %}Connection{% endtrans %} / {% trans %}Log off{% endtrans %}</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>{% trans %}User{% endtrans %}</th>
+                                    <th>{% trans %}IP{% endtrans %}</th>
+                                    <th>{% trans %}Device{% endtrans %}</th>
+                                    <th>{% trans %}Operating system{% endtrans %}</th>
+                                    <th>{% trans %}Browser{% endtrans %}</th>
+                                    <th>{% trans %}Town{% endtrans %} - {% trans %}Country{% endtrans %}</th>
+                                    <th>{% trans %}Connection{% endtrans %} / {% trans %}Log off{% endtrans %}</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                {% for log in logs %}
+                                    <tr>
+                                        <td>
+                                            <img alt="{{ log.user.fullName }}" class="rounded-circle" src="{{ asset ('images/browser/user.png' ) }}" width="16" height="16">
+                                            
+                                            {{ log.user.fullName }}
+                                        </td>
+                                        <td>{{ log.ip }}</td>
+                                        <td>
+                                            <img alt="{{ log.deviceType.deviceType }}" class="rounded-circle" src="{{ asset ('images/device/' ~ log.deviceType.logo ) }}" width="25" height="25">
+                                            
+                                            {% if log.deviceType.deviceType == 'Mobile' %}
+                                                {% trans %}Phone{% endtrans %} - 
+                                                {% if log.operatingSystem.operatingSystem == 'Android' %}
+                                                    {% trans %}Android{% endtrans %}
+                                                {% elseif log.operatingSystem.operatingSystem == 'iOS' %}
+                                                    {% trans %}Apple{% endtrans %}
+                                                {% endif %}
+                                            {% elseif log.deviceType.deviceType == 'Desktop' %}
+                                                {% trans %}Desktop{% endtrans %} <br> {% trans %}PC / Laptop{% endtrans %}
+                                            {% else %}
+                                                {{ log.deviceType.deviceType }}
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if log.operatingSystem %}
+                                                <img alt="{{ log.operatingSystem.operatingSystem }}" class="rounded-circle" src="{{ asset ('images/os/' ~ log.operatingSystem.logo ) }}" width="25" height="25">
+                                                {{ log.operatingSystem.operatingSystem }}
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if log.browser %}
+                                                <img alt="{{ log.browser.browser }}" class="rounded-circle" src="{{ asset ('images/browser/' ~ log.browser.logo ) }}" width="25" height="25">
+                                                {{ log.browser.browser }}
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ log.ville ? log.ville : 'N/A' }},<br> 
+                                            {% if log.country %}
+                                                <img alt="{{ log.country.country }}" class="rounded-circle" src="{{ asset ('images/country/' ~ log.country.logo ) }}" width="16" height="16">
+                                            {% endif %}
+                                            {# <img alt="cameroun" class="rounded-circle" src="{{ asset ('images/country/cm.svg' ) }}" width="16" height="16"> #}
+                                            {{ log.country ? log.country.country: 'unknow'}}
+                                        </td>
+                                        <td>
+                                            {% trans %}Connection{% endtrans %} : {{ log.logedAt|date('d/m/Y H:i') }}
+                                            <br>
+                                            {% trans %}Log off{% endtrans %} :
+                                            {% if log.disconnectedAt %}
+                                                {{ log.disconnectedAt|date('d/m/Y H:i') }}
+                                                <span class="badge bg-danger side-badge">{% trans %}Log off{% endtrans %}</span>
+                                            {% else %}
+                                                <span class="text-success"></span>
+                                                <span class="badge bg-success side-badge">{% trans %}Still connected{% endtrans %}</span>
+                                            {% endif %}
+
+                                        </td>
+
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}

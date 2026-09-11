@@ -14,11 +14,7 @@ use App\Service\PrintProgressTrakingSheetService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/progress")]
 class PrintProgressTrackingSheetController extends AbstractController
 {
@@ -53,10 +49,16 @@ class PrintProgressTrackingSheetController extends AbstractController
         $school = $this->schoolRepository->findOneBySchoolYear(['schoolYear' => $schoolYear]);
 
         //////Je récupère l'enseignant, la matière et la classe
-        $teacher = $this->teacherRepository->findOneBySlug(['slug' => $slugTeacher]);
+        $teacher = $this->teacherRepository->findOneBy(['slug' => $slugTeacher]);
         // $subject = $this->subjectReposirory->find($idS);
         ////je récupère la lecçon prévue en fonction de l'enseigant, 
         ////la matière et la classe d'une année scolaire
+
+        if (!$teacher) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
+        
         $lessonPlains = $this->lessonRepository->findBy([
             'teacher' => $teacher,
             ]);

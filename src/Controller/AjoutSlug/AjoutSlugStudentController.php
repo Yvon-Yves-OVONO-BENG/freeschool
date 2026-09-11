@@ -34,38 +34,9 @@ class AjoutSlugStudentController extends AbstractController
         {
             if(!$student->getSlug())
             {
-                #je fabrique mon slug
-                $characts    = 'abcdefghijklmnopqrstuvwxyz#{};()';
-                $characts   .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#{};()';	
-                $characts   .= '1234567890'; 
-                $slug      = ''; 
-        
-                for($i=0;$i < 15;$i++) 
-                { 
-                    $slug .= substr($characts,rand()%(strlen($characts)),1); 
-                }
-
-                //////j'extrait la derniere matiere de la table
-                $dernierStudent = $studentRepository->findBy([],['id' => 'DESC'],1,0);
-
-                /////je récupère l'id du sernier utilisateur
-                
-                if ($dernierStudent) 
-                {
-                    $id = $dernierStudent[0]->getId();
-                } 
-                else 
-                {
-                    $id = 1;
-                }
-
-
-
-                $student->setSlug($slug.$id);
+                $student->setSlug(uniqid('', true));
                 $em->persist($student);
             }
-            
-            
         }
 
         $em->flush();

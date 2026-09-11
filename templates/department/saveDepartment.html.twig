@@ -1,108 +1,192 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    {% if slug == 0 %}
-        {% trans %}Add{% endtrans %}
-        {% else %}
-        {% trans %}Edit{% endtrans %}
-    {% endif %}
-    {% trans %}department{% endtrans %}
+	{% if slug == 0 %}
+		{% trans %}Add{% endtrans %}
+	{% else %}
+		{% trans %}Edit{% endtrans %}
+	{% endif %}
+	{% trans %}department{% endtrans %}
 {% endblock %}
 
 {% block subTitle %}
-    {% if slug != 0 %}
-        {% trans %}UPDATING DEPARTMENT{% endtrans %}
-    {% else %}
-        {% trans %}ADDING NEW DEPARTMENT{% endtrans %}
-    {% endif %}
+	{% if slug != 0 %}
+		{% trans %}UPDATING DEPARTMENT{% endtrans %}
+	{% else %}
+		{% trans %}ADDING NEW DEPARTMENT{% endtrans %}
+	{% endif %}
 {% endblock %}
+
 {% block infoMessage %}
-    {% include "includes/_info_message.html.twig" %}
+	{% include "includes/_info_message.html.twig" %}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-department-form-premium.css') }}">
 {% endblock %}
 
 {% block body %}
-<!-- App-Content -->
-	<div class="hor-content main-content">
+	<div class="hor-content main-content fs-department-form-page">
 		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary">
-                        {% if slug != 0 %}
-                            <i class="fa fa-edit me-2"></i>{% trans %}UPDATING DEPARTMENT{% endtrans %}
-                        {% else %}
-                            <i class="fa fa-plus me-2"></i>{% trans %}ADDING NEW DEPARTMENT{% endtrans %}
-                        {% endif %}
-                    </h4>
-                </div>
-                <div class="page-rightheader">
-                    <div class="btn-list">
-                        <a href="{{ path('department_displayDepartment') }}" class="btn btn-outline-primary">
-                            <i class="fa fa-list"></i>
-                            {% trans %}Display registered departments{% endtrans %}
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <!--End Page header-->
+			<div class="fs-department-form-menu-safe-space" aria-hidden="true"></div>
 
-            <div class="card border-primary">
-                <div class="card-header">
-                    {# ligne afficher les departments #}
-                        <div class="col-md-5 text-left">
-                            <button type="button" class="btn btn-primary  mt-1 mb-1 me-3 form-control-sm">
-                                <span>{% trans %}Number of registered departments{% endtrans %}</span>
-                                <span class="badge bg-white text-dark rounded-pill">{{ departments|length }}</span>
-                            </button>
-                        </div>
-                        <div class="col-md-4">
-                            
-                        </div>
-                    
-                    {# Fin ligne afficher les departments #}
-                </div>
-                <div class="card-body ">
-                    <div class="row">
-                        <div class="col-md-12">
-                            {{ form_start(formDepartment, {'attr': {'class':'row g-4 needs-validation', 'novalidate':""}}) }}
-                                <div class="row mb-3">
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            {{ form_row(formDepartment.department, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            {{ form_row(formDepartment.educationalFacilitator, {'attr': {'class': 'form-control select2-show-search'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label style="color: #fff;">
-                                                {% trans %}Save{% endtrans %}
-                                            </label>
-                                            {% if slug == 0 %}
-                                            <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="addDepartment">
-                                                <i class="fa fa-save"></i>
-                                                {% trans %}Save{% endtrans %}
-                                            </button>
-                                            {% else %}
-                                            <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="editDepartment">
-                                                <i class="fa fa-save"></i>
-                                                {% trans %}Save changes{% endtrans %}
-                                            </button>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                </div>
+			<section class="fs-department-form-hero">
+				<div class="fs-department-form-hero__content">
+					<div>
+						<span class="fs-department-form-eyebrow">
+							{% if slug != 0 %}
+								<i class="fe fe-edit-3"></i>
+								{% trans %}Department update workspace{% endtrans %}
+							{% else %}
+								<i class="fe fe-plus"></i>
+								{% trans %}Department creation workspace{% endtrans %}
+							{% endif %}
+						</span>
 
-                            {{ form_end(formDepartment) }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+						<h1 class="fs-department-form-title">
+							{% if slug != 0 %}
+								{% trans %}UPDATING DEPARTMENT{% endtrans %}
+							{% else %}
+								{% trans %}ADDING NEW DEPARTMENT{% endtrans %}
+							{% endif %}
+						</h1>
+
+						<p class="fs-department-form-subtitle">
+							{% trans %}Create and organize departments with their educational facilitator through a refined premium workspace.{% endtrans %}
+						</p>
+					</div>
+
+					<div class="fs-department-form-hero__right">
+						<div class="fs-department-form-stat">
+							<span class="fs-department-form-stat__icon">
+								<i class="fe fe-layers"></i>
+							</span>
+							<span class="fs-department-form-stat__label">{% trans %}Registered departments{% endtrans %}</span>
+							<strong class="fs-department-form-stat__value">{{ departments|length }}</strong>
+						</div>
+
+						<a href="{{ path('department_displayDepartment') }}" class="fs-department-form-btn fs-department-form-btn--hero">
+							<i class="fe fe-list"></i>
+							<span>{% trans %}Display registered departments{% endtrans %}</span>
+						</a>
+					</div>
+				</div>
+			</section>
+
+			<section class="fs-department-form-card {% if slug != 0 %}fs-department-form-card--edit{% else %}fs-department-form-card--create{% endif %}">
+				<div class="fs-department-form-card__header">
+					<div>
+						<span class="fs-department-form-card-badge">
+							{% if slug != 0 %}
+								<i class="fe fe-edit"></i>
+								{% trans %}Edit mode{% endtrans %}
+							{% else %}
+								<i class="fe fe-plus"></i>
+								{% trans %}Creation mode{% endtrans %}
+							{% endif %}
+						</span>
+
+						<h2 class="fs-department-form-card-title">
+							{% if slug != 0 %}
+								{% trans %}UPDATING DEPARTMENT{% endtrans %}
+							{% else %}
+								{% trans %}ADDING NEW DEPARTMENT{% endtrans %}
+							{% endif %}
+						</h2>
+					</div>
+
+					<div class="fs-department-form-soft-note">
+						<i class="fe fe-info"></i>
+						<span>{% trans %}Fill in the department name and assign a facilitator before saving.{% endtrans %}</span>
+					</div>
+				</div>
+
+				<div class="fs-department-form-card__body">
+					{{ form_start(formDepartment, {'attr': {'class': 'fs-department-form needs-validation', 'novalidate': 'novalidate'}}) }}
+
+						<div class="fs-department-form-section">
+							<div class="fs-department-form-section__header">
+								<div class="fs-department-form-section-title">
+									<span class="fs-department-form-section-icon">
+										<i class="fe fe-grid"></i>
+									</span>
+									<div>
+										<h3>{% trans %}Department information{% endtrans %}</h3>
+										<p>{% trans %}Enter the department label and select the educational facilitator.{% endtrans %}</p>
+									</div>
+								</div>
+							</div>
+
+							<div class="fs-department-form-grid">
+								<div class="fs-floating-field fs-required-field">
+									{{ form_widget(formDepartment.department, {
+										'attr': {
+											'class': 'form-control form-control-sm fs-floating-control',
+											'placeholder': ' ',
+											'required': 'required'
+										}
+									}) }}
+									<label class="fs-floating-label">
+										<i class="fe fe-grid"></i>
+										{% trans %}Department{% endtrans %}
+									</label>
+									<div class="fs-field-error">{{ form_errors(formDepartment.department) }}</div>
+								</div>
+
+								<div class="fs-floating-field fs-required-field">
+									{{ form_widget(formDepartment.educationalFacilitator, {
+										'attr': {
+											'class': 'form-control select2-show-search fs-floating-control',
+											'placeholder': ' ',
+											'required': 'required'
+										}
+									}) }}
+									<label class="fs-floating-label">
+										<i class="fe fe-user-check"></i>
+										{% trans %}Educational facilitator{% endtrans %}
+									</label>
+									<div class="fs-field-error">{{ form_errors(formDepartment.educationalFacilitator) }}</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="fs-department-submit-zone">
+							<div class="fs-department-submit-zone__hint">
+								<i class="fe fe-shield"></i>
+								<span>{% trans %}Please review the information before saving.{% endtrans %}</span>
+							</div>
+
+							<div class="fs-department-submit-zone__actions">
+								<a href="{{ path('department_displayDepartment') }}" class="fs-department-form-btn fs-department-form-btn--ghost">
+									<i class="fe fe-arrow-left"></i>
+									<span>{% trans %}Back{% endtrans %}</span>
+								</a>
+
+								{% if slug == 0 %}
+									<button type="submit" class="fs-department-form-btn fs-department-form-btn--primary fs-department-submit-btn" name="addDepartment">
+										<span class="fs-department-submit-spinner" aria-hidden="true"></span>
+										<i class="fe fe-save fs-department-submit-icon"></i>
+										<span>{% trans %}Save{% endtrans %}</span>
+									</button>
+								{% else %}
+									<button type="submit" class="fs-department-form-btn fs-department-form-btn--primary fs-department-submit-btn" name="editDepartment">
+										<span class="fs-department-submit-spinner" aria-hidden="true"></span>
+										<i class="fe fe-save fs-department-submit-icon"></i>
+										<span>{% trans %}Save changes{% endtrans %}</span>
+									</button>
+								{% endif %}
+							</div>
+						</div>
+
+					{{ form_end(formDepartment) }}
+				</div>
+			</section>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-department-form-premium.js') }}"></script>
 {% endblock %}

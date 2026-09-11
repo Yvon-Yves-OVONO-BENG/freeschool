@@ -13,11 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/lesson")]
 class DisplayLessonController extends AbstractController
 {
@@ -75,7 +71,12 @@ class DisplayLessonController extends AbstractController
         {
             // On ajoute le classroom à la request pour permettre l'affichage des lessons
             //  et non le formulaire de choix de la classe
-            $request->request->set('classroom', $this->classroomRepository->findOneBySlug(['slug' => $slug])->getId());
+            if (!$this->classroomRepository->findOneBy(['slug' => $slug])->getId()) 
+            {
+                return $this->redirectToRoute('page_error');
+            }
+            
+            $request->request->set('classroom', $this->classroomRepository->findOneBy(['slug' => $slug])->getId());
         }
 
         $methodIsPost = false;

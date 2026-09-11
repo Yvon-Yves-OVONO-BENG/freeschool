@@ -1,144 +1,238 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    {% if slug != 0 %}
-        {% trans %}Updating{% endtrans %}
-        {% else %}
-        {% trans %}Add{% endtrans %}
-    {% endif %}
-    {% trans %}Classroom{% endtrans %}
+	{% if slug != 0 %}
+		{% trans %}Updating{% endtrans %}
+	{% else %}
+		{% trans %}Add{% endtrans %}
+	{% endif %}
+	{% trans %}Classroom{% endtrans %}
 {% endblock %}
 
 {% block subTitle %}
-    {% if slug != 0 %}
-        {% trans %}UPDATING CLASSROOM{% endtrans %}
-    {% else %}
-        {% trans %}ADDING NEW CLASSROOM{% endtrans %}
-    {% endif %}
+	{% if slug != 0 %}
+		{% trans %}UPDATING CLASSROOM{% endtrans %}
+	{% else %}
+		{% trans %}ADDING NEW CLASSROOM{% endtrans %}
+	{% endif %}
 {% endblock %}
+
 {% block infoMessage %}
-    {% include "includes/_info_message.html.twig" %}
+	{% include "includes/_info_message.html.twig" %}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-classroom-form-premium.css') }}">
 {% endblock %}
 
 {% block body %}
- <!-- App-Content -->
-	<div class="hor-content main-content">
+	<div class="hor-content main-content fs-classroom-form-page">
 		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary">
-                        {% if slug != 0 %}
-                            <i class="fa fa-edit me-2"></i> {% trans %}UPDATING CLASSROOM{% endtrans %}
-                        {% else %}
-                            <i class="fa fa-plus me-2"></i> {% trans %}ADDING NEW CLASSROOM{% endtrans %}
-                        {% endif %}
-                    </h4>
-                </div>
-                <div class="page-rightheader">
-                    <div class="btn-list">
-                        <a href="{{  path('classroom_displayClassroom') }}" class="btn btn-outline-primary">
-                            <i class="fa fa-list"></i>
-                        {% trans %}Display registered classrooms{% endtrans %}
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <!--End Page header-->
-            {% if slug != 0 %}
-                <div class="card border-danger">
-                {% else %}
-                <div class="card border-primary">
-            {% endif %}
-                <div class="card-header">
-                    {# ligne afficher les classes #}
-                        <div class="col-md-5 text-left">
-                            <button type="button" class="btn btn-primary  mt-1 mb-1 me-3 form-control-sm">
-                                <span><i class="fa fa-building me-2"></i> {% trans %}Number of registered classrooms{% endtrans %}</span>
-                                <span class="badge bg-white text-dark rounded-pill">{{ classrooms|length }}</span>
-                            </button>
-                        </div>
-                        <div class="col-md-4 text-right">
-                            
-                        </div>
-                    {# Fin ligne afficher les classes #}
-                </div>
-                <div class="card-body ">
-                    <div class="row">
-                        <div class="col-md-12">
-                            {{ form_start(formClassroom, {'attr': {'class':'row g-4 needs-validation', 'novalidate':""}}) }}
-                                <div class="row mb-4 mt-4">
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            {{ form_row(formClassroom.classroom, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            {{ form_row(formClassroom.level, {'attr': {'class': 'form-control select2 custom-select'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            {{ form_row(formClassroom.principalTeacher, {'attr': {'class': 'form-control select2-show-search'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            {{ form_row(formClassroom.censor, {'attr': {'class': 'form-control select2-show-search'}}) }}
-                                        </div>
-                                    </div>
+			<div class="fs-classroom-form-menu-safe-space" aria-hidden="true"></div>
 
-                                    
-                                </div>
+			<section class="fs-classroom-form-hero">
+				<div class="fs-classroom-form-hero__content">
+					<div>
+						<span class="fs-classroom-form-eyebrow">
+							{% if slug != 0 %}
+								<i class="fe fe-edit-3"></i>
+								{% trans %}Classroom update workspace{% endtrans %}
+							{% else %}
+								<i class="fe fe-plus"></i>
+								{% trans %}Classroom creation workspace{% endtrans %}
+							{% endif %}
+						</span>
 
-                                <div class="row mb-3">
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            {{ form_row(formClassroom.supervisor, {'attr': {'class': 'form-control select2-show-search'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            {{ form_row(formClassroom.counsellor, {'attr': {'class': 'form-control select2-show-search'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            {{ form_row(formClassroom.actionSociale, {'attr': {'class': 'form-control select2-show-search'}}) }}
-                                        </div>
-                                    </div>
+						<h1 class="fs-classroom-form-title">
+							{% if slug != 0 %}
+								{% trans %}UPDATING CLASSROOM{% endtrans %}
+							{% else %}
+								{% trans %}ADDING NEW CLASSROOM{% endtrans %}
+							{% endif %}
+						</h1>
 
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label style="color: #fff;">
-                                                {% trans %}Save{% endtrans %}
-                                            </label>
-                                            {% if slug == 0 %}
-                                                <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="addClassroom">
-                                                    <i class="fa fa-save me-2"></i>
-                                                    {% trans %}Save{% endtrans %}
-                                                </button>
-                                            {% else %}
-                                                    <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="editClassroom">
-                                                        <i class="fa fa-save me-2"></i>
-                                                    {% trans %}Save changes{% endtrans %}
-                                                </button>
-                                            {% endif %}
-                                        </div>
-                                    </div>
+						<p class="fs-classroom-form-subtitle">
+							{% trans %}Create and organize classrooms, levels and staff attachments through a refined premium workspace.{% endtrans %}
+						</p>
+					</div>
 
-                                </div>
+					<div class="fs-classroom-form-hero__right">
+						<div class="fs-classroom-form-stat">
+							<span class="fs-classroom-form-stat__icon">
+								<i class="fe fe-home"></i>
+							</span>
+							<span class="fs-classroom-form-stat__label">{% trans %}Registered classrooms{% endtrans %}</span>
+							<strong class="fs-classroom-form-stat__value">{{ classrooms|length }}</strong>
+						</div>
 
+						<a href="{{ path('classroom_displayClassroom') }}" class="fs-classroom-form-btn fs-classroom-form-btn--hero">
+							<i class="fe fe-list"></i>
+							<span>{% trans %}Display registered classrooms{% endtrans %}</span>
+						</a>
+					</div>
+				</div>
+			</section>
 
+			<section class="fs-classroom-form-card {% if slug != 0 %}fs-classroom-form-card--edit{% else %}fs-classroom-form-card--create{% endif %}">
+				<div class="fs-classroom-form-card__header">
+					<div>
+						<span class="fs-classroom-form-card-badge">
+							{% if slug != 0 %}
+								<i class="fe fe-edit"></i>
+								{% trans %}Edit mode{% endtrans %}
+							{% else %}
+								<i class="fe fe-plus"></i>
+								{% trans %}Creation mode{% endtrans %}
+							{% endif %}
+						</span>
 
-                            {{ form_end(formClassroom) }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+						<h2 class="fs-classroom-form-card-title">
+							{% if slug != 0 %}
+								{% trans %}UPDATING CLASSROOM{% endtrans %}
+							{% else %}
+								{% trans %}ADDING NEW CLASSROOM{% endtrans %}
+							{% endif %}
+						</h2>
+					</div>
+
+					<div class="fs-classroom-form-soft-note">
+						<i class="fe fe-info"></i>
+						<span>{% trans %}Fill in classroom information and staff attachments before saving.{% endtrans %}</span>
+					</div>
+				</div>
+
+				<div class="fs-classroom-form-card__body">
+					{{ form_start(formClassroom, {'attr': {'class': 'fs-classroom-form needs-validation', 'novalidate': 'novalidate'}}) }}
+
+						<div class="fs-classroom-form-section">
+							<div class="fs-classroom-form-section__header">
+								<div class="fs-classroom-form-section-title">
+									<span class="fs-classroom-form-section-icon">
+										<i class="fe fe-home"></i>
+									</span>
+									<div>
+										<h3>{% trans %}Classroom information{% endtrans %}</h3>
+										<p>{% trans %}Define the classroom, level and main staff attachments.{% endtrans %}</p>
+									</div>
+								</div>
+							</div>
+
+							<div class="fs-classroom-form-grid">
+								<div class="fs-floating-field fs-required-field">
+									{{ form_widget(formClassroom.classroom, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' ', 'required': 'required'}}) }}
+									<label class="fs-floating-label">
+										<i class="fe fe-home"></i>
+										{% trans %}Classroom{% endtrans %}
+									</label>
+									<div class="fs-field-error">{{ form_errors(formClassroom.classroom) }}</div>
+								</div>
+
+								<div class="fs-floating-field fs-required-field">
+									{{ form_widget(formClassroom.level, {'attr': {'class': 'form-control select2 custom-select fs-floating-control', 'placeholder': ' ', 'required': 'required'}}) }}
+									<label class="fs-floating-label">
+										<i class="fe fe-layers"></i>
+										{% trans %}Level{% endtrans %}
+									</label>
+									<div class="fs-field-error">{{ form_errors(formClassroom.level) }}</div>
+								</div>
+
+								<div class="fs-floating-field">
+									{{ form_widget(formClassroom.principalTeacher, {'attr': {'class': 'form-control select2-show-search fs-floating-control', 'placeholder': ' '}}) }}
+									<label class="fs-floating-label">
+										<i class="fe fe-user"></i>
+										{% trans %}Principal teacher{% endtrans %}
+									</label>
+									<div class="fs-field-error">{{ form_errors(formClassroom.principalTeacher) }}</div>
+								</div>
+
+								{% if school.education.education == "Général" or school.education.education == "Technique" %}
+									<div class="fs-floating-field">
+										{{ form_widget(formClassroom.censor, {'attr': {'class': 'form-control select2-show-search fs-floating-control', 'placeholder': ' '}}) }}
+										<label class="fs-floating-label">
+											<i class="fe fe-shield"></i>
+											{% trans %}Censor{% endtrans %}
+										</label>
+										<div class="fs-field-error">{{ form_errors(formClassroom.censor) }}</div>
+									</div>
+								{% endif %}
+
+								{% if school.education.education == "Technique" %}
+									<div class="fs-floating-field">
+										{{ form_widget(formClassroom.censorEnsGen, {'attr': {'class': 'form-control select2-show-search fs-floating-control', 'placeholder': ' '}}) }}
+										<label class="fs-floating-label">
+											<i class="fe fe-shield"></i>
+											{% trans %}General education censor{% endtrans %}
+										</label>
+										<div class="fs-field-error">{{ form_errors(formClassroom.censorEnsGen) }}</div>
+									</div>
+								{% endif %}
+
+								<div class="fs-floating-field">
+									{{ form_widget(formClassroom.supervisor, {'attr': {'class': 'form-control select2-show-search fs-floating-control', 'placeholder': ' '}}) }}
+									<label class="fs-floating-label">
+										<i class="fe fe-user-check"></i>
+										{% trans %}Supervisor{% endtrans %}
+									</label>
+									<div class="fs-field-error">{{ form_errors(formClassroom.supervisor) }}</div>
+								</div>
+
+								<div class="fs-floating-field">
+									{{ form_widget(formClassroom.counsellor, {'attr': {'class': 'form-control select2-show-search fs-floating-control', 'placeholder': ' '}}) }}
+									<label class="fs-floating-label">
+										<i class="fe fe-compass"></i>
+										{% trans %}Counsellor{% endtrans %}
+									</label>
+									<div class="fs-field-error">{{ form_errors(formClassroom.counsellor) }}</div>
+								</div>
+
+								<div class="fs-floating-field">
+									{{ form_widget(formClassroom.actionSociale, {'attr': {'class': 'form-control select2-show-search fs-floating-control', 'placeholder': ' '}}) }}
+									<label class="fs-floating-label">
+										<i class="fe fe-heart"></i>
+										{% trans %}Social action{% endtrans %}
+									</label>
+									<div class="fs-field-error">{{ form_errors(formClassroom.actionSociale) }}</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="fs-classroom-submit-zone">
+							<div class="fs-classroom-submit-zone__hint">
+								<i class="fe fe-shield"></i>
+								<span>{% trans %}Please review the information before saving.{% endtrans %}</span>
+							</div>
+
+							<div class="fs-classroom-submit-zone__actions">
+								<a href="{{ path('classroom_displayClassroom') }}" class="fs-classroom-form-btn fs-classroom-form-btn--ghost">
+									<i class="fe fe-arrow-left"></i>
+									<span>{% trans %}Back{% endtrans %}</span>
+								</a>
+
+								{% if slug == 0 %}
+									<button type="submit" class="fs-classroom-form-btn fs-classroom-form-btn--primary fs-classroom-submit-btn" name="addClassroom">
+										<span class="fs-classroom-submit-spinner" aria-hidden="true"></span>
+										<i class="fe fe-save fs-classroom-submit-icon"></i>
+										<span>{% trans %}Save{% endtrans %}</span>
+									</button>
+								{% else %}
+									<button type="submit" class="fs-classroom-form-btn fs-classroom-form-btn--primary fs-classroom-submit-btn" name="editClassroom">
+										<span class="fs-classroom-submit-spinner" aria-hidden="true"></span>
+										<i class="fe fe-save fs-classroom-submit-icon"></i>
+										<span>{% trans %}Save changes{% endtrans %}</span>
+									</button>
+								{% endif %}
+							</div>
+						</div>
+
+					{{ form_end(formClassroom) }}
+				</div>
+			</section>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-classroom-form-premium.js') }}"></script>
 {% endblock %}

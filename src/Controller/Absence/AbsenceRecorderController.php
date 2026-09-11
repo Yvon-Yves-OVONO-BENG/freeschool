@@ -22,11 +22,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/absence")]
 class AbsenceRecorderController extends AbstractController
 {
@@ -48,7 +44,7 @@ class AbsenceRecorderController extends AbstractController
     {}
 
     #[Route("/absenceRecorder/{slug}", name:"absence_absenceRecorder")]
-    public function absenceRecorder(Request $request, string $slug = null): Response
+    public function absenceRecorder(Request $request, ?string $slug = null): Response
     {
         $mySession = $request->getSession();
         $mySession->set('ajout',null);
@@ -70,83 +66,92 @@ class AbsenceRecorderController extends AbstractController
 
         $terms = $this->termRepository->findBy([], ['term' => 'ASC']);
         
-        $teacher = $this->teacherRepository->findOneBySlug(['slug' => $slug ]);
+        $teacher = $this->teacherRepository->findOneBy(['slug' => $slug, 'schoolYear' => $schoolYear ]);
         
-        $classrooms = $this->classroomRepository->findSupervisorClassrooms($teacher, $schoolYear, $subSystem);
-
-        $absenceToUpdate = null;
-
-        if($request->request->has('absenceToUpdate'))
+        if ($teacher) 
         {
-            $absenceToUpdate = $this->absenceRepository->find($request->request->get('absence'));
-        }
+            $classrooms = $this->classroomRepository->findSupervisorClassrooms($teacher, $schoolYear, $subSystem);
 
-        if($request->request->has('term')) 
-        {
-            $termId = $request->request->get('term');
-            $classroomId = $request->request->get('classroom');
+            $absenceToUpdate = null;
 
-            $selectedTerm = $this->termRepository->find($termId);
-            $selectedClassroom = $this->classroomRepository->find($classroomId);
-            
-            
-            if ($request->request->has('saveAbsence')) 
-            {  
+            if($request->request->has('absenceToUpdate'))
+            {
+                $absenceToUpdate = $this->absenceRepository->find($request->request->get('absence'));
+            }
+
+            if($request->request->has('term')) 
+            {
+                $termId = $request->request->get('term');
+                $classroomId = $request->request->get('classroom');
+
+                $selectedTerm = $this->termRepository->find($termId);
+                $selectedClassroom = $this->classroomRepository->find($classroomId);
+                
+                
+                if ($request->request->has('saveAbsence')) 
+                {  
+                    $students = $this->studentRepository->findBy([
+                        'classroom' => $selectedClassroom
+                    ]);
+
+                    $this->absenceManagerService->saveAbsences($selectedTerm, $request);
+
+                    $this->addFlash('info', $this->translator->trans('Hour absences saved with success !'));
+
+                    $mySession->set('ajout', 1);
+                }
+                elseif($request->request->has('updateAbsence'))
+                { 
+                    $this->absenceManagerService->updateAbsence($request->request->get('absenceToUpdateId'), $request->request->get('updatedAbsence'), $request);
+                    $this->addFlash('info', $this->translator->trans('Hour absense updated with success !'));
+                    $mySession->set('miseAjour', 1);
+                }
+                elseif ($request->request->has('removeAllAbsences')) 
+                {
+                    $this->absenceManagerService->removeAbsences($request->request->get('term'), $request->request->get('classroom'), $request);
+                    $this->addFlash('info', $this->translator->trans('Hour absences deleted with success !'));
+                    $mySession->set('suppression', 1);
+                }
+
+                $absences = $this->absenceRepository->findAbsences($selectedTerm, $selectedClassroom);
+                
                 $students = $this->studentRepository->findBy([
-                    'classroom' => $selectedClassroom
+                    'classroom' => $selectedClassroom,
+                    'schoolYear' => $schoolYear,
+                    ], [
+                    'fullName' => 'ASC'
                 ]);
 
-                $this->absenceManagerService->saveAbsences($selectedTerm, $request);
-
-                $this->addFlash('info', $this->translator->trans('Hour absences saved with success !'));
-
-                $mySession->set('ajout', 1);
+                return $this->render('absence/absenceRecorder.html.twig', [
+                    'terms' => $terms,
+                    'school' => $school,
+                    'classrooms' => $classrooms,
+                    'teacher' => $teacher,
+                    'selectedTerm' => $selectedTerm,
+                    'selectedClassroom' => $selectedClassroom,
+                    'absences' => $absences,
+                    'students' => $students,
+                    'absenceToUpdate' => $absenceToUpdate,
+                    'annualTerm' => ConstantsClass::ANNUEL_TERM,
+                ]);
             }
-            elseif($request->request->has('updateAbsence'))
-            { 
-                $this->absenceManagerService->updateAbsence($request->request->get('absenceToUpdateId'), $request->request->get('updatedAbsence'), $request);
-                $this->addFlash('info', $this->translator->trans('Hour absense updated with success !'));
-                $mySession->set('miseAjour', 1);
-            }
-            elseif ($request->request->has('removeAllAbsences')) 
-            {
-                $this->absenceManagerService->removeAbsences($request->request->get('term'), $request->request->get('classroom'), $request);
-                $this->addFlash('info', $this->translator->trans('Hour absences deleted with success !'));
-                $mySession->set('suppression', 1);
-            }
-
-            $absences = $this->absenceRepository->findAbsences($selectedTerm, $selectedClassroom);
             
-            $students = $this->studentRepository->findBy([
-                'classroom' => $selectedClassroom,
-                'schoolYear' => $schoolYear,
-                ], [
-                'fullName' => 'ASC'
-            ]);
-
+            
+            // $notification = true;
             return $this->render('absence/absenceRecorder.html.twig', [
                 'terms' => $terms,
                 'school' => $school,
                 'classrooms' => $classrooms,
                 'teacher' => $teacher,
-                'selectedTerm' => $selectedTerm,
-                'selectedClassroom' => $selectedClassroom,
-                'absences' => $absences,
-                'students' => $students,
-                'absenceToUpdate' => $absenceToUpdate,
                 'annualTerm' => ConstantsClass::ANNUEL_TERM,
             ]);
+        } 
+        else 
+        {
+            return $this->redirectToRoute('page_error');
         }
         
         
-        // $notification = true;
-        return $this->render('absence/absenceRecorder.html.twig', [
-            'terms' => $terms,
-            'school' => $school,
-            'classrooms' => $classrooms,
-            'teacher' => $teacher,
-            'annualTerm' => ConstantsClass::ANNUEL_TERM,
-        ]);
     }
  
 }

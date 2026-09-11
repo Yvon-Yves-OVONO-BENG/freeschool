@@ -16,7 +16,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 class GenerationQrCodeController extends AbstractController
 {
     public function __construct(
@@ -64,20 +66,20 @@ class GenerationQrCodeController extends AbstractController
 
                 if ($subSystem->getSubSystem() == ConstantsClass::FRANCOPHONE) 
                 {
-                    $qrCode = $this->qrcodeService->qrcode($school->getFrenchName()." : Ce bulletin appartient à l'élève : ".$student->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber()).", Année Scolaire : ".$schoolYear->getSchoolYear().", Classe : ".$student->getClassroom()->getClassroom());
+                    $qrCode = $this->qrcodeService->qrcode(($school->getFrenchName()." : Ce bulletin appartient à l'élève : ".$student->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber()).", Année Scolaire : ".$schoolYear->getSchoolYear().", Classe : ".$student->getClassroom()->getClassroom()), $student->getslug(), $school);
 
-                    $qrCodeFiche = $this->qrcodeService->qrcode($school->getFrenchName()." : Cette fiche appartient à l'élève : ".$student->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber())." Année Scolaire : ".$schoolYear->getSchoolYear().", Classe : ".$student->getClassroom()->getClassroom());
+                    $qrCodeFiche = $this->qrcodeService->qrcode(($school->getFrenchName()." : Cette fiche appartient à l'élève : ".$student->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber())." Année Scolaire : ".$schoolYear->getSchoolYear().", Classe : ".$student->getClassroom()->getClassroom()), $student->getslug(), $school);
                     
-                    $qrCodeRollOfHonor = $this->qrcodeService->qrcode($school->getFrenchName()." : Ce TABLEAU D'HONNEUR appartient à l'élève : ".$student->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber()).", Année Scolaire : ".$schoolYear->getSchoolYear().", Classe : ".$student->getClassroom()->getClassroom());
+                    $qrCodeRollOfHonor = $this->qrcodeService->qrcode(($school->getFrenchName()." : Ce TABLEAU D'HONNEUR appartient à l'élève : ".$student->getFullName()." de matricule : ".$this->strService->strToUpper($student->getRegistrationNumber()).", Année Scolaire : ".$schoolYear->getSchoolYear().", Classe : ".$student->getClassroom()->getClassroom()), $student->getslug(), $school);
 
-                } else 
+                } 
+                else 
                 {
-                    $qrCode = $this->qrcodeService->qrcode($school->getEnglishName()." : This report belongs to the student : ".$student->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber()).", School Year : ".$schoolYear->getSchoolYear().", Classroom : ".$student->getClassroom()->getClassroom());
+                    $qrCode = $this->qrcodeService->qrcode(($school->getEnglishName()." : This report belongs to the student : ".$student->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber()).", School Year : ".$schoolYear->getSchoolYear().", Classroom : ".$student->getClassroom()->getClassroom()), $student->getslug(), $school);
 
-                    $qrCodeFiche = $this->qrcodeService->qrcode($school->getEnglishName()." : This sheet belongs to the student : ".$student->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber()).", School Year  : ".$schoolYear->getSchoolYear().", Classroom : ".$student->getClassroom()->getClassroom());
+                    $qrCodeFiche = $this->qrcodeService->qrcode(($school->getEnglishName()." : This sheet belongs to the student : ".$student->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber()).", School Year  : ".$schoolYear->getSchoolYear().", Classroom : ".$student->getClassroom()->getClassroom()), $student->getslug(), $school);
                 
-                    $qrCodeRollOfHonor = $this->qrcodeService->qrcode($school->getEnglishName()." : This roll of honor belongs to the student: ".$student->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber()).", School Year  : ".$schoolYear->getSchoolYear().", Classroom : ".$student->getClassroom()->getClassroom());
-
+                    $qrCodeRollOfHonor = $this->qrcodeService->qrcode(($school->getEnglishName()." : This roll of honor belongs to the student: ".$student->getFullName()." register number : ".$this->strService->strToUpper($student->getRegistrationNumber()).", School Year  : ".$schoolYear->getSchoolYear().", Classroom : ".$student->getClassroom()->getClassroom()), $student->getslug(), $school);
                 }
 
                 $student->setQrcode($qrCode)
@@ -91,9 +93,9 @@ class GenerationQrCodeController extends AbstractController
 
             $this->addFlash('info', $this->translator->trans('QR Code generate with success !'));
 
-            $mySession->set('saisiNotes', 1);
+            // $mySession->set('saisiNotes', 1);
 
-            return $this->redirectToRoute('home_dashboard');
+            // return $this->redirectToRoute('home_dashboard');
 
         }
 

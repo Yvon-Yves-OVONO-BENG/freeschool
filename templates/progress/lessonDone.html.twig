@@ -5,133 +5,610 @@
 {% block subTitle %}
     {% trans %}LESSON DONE MANAGMENT{% endtrans %}
 {% endblock %}
+
 {% block infoMessage %}
     {% include "includes/_info_message.html.twig" %}
 {% endblock %}
 
 {% block stylesheets %}
-	<style>
-		th,
-		tfoot {
-			font-size: 15px !important;
-			text-align: center !important;
-			font-weight: bold !important;
-			background-color: #F1F1F1 !important;
-		}
+    {{ parent() }}
 
-		tr:hover {
-			background-color: rgba(62, 128, 235, 0.2) !important;
-			color: #3e80eb !important;
-		}
+    <style>
+        .fs-lesson-done-page {
+            padding-bottom: 2rem;
+        }
 
-        .td {
-			text-align: center !important;
-		}
-	</style>
+        .fs-lesson-done-hero {
+            position: relative;
+            overflow: hidden;
+            border-radius: 28px;
+            padding: 1.35rem;
+            margin-bottom: 1.25rem;
+            color: #fff;
+            background:
+                radial-gradient(circle at top right, rgba(255, 255, 255, .22), transparent 30%),
+                linear-gradient(135deg, #0f172a 0%, #1d4ed8 52%, #06b6d4 100%);
+            box-shadow: 0 22px 55px rgba(15, 23, 42, .18);
+        }
+
+        .fs-lesson-done-hero::before {
+            content: "";
+            position: absolute;
+            width: 260px;
+            height: 260px;
+            right: -120px;
+            bottom: -140px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .16);
+        }
+
+        .fs-lesson-done-hero-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .fs-lesson-done-title {
+            display: flex;
+            align-items: center;
+            gap: .85rem;
+        }
+
+        .fs-lesson-done-title-icon {
+            width: 54px;
+            height: 54px;
+            border-radius: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, .16);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .22);
+            backdrop-filter: blur(10px);
+            font-size: 1.35rem;
+        }
+
+        .fs-lesson-done-title h4 {
+            margin: 0;
+            color: #fff;
+            font-weight: 900;
+            letter-spacing: -.02em;
+        }
+
+        .fs-lesson-done-title p {
+            margin: .25rem 0 0;
+            color: rgba(255, 255, 255, .82);
+            font-weight: 700;
+            font-size: .9rem;
+        }
+
+        .fs-lesson-done-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: .45rem;
+            border-radius: 999px;
+            padding: .55rem .85rem;
+            background: rgba(255, 255, 255, .16);
+            color: #fff;
+            font-size: .8rem;
+            font-weight: 900;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .18);
+            backdrop-filter: blur(10px);
+        }
+
+        .fs-filter-card,
+        .fs-result-card,
+        .fs-lesson-card {
+            background: #fff;
+            box-shadow: 0 18px 50px rgba(15, 23, 42, .09);
+        }
+
+        .fs-filter-card {
+            border-radius: 28px;
+            overflow: hidden;
+            margin-bottom: 1.25rem;
+        }
+
+        .fs-filter-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 1.15rem 1.25rem;
+            border-bottom: 1px solid #eef2f7;
+            background:
+                radial-gradient(circle at top left, rgba(79, 70, 229, .08), transparent 34%),
+                #fff;
+        }
+
+        .fs-filter-title {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+        }
+
+        .fs-filter-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #eef2ff;
+            color: #4f46e5;
+            font-size: 1.05rem;
+        }
+
+        .fs-filter-title h5 {
+            margin: 0;
+            color: #0f172a;
+            font-weight: 900;
+        }
+
+        .fs-filter-title small {
+            display: block;
+            margin-top: .15rem;
+            color: #64748b;
+            font-weight: 700;
+        }
+
+        .fs-filter-body {
+            padding: 1.25rem;
+            background: linear-gradient(180deg, #f8fafc 0%, #ffffff 42%);
+        }
+
+        .fs-field label {
+            color: #334155;
+            font-size: .78rem;
+            font-weight: 900;
+            margin-bottom: .4rem;
+        }
+
+        .fs-field .form-control,
+        .fs-field select {
+            min-height: 46px;
+            border-radius: 15px !important;
+            border: 1px solid #dbe3ef !important;
+            background: #fff !important;
+            color: #0f172a !important;
+            font-weight: 800;
+            box-shadow: none !important;
+            transition: border-color .2s ease, box-shadow .2s ease;
+        }
+
+        .fs-field .form-control:focus,
+        .fs-field select:focus {
+            border-color: #4f46e5 !important;
+            box-shadow: 0 0 0 .22rem rgba(79, 70, 229, .12) !important;
+        }
+
+        .fs-field .select2-container {
+            width: 100% !important;
+        }
+
+        .fs-field .select2-container--default .select2-selection--single {
+            min-height: 46px;
+            border-radius: 15px;
+            border: 1px solid #dbe3ef;
+            display: flex;
+            align-items: center;
+        }
+
+        .fs-field .select2-container--default .select2-selection--single .select2-selection__rendered {
+            color: #0f172a;
+            font-weight: 800;
+            line-height: 46px;
+            padding-left: 14px;
+        }
+
+        .fs-field .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 46px;
+        }
+
+        .fs-btn-primary {
+            min-height: 46px;
+            border: 0 !important;
+            border-radius: 15px !important;
+            color: #fff !important;
+            font-weight: 900;
+            background: linear-gradient(135deg, #4f46e5, #06b6d4) !important;
+            box-shadow: 0 14px 30px rgba(79, 70, 229, .22);
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .fs-btn-primary:hover {
+            color: #fff !important;
+            transform: translateY(-1px);
+            box-shadow: 0 18px 38px rgba(79, 70, 229, .28);
+        }
+
+        .fs-result-card {
+            border-radius: 28px;
+            overflow: hidden;
+        }
+
+        .fs-result-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 1.15rem 1.25rem;
+            border-bottom: 1px solid #eef2f7;
+            background:
+                radial-gradient(circle at top left, rgba(22, 163, 74, .08), transparent 34%),
+                #fff;
+        }
+
+        .fs-result-title {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+        }
+
+        .fs-result-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #ecfdf5;
+            color: #16a34a;
+            font-size: 1.05rem;
+        }
+
+        .fs-result-title h5 {
+            margin: 0;
+            color: #0f172a;
+            font-weight: 900;
+        }
+
+        .fs-result-title small {
+            display: block;
+            margin-top: .15rem;
+            color: #64748b;
+            font-weight: 700;
+        }
+
+        .fs-result-count {
+            display: inline-flex;
+            align-items: center;
+            gap: .45rem;
+            border-radius: 999px;
+            padding: .45rem .75rem;
+            background: #eef2ff;
+            color: #1d4ed8;
+            font-size: .78rem;
+            font-weight: 900;
+        }
+
+        .fs-result-body {
+            padding: 1.25rem;
+            background: linear-gradient(180deg, #f8fafc 0%, #ffffff 42%);
+        }
+
+        .fs-lessons-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem;
+        }
+
+        .fs-lesson-card {
+            border-radius: 24px;
+            padding: 1.1rem;
+            background:
+                radial-gradient(circle at top right, rgba(79, 70, 229, .08), transparent 34%),
+                #fff;
+            border: 1px solid #eef2f7;
+            box-shadow: 0 14px 36px rgba(15, 23, 42, .07);
+        }
+
+        .fs-lesson-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: .9rem;
+            border-bottom: 1px solid #eef2f7;
+        }
+
+        .fs-subject-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            border-radius: 999px;
+            padding: .42rem .72rem;
+            background: #eef2ff;
+            color: #1d4ed8;
+            font-size: .78rem;
+            font-weight: 900;
+        }
+
+        .fs-lesson-card h5 {
+            margin: .55rem 0 0;
+            color: #0f172a;
+            font-weight: 900;
+            letter-spacing: -.015em;
+        }
+
+        .fs-teacher-line {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            margin-top: .45rem;
+            color: #64748b;
+            font-size: .82rem;
+            font-weight: 800;
+        }
+
+        .fs-lesson-actions {
+            display: flex;
+            flex-direction: column;
+            gap: .55rem;
+            margin-top: 1rem;
+        }
+
+        .fs-action-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: .45rem;
+            min-height: 42px;
+            border-radius: 14px;
+            padding: .55rem .75rem;
+            color: #fff !important;
+            font-size: .78rem;
+            font-weight: 900;
+            text-align: center;
+            text-decoration: none !important;
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .fs-action-link:hover {
+            transform: translateY(-1px);
+            color: #fff !important;
+        }
+
+        .fs-action-validate {
+            background: linear-gradient(135deg, #16a34a, #06b6d4);
+            box-shadow: 0 12px 24px rgba(22, 163, 74, .18);
+        }
+
+        .fs-action-print {
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            box-shadow: 0 12px 24px rgba(79, 70, 229, .18);
+        }
+
+        .fs-empty-card {
+            border-radius: 22px;
+            padding: 1.4rem;
+            background: #fff;
+            color: #64748b;
+            text-align: center;
+            font-weight: 800;
+            box-shadow: 0 12px 35px rgba(15, 23, 42, .08);
+        }
+
+        @media (max-width: 1199px) {
+            .fs-lessons-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 991px) {
+            .fs-lesson-done-hero-content,
+            .fs-filter-card-header,
+            .fs-result-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .fs-btn-primary {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .hor-content.main-content.fs-lesson-done-page {
+                padding-top: 8px !important;
+                margin-top: 0 !important;
+            }
+
+            .fs-lesson-done-page .container {
+                padding-top: 0 !important;
+                margin-top: 0 !important;
+            }
+
+            .fs-lesson-done-hero,
+            .fs-filter-card,
+            .fs-result-card,
+            .fs-lesson-card {
+                border-radius: 20px;
+            }
+
+            .fs-lesson-done-hero,
+            .fs-filter-body,
+            .fs-result-body,
+            .fs-lesson-card {
+                padding: 1rem;
+            }
+
+            .fs-lesson-done-hero {
+                margin-bottom: 12px;
+            }
+
+            .fs-lesson-done-title {
+                align-items: flex-start;
+            }
+
+            .fs-lesson-done-title-icon {
+                width: 44px;
+                height: 44px;
+                border-radius: 14px;
+            }
+
+            .fs-lesson-done-title h4 {
+                font-size: 17px;
+                line-height: 1.15;
+            }
+
+            .fs-lesson-done-title p {
+                font-size: 12px;
+                line-height: 1.25;
+            }
+        }
+    </style>
 {% endblock %}
+
 {% block body %}
-<!-- App-Content -->
-	<div class="hor-content main-content">
-		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary">
-                        <i class="fa fa-book me-2"></i> {% trans %}DISPLAY LESSON DONE{% endtrans %}
-                    </h4>
+<div class="hor-content main-content fs-lesson-done-page">
+    <div class="container">
+
+        <div class="fs-lesson-done-hero">
+            <div class="fs-lesson-done-hero-content">
+                <div class="fs-lesson-done-title">
+                    <div class="fs-lesson-done-title-icon">
+                        <i class="fa fa-book"></i>
+                    </div>
+
+                    <div>
+                        <h4>{% trans %}DISPLAY LESSON DONE{% endtrans %}</h4>
+                        <p>{% trans %}Select a classroom, then validate completed lessons or print the progress tracking sheet.{% endtrans %}</p>
+                    </div>
                 </div>
-				<div class="page-rightheader">
-                    <div class="btn-list">
-                        
+
+                <span class="fs-lesson-done-pill">
+                    <i class="fe fe-check-circle"></i>
+                    {% trans %}Lesson done management{% endtrans %}
+                </span>
+            </div>
+        </div>
+
+        <div class="fs-filter-card">
+            <div class="fs-filter-card-header">
+                <div class="fs-filter-title">
+                    <span class="fs-filter-icon">
+                        <i class="fe fe-filter"></i>
+                    </span>
+
+                    <div>
+                        <h5>{% trans %}Choose classroom{% endtrans %}</h5>
+                        <small>{% trans %}Filter lessons by classroom before validation.{% endtrans %}</small>
                     </div>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-md-12 col-lg-12">
-                    <div class="expanel expanel-primary border-primary">
-                        <div class="expanel-heading">
-                            <h3 class="expanel-title">{% trans %}Choose classroom{% endtrans %}</h3>
+            <div class="fs-filter-body">
+                <form action="{{ path('lesson_done') }}" method="post">
+                    <div class="row align-items-end">
+                        <div class="col-lg-7">
+                            <div class="form-group fs-field mb-lg-0">
+                                <label for="classroom">
+                                    <i class="fe fe-home me-1"></i>
+                                    {% trans %}Classroom{% endtrans %}
+                                </label>
+
+                                <select class="form-control select2-show-search"
+                                        data-placeholder="{% trans %}Choose a classroom{% endtrans %}"
+                                        name="classroom"
+                                        id="classroom"
+                                        required>
+                                    <option label="{% trans %}Choose a classroom{% endtrans %}">{% trans %}Choose a class{% endtrans %}</option>
+
+                                    {% if subSystem is defined and subSystem == 'Francophone / French Speaker' %}
+                                        {% include "includes/_selectClassrooms.html.twig" %}
+                                    {% else %}
+                                        {% include "includes/_selectClassroomsEn.html.twig" %}
+                                    {% endif %}
+                                </select>
+                            </div>
                         </div>
-                        <div class="expanel-body">
-                            <form action="{{ path('lesson_done') }}" method="post">
-                                <div class="row">
-                                    <div class="col-md-5">
-                                        <div class="form-group">
-                                            <select class="form-control select2-show-search" data-placeholder="Choose a classroom" name="classroom" id="classroom" required style="border: 1px solid #0f0;">
-                                                <option label="Choose a classroom">{% trans %}Choose a class{% endtrans %}</option>
-                                                {% if subSystem == 'Francophone / French Speaker' %}
-                                                    {% include "includes/_selectClassrooms.html.twig" %}
-                                                    {% else %}
-                                                        {% include "includes/_selectClassroomsEn.html.twig" %}
-                                                {% endif %}
-                                            </select>
+
+                        <div class="col-lg-3 mt-3 mt-lg-0">
+                            <button class="btn fs-btn-primary w-100" type="submit" name="displayStudents">
+                                <i class="fa fa-list me-1"></i>
+                                {% trans %}Display{% endtrans %}
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {% if methodIsPost is defined and methodIsPost %}
+            <div class="fs-result-card">
+                <div class="fs-result-header">
+                    <div class="fs-result-title">
+                        <span class="fs-result-icon">
+                            <i class="fe fe-book-open"></i>
+                        </span>
+
+                        <div>
+                            <h5>{% trans %}List of lessons{% endtrans %}</h5>
+                            <small>{% trans %}Available lessons for the selected classroom.{% endtrans %}</small>
+                        </div>
+                    </div>
+
+                    <span class="fs-result-count">
+                        <i class="fe fe-list"></i>
+                        {{ lessons|length }} {% trans %}lesson(s){% endtrans %}
+                    </span>
+                </div>
+
+                <div class="fs-result-body">
+                    {% if lessons|length > 0 %}
+                        <div class="fs-lessons-grid">
+                            {% for lesson in lessons %}
+                                <div class="fs-lesson-card">
+                                    <div class="fs-lesson-card-header">
+                                        <div>
+                                            <span class="fs-subject-pill">
+                                                <i class="fe fe-book"></i>
+                                                {{ lesson.subject.subject }}
+                                            </span>
+
+                                            <h5>{{ lesson.subject.subject }}</h5>
+
+                                            <div class="fs-teacher-line">
+                                                <i class="fe fe-user"></i>
+                                                {{ lesson.teacher.fullName }}
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="displayStudents">
-                                                <i class="fa fa-list"></i>
-                                                {% trans %}Display{% endtrans %}
-                                            </button>
-                                        </div>
+
+                                    <div class="fs-lesson-actions">
+                                        <a href="{{ path('save_lesson_done', {'slugTeacher': lesson.teacher.slug, 'slugSubject': lesson.subject.slug, 'slugClassroom': lesson.classroom.slug}) }}"
+                                           class="fs-action-link fs-action-validate"
+                                           data-bs-toggle="tooltip"
+                                           title="{% trans %}Validate lessons learned{% endtrans %}">
+                                            <i class="fa fa-check"></i>
+                                            {% trans %}Validate lessons learned{% endtrans %}
+                                        </a>
+
+                                        <a href="{{ path('print_progress_tracking_sheet', {'slugTeacher': lesson.teacher.slug}) }}"
+                                           target="_blank"
+                                           class="fs-action-link fs-action-print"
+                                           data-bs-toggle="tooltip"
+                                           title="{% trans %}Print the progress tracking sheet{% endtrans %}">
+                                            <i class="fa fa-print"></i>
+                                            {% trans %}Print the progress tracking sheet{% endtrans %}
+                                        </a>
                                     </div>
                                 </div>
-                            </form>
+                            {% endfor %}
                         </div>
-                    </div>
+                    {% else %}
+                        <div class="fs-empty-card">
+                            {% trans %}No lessons found for this classroom.{% endtrans %}
+                        </div>
+                    {% endif %}
                 </div>
             </div>
-            <!--End Row -->
+        {% endif %}
 
-            {% if methodIsPost %}
-                <div class="card border-primary">
-                    <div class="card-header">
-                        <h4>{% trans %}List of lessons{% endtrans %}</h4>
-                    </div>
-
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            
-                            <table border="1" class="table table-striped" border="2" id="example2" width="100%" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                    <th class="border-bottom-0 indigo-gradient">{% trans %}Subject{% endtrans %}</th>
-                                    <th class="border-bottom-0 indigo-gradient">{% trans %}Full name{% endtrans %}</th>
-                                    <th class="border-bottom-0 green-gradient">{% trans %}Operations{% endtrans %}</th>
-                                    </tr>
-                                </thead>
-                                <tfoot>
-                                    <tr>
-                                    <th class="border-bottom-0 indigo-gradient">{% trans %}Subject{% endtrans %}</th>
-                                    <th class="border-bottom-0 indigo-gradient">{% trans %}Full name{% endtrans %}</th>
-                                    <th class="border-bottom-0 green-gradient">{% trans %}Operations{% endtrans %}</th>
-                                    </tr>
-                                </tfoot>
-                                {% for lesson in lessons %}
-                                    <tr>
-                                        <td style="vertical-align: middle;">{{ lesson.subject.subject }}</td>
-                                        <td style="vertical-align: middle;">{{ lesson.teacher.fullName }}</td>
-                                        <td style="text-align: center; vertical-align:middle;"> 
-                                            <a href="{{ path('save_lesson_done', {'slugTeacher': lesson.teacher.slug, 'slugSubject': lesson.subject.slug, 'slugClassroom': lesson.classroom.slug }) }}" class="btn btn-outline-primary" data-bs-toggle="tooltip" title="{% trans %}Validate lessons learned{% endtrans %}">
-                                                <i class="fa fa-check"></i> {% trans %}Validate lessons learned{% endtrans %}
-                                            </a>
-
-                                            <a href="{{ path('print_progress_tracking_sheet', {'slugTeacher': lesson.teacher.slug}) }}" target="_blank" class="btn btn-outline-primary" data-bs-toggle="tooltip" title="{% trans %}Print the progress tracking sheet{% endtrans %}">
-                                                <i class="fa fa-print"></i> {% trans %}Print the progress tracking sheet{% endtrans %}
-                                            </a>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </table>
-                            
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-        </div>
     </div>
 </div>
-
 {% endblock %}

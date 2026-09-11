@@ -16,11 +16,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/depense")]
 class EditDepenseController extends AbstractController
 {
@@ -66,7 +62,13 @@ class EditDepenseController extends AbstractController
             return $this->redirectToRoute('home_mainMenu');
         }
 
-        $depense = $this->depenseRepository->findOneBySlug(['slug' > $slugDepense]);
+        $depense = $this->depenseRepository->findOneBy(['slug' => $slugDepense,
+            'schoolYear' => $schoolYear]);
+
+        if (!$depense) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
 
         $form = $this->createForm(DepenseType::class, $depense);
 

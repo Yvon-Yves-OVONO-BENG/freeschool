@@ -13,11 +13,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/classroom")]
 class PrintLessonClassroomController extends AbstractController
 {
@@ -56,23 +52,30 @@ class PrintLessonClassroomController extends AbstractController
             return $this->redirectToRoute('home_mainMenu');
         }
 
-        $classroom = $this->classroomRepository->findOneBySlug([
-            'slug' => $slug
+        $classroom = $this->classroomRepository->findOneBy([
+            'slug' => $slug,
+            'schoolYear' => $schoolYear
         ]);
 
-        $lessons = $classroom->getLessons();
+        if ($classroom ) 
+        {
+            $lessons = $classroom->getLessons();
         
-        $school = $this->schoolRepository->findOneBy(['schoolYear' => $schoolYear]);
+            $school = $this->schoolRepository->findOneBy(['schoolYear' => $schoolYear]);
 
-        $pdf = $this->printLessonClassroomService->print($classroom, $lessons, $school, $schoolYear);
+            $pdf = $this->printLessonClassroomService->print($classroom, $lessons, $school, $schoolYear);
 
-        if ($subSystem->getId() == 1 ) 
-        {
-            return new Response($pdf->Output("Lesson of - ".$classroom->getClassroom(), "I" ), 200, ['Content-Type' => 'application/pdf']);
+            if ($subSystem->getId() == 1 ) 
+            {
+                return new Response($pdf->Output("Lesson of - ".$classroom->getClassroom(), "I" ), 200, ['Content-Type' => 'application/pdf']);
+            } 
+            else 
+            {
+                return new Response($pdf->Output(utf8_decode("Lecon de la classe de - ".$classroom->getClassroom()), "I" ), 200, ['Content-Type' => 'application/pdf']);
+            }
         } 
-        else 
-        {
-            return new Response($pdf->Output(utf8_decode("Lecon de la classe de - ".$classroom->getClassroom()), "I" ), 200, ['Content-Type' => 'application/pdf']);
+        else {
+            return $this->redirectToRoute('page_error');
         }
         
         

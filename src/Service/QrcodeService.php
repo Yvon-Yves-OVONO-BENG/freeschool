@@ -2,8 +2,10 @@
 
 namespace App\Service;
 
+use App\Repository\TermRepository;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\Builder\BuilderInterface;
+use App\Service\InternetConnectionCheckerService;
 use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
 
 class QrcodeService
@@ -11,17 +13,32 @@ class QrcodeService
     /**
      * @var BuilderInterface
      */
-    protected $bulder;
-    public function __construct(BuilderInterface $bulder)
-    {
-        $this->bulder = $bulder;
-    }
+    public function __construct(
+        protected BuilderInterface $bulder,
+        protected TermRepository $termRepository,
+        protected InternetConnectionCheckerService $connectionCheckerService,)
+    {}
 
-    public function qrcode($query)
+    public function qrcode($query, $slugStudent, $school)
     {
-        $url = 'https://www.google.com/search?q=';
+        $slugTerm = $this->termRepository->findOneBy(['term' => 0])->getSlug();
+
+        $url = 'http://localhost/freeschool/public/display-transcript/'.$slugStudent."/".$slugTerm;
+        
+        if (!$this->connectionCheckerService->isConnected())
+        {
+            $donnees = $query;
+        }
+        else 
+        {
+            $donnees = $url;
+        }
+    
         $result = $this->bulder
-            ->data($query)
+            ->data($donnees)
+            ->logoPath(\dirname(__DIR__, 2).'/public/images/school/'.$school->getLogo())
+            ->logoResizeToWidth(100)
+            ->logoPunchoutBackground(true)
             ->size(400)
             ->encoding(new Encoding('UTF-8'))
             ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())

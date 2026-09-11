@@ -14,11 +14,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/student")]
 class DeleteStudentController extends AbstractController
 {
@@ -42,7 +38,12 @@ class DeleteStudentController extends AbstractController
         $mySession->set('saisiNotes', null);
         
 
-        if(!$mySession)
+        if($mySession)
+        {
+            $schoolYear = $mySession->get('schoolYear');
+            $subSystem = $mySession->get('subSystem');
+        }
+        else 
         {
             return $this->redirectToRoute("app_logout");
         }
@@ -56,12 +57,18 @@ class DeleteStudentController extends AbstractController
             return $this->redirectToRoute('home_mainMenu');
         }
 
-        $student = $this->studentRepository->findOneBySlug([
-            'slug' => $slug 
+        $student = $this->studentRepository->findOneBy([
+            'slug' => $slug,
+            'schoolYear' => $schoolYear
         ]);
+
+        if (!$student) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
         
         $idC = $student->getClassroom()->getId();
-        
+    
         $this->studentService->deleteStudentForClassroom($student, $user);
         // $student->setSupprime(1)
         //     ->setDeletedAt(new DateTime('now'))
@@ -82,6 +89,7 @@ class DeleteStudentController extends AbstractController
         {
             return $this->redirectToRoute('student_displayStudent', ['id' => $idC, 's' => 1 ]);
         }
+        
         
     }
 }

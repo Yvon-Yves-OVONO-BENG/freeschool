@@ -1,0 +1,222 @@
+{% extends 'baseTranscript.html.twig' %}
+
+{% block title %}
+	{% trans %}Transcript of : {% endtrans %} {{ student.fullName }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-student-transcript-premium.css') }}">
+{% endblock %}
+
+{% block body %}
+	<div class="hor-content main-content fs-transcript-page">
+		<div class="container">
+			<div class="fs-transcript-menu-safe-space" aria-hidden="true"></div>
+
+			<section class="fs-transcript-hero">
+				<div class="fs-transcript-hero__content">
+					<div>
+						<span class="fs-transcript-eyebrow">
+							<i class="fe fe-file-text"></i>
+							{% trans %}Academic transcript{% endtrans %}
+						</span>
+
+						<h1 class="fs-transcript-title">
+							{% trans %}Report card for / Transcript's of :{% endtrans %} {{ student.fullName }}
+						</h1>
+
+						<p class="fs-transcript-subtitle">
+							{% trans %}Review the student marks by subject, teacher and evaluation through a refined premium workspace.{% endtrans %}
+						</p>
+					</div>
+
+					<div class="fs-transcript-hero__actions">
+						<div class="fs-transcript-stat">
+							<span class="fs-transcript-stat__icon">
+								<i class="fe fe-home"></i>
+							</span>
+							<span class="fs-transcript-stat__label">{% trans %}Class{% endtrans %}</span>
+							<strong class="fs-transcript-stat__value">{{ student.classroom.classroom }}</strong>
+						</div>
+
+						<div class="fs-transcript-stat">
+							<span class="fs-transcript-stat__icon">
+								<i class="fe fe-book-open"></i>
+							</span>
+							<span class="fs-transcript-stat__label">{% trans %}Subjects{% endtrans %}</span>
+							<strong class="fs-transcript-stat__value">{{ releves|length }}</strong>
+						</div>
+
+						<a href="{{ path('print_transcript_annual_student', {'slugStudent': student.slug, 'slugTerm': term.slug}) }}" target="_blank" class="fs-transcript-btn fs-transcript-btn--light" data-bs-toggle="tooltip" title="{% trans %}Print transcript's of {% endtrans %} {{ student.fullName }}">
+							<i class="fe fe-printer"></i>
+							<span>{% trans %}Print transcript{% endtrans %}</span>
+						</a>
+					</div>
+				</div>
+			</section>
+
+			<section class="fs-transcript-profile-card">
+				<div class="fs-transcript-profile-card__avatar">
+					{{ student.fullName|slice(0, 1)|upper }}
+				</div>
+
+				<div class="fs-transcript-profile-card__content">
+					<span>{% trans %}Student profile{% endtrans %}</span>
+					<strong>{{ student.fullName }}</strong>
+					<small>{% trans %}Class:{% endtrans %} {{ student.classroom.classroom }}</small>
+				</div>
+
+				<div class="fs-transcript-profile-card__actions">
+					<button type="button" class="fs-transcript-btn fs-transcript-btn--ghost" id="fsTranscriptPrintTable">
+						<i class="fe fe-printer"></i>
+						<span>{% trans %}Print table{% endtrans %}</span>
+					</button>
+				</div>
+			</section>
+
+			<section class="fs-transcript-card">
+				<div class="fs-transcript-card__header">
+					<div>
+						<span class="fs-transcript-chip">
+							<i class="fe fe-grid"></i>
+							{% trans %}Dynamic table{% endtrans %}
+						</span>
+
+						<h2 class="fs-transcript-card-title">
+							{% trans %}Marks details{% endtrans %}
+						</h2>
+					</div>
+
+					<div class="fs-transcript-card__actions">
+						<div class="fs-transcript-search">
+							<i class="fe fe-search"></i>
+							<input type="text" id="fsTranscriptSearch" placeholder="{% trans %}Search subject or teacher...{% endtrans %}">
+						</div>
+					</div>
+				</div>
+
+				<div class="fs-transcript-table-wrap">
+					<table class="table fs-transcript-table" id="fsTranscriptTable">
+						<thead>
+							<tr>
+								<th>
+									<button type="button" class="fs-transcript-sort" data-sort-index="0">
+										<span>{% trans %}N°{% endtrans %}</span>
+										<i class="fe fe-chevron-down"></i>
+									</button>
+								</th>
+								<th scope="col">
+									<button type="button" class="fs-transcript-sort" data-sort-index="1">
+										<span>{% trans %}Subjects{% endtrans %}</span>
+										<i class="fe fe-chevron-down"></i>
+									</button>
+								</th>
+								<th scope="col">
+									<button type="button" class="fs-transcript-sort" data-sort-index="2">
+										<span>{% trans %}Teachers{% endtrans %}</span>
+										<i class="fe fe-chevron-down"></i>
+									</button>
+								</th>
+								<th>{% trans %}Eval 1{% endtrans %}</th>
+								<th>{% trans %}Eval 2{% endtrans %}</th>
+								<th>{% trans %}Eval 3{% endtrans %}</th>
+								<th>{% trans %}Eval 4{% endtrans %}</th>
+								<th>{% trans %}Eval 5{% endtrans %}</th>
+								<th>{% trans %}Eval 6{% endtrans %}</th>
+							</tr>
+						</thead>
+
+						<tbody>
+							{% set i = 1 %}
+							{% for releve in releves %}
+								<tr>
+									<td data-label="{% trans %}N°{% endtrans %}">
+										<span class="fs-transcript-index">{{ i }}</span>
+									</td>
+
+									<td data-label="{% trans %}Subjects{% endtrans %}">
+										<div class="fs-transcript-subject-cell">
+											<span class="fs-transcript-subject-icon">
+												<i class="fe fe-book"></i>
+											</span>
+											<strong>{{ releve['subjectName'] }}</strong>
+										</div>
+									</td>
+
+									<td data-label="{% trans %}Teachers{% endtrans %}">
+										<span class="fs-transcript-teacher-pill">
+											<i class="fe fe-user"></i>
+											{{ releve['teacher'] }}
+										</span>
+									</td>
+
+									<td data-label="{% trans %}Eval 1{% endtrans %}">
+										<span class="fs-transcript-mark">{{ releve['eval1'] }}</span>
+									</td>
+
+									<td data-label="{% trans %}Eval 2{% endtrans %}">
+										<span class="fs-transcript-mark">{{ releve['eval2'] }}</span>
+									</td>
+
+									<td data-label="{% trans %}Eval 3{% endtrans %}">
+										<span class="fs-transcript-mark">{{ releve['eval3'] }}</span>
+									</td>
+
+									<td data-label="{% trans %}Eval 4{% endtrans %}">
+										<span class="fs-transcript-mark">{{ releve['eval4'] }}</span>
+									</td>
+
+									<td data-label="{% trans %}Eval 5{% endtrans %}">
+										<span class="fs-transcript-mark">{{ releve['eval5'] }}</span>
+									</td>
+
+									<td data-label="{% trans %}Eval 6{% endtrans %}">
+										<span class="fs-transcript-mark">{{ releve['eval6'] }}</span>
+									</td>
+								</tr>
+
+								{% set i = i + 1 %}
+							{% else %}
+								<tr>
+									<td colspan="9">
+										<div class="fs-transcript-empty">
+											<i class="fe fe-folder"></i>
+											<strong>{% trans %}No marks found{% endtrans %}</strong>
+											<span>{% trans %}No transcript detail is available for this student.{% endtrans %}</span>
+										</div>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+
+				<div class="fs-transcript-table-footer">
+					<div class="fs-transcript-table-footer__left">
+						<span id="fsTranscriptResultCount"></span>
+					</div>
+
+					<div class="fs-transcript-footer-controls">
+						<label class="fs-transcript-page-size">
+							<span>{% trans %}Rows{% endtrans %}</span>
+							<select id="fsTranscriptRowsPerPage">
+								<option value="5">5</option>
+								<option value="10" selected>10</option>
+								<option value="25">25</option>
+								<option value="50">50</option>
+							</select>
+						</label>
+
+						<div class="fs-transcript-pagination" id="fsTranscriptPagination" aria-label="{% trans %}Pagination{% endtrans %}"></div>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-student-transcript-premium.js') }}"></script>
+{% endblock %}

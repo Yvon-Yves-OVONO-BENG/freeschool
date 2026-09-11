@@ -16,11 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/registration")]
 class SchoolFeesController extends AbstractController
 {
@@ -75,7 +71,15 @@ class SchoolFeesController extends AbstractController
         //on récupère les classes pour la liste déroulante
         $classrooms = $this->classroomRepository->findForSelect($schoolYear, $subSystem);
 
-        $student = $this->studentRepository->findOneBySlug(['slug' => $slugStudent]);
+        $student = $this->studentRepository->findOneBy([
+            'slug' => $slugStudent,
+            'schoolYear' => $schoolYear
+        ]);
+
+        if (!$student) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
 
         //on récupère la classe del'élève
         $selectedClassroom = $student->getClassroom();

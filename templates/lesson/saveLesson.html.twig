@@ -1,127 +1,203 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    {% if slugClassroom != 0 %}
-        {% trans %}Edit Lesson{% endtrans %}
-        {% else %}
-            {% trans %}Save Lesson{% endtrans %}
-    {% endif %}
-    
-        
+	{% if slugClassroom != 0 %}
+		{% trans %}Edit Lesson{% endtrans %}
+	{% else %}
+		{% trans %}Save Lesson{% endtrans %}
+	{% endif %}
 {% endblock %}
 
 {% block subTitle %}
-     {% if slugClassroom != 0 %}
-        {% trans %}UPDATING LESSON{% endtrans %}
-        {% else %}
-        {% trans %}ADDING NEW LESSON{% endtrans %}
-    {% endif %}
+	{% if slugClassroom != 0 %}
+		{% trans %}UPDATING LESSON{% endtrans %}
+	{% else %}
+		{% trans %}ADDING NEW LESSON{% endtrans %}
+	{% endif %}
 {% endblock %}
 
 {% block infoMessage %}
-    {% include "includes/_info_message.html.twig" %}
+	{% include "includes/_info_message.html.twig" %}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-lesson-form-premium.css') }}">
 {% endblock %}
 
 {% block body %}
-<!-- App-Content -->
-	<div class="hor-content main-content">
+	<div class="hor-content main-content fs-lesson-form-page">
 		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary"></h4>
-                </div>
-                <div class="page-rightheader">
-                    <div class="btn-list">
-                        
-                    </div>
-                </div>
-            </div>
-            <!--End Page header-->
+			<div class="fs-lesson-form-menu-safe-space" aria-hidden="true"></div>
 
-            <div class="card border-primary">
-                <div class="card-header">
-                        <div class="col-md-8">
-                            <div class="card-title">
-                            <i class="fa fa-briefcase me-2"></i>
-                                {% if slugClassroom != 0 %}
-                                    {% trans %}UPDATING LESSON{% endtrans %}
-                                {% else %}
-                                {% trans %}ADDING NEW LESSON{% endtrans %}
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="col-md-4 text-right">
-                            <a href="{{ path('lesson_displayLesson', {'slug': slugClassroom }) }}" class="btn btn-outline-primary">
-                                <i class="fa fa-list"></i>
-                                {% trans %}Display registered lessons{% endtrans %}
-                            </a>
-                        </div>
-                    
-                </div>
-                <div class="card-body ">
-                    <div class="row">
-                        <div class="col-md-12">
-                            {{ form_start(formLesson)}}
-                                <div class="row mb-3">
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            {{ form_row(formLesson.subject, {'attr': {'class': 'form-control select2-show-search'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            {{ form_row(formLesson.classroom, {'attr': {'class': 'form-control select2-show-search'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            {{ form_row(formLesson.teacher, {'attr': {'class': 'form-control select2-show-search'}}) }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            {{ form_row(formLesson.subjectGroup, {'attr': {'class': 'form-control select2 custom-select'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            {{ form_row(formLesson.coefficient, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            {{ form_row(formLesson.weekHours, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
+			<section class="fs-lesson-form-hero">
+				<div class="fs-lesson-form-hero__content">
+					<div>
+						<span class="fs-lesson-form-eyebrow">
+							{% if slugClassroom != 0 %}
+								<i class="fe fe-edit-3"></i>
+								{% trans %}Lesson update workspace{% endtrans %}
+							{% else %}
+								<i class="fe fe-plus"></i>
+								{% trans %}Lesson creation workspace{% endtrans %}
+							{% endif %}
+						</span>
 
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label style="color: #fff;">
-                                                {% trans %}Save{% endtrans %}
-                                            </label>
-                                            <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="addLesson">
-                                                {% if slugClassroom == 0 %}
-                                                <i class="fa fa-save"></i>
-                                                    {% trans %}Save{% endtrans %}
-                                                {% else %}
-                                                <i class="fa fa-save"></i>
-                                                    {% trans %}Save changes{% endtrans %}
-                                                {% endif %}
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>   
-                        {{ form_end(formLesson) }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-    
+						<h1 class="fs-lesson-form-title">
+							{% if slugClassroom != 0 %}
+								{% trans %}UPDATING LESSON{% endtrans %}
+							{% else %}
+								{% trans %}ADDING NEW LESSON{% endtrans %}
+							{% endif %}
+						</h1>
+
+						<p class="fs-lesson-form-subtitle">
+							{% trans %}Assign a subject, classroom, teacher, coefficient and weekly hours through a refined premium workspace.{% endtrans %}
+						</p>
+					</div>
+
+					<div class="fs-lesson-form-hero__right">
+						<a href="{{ path('lesson_displayLesson', {'slug': slugClassroom }) }}" class="fs-lesson-form-btn fs-lesson-form-btn--hero">
+							<i class="fe fe-list"></i>
+							<span>{% trans %}Display registered lessons{% endtrans %}</span>
+						</a>
+					</div>
+				</div>
+			</section>
+
+			<section class="fs-lesson-form-card {% if slugClassroom != 0 %}fs-lesson-form-card--edit{% else %}fs-lesson-form-card--create{% endif %}">
+				<div class="fs-lesson-form-card__header">
+					<div>
+						<span class="fs-lesson-form-card-badge">
+							{% if slugClassroom != 0 %}
+								<i class="fe fe-edit"></i>
+								{% trans %}Edit mode{% endtrans %}
+							{% else %}
+								<i class="fe fe-plus"></i>
+								{% trans %}Creation mode{% endtrans %}
+							{% endif %}
+						</span>
+
+						<h2 class="fs-lesson-form-card-title">
+							{% if slugClassroom != 0 %}
+								{% trans %}UPDATING LESSON{% endtrans %}
+							{% else %}
+								{% trans %}ADDING NEW LESSON{% endtrans %}
+							{% endif %}
+						</h2>
+					</div>
+
+					<div class="fs-lesson-form-soft-note">
+						<i class="fe fe-info"></i>
+						<span>{% trans %}Fill in every lesson parameter before saving.{% endtrans %}</span>
+					</div>
+				</div>
+
+				<div class="fs-lesson-form-card__body">
+					{{ form_start(formLesson, {'attr': {'class': 'fs-lesson-form needs-validation', 'novalidate': 'novalidate'}}) }}
+
+						<div class="fs-lesson-form-section">
+							<div class="fs-lesson-form-section__header">
+								<div class="fs-lesson-form-section-title">
+									<span class="fs-lesson-form-section-icon">
+										<i class="fe fe-briefcase"></i>
+									</span>
+									<div>
+										<h3>{% trans %}Lesson information{% endtrans %}</h3>
+										<p>{% trans %}Connect the subject, classroom and teacher with the academic workload.{% endtrans %}</p>
+									</div>
+								</div>
+							</div>
+
+							<div class="fs-lesson-form-grid">
+								<div class="fs-floating-field fs-required-field">
+									{{ form_widget(formLesson.subject, {'attr': {'class': 'form-control select2-show-search fs-floating-control', 'placeholder': ' ', 'required': 'required'}}) }}
+									<label class="fs-floating-label">
+										<i class="fe fe-book-open"></i>
+										{% trans %}Subject{% endtrans %}
+									</label>
+									<div class="fs-field-error">{{ form_errors(formLesson.subject) }}</div>
+								</div>
+
+								<div class="fs-floating-field fs-required-field">
+									{{ form_widget(formLesson.classroom, {'attr': {'class': 'form-control select2-show-search fs-floating-control', 'placeholder': ' ', 'required': 'required'}}) }}
+									<label class="fs-floating-label">
+										<i class="fe fe-home"></i>
+										{% trans %}Classroom{% endtrans %}
+									</label>
+									<div class="fs-field-error">{{ form_errors(formLesson.classroom) }}</div>
+								</div>
+
+								<div class="fs-floating-field fs-required-field">
+									{{ form_widget(formLesson.teacher, {'attr': {'class': 'form-control select2-show-search fs-floating-control', 'placeholder': ' ', 'required': 'required'}}) }}
+									<label class="fs-floating-label">
+										<i class="fe fe-user-check"></i>
+										{% trans %}Teacher{% endtrans %}
+									</label>
+									<div class="fs-field-error">{{ form_errors(formLesson.teacher) }}</div>
+								</div>
+
+								<div class="fs-floating-field fs-required-field">
+									{{ form_widget(formLesson.subjectGroup, {'attr': {'class': 'form-control select2 custom-select fs-floating-control', 'placeholder': ' ', 'required': 'required'}}) }}
+									<label class="fs-floating-label">
+										<i class="fe fe-layers"></i>
+										{% trans %}Group{% endtrans %}
+									</label>
+									<div class="fs-field-error">{{ form_errors(formLesson.subjectGroup) }}</div>
+								</div>
+
+								<div class="fs-floating-field fs-required-field">
+									{{ form_widget(formLesson.coefficient, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' ', 'required': 'required'}}) }}
+									<label class="fs-floating-label">
+										<i class="fe fe-hash"></i>
+										{% trans %}Coefficient{% endtrans %}
+									</label>
+									<div class="fs-field-error">{{ form_errors(formLesson.coefficient) }}</div>
+								</div>
+
+								<div class="fs-floating-field fs-required-field">
+									{{ form_widget(formLesson.weekHours, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' ', 'required': 'required'}}) }}
+									<label class="fs-floating-label">
+										<i class="fe fe-clock"></i>
+										{% trans %}Hours per week{% endtrans %}
+									</label>
+									<div class="fs-field-error">{{ form_errors(formLesson.weekHours) }}</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="fs-lesson-submit-zone">
+							<div class="fs-lesson-submit-zone__hint">
+								<i class="fe fe-shield"></i>
+								<span>{% trans %}Please review the information before saving.{% endtrans %}</span>
+							</div>
+
+							<div class="fs-lesson-submit-zone__actions">
+								<a href="{{ path('lesson_displayLesson', {'slug': slugClassroom }) }}" class="fs-lesson-form-btn fs-lesson-form-btn--ghost">
+									<i class="fe fe-arrow-left"></i>
+									<span>{% trans %}Back{% endtrans %}</span>
+								</a>
+
+								<button type="submit" class="fs-lesson-form-btn fs-lesson-form-btn--primary fs-lesson-submit-btn" name="addLesson">
+									<span class="fs-lesson-submit-spinner" aria-hidden="true"></span>
+									<i class="fe fe-save fs-lesson-submit-icon"></i>
+									{% if slugClassroom == 0 %}
+										<span>{% trans %}Save{% endtrans %}</span>
+									{% else %}
+										<span>{% trans %}Save changes{% endtrans %}</span>
+									{% endif %}
+								</button>
+							</div>
+						</div>
+
+					{{ form_end(formLesson) }}
+				</div>
+			</section>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-lesson-form-premium.js') }}"></script>
 {% endblock %}

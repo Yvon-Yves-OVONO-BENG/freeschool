@@ -3,92 +3,225 @@
 {% block title %}{% trans %}Display best results of the year{% endtrans %}{% endblock %}
 
 {% block subTitle %}
-    {% trans %}BEST STUDENTS{% endtrans %}
+	{% trans %}BEST STUDENTS{% endtrans %}
 {% endblock %}
 
 {% block stylesheets %}
-	<style>
-		th,
-		tfoot {
-			font-size: 15px !important;
-			text-align: center !important;
-			font-weight: bold !important;
-			background-color: #F1F1F1 !important;
-		}
-
-		tr:hover {
-			background-color: rgba(62, 128, 235, 0.2) !important;
-			color: #3e80eb !important;
-		}
-
-        td {
-			font-size: 12px !important;
-			text-align: center !important;
-		}
-	</style>
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-best-students-premium.css') }}">
 {% endblock %}
 
-{% block body %}    
-<!-- App-Content -->
-	<div class="hor-content main-content">
+{% block body %}
+	<div class="hor-content main-content fs-best-page">
 		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary"></h4>
-                </div>
-                <div class="page-rightheader">
-                    <div class="btn-list">
-                        
-                    </div>
-                </div>
-            </div>
-            <!--End Page header-->
+			<div class="fs-best-menu-safe-space" aria-hidden="true"></div>
 
-            <div class="card border-primary">
-                <div class="card-header">
-                    {% if level != null %}
-                        <div class="card-title">{% trans %}Best students of level{% endtrans %} :  <span class="badge bg-primary">{{ level.level }}</span></div>
-                        {% else %}
-                        <div class="card-title">{% trans %}Best students of classroom{% endtrans %} : <span class="badge bg-primary">{{ classroom.classroom }}</span> </div>
-                    {% endif %}
-                </div>
-                <div class="card-body">
-                    <div class="">
-                        <div class="table-responsive">
-                            <table id="example" class="table table-bordered text-nowrap key-buttons">
-                                <thead>
-                                    <tr>
-                                        <th class="border-bottom-0">{% trans %}Full name{% endtrans %}</th>
-                                        <th class="border-bottom-0">{% trans %}Sex{% endtrans %}</th>
-                                        <th class="border-bottom-0">{% trans %}Average{% endtrans %}</th>
-                                        <th class="border-bottom-0">{% trans %}Class{% endtrans %}</th>
-                                        <th class="border-bottom-0">{% trans %}Date of birth{% endtrans %}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for student in students %}
-                                    
-                                        <tr>
-                                            <td style="text-align: left !important;">{{ student.student.fullName }}</td>
-                                            <td>{{ student.student.sex.sex }}</td>
-                                            <td>{{ student.moyenne|number_format(2) }}</td>
-                                            <td>{{ student.student.classroom.classroom }}</td>
-                                            <td>{{ student.student.birthday|date('d/m/Y') }}</td>
-                                        </tr>
+			<section class="fs-best-hero">
+				<div class="fs-best-hero__content">
+					<div>
+						<span class="fs-best-eyebrow">
+							<i class="fe fe-award"></i>
+							{% trans %}Academic excellence{% endtrans %}
+						</span>
 
-                                    {% endfor %}
-                                    
-                                    
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--/div-->
-        </div>
-    </div>
-</div>
+						<h1 class="fs-best-title">
+							{% trans %}Best students{% endtrans %}
+						</h1>
+
+						<p class="fs-best-subtitle">
+							{% trans %}Display the best annual results with a refined, responsive and dynamic premium table.{% endtrans %}
+						</p>
+					</div>
+
+					<div class="fs-best-hero__actions">
+						<div class="fs-best-hero-stat">
+							<span class="fs-best-hero-stat__icon">
+								<i class="fe fe-users"></i>
+							</span>
+							<span class="fs-best-hero-stat__label">{% trans %}Students{% endtrans %}</span>
+							<strong class="fs-best-hero-stat__value">{{ students|length }}</strong>
+						</div>
+
+						<div class="fs-best-hero-stat fs-best-hero-stat--gold">
+							<span class="fs-best-hero-stat__icon">
+								<i class="fe fe-star"></i>
+							</span>
+							<span class="fs-best-hero-stat__label">
+								{% if level != null %}
+									{% trans %}Level{% endtrans %}
+								{% else %}
+									{% trans %}Classroom{% endtrans %}
+								{% endif %}
+							</span>
+							<strong class="fs-best-hero-stat__value fs-best-hero-stat__value--small">
+								{% if level != null %}
+									{{ level.level }}
+								{% else %}
+									{{ classroom.classroom }}
+								{% endif %}
+							</strong>
+						</div>
+
+						<button type="button" class="fs-best-btn fs-best-btn--light fs-best-print-table">
+							<i class="fe fe-printer"></i>
+							<span>{% trans %}Print table{% endtrans %}</span>
+						</button>
+					</div>
+				</div>
+			</section>
+
+			<section class="fs-best-card">
+				<div class="fs-best-card__header">
+					<div>
+						<span class="fs-best-chip">
+							<i class="fe fe-grid"></i>
+							{% trans %}Dynamic ranking{% endtrans %}
+						</span>
+
+						<h2 class="fs-best-card-title">
+							{% if level != null %}
+								{% trans %}Best students of level{% endtrans %} : <span>{{ level.level }}</span>
+							{% else %}
+								{% trans %}Best students of classroom{% endtrans %} : <span>{{ classroom.classroom }}</span>
+							{% endif %}
+						</h2>
+					</div>
+
+					<div class="fs-best-card__actions">
+						<div class="fs-best-search">
+							<i class="fe fe-search"></i>
+							<input type="text" class="fs-best-search-input" placeholder="{% trans %}Search student, sex, class...{% endtrans %}">
+						</div>
+					</div>
+				</div>
+
+				<div class="fs-best-table-wrap">
+					<table id="fsBestTable" class="table fs-best-table fs-best-dynamic-table">
+						<thead>
+							<tr>
+								<th>
+									<button type="button" class="fs-best-sort" data-sort-index="0">
+										<span>{% trans %}Rank{% endtrans %}</span>
+										<i class="fe fe-chevron-down"></i>
+									</button>
+								</th>
+								<th>
+									<button type="button" class="fs-best-sort" data-sort-index="1">
+										<span>{% trans %}Full name{% endtrans %}</span>
+										<i class="fe fe-chevron-down"></i>
+									</button>
+								</th>
+								<th>
+									<button type="button" class="fs-best-sort" data-sort-index="2">
+										<span>{% trans %}Sex{% endtrans %}</span>
+										<i class="fe fe-chevron-down"></i>
+									</button>
+								</th>
+								<th>
+									<button type="button" class="fs-best-sort" data-sort-index="3">
+										<span>{% trans %}Average{% endtrans %}</span>
+										<i class="fe fe-chevron-down"></i>
+									</button>
+								</th>
+								<th>
+									<button type="button" class="fs-best-sort" data-sort-index="4">
+										<span>{% trans %}Class{% endtrans %}</span>
+										<i class="fe fe-chevron-down"></i>
+									</button>
+								</th>
+								<th>
+									<button type="button" class="fs-best-sort" data-sort-index="5">
+										<span>{% trans %}Date of birth{% endtrans %}</span>
+										<i class="fe fe-chevron-down"></i>
+									</button>
+								</th>
+							</tr>
+						</thead>
+
+						<tbody>
+							{% set rank = 1 %}
+							{% for student in students %}
+								<tr>
+									<td data-label="{% trans %}Rank{% endtrans %}">
+										<span class="fs-best-rank {% if rank == 1 %}fs-best-rank--gold{% elseif rank == 2 %}fs-best-rank--silver{% elseif rank == 3 %}fs-best-rank--bronze{% endif %}">
+											{% if rank <= 3 %}
+												<i class="fe fe-award"></i>
+											{% endif %}
+											{{ rank }}
+										</span>
+									</td>
+
+									<td data-label="{% trans %}Full name{% endtrans %}">
+										<div class="fs-best-student-cell">
+											<span class="fs-best-avatar">{{ student.student.fullName|slice(0, 1)|upper }}</span>
+											<div>
+												<strong>{{ student.student.fullName }}</strong>
+												<span class="fs-best-status">
+													<i class="fe fe-star"></i>
+													{% trans %}Excellent result{% endtrans %}
+												</span>
+											</div>
+										</div>
+									</td>
+
+									<td data-label="{% trans %}Sex{% endtrans %}">
+										<span class="fs-best-pill">{{ student.student.sex.sex }}</span>
+									</td>
+
+									<td data-label="{% trans %}Average{% endtrans %}">
+										<span class="fs-best-average">{{ student.moyenne|number_format(2) }}</span>
+									</td>
+
+									<td data-label="{% trans %}Class{% endtrans %}">
+										<span class="fs-best-classroom">{{ student.student.classroom.classroom }}</span>
+									</td>
+
+									<td data-label="{% trans %}Date of birth{% endtrans %}">
+										<span class="fs-best-date">{{ student.student.birthday|date('d/m/Y') }}</span>
+									</td>
+								</tr>
+
+								{% set rank = rank + 1 %}
+							{% else %}
+								<tr>
+									<td colspan="6">
+										<div class="fs-best-empty">
+											<i class="fe fe-folder"></i>
+											<strong>{% trans %}No student found{% endtrans %}</strong>
+											<span>{% trans %}No best result is available for this selection.{% endtrans %}</span>
+										</div>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+
+				<div class="fs-best-table-footer">
+					<div class="fs-best-table-footer__left">
+						<span class="fs-best-result-count"></span>
+					</div>
+
+					<div class="fs-best-footer-controls">
+						<label class="fs-best-page-size">
+							<span>{% trans %}Rows{% endtrans %}</span>
+							<select class="fs-best-rows-per-page">
+								<option value="5">5</option>
+								<option value="10" selected>10</option>
+								<option value="25">25</option>
+								<option value="50">50</option>
+							</select>
+						</label>
+
+						<div class="fs-best-pagination" aria-label="{% trans %}Pagination{% endtrans %}"></div>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-best-students-premium.js') }}"></script>
 {% endblock %}

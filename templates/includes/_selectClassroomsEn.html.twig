@@ -1,5 +1,5 @@
 {% if classrooms.level1|length > 0 %}
-    <optgroup label="From 1">
+    <optgroup label="{% trans %}From 1{% endtrans %}">
         {% for classroom in  classrooms.level1 %}
         <option value="{{ classroom.id }}" 
             {% if selectedClassroom.id == classroom.id %}
@@ -12,7 +12,7 @@
 {% endif %}
 
 {% if classrooms.level2|length > 0 %}
-    <optgroup label="From 2">
+    <optgroup label="{% trans %}From 2{% endtrans %}">
         {% for classroom in  classrooms.level2 %}
         <option value="{{ classroom.id }}" 
             {% if selectedClassroom.id == classroom.id %}
@@ -25,7 +25,7 @@
 {% endif %}
 
 {% if classrooms.level3|length > 0 %}
-    <optgroup label="From 3">
+    <optgroup label="{% trans %}From 3{% endtrans %}">
         {% for classroom in  classrooms.level3 %}
         <option value="{{ classroom.id }}" 
             {% if selectedClassroom.id == classroom.id %}
@@ -38,7 +38,7 @@
 {% endif %}
 
 {% if classrooms.level4|length > 0 %}
-    <optgroup label="From 4">
+    <optgroup label="{% trans %}From 4{% endtrans %}">
         {% for classroom in  classrooms.level4 %}
         <option value="{{ classroom.id }}" 
             {% if selectedClassroom.id == classroom.id %}
@@ -51,7 +51,7 @@
 {% endif %}
 
 {% if classrooms.level5|length > 0 %}
-    <optgroup label="From 5">
+    <optgroup label="{% trans %}From 5{% endtrans %}">
         {% for classroom in  classrooms.level5 %}
         <option value="{{ classroom.id }}" 
             {% if selectedClassroom.id == classroom.id %}
@@ -64,7 +64,7 @@
 {% endif %}
 
 {% if classrooms.level6|length > 0 %}
-    <optgroup label="Lower 6">
+    <optgroup label="{% trans %}Lower 6{% endtrans %}">
         {% for classroom in  classrooms.level6 %}
         <option value="{{ classroom.id }}" 
             {% if selectedClassroom.id == classroom.id %}
@@ -77,7 +77,7 @@
 {% endif %}
 
 {% if classrooms.level7|length > 0 %}
-    <optgroup label="Upper 6">
+    <optgroup label="{% trans %}Upper 6{% endtrans %}">
         {% for classroom in  classrooms.level7 %}
         <option value="{{ classroom.id }}" 
             {% if selectedClassroom.id == classroom.id %}

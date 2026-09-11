@@ -15,11 +15,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/diploma")]
 class EditDiplomaController extends AbstractController
 {
@@ -62,9 +58,14 @@ class EditDiplomaController extends AbstractController
             return $this->redirectToRoute('home_mainMenu');
         }
 
-        $diploma = $this->diplomaRepository->findOneBySlug([
+        $diploma = $this->diplomaRepository->findOneBy([
             'slug' => $slug
         ]);
+
+        if (!$diploma) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
 
         $form = $this->createForm(DiplomaType::class, $diploma);
 

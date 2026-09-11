@@ -7,16 +7,14 @@ use App\Repository\EvaluationRepository;
 use App\Repository\LessonRepository;
 use App\Repository\SequenceRepository;
 use App\Repository\StudentRepository;
+use App\Service\ReportRefreshService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/problems")]
 class ResoudreProblemeController extends AbstractController
 {
@@ -27,6 +25,7 @@ class ResoudreProblemeController extends AbstractController
         protected StudentRepository $studentRepository,
         protected SequenceRepository $sequenceRepository,
         protected EvaluationRepository $evaluationRepository,
+        protected ReportRefreshService $reportRefreshService,
     )
     {}
 
@@ -49,16 +48,18 @@ class ResoudreProblemeController extends AbstractController
             'sequence' => $sequence,
         ]);
 
-        if (!$evaluation) {
+        if (!$evaluation) 
+        {
             // Créez une nouvelle évaluation avec une note de 0.1
             $evaluation = new Evaluation();
             $evaluation->setStudent($student);
             $evaluation->setLesson($lesson);
-            $evaluation->setSequence($sequenceId);
+            $evaluation->setSequence($sequence);
             $evaluation->setMark(0.1);
 
             $this->em->persist($evaluation);
             $this->em->flush();
+            $this->reportRefreshService->refreshAfterSequence($sequence, $student->getClassroom());
 
             $this->addFlash('success', $this->translator->trans('The problem is solved with success !'));
         } 

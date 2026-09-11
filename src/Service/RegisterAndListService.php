@@ -1295,7 +1295,7 @@ class RegisterAndListService
 
             // Entête de la fiche
             $pdf = $this->getReferenceRegisterSlipHeaderPagination($pdf, $termName, $school,  $firstReport, $cellSubjectWidth, $cellHeaderHeight1, $cellHeaderWidth1, $pv,  $firstPeriodLetter, $cellDecisionWidth, $cellHeight2, $cellNumberWidth, $cellStudentNameWidth);
-
+            
             if(!empty($firstReport->getReportBody()->getRowsGroup1()))
             {
                 // contenu du tableau
@@ -1650,7 +1650,7 @@ class RegisterAndListService
 
             $x = $cellSubjectWidth+($cellHeaderWidth1/2)+11; 
             $r = $cellHeaderWidth1; 
-            $y = 87; 
+            $y = 90; 
             $numberOfSubjects = 0;
 
             // listes des matières de groupe 1 à l'entête

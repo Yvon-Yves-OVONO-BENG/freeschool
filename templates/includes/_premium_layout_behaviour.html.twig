@@ -1,0 +1,1292 @@
+{#
+  FreeSchool — comportement global UI Premium
+  - Retire les héros décoratifs sans perdre leurs actions
+  - Déplace les actions vers l’en-tête de la première carte utile
+  - Ouvre les ajouts/modifications dans une modale isolée (iframe même origine)
+  - Préserve intégralement JavaScript, CSRF, upload, Select2 et logique Symfony
+  - Maintient le footer au bas de l’écran sans masquer le contenu
+#}
+<style id="fs-premium-layout-behaviour-style">
+  html,
+  body {
+    min-height: 100%;
+  }
+
+  body.fs-saas-premium {
+    min-height: 100vh;
+  }
+
+  body.fs-saas-premium > .page,
+  body.fs-saas-premium .page-main {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  body.fs-saas-premium .page-main > .hor-content.main-content,
+  body.fs-saas-premium .page-main > .app-content,
+  body.fs-saas-premium .page-main > .content-wrapper {
+    flex: 1 0 auto;
+  }
+
+  body.fs-saas-premium .page-main > .footer,
+  body.fs-saas-premium footer.footer,
+  body.fs-saas-premium .footer {
+    position: relative !important;
+    inset: auto !important;
+    z-index: 2;
+    flex: 0 0 auto;
+    width: 100%;
+    margin-top: auto !important;
+  }
+
+  /* Le héros est masqué seulement après la récupération de ses actions. */
+  body.fs-saas-premium .fs-premium-hero-removed {
+    display: none !important;
+  }
+
+  .fs-premium-card-toolbar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+    width: 100%;
+  }
+
+  .fs-premium-card-toolbar__content {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  .fs-premium-card-toolbar__actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-left: auto;
+  }
+
+  .fs-premium-card-toolbar__actions > * {
+    margin: 0 !important;
+  }
+
+  .fs-premium-card-toolbar__actions form {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .fs-premium-card-toolbar__actions .btn,
+  .fs-premium-card-toolbar__actions button,
+  .fs-premium-card-toolbar__actions a[class*="-btn"],
+  .fs-premium-card-toolbar__actions span[class*="-btn"],
+  .fs-premium-orphan-actions .btn,
+  .fs-premium-orphan-actions button,
+  .fs-premium-orphan-actions a[class*="-btn"],
+  .fs-premium-orphan-actions span[class*="-btn"] {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 9px 14px !important;
+    border: 1px solid #dce2eb !important;
+    border-radius: 12px !important;
+    color: #475569 !important;
+    background: #fff !important;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, .07) !important;
+    font-size: 12.5px !important;
+    font-weight: 600 !important;
+    line-height: 1.15;
+    text-decoration: none !important;
+    white-space: nowrap;
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, color .18s ease, background .18s ease;
+  }
+
+  .fs-premium-card-toolbar__actions a[class*="-btn"]:hover,
+  .fs-premium-card-toolbar__actions button:hover:not(:disabled),
+  .fs-premium-orphan-actions a[class*="-btn"]:hover,
+  .fs-premium-orphan-actions button:hover:not(:disabled) {
+    transform: translateY(-1px);
+    border-color: #cbd5e1 !important;
+    box-shadow: 0 10px 22px rgba(15, 23, 42, .11) !important;
+  }
+
+  .fs-premium-card-toolbar__actions :is(a, button, span)[class*="--primary"],
+  .fs-premium-card-toolbar__actions :is(a, button, span)[class*="--indigo"],
+  .fs-premium-orphan-actions :is(a, button, span)[class*="--primary"],
+  .fs-premium-orphan-actions :is(a, button, span)[class*="--indigo"] {
+    border-color: #4f46e5 !important;
+    color: #fff !important;
+    background: linear-gradient(135deg, #5b52ec, #4338ca) !important;
+  }
+
+  .fs-premium-card-toolbar__actions :is(a, button, span)[class*="--success"],
+  .fs-premium-orphan-actions :is(a, button, span)[class*="--success"] {
+    border-color: #10b981 !important;
+    color: #fff !important;
+    background: linear-gradient(135deg, #21bd8d, #059669) !important;
+  }
+
+  .fs-premium-card-toolbar__actions :is(a, button, span)[class*="--danger"],
+  .fs-premium-orphan-actions :is(a, button, span)[class*="--danger"] {
+    border-color: #ef4444 !important;
+    color: #fff !important;
+    background: linear-gradient(135deg, #f35b5b, #dc2626) !important;
+  }
+
+  .fs-premium-card-toolbar__actions :is(a, button, span)[class*="--warning"],
+  .fs-premium-orphan-actions :is(a, button, span)[class*="--warning"] {
+    border-color: #f59e0b !important;
+    color: #fff !important;
+    background: linear-gradient(135deg, #f8b433, #e88a05) !important;
+  }
+
+  .fs-premium-card-toolbar__actions :is(a, button, span)[class*="--info"],
+  .fs-premium-orphan-actions :is(a, button, span)[class*="--info"] {
+    border-color: #0ea5e9 !important;
+    color: #fff !important;
+    background: linear-gradient(135deg, #22b5eb, #0284c7) !important;
+  }
+
+  .fs-premium-card-toolbar__actions :is(a, button, span)[class*="--light"],
+  .fs-premium-card-toolbar__actions :is(a, button, span)[class*="--ghost"],
+  .fs-premium-orphan-actions :is(a, button, span)[class*="--light"],
+  .fs-premium-orphan-actions :is(a, button, span)[class*="--ghost"] {
+    border-color: #dce2eb !important;
+    color: #334155 !important;
+    background: #fff !important;
+  }
+
+
+  .fs-premium-card-toolbar__actions :is(a, button, span)[class*="--success-soft"],
+  .fs-premium-card-toolbar__actions :is(a, button, span)[class*="--success-light"],
+  .fs-premium-orphan-actions :is(a, button, span)[class*="--success-soft"],
+  .fs-premium-orphan-actions :is(a, button, span)[class*="--success-light"] {
+    border-color: #a7f3d0 !important;
+    color: #047857 !important;
+    background: #ecfdf5 !important;
+  }
+
+  .fs-premium-card-toolbar__actions :is(a, button, span)[class*="--danger-soft"],
+  .fs-premium-card-toolbar__actions :is(a, button, span)[class*="--danger-light"],
+  .fs-premium-orphan-actions :is(a, button, span)[class*="--danger-soft"],
+  .fs-premium-orphan-actions :is(a, button, span)[class*="--danger-light"] {
+    border-color: #fecaca !important;
+    color: #b91c1c !important;
+    background: #fff1f2 !important;
+  }
+
+  .fs-premium-card-toolbar__actions :is(a, button, span)[class*="--warning-soft"],
+  .fs-premium-card-toolbar__actions :is(a, button, span)[class*="--warning-light"],
+  .fs-premium-orphan-actions :is(a, button, span)[class*="--warning-soft"],
+  .fs-premium-orphan-actions :is(a, button, span)[class*="--warning-light"] {
+    border-color: #fde68a !important;
+    color: #b45309 !important;
+    background: #fffbeb !important;
+  }
+
+  .fs-premium-card-toolbar__actions :is(a, button, span)[class*="--disabled"],
+  .fs-premium-orphan-actions :is(a, button, span)[class*="--disabled"],
+  .fs-premium-card-toolbar__actions :is(a, button):disabled,
+  .fs-premium-orphan-actions :is(a, button):disabled {
+    border-color: #e2e8f0 !important;
+    color: #94a3b8 !important;
+    background: #f8fafc !important;
+    box-shadow: none !important;
+    cursor: not-allowed;
+    opacity: .76;
+  }
+
+  .fs-premium-card-toolbar__actions i,
+  .fs-premium-orphan-actions i {
+    color: currentColor !important;
+    opacity: 1 !important;
+  }
+
+  .fs-premium-orphan-actions {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0 0 16px;
+    padding: 12px 14px;
+    border: 1px solid #e6eaf1;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, .96);
+    box-shadow: 0 8px 24px rgba(30, 41, 59, .07);
+  }
+
+  .fs-premium-hero-form-dock {
+    width: 100%;
+    margin: 0 0 16px;
+    padding: 16px;
+    border: 1px solid #e6eaf1;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, .97);
+    box-shadow: 0 10px 30px rgba(30, 41, 59, .075);
+  }
+
+  .fs-premium-hero-form-dock > form {
+    width: 100%;
+    margin: 0 !important;
+  }
+
+  /* ================================================================
+     Modale CRUD SaaS Premium — la page est chargée dans une iframe
+     même origine afin de conserver tous ses scripts et comportements.
+     ================================================================ */
+  .fs-global-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 22px;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease, visibility 0s linear .22s;
+  }
+
+  .fs-global-modal.is-open {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    transition-delay: 0s;
+  }
+
+  .fs-global-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 18% 5%, rgba(79, 70, 229, .18), transparent 34rem),
+      rgba(15, 23, 42, .66);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .fs-global-modal__dialog {
+    --fs-modal-width: 1080px;
+    --fs-modal-height: min(91vh, 920px);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: min(var(--fs-modal-width), calc(100vw - 44px));
+    height: var(--fs-modal-height);
+    min-height: 360px;
+    max-height: calc(100vh - 36px);
+    overflow: hidden;
+    border: 1px solid rgba(226, 232, 240, .96);
+    border-radius: 24px;
+    background: #f7f9fc;
+    box-shadow: 0 34px 100px rgba(15, 23, 42, .34);
+    transform: translateY(14px) scale(.982);
+    opacity: 0;
+    transition: transform .24s cubic-bezier(.2, .8, .2, 1), opacity .2s ease;
+  }
+
+  .fs-global-modal.is-open .fs-global-modal__dialog {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+
+  .fs-global-modal__header {
+    position: relative;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    flex: 0 0 72px;
+    min-height: 72px;
+    padding: 14px 18px 14px 20px;
+    border-bottom: 1px solid #e7ebf2;
+    background: rgba(255, 255, 255, .96);
+    box-shadow: 0 5px 20px rgba(15, 23, 42, .045);
+    backdrop-filter: blur(16px);
+  }
+
+  .fs-global-modal__heading {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    gap: 12px;
+  }
+
+  .fs-global-modal__icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 42px;
+    width: 42px;
+    height: 42px;
+    border: 1px solid #dfe4ff;
+    border-radius: 13px;
+    color: #4f46e5;
+    background: linear-gradient(145deg, #f8f9ff, #eef2ff);
+    box-shadow: inset 0 1px 0 #fff;
+  }
+
+  .fs-global-modal__heading-copy {
+    min-width: 0;
+  }
+
+  .fs-global-modal__eyebrow {
+    display: block;
+    margin-bottom: 3px;
+    color: #6366f1;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+  }
+
+  .fs-global-modal__title {
+    overflow: hidden;
+    max-width: min(72vw, 760px);
+    margin: 0;
+    color: #172033;
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -.018em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .fs-global-modal__close {
+    display: inline-grid;
+    place-items: center;
+    flex: 0 0 42px;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: 1px solid #e3e8f1;
+    border-radius: 13px;
+    color: #64748b;
+    background: #fff;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, .055);
+    cursor: pointer;
+    transition: color .18s ease, border-color .18s ease, background-color .18s ease, transform .18s ease;
+  }
+
+  .fs-global-modal__close:hover {
+    color: #dc2626;
+    border-color: #fecaca;
+    background: #fff7f7;
+    transform: translateY(-1px);
+  }
+
+  .fs-global-modal__viewport {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    background: #f5f7fb;
+  }
+
+  .fs-global-modal__frame {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    opacity: 0;
+    background: #f5f7fb;
+    transition: opacity .18s ease;
+  }
+
+  .fs-global-modal__frame.is-ready {
+    opacity: 1;
+  }
+
+  .fs-global-modal__loader {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    display: grid;
+    place-items: center;
+    color: #64748b;
+    background: rgba(247, 249, 252, .94);
+    text-align: center;
+    transition: opacity .18s ease, visibility .18s ease;
+  }
+
+  .fs-global-modal__loader.is-hidden {
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .fs-global-modal__spinner {
+    width: 42px;
+    height: 42px;
+    margin: 0 auto 14px;
+    border: 3px solid #e0e7ff;
+    border-top-color: #4f46e5;
+    border-radius: 50%;
+    animation: fsModalSpin .75s linear infinite;
+  }
+
+  body.fs-modal-open {
+    overflow: hidden !important;
+  }
+
+  @keyframes fsModalSpin {
+    to { transform: rotate(360deg); }
+  }
+
+
+  .fs-navigation-progress {
+    position: fixed;
+    z-index: 2147483646;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .15s ease;
+  }
+
+  .fs-navigation-progress::before {
+    content: "";
+    display: block;
+    width: 36%;
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #4f46e5, #0ea5e9, #14b8a6);
+    transform: translateX(-110%);
+  }
+
+  .fs-navigation-progress.is-active {
+    opacity: 1;
+  }
+
+  .fs-navigation-progress.is-active::before {
+    animation: fsNavigationProgress 1.05s ease-in-out infinite;
+  }
+
+  @keyframes fsNavigationProgress {
+    0% { transform: translateX(-110%); }
+    65% { transform: translateX(185%); }
+    100% { transform: translateX(320%); }
+  }
+
+  /* Mode d’affichage de la page à l’intérieur de la modale. */
+  html.fs-modal-embedded,
+  body.fs-modal-embedded {
+    min-height: 0 !important;
+    background: #f5f7fb !important;
+  }
+
+  body.fs-modal-embedded {
+    overflow-x: hidden !important;
+    padding: 0 !important;
+  }
+
+  body.fs-modal-embedded #global-loader,
+  body.fs-modal-embedded > .fs-global-modal,
+  body.fs-modal-embedded .fs4-header,
+  body.fs-modal-embedded .hor-header,
+  body.fs-modal-embedded .fs4-menu-shell,
+  body.fs-modal-embedded .fs4-horizontal,
+  body.fs-modal-embedded .horizontal-main,
+  body.fs-modal-embedded .hor-menu,
+  body.fs-modal-embedded .app-sidebar,
+  body.fs-modal-embedded .sidebar,
+  body.fs-modal-embedded .page-header,
+  body.fs-modal-embedded .breadcrumb-header,
+  body.fs-modal-embedded .breadcrumb,
+  body.fs-modal-embedded #back-to-top,
+  body.fs-modal-embedded footer,
+  body.fs-modal-embedded .footer,
+  body.fs-modal-embedded [class*="menu-safe-space"] {
+    display: none !important;
+  }
+
+  body.fs-modal-embedded > .page,
+  body.fs-modal-embedded .page-main {
+    display: block !important;
+    min-height: 0 !important;
+    height: auto !important;
+  }
+
+  body.fs-modal-embedded .page-main > .hor-content.main-content,
+  body.fs-modal-embedded .page-main > .app-content,
+  body.fs-modal-embedded .page-main > .content-wrapper,
+  body.fs-modal-embedded .hor-content.main-content,
+  body.fs-modal-embedded .main-content {
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 18px !important;
+    background: #f5f7fb !important;
+  }
+
+  body.fs-modal-embedded .container,
+  body.fs-modal-embedded .container-fluid {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  body.fs-modal-embedded .fs-premium-hero-removed {
+    display: none !important;
+  }
+
+  body.fs-modal-embedded .card,
+  body.fs-modal-embedded [class$="-card"],
+  body.fs-modal-embedded [class*="-card "] {
+    margin-top: 0 !important;
+  }
+
+  body.fs-modal-embedded .fs-global-modal {
+    display: none !important;
+  }
+
+  @media (max-width: 767.98px) {
+    .fs-premium-card-toolbar {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .fs-premium-card-toolbar__actions {
+      width: 100%;
+      justify-content: flex-start;
+      margin-left: 0;
+    }
+
+    .fs-premium-card-toolbar__actions > * {
+      flex: 1 1 auto;
+    }
+
+    .fs-global-modal {
+      align-items: stretch;
+      padding: 0;
+    }
+
+    .fs-global-modal__dialog {
+      width: 100%;
+      height: 100vh !important;
+      max-height: none;
+      border: 0;
+      border-radius: 0;
+    }
+
+    .fs-global-modal__header {
+      flex-basis: 64px;
+      min-height: 64px;
+      padding: 10px 12px;
+    }
+
+    .fs-global-modal__icon {
+      display: none;
+    }
+
+    .fs-global-modal__title {
+      max-width: calc(100vw - 90px);
+      font-size: 15px;
+    }
+
+    body.fs-modal-embedded .page-main > .hor-content.main-content,
+    body.fs-modal-embedded .page-main > .app-content,
+    body.fs-modal-embedded .page-main > .content-wrapper,
+    body.fs-modal-embedded .hor-content.main-content,
+    body.fs-modal-embedded .main-content {
+      padding: 12px !important;
+    }
+  }
+
+  @media print {
+    .fs-global-modal {
+      display: none !important;
+    }
+
+    body.fs-saas-premium .fs-premium-hero-removed {
+      display: none !important;
+    }
+  }
+</style>
+
+<script id="fs-premium-layout-behaviour-script">
+(function () {
+  'use strict';
+
+  const MODAL_ID = 'fsGlobalCrudModal';
+  const FRAME_ID = 'fsGlobalCrudFrame';
+  const FRAME_NAME = 'fsGlobalCrudFrame';
+  const FRAME_READY_TIMEOUT = 2200;
+  const HERO_EXCLUSIONS = ['carousel', 'swiper', 'login', 'auth', 'landing'];
+  const HEADER_HINTS = ['__header', '-card__header', '-card-header', 'card-header', 'section-header', 'panel-heading', 'toolbar'];
+  const CRUD_POSITIVE = /(ajout|ajouter|add|new|create|cré|enregistr|save|modifier|modif|edit|update|mise.?à.?jour|grade|diploma)/i;
+  const CRUD_NEGATIVE = /(delete|supprim|trash|logout|deconnexion|déconnexion|print|imprim|download|export|pdf|report|bulletin|password.?reset|forgot|recherche|search|filter)/i;
+
+  function classText(el) {
+    return String(el && el.className || '').toLowerCase();
+  }
+
+  function normalizedText(value) {
+    return String(value || '').replace(/\s+/g, ' ').trim();
+  }
+
+  function isEmbeddedPage() {
+    try {
+      return window.self !== window.top && window.name === FRAME_NAME;
+    } catch (_) {
+      return true;
+    }
+  }
+
+  function isDecorativeHero(el) {
+    if (!el || el.closest('.fs-global-modal') || !el.matches('section, div, header')) return false;
+
+    const cls = classText(el);
+    if (!cls.includes('hero') || HERO_EXCLUSIONS.some(value => cls.includes(value))) return false;
+
+    /* Ne cible que le conteneur racine du héros, jamais ses enfants
+       hero__content, hero__actions, hero-stat, etc. */
+    return cls.split(/\s+/).some(token => (
+      token === 'hero' ||
+      /(?:^|-)hero(?:--[a-z0-9_-]+)?$/.test(token) ||
+      /^hero-[a-z0-9_-]+$/.test(token) ||
+      /__hero(?:--[a-z0-9_-]+)?$/.test(token)
+    ));
+  }
+
+  function hasVisibleFormControls(form) {
+    return !!form.querySelector('input:not([type="hidden"]):not([type="submit"]):not([type="button"]), select, textarea');
+  }
+
+  function collectHeroActions(hero) {
+    const actions = [];
+    const remember = node => {
+      if (!node || actions.includes(node)) return;
+      if (actions.some(parent => parent.contains(node))) return;
+      for (let i = actions.length - 1; i >= 0; i -= 1) {
+        if (node.contains(actions[i])) actions.splice(i, 1);
+      }
+      actions.push(node);
+    };
+
+    /* Tous les formulaires fonctionnels du héros sont conservés. Les petits
+       formulaires d’action vont dans l’en-tête ; les formulaires avec champs
+       restent en pleine largeur juste sous l’ancien héros. */
+    hero.querySelectorAll('form').forEach(form => {
+      if (form.querySelector('button, input[type="submit"], select, textarea, input')) {
+        remember(form);
+      }
+    });
+
+    hero.querySelectorAll('a[href], button, input[type="button"], input[type="submit"]').forEach(control => {
+      const form = control.closest('form');
+      if (form) {
+        remember(form);
+        return;
+      }
+      remember(control);
+    });
+
+    return actions;
+  }
+
+  function findNextUsefulCard(hero) {
+    let node = hero.nextElementSibling;
+    while (node) {
+      if (!isDecorativeHero(node) && (
+        node.matches('section, .card, [class*="-card"], [class*="_card"], .panel') ||
+        node.querySelector('form, table, .card, [class*="-card"]')
+      )) {
+        return node;
+      }
+      node = node.nextElementSibling;
+    }
+    return null;
+  }
+
+  function findCardHeader(card) {
+    if (!card) return null;
+    const candidates = [
+      card,
+      ...Array.from(card.querySelectorAll(':scope > div, :scope > header, :scope > section, .card-header'))
+    ];
+    return candidates.find(el => HEADER_HINTS.some(hint => classText(el).includes(hint))) || null;
+  }
+
+  function ensureToolbar(card, header) {
+    const doc = card.ownerDocument || document;
+    if (!header) {
+      header = doc.createElement('div');
+      header.className = 'card-header fs-premium-generated-card-header';
+      card.insertBefore(header, card.firstChild);
+    }
+
+    let toolbar = header.querySelector(':scope > .fs-premium-card-toolbar');
+    if (toolbar) return toolbar;
+
+    toolbar = doc.createElement('div');
+    toolbar.className = 'fs-premium-card-toolbar';
+
+    const content = doc.createElement('div');
+    content.className = 'fs-premium-card-toolbar__content';
+    while (header.firstChild) content.appendChild(header.firstChild);
+
+    const actions = doc.createElement('div');
+    actions.className = 'fs-premium-card-toolbar__actions';
+
+    toolbar.append(content, actions);
+    header.appendChild(toolbar);
+    return toolbar;
+  }
+
+  function moveActionsBelowHero(hero, actions) {
+    if (!actions.length) return;
+
+    const doc = hero.ownerDocument || document;
+    const card = findNextUsefulCard(hero);
+    const wideForms = actions.filter(action => action.tagName === 'FORM' && hasVisibleFormControls(action));
+    const compactActions = actions.filter(action => !wideForms.includes(action));
+
+    if (wideForms.length) {
+      const dock = doc.createElement('div');
+      dock.className = 'fs-premium-hero-form-dock';
+      wideForms.forEach(form => dock.appendChild(form));
+      hero.insertAdjacentElement('afterend', dock);
+    }
+
+    if (!compactActions.length) return;
+
+    if (card) {
+      const toolbar = ensureToolbar(card, findCardHeader(card));
+      const destination = toolbar.querySelector('.fs-premium-card-toolbar__actions');
+      compactActions.forEach(action => destination.appendChild(action));
+      return;
+    }
+
+    const fallback = doc.createElement('div');
+    fallback.className = 'fs-premium-orphan-actions';
+    compactActions.forEach(action => fallback.appendChild(action));
+    hero.insertAdjacentElement('afterend', fallback);
+  }
+
+  function removeHeroes(root) {
+    const scope = root || document;
+    const heroes = Array.from(scope.querySelectorAll('[class*="hero"]')).filter(isDecorativeHero);
+
+    heroes.forEach(hero => {
+      if (hero.dataset.fsHeroProcessed === '1') return;
+      hero.dataset.fsHeroProcessed = '1';
+      moveActionsBelowHero(hero, collectHeroActions(hero));
+      hero.classList.add('fs-premium-hero-removed');
+      hero.setAttribute('aria-hidden', 'true');
+    });
+  }
+
+  function modalMarkup() {
+    return `
+      <div class="fs-global-modal__backdrop" data-fs-modal-close></div>
+      <section class="fs-global-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="fsGlobalCrudModalTitle">
+        <header class="fs-global-modal__header">
+          <div class="fs-global-modal__heading">
+            <span class="fs-global-modal__icon" aria-hidden="true"><i class="fe fe-edit-3"></i></span>
+            <div class="fs-global-modal__heading-copy">
+              <span class="fs-global-modal__eyebrow">FreeSchool · Workspace</span>
+              <h2 class="fs-global-modal__title" id="fsGlobalCrudModalTitle">Formulaire</h2>
+            </div>
+          </div>
+          <button type="button" class="fs-global-modal__close" data-fs-modal-close aria-label="{% trans %}Close{% endtrans %}">
+            <i class="fe fe-x"></i>
+          </button>
+        </header>
+        <div class="fs-global-modal__viewport">
+          <div class="fs-global-modal__loader" id="fsGlobalCrudModalLoader">
+            <div>
+              <div class="fs-global-modal__spinner"></div>
+              <div>Chargement du formulaire…</div>
+            </div>
+          </div>
+          <iframe
+            class="fs-global-modal__frame"
+            id="${FRAME_ID}"
+            name="${FRAME_NAME}"
+            title="Formulaire FreeSchool"
+            src="about:blank"
+          ></iframe>
+        </div>
+      </section>`;
+  }
+
+  function ensureModal() {
+    let modal = document.getElementById(MODAL_ID);
+    if (modal) return modal;
+
+    modal = document.createElement('div');
+    modal.id = MODAL_ID;
+    modal.className = 'fs-global-modal';
+    modal.setAttribute('aria-hidden', 'true');
+    modal.innerHTML = modalMarkup();
+    document.body.appendChild(modal);
+
+    modal.addEventListener('click', event => {
+      if (event.target.closest('[data-fs-modal-close]')) closeModal();
+    });
+
+    const frame = modal.querySelector(`#${FRAME_ID}`);
+    frame.addEventListener('load', () => handleFrameLoad(frame));
+    return modal;
+  }
+
+  function setLoader(visible, label) {
+    const loader = document.getElementById('fsGlobalCrudModalLoader');
+    if (!loader) return;
+    if (label) {
+      const text = loader.querySelector('div > div:last-child');
+      if (text) text.textContent = label;
+    }
+    loader.classList.toggle('is-hidden', !visible);
+  }
+
+  function clearFrameReadinessProbe(frame) {
+    if (!frame) return;
+    if (frame._fsReadyInterval) window.clearInterval(frame._fsReadyInterval);
+    if (frame._fsReadyTimeout) window.clearTimeout(frame._fsReadyTimeout);
+    frame._fsReadyInterval = null;
+    frame._fsReadyTimeout = null;
+  }
+
+  function openModal(title, options) {
+    const modal = ensureModal();
+    const dialog = modal.querySelector('.fs-global-modal__dialog');
+    const frame = modal.querySelector(`#${FRAME_ID}`);
+    const requestedWidth = options && options.width ? options.width : '1080px';
+
+    clearFrameReadinessProbe(frame);
+    frame._fsDocumentBeforeSubmit = null;
+    frame.classList.remove('is-ready');
+    dialog.style.setProperty('--fs-modal-width', requestedWidth);
+    dialog.style.setProperty('--fs-modal-height', 'min(91vh, 920px)');
+    modal.querySelector('.fs-global-modal__title').textContent = title || 'Formulaire';
+    modal.dataset.shouldRefresh = '0';
+    modal.dataset.awaitingSubmit = '0';
+    modal.dataset.closeOnSuccess = '';
+    modal.dataset.autoClosing = '0';
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('fs-modal-open');
+    setLoader(true, '{% trans %}Loading form…{% endtrans %}');
+  }
+
+  function closeModal() {
+    const modal = document.getElementById(MODAL_ID);
+    if (!modal || !modal.classList.contains('is-open')) return;
+
+    const shouldRefresh = modal.dataset.shouldRefresh === '1';
+    const frame = modal.querySelector(`#${FRAME_ID}`);
+
+    clearFrameReadinessProbe(frame);
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('fs-modal-open');
+
+    window.setTimeout(() => {
+      try {
+        frame.classList.remove('is-ready');
+        frame.src = 'about:blank';
+      } catch (_) {}
+    }, 220);
+
+    if (shouldRefresh) {
+      window.setTimeout(() => {
+        window.requestAnimationFrame(() => window.location.reload());
+      }, 235);
+    }
+  }
+
+  function titleFromElement(element) {
+    return normalizedText(
+      element && (
+        element.getAttribute('data-modal-title') ||
+        element.getAttribute('title') ||
+        element.textContent ||
+        element.value
+      )
+    ) || 'Formulaire';
+  }
+
+  function elementSignature(element, url) {
+    return normalizedText([
+      element && element.textContent,
+      element && element.getAttribute && element.getAttribute('title'),
+      element && element.getAttribute && element.getAttribute('name'),
+      element && element.className,
+      url && url.pathname
+    ].filter(Boolean).join(' ')).toLowerCase();
+  }
+
+  function toSameOriginUrl(href) {
+    try {
+      const url = new URL(href, window.location.href);
+      return url.origin === window.location.origin ? url : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function isCrudLink(link) {
+    if (!link || link.closest(`#${MODAL_ID}`) || link.hasAttribute('download')) return false;
+    if (link.hasAttribute('data-no-modal') || link.getAttribute('data-fs-modal') === 'false') return false;
+    if (link.target && link.target.toLowerCase() === '_blank') return false;
+
+    const href = link.getAttribute('href') || '';
+    if (!href || href.startsWith('#') || href.startsWith('javascript:') || href.startsWith('mailto:') || href.startsWith('tel:')) return false;
+
+    const url = toSameOriginUrl(href);
+    if (!url) return false;
+
+    if (link.getAttribute('data-fs-modal') === 'true' || link.getAttribute('data-modal') === 'true') return true;
+
+    const signature = elementSignature(link, url);
+    return CRUD_POSITIVE.test(signature) && !CRUD_NEGATIVE.test(signature);
+  }
+
+  function isCrudForm(form, submitter) {
+    if (!form || form.closest(`#${MODAL_ID}`)) return false;
+    if ((form.target || '').toLowerCase() === '_blank') return false;
+    if (form.hasAttribute('data-no-modal') || form.getAttribute('data-fs-modal-form') === 'false') return false;
+    if (form.getAttribute('data-fs-modal-form') === 'true') return true;
+
+    const url = toSameOriginUrl(form.action || window.location.href);
+    if (!url) return false;
+
+    const signature = normalizedText([
+      form.className,
+      form.id,
+      submitter && submitter.name,
+      submitter && submitter.textContent,
+      submitter && submitter.value,
+      url.pathname
+    ].filter(Boolean).join(' ')).toLowerCase();
+
+    return CRUD_POSITIVE.test(signature) && !CRUD_NEGATIVE.test(signature);
+  }
+
+  function modalWidthFromElement(element) {
+    const size = element && element.getAttribute && element.getAttribute('data-modal-size');
+    if (size === 'sm') return '560px';
+    if (size === 'md') return '760px';
+    if (size === 'lg') return '940px';
+    if (size === 'xl') return '1180px';
+    return '1080px';
+  }
+
+  function openUrlInModal(url, title, sourceElement) {
+    const modal = ensureModal();
+    const frame = modal.querySelector(`#${FRAME_ID}`);
+
+    openModal(title, { width: modalWidthFromElement(sourceElement) });
+    modal.dataset.initialUrl = url;
+    modal.dataset.currentUrl = url;
+    frame.src = url;
+    startFrameReadinessProbe(frame);
+  }
+
+  function prepareEmbeddedDocument(doc) {
+    if (!doc || !doc.documentElement || !doc.body) return;
+
+    doc.documentElement.classList.add('fs-modal-embedded');
+    doc.body.classList.add('fs-modal-embedded');
+    doc.body.classList.add('fs-saas-premium');
+
+    const embeddedLoader = doc.getElementById('global-loader');
+    if (embeddedLoader) {
+      embeddedLoader.style.setProperty('display', 'none', 'important');
+      embeddedLoader.setAttribute('aria-hidden', 'true');
+    }
+
+    doc.querySelectorAll(`#${MODAL_ID}`).forEach(element => element.remove());
+
+    if (doc.documentElement.dataset.fsModalPrepared === '1') return;
+    doc.documentElement.dataset.fsModalPrepared = '1';
+
+    doc.addEventListener('submit', event => {
+      const form = event.target;
+      if (event.defaultPrevented || (form.checkValidity && !form.checkValidity())) return;
+
+      const modal = document.getElementById(MODAL_ID);
+      const frame = modal && modal.querySelector(`#${FRAME_ID}`);
+      if (modal) {
+        modal.dataset.shouldRefresh = '1';
+        modal.dataset.awaitingSubmit = '1';
+        modal.dataset.closeOnSuccess = form.getAttribute('data-fs-modal-close-on-success') || '';
+        if (frame) {
+          frame._fsDocumentBeforeSubmit = doc;
+          frame.classList.remove('is-ready');
+          startFrameReadinessProbe(frame);
+        }
+        setLoader(true, 'Enregistrement en cours…');
+      }
+    }, true);
+
+    doc.addEventListener('click', event => {
+      const closeLink = event.target.closest('[data-fs-close-modal], a[href]');
+      if (!closeLink) return;
+
+      const href = closeLink.getAttribute('href') || '';
+      const text = normalizedText(closeLink.textContent).toLowerCase();
+      if (closeLink.hasAttribute('data-fs-close-modal') || (/(^|\s)(back|retour)(\s|$)/i.test(text) && (href === '#' || href === 'javascript:void(0);'))) {
+        event.preventDefault();
+        closeModal();
+      }
+    }, true);
+  }
+
+  function bestFrameTitle(doc, fallback) {
+    const candidates = [
+      doc.querySelector('[data-modal-page-title]'),
+      doc.querySelector('.page-title'),
+      doc.querySelector('h1'),
+      doc.querySelector('.card-title'),
+      doc.querySelector('h2')
+    ].filter(Boolean);
+
+    for (const candidate of candidates) {
+      const text = normalizedText(candidate.textContent);
+      if (text && text.length <= 120) return text;
+    }
+
+    return fallback || 'Formulaire';
+  }
+
+  function resizeDialogForFrame(doc) {
+    const modal = document.getElementById(MODAL_ID);
+    if (!modal || !doc || !doc.documentElement) return;
+
+    const dialog = modal.querySelector('.fs-global-modal__dialog');
+    const maxHeight = Math.max(520, window.innerHeight - 36);
+    const contentHeight = Math.max(
+      doc.body ? doc.body.scrollHeight : 0,
+      doc.documentElement.scrollHeight || 0
+    );
+    const desired = Math.min(maxHeight, Math.max(420, contentHeight + 72));
+
+    if (window.innerWidth > 767) {
+      dialog.style.setProperty('--fs-modal-height', `${desired}px`);
+    }
+  }
+
+  function frameContainsCloseOnSuccessForm(doc, token) {
+    if (!doc || !token) return false;
+    return Array.from(doc.querySelectorAll('[data-fs-modal-close-on-success]')).some(form => (
+      form.getAttribute('data-fs-modal-close-on-success') === token
+    ));
+  }
+
+  function finalizeFrame(frame, force) {
+    const modal = document.getElementById(MODAL_ID);
+    if (!modal || !modal.classList.contains('is-open')) return false;
+
+    let doc;
+    let currentUrl = '';
+    try {
+      doc = frame.contentDocument || frame.contentWindow.document;
+      currentUrl = frame.contentWindow.location.href;
+    } catch (_) {
+      if (force) {
+        frame.classList.add('is-ready');
+        setLoader(false);
+      }
+      return false;
+    }
+
+    if (!doc || !doc.body || currentUrl === 'about:blank') return false;
+    if (modal.dataset.awaitingSubmit === '1' && frame._fsDocumentBeforeSubmit === doc) return false;
+    if (!force && doc.readyState === 'loading') return false;
+
+    frame._fsDocumentBeforeSubmit = null;
+    prepareEmbeddedDocument(doc);
+
+    const currentTitle = modal.querySelector('.fs-global-modal__title').textContent;
+    modal.querySelector('.fs-global-modal__title').textContent = bestFrameTitle(doc, currentTitle);
+    modal.dataset.currentUrl = currentUrl;
+
+    const closeToken = modal.dataset.closeOnSuccess || '';
+    if (
+      modal.dataset.awaitingSubmit === '1' &&
+      closeToken &&
+      !frameContainsCloseOnSuccessForm(doc, closeToken) &&
+      modal.dataset.autoClosing !== '1'
+    ) {
+      modal.dataset.autoClosing = '1';
+      modal.dataset.awaitingSubmit = '0';
+      window.setTimeout(closeModal, 90);
+      return true;
+    }
+
+    resizeDialogForFrame(doc);
+    frame.classList.add('is-ready');
+    setLoader(false);
+    clearFrameReadinessProbe(frame);
+    return true;
+  }
+
+  function startFrameReadinessProbe(frame) {
+    if (!frame) return;
+    clearFrameReadinessProbe(frame);
+
+    frame._fsReadyInterval = window.setInterval(() => {
+      finalizeFrame(frame, false);
+    }, 40);
+
+    frame._fsReadyTimeout = window.setTimeout(() => {
+      finalizeFrame(frame, true);
+      clearFrameReadinessProbe(frame);
+    }, FRAME_READY_TIMEOUT);
+  }
+
+  function handleFrameLoad(frame) {
+    finalizeFrame(frame, true);
+  }
+
+  function submitFormIntoModal(form, submitter) {
+    const modal = ensureModal();
+    const frame = modal.querySelector(`#${FRAME_ID}`);
+    const title = titleFromElement(submitter) || titleFromElement(form);
+    const originalTarget = form.getAttribute('target');
+
+    openModal(title, { width: modalWidthFromElement(form) });
+    modal.dataset.initialUrl = form.action || window.location.href;
+    frame.src = 'about:blank';
+    startFrameReadinessProbe(frame);
+
+    form.setAttribute('target', FRAME_NAME);
+    window.setTimeout(() => {
+      if (originalTarget === null) form.removeAttribute('target');
+      else form.setAttribute('target', originalTarget);
+    }, 500);
+  }
+
+  function ensureNavigationProgress() {
+    let progress = document.getElementById('fsNavigationProgress');
+    if (progress) return progress;
+
+    progress = document.createElement('div');
+    progress.id = 'fsNavigationProgress';
+    progress.className = 'fs-navigation-progress';
+    progress.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(progress);
+    return progress;
+  }
+
+  function startNavigationProgress() {
+    const progress = ensureNavigationProgress();
+    progress.classList.add('is-active');
+    window.clearTimeout(progress._fsStopTimer);
+    progress._fsStopTimer = window.setTimeout(() => {
+      progress.classList.remove('is-active');
+    }, 4500);
+  }
+
+  function stopNavigationProgress() {
+    const progress = document.getElementById('fsNavigationProgress');
+    if (!progress) return;
+    window.clearTimeout(progress._fsStopTimer);
+    progress.classList.remove('is-active');
+  }
+
+  function isRegularNavigationLink(link, event) {
+    if (!link || event.defaultPrevented || event.button !== 0) return false;
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return false;
+    if (link.hasAttribute('download') || link.hasAttribute('data-no-progress')) return false;
+    if ((link.target || '').toLowerCase() === '_blank') return false;
+
+    const href = link.getAttribute('href') || '';
+    if (!href || href.startsWith('#') || href.startsWith('javascript:') || href.startsWith('mailto:') || href.startsWith('tel:')) return false;
+
+    const url = toSameOriginUrl(href);
+    if (!url) return false;
+    if (url.pathname === window.location.pathname && url.search === window.location.search && url.hash) return false;
+    return true;
+  }
+
+  function setupEmbeddedPage() {
+    const apply = () => {
+      document.documentElement.classList.add('fs-modal-embedded');
+      if (document.body) {
+        document.body.classList.add('fs-modal-embedded');
+        document.body.classList.add('fs-saas-premium');
+      }
+      removeHeroes(document);
+    };
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', apply);
+    else apply();
+  }
+
+  function bootMainPage() {
+    ensureModal();
+    ensureNavigationProgress();
+    stopNavigationProgress();
+    removeHeroes(document);
+
+    const observer = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        mutation.addedNodes.forEach(node => {
+          if (node.nodeType === 1) removeHeroes(node);
+        });
+      });
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+
+  if (isEmbeddedPage()) {
+    setupEmbeddedPage();
+    return;
+  }
+
+  document.addEventListener('click', event => {
+    const link = event.target.closest('a[href]');
+    if (!link) return;
+
+    if (isCrudLink(link)) {
+      event.preventDefault();
+      event.stopPropagation();
+      openUrlInModal(link.href, titleFromElement(link), link);
+      return;
+    }
+
+    if (isRegularNavigationLink(link, event)) {
+      startNavigationProgress();
+    }
+  }, true);
+
+  document.addEventListener('submit', event => {
+    const form = event.target;
+    const submitter = event.submitter || form.querySelector('button[type="submit"], input[type="submit"]');
+    if (form.checkValidity && !form.checkValidity()) return;
+
+    if (isCrudForm(form, submitter)) {
+      /* Ne pas empêcher le submit natif : il est envoyé directement à l’iframe,
+         ce qui préserve les noms de boutons, fichiers, redirects et CSRF. */
+      submitFormIntoModal(form, submitter);
+      return;
+    }
+
+    if ((form.target || '').toLowerCase() !== '_blank') {
+      startNavigationProgress();
+    }
+  }, true);
+
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && document.getElementById(MODAL_ID)?.classList.contains('is-open')) {
+      closeModal();
+    }
+  });
+
+  window.addEventListener('pageshow', stopNavigationProgress);
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bootMainPage);
+  else bootMainPage();
+})();
+</script>

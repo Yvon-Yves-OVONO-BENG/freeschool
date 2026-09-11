@@ -12,16 +12,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 class ActivatePrintReportInsolvableController extends AbstractController
 {
-    public function __construct(protected EntityManagerInterface $em, protected StudentRepository $studentRepository, protected VerrouInsolvableRepository $verrouInsolvableRepository, protected TranslatorInterface $translator)
-    {
-        
-    }
+    public function __construct(
+        protected EntityManagerInterface $em, 
+        protected StudentRepository $studentRepository, 
+        protected VerrouInsolvableRepository $verrouInsolvableRepository, 
+        protected TranslatorInterface $translator)
+    {}
+
     #[Route('/activate-print-report-insolvable/{transcript}', name: 'activate_print_report_insolvable')]
     public function activatePrintReportInsolvable(Request $request, int $transcript = 0): Response
     {

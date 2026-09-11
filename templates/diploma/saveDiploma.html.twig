@@ -1,107 +1,158 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    {% if slug != 0 %}
-        {% trans %}Edit Diplome{% endtrans %}
-    {% else %}
-        {% trans %}Save Diploma{% endtrans %}
-    {% endif %}
+	{% if slug != 0 %}
+		{% trans %}Edit Diplome{% endtrans %}
+	{% else %}
+		{% trans %}Save Diploma{% endtrans %}
+	{% endif %}
 {% endblock %}
 
 {% block subTitle %}
-    {% if slug != 0 %}
-        {% trans %}UPDATING DIPLOMA{% endtrans %}
-    {% else %}
-        {% trans %}ADDING NEW DIPLOMA{% endtrans %}
-    {% endif %}
+	{% if slug != 0 %}
+		{% trans %}UPDATING DIPLOMA{% endtrans %}
+	{% else %}
+		{% trans %}ADDING NEW DIPLOMA{% endtrans %}
+	{% endif %}
 {% endblock %}
+
 {% block infoMessage %}
-    {% include "includes/_info_message.html.twig" %}
+	{% include "includes/_info_message.html.twig" %}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-diploma-form-premium.css') }}">
 {% endblock %}
 
 {% block body %}
-<!-- App-Content -->
-	<div class="hor-content main-content">
+	<div class="hor-content main-content fs-diploma-page">
 		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary"></h4>
-                </div>
-                <div class="page-rightheader">
-                    <div class="btn-list">
-                        
-                    </div>
-                </div>
-            </div>
-            <!--End Page header-->
-        
-                {% if slug == 0 %}
-                    <div class="card border-primary">
-                    {% else %}
-                    <div class="card border-danger">
-                {% endif %}
-                <div class="card-header">
-                        <div class="col-md-4">
-                            <div class="card-title">
-                                {% if slug != 0 %}
-                                    <i class="fa fa-edit me-2"></i> {% trans %}UPDATING DIPLOMA{% endtrans %}
-                                {% else %}
-                                    <i class="fa fa-plus  me-2"></i> {% trans %}ADDING NEW DIPLOMA{% endtrans %}
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="col-md-4 text-center">
-                            <button type="button" class="btn btn-primary  mt-1 mb-1 me-3 form-control-sm">
-                                <span>{% trans %}Number of registered diplomas{% endtrans %}</span>
-                                <span class="badge bg-white text-dark rounded-pill">{{ diplomas|length }}</span>
-                            </button>
-                        </div>
-                        <div class="col-md-4 text-right">
-                            <a href="{{ path('diploma_displayDiploma') }}" class="btn btn-outline-primary">
-                                <i class="fa fa-eye me-2"></i>
-                                {% trans %}Display registered diplomas{% endtrans %}
-                            </a>
-                        </div>
-                    {# Fin ligne afficher les diplomas #}
-                </div>
-                <div class="card-body">
-                    <div class="col-md-12">
-                        {{ form_start(formDiploma) }}
-                            <div class="row mb-5">
-                                <div class="col-md-2">
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        {{ form_row(formDiploma.diploma, {'attr': {'class': 'form-control form-control-sm bg-info-transparent'}}) }}
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label style="color: #fff;">.</label>
-                                            {% if slug == 0 %}
-                                                <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="addDiploma">
-                                                    <i class="fa fa-save me-2"></i> {% trans %}Save{% endtrans %}
-                                                </button>
-                                            {% else %}
-                                                <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="editDiploma">
-                                                    <i class="fa fa-save me-2"></i>
-                                                    {% trans %}Save changes{% endtrans %}
-                                                </button>
-                                            {% endif %}
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                </div>
-                            </div>
+			<div class="fs-diploma-menu-safe-space" aria-hidden="true"></div>
 
-                        {{ form_end(formDiploma) }}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+			<div class="fs-diploma-hero fs-diploma-hero--compact">
+				<div class="fs-diploma-hero__content">
+					<span class="fs-diploma-eyebrow">
+						<i class="fe fe-award"></i>
+						{% trans %}School configuration{% endtrans %}
+					</span>
 
+					<h1 class="fs-diploma-title">
+						{% if slug != 0 %}
+							{% trans %}UPDATING DIPLOMA{% endtrans %}
+						{% else %}
+							{% trans %}ADDING NEW DIPLOMA{% endtrans %}
+						{% endif %}
+					</h1>
+
+					<p class="fs-diploma-subtitle">
+						{% trans %}Create and manage staff diplomas with a clean, secure and responsive workspace.{% endtrans %}
+					</p>
+				</div>
+
+				<div class="fs-diploma-hero__actions">
+					<a href="{{ path('diploma_displayDiploma') }}" class="fs-diploma-btn fs-diploma-btn--hero-secondary">
+						<i class="fe fe-list"></i>
+						<span>{% trans %}Display registered diplomas{% endtrans %}</span>
+					</a>
+				</div>
+			</div>
+
+			<div class="fs-diploma-card fs-diploma-card--clean {% if slug == 0 %}fs-diploma-card--create{% else %}fs-diploma-card--edit{% endif %}">
+				<div class="fs-diploma-card__header fs-diploma-card__header--clean">
+					<div>
+						<span class="fs-diploma-card__badge">
+							{% if slug != 0 %}
+								<i class="fe fe-edit"></i>
+								{% trans %}Edit mode{% endtrans %}
+							{% else %}
+								<i class="fe fe-plus"></i>
+								{% trans %}Creation mode{% endtrans %}
+							{% endif %}
+						</span>
+
+						<h2 class="fs-diploma-card__title">
+							{% if slug != 0 %}
+								{% trans %}UPDATING DIPLOMA{% endtrans %}
+							{% else %}
+								{% trans %}ADDING NEW DIPLOMA{% endtrans %}
+							{% endif %}
+						</h2>
+					</div>
+
+					{% if slug == 0 %}
+						<button type="button" class="fs-diploma-btn fs-diploma-btn--soft fs-diploma-add-top-btn" id="fsAddDiplomaField">
+							<i class="fe fe-plus"></i>
+							<span>{% trans %}Add diploma{% endtrans %}</span>
+						</button>
+					{% endif %}
+				</div>
+
+				<div class="fs-diploma-card__body fs-diploma-card__body--clean">
+					{{ form_start(formDiploma, {'attr': {'class': 'fs-diploma-form', 'novalidate': 'novalidate'}}) }}
+
+						<input type="hidden" name="_token_bulk_diplomas" value="{{ csrf_token('bulk_save_diploma') }}">
+
+						<div class="fs-diploma-builder">
+							<div class="fs-diploma-builder-row fs-diploma-builder-row--main">
+								<div class="fs-diploma-builder-index">01</div>
+
+								<div class="fs-floating-field">
+									{{ form_widget(formDiploma.diploma, {
+										'attr': {
+											'class': 'fs-floating-control',
+											'placeholder': ' '
+										}
+									}) }}
+
+									<label class="fs-floating-label">
+										<i class="fe fe-award"></i>
+										{% trans %}Diploma{% endtrans %}
+									</label>
+
+									<div class="fs-floating-error">
+										{{ form_errors(formDiploma.diploma) }}
+									</div>
+								</div>
+
+								<div class="fs-diploma-builder-status">
+									<span>{% trans %}Main{% endtrans %}</span>
+								</div>
+							</div>
+
+							{% if slug == 0 %}
+								<div id="fsExtraDiplomasContainer" class="fs-extra-diplomas-container"></div>
+							{% endif %}
+						</div>
+
+						<div class="fs-diploma-form__footer fs-diploma-form__footer--clean">
+							<a href="{{ path('diploma_displayDiploma') }}" class="fs-diploma-btn fs-diploma-btn--ghost">
+								<i class="fe fe-arrow-left"></i>
+								<span>{% trans %}Back{% endtrans %}</span>
+							</a>
+
+							{% if slug == 0 %}
+								<button type="submit" class="fs-diploma-btn fs-diploma-btn--primary" name="addDiploma">
+									<i class="fe fe-save"></i>
+									<span>{% trans %}Save{% endtrans %}</span>
+								</button>
+							{% else %}
+								<button type="submit" class="fs-diploma-btn fs-diploma-btn--primary" name="editDiploma">
+									<i class="fe fe-save"></i>
+									<span>{% trans %}Save changes{% endtrans %}</span>
+								</button>
+							{% endif %}
+						</div>
+
+					{{ form_end(formDiploma) }}
+				</div>
+			</div>
+
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-diploma-form-premium.js') }}"></script>
 {% endblock %}

@@ -1,94 +1,173 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    {% if id != 0 %}
-        {% trans %}Edit {% endtrans %}
-        {% else %}
-        {% trans %}Add an{% endtrans %}
-    {% endif %}
-    administrator
+	{% if id != 0 %}
+		{% trans %}Edit {% endtrans %}
+	{% else %}
+		{% trans %}Add an{% endtrans %}
+	{% endif %}
+	{% trans %}administrator{% endtrans %}
 {% endblock %}
 
-{# {% block infoMessage %}
-    {% include "includes/_info_message.html.twig" %}
-{% endblock %} #}
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-administrators-premium.css') }}">
+{% endblock %}
 
 {% block body %}
-<!-- App-Content -->
-	<div class="hor-content main-content">
+	<div class="hor-content main-content fs-admin-page">
 		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary">
-                        {% if id != 0 %}
-                            <i class="fe fe-edit me-2"></i> {% trans %}Update administrator{% endtrans %}
-                        {% else %}
-                            <i class="fe fe-plus-circle me-2"></i>{% trans %}Add an administrator{% endtrans %}
-                        {% endif %}
-                    </h4>
-                </div>
-                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted ('ROLE_SUPER_ADMIN') %}
-                    <div class="page-rightheader">
-                        <div class="btn-list">
-                            <a href="{{ path('list_administrators') }}" class="btn btn-outline-primary btn-medium w-100 br-7">
-                                <i class="fa fa-list"></i>
-                                {% trans %}Display administrators registered{% endtrans %}
-                            </a>
-                        </div>
-                    </div>
-                {% endif %}
-                
-            </div>
-            <!--End Page header-->
-        
-                {% if id == 0 %}
-                    <div class="card border-primary">
-                    {% else %}
-                    <div class="card border-danger">
-                {% endif %}
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            {{ form_start(formAdmin, {'attr': {'class':'row g-4 needs-validation', 'novalidate':""}}) }}
-                                <div class="row mt-3">
-                                    <div class="col-md-2">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            {{ form_label(formAdmin.fullName) }}
-                                            {{ form_widget(formAdmin.fullName, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                            {{ form_errors(formAdmin.fullName) }}
-                                            <div class="invalid-feedback">
-                                                {% trans %}This field is required !{% endtrans %}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 mt-5">
-                                        {% if id == 0 %}
-                                            <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="addTeacher">
-                                                <i class="fa fa-save me-2"></i>
-                                                {% trans %}Save{% endtrans %}
-                                            </button>
-                                        {% else %}
-                                            <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="editTeacher">
-                                                <i class="fa fa-save me-2"></i>
-                                                {% trans %}Save changes{% endtrans %}
-                                            </button>
-                                        {% endif %}
-                                    </div>
-                                    
-                                    <div class="col-md-2">
-                                    </div>
-                                </div>
+			<div class="fs-admin-menu-safe-space" aria-hidden="true"></div>
 
-                            {{ form_end(formAdmin) }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+			<section class="fs-admin-hero {% if id != 0 %}fs-admin-hero--edit{% endif %}">
+				<div class="fs-admin-hero__content">
+					<div>
+						<span class="fs-admin-eyebrow">
+							{% if id != 0 %}
+								<i class="fe fe-edit"></i>
+								{% trans %}Administrator update workspace{% endtrans %}
+							{% else %}
+								<i class="fe fe-plus-circle"></i>
+								{% trans %}Administrator registration workspace{% endtrans %}
+							{% endif %}
+						</span>
+
+						<h1 class="fs-admin-title">
+							{% if id != 0 %}
+								{% trans %}Update administrator{% endtrans %}
+							{% else %}
+								{% trans %}Add an administrator{% endtrans %}
+							{% endif %}
+						</h1>
+
+						<p class="fs-admin-subtitle">
+							{% trans %}Manage administrator identity through a clean, refined and responsive premium interface while preserving your Symfony form and controller flow.{% endtrans %}
+						</p>
+					</div>
+
+					<div class="fs-admin-hero__actions">
+						<div class="fs-admin-hero-stat">
+							<span class="fs-admin-hero-stat__icon">
+								{% if id != 0 %}
+									<i class="fe fe-edit-3"></i>
+								{% else %}
+									<i class="fe fe-user-plus"></i>
+								{% endif %}
+							</span>
+							<span class="fs-admin-hero-stat__label">{% trans %}Mode{% endtrans %}</span>
+							<strong class="fs-admin-hero-stat__value">
+								{% if id != 0 %}
+									{% trans %}Edit{% endtrans %}
+								{% else %}
+									{% trans %}Create{% endtrans %}
+								{% endif %}
+							</strong>
+						</div>
+
+						{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted ('ROLE_SUPER_ADMIN') %}
+							<a href="{{ path('list_administrators') }}" class="fs-admin-btn fs-admin-btn--light">
+								<i class="fa fa-list"></i>
+								<span>{% trans %}Display administrators registered{% endtrans %}</span>
+							</a>
+						{% endif %}
+					</div>
+				</div>
+			</section>
+
+			<section class="fs-admin-form-card {% if id != 0 %}fs-admin-form-card--edit{% endif %}">
+				<div class="fs-admin-card__header">
+					<div>
+						<span class="fs-admin-chip">
+							{% if id != 0 %}
+								<i class="fe fe-edit"></i>
+								{% trans %}Update form{% endtrans %}
+							{% else %}
+								<i class="fe fe-user-plus"></i>
+								{% trans %}Registration form{% endtrans %}
+							{% endif %}
+						</span>
+
+						<h2>
+							{% if id != 0 %}
+								{% trans %}Save changes{% endtrans %}
+							{% else %}
+								{% trans %}Save administrator{% endtrans %}
+							{% endif %}
+						</h2>
+
+						<p>
+							{% trans %}Enter the administrator full name. Your form variable, field and submit button names are preserved.{% endtrans %}
+						</p>
+					</div>
+
+					<span class="fs-admin-card__icon">
+						{% if id != 0 %}
+							<i class="fe fe-edit-3"></i>
+						{% else %}
+							<i class="fe fe-user-plus"></i>
+						{% endif %}
+					</span>
+				</div>
+
+				{{ form_start(formAdmin, {'attr': {'class':'fs-admin-form needs-validation', 'novalidate':'novalidate'}}) }}
+					<div class="fs-admin-form-grid">
+						<div class="fs-admin-field">
+							<span class="fs-admin-field__icon">
+								<i class="fe fe-user"></i>
+							</span>
+
+							<div class="fs-floating-field fs-symfony-row">
+								{{ form_label(formAdmin.fullName) }}
+								{{ form_widget(formAdmin.fullName, {'attr': {'class': 'form-control form-control-sm fs-floating-control'}}) }}
+								{{ form_errors(formAdmin.fullName) }}
+								<div class="invalid-feedback">
+									{% trans %}This field is required !{% endtrans %}
+								</div>
+							</div>
+						</div>
+
+						<div class="fs-admin-submit-panel">
+							<div>
+								<span class="fs-admin-submit-panel__badge">
+									<i class="fe fe-shield"></i>
+									{% trans %}Secure action{% endtrans %}
+								</span>
+
+								<h3>
+									{% if id != 0 %}
+										{% trans %}Ready to update{% endtrans %}
+									{% else %}
+										{% trans %}Ready to save{% endtrans %}
+									{% endif %}
+								</h3>
+
+								<p>
+									{% trans %}Click the button below to submit the administrator information.{% endtrans %}
+								</p>
+							</div>
+
+							{% if id == 0 %}
+								<button type="submit" class="fs-admin-btn fs-admin-btn--primary fs-admin-submit-btn" name="addTeacher">
+									<span class="fs-admin-submit-spinner" aria-hidden="true"></span>
+									<i class="fa fa-save fs-admin-submit-icon"></i>
+									<span>{% trans %}Save{% endtrans %}</span>
+								</button>
+							{% else %}
+								<button type="submit" class="fs-admin-btn fs-admin-btn--primary fs-admin-submit-btn" name="editTeacher">
+									<span class="fs-admin-submit-spinner" aria-hidden="true"></span>
+									<i class="fa fa-save fs-admin-submit-icon"></i>
+									<span>{% trans %}Save changes{% endtrans %}</span>
+								</button>
+							{% endif %}
+						</div>
+					</div>
+				{{ form_end(formAdmin) }}
+			</section>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-administrators-premium.js') }}"></script>
 {% endblock %}

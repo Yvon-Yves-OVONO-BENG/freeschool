@@ -21,11 +21,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/teacher")]
 class EditTeacherController extends AbstractController
 {
@@ -79,13 +75,21 @@ class EditTeacherController extends AbstractController
         // on ecupère le schoolYear de la BD pour qu'il soit suivi par le EntityManager au moment du persist
         $schoolYear = $this->schoolYearRepository->find($mySession->get('schoolYear')->getId());
 
-        $teacher = $this->teacherRepository->findOneBySlug([
+        $teacher = $this->teacherRepository->findOneBy([
             'slug' => $slug
         ]);
+
+        if (!$teacher) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
 
         $user = $this->userRepository->findOneBy(['teacher' => $teacher]);
 
         $form = $this->createForm(TeacherType::class, $teacher);
+        if ($form->has('email')) {
+            $form->get('email')->setData($user?->getEmail());
+        }
 
         $teacher->setSchoolYear($schoolYear); 
 
@@ -104,7 +108,8 @@ class EditTeacherController extends AbstractController
             if($user)
             {
                 $user->setUsername($teacher->getAdministrativeNumber().$teacher->getId())
-                    ->setFullName($teacher->getFullName());
+                    ->setFullName($teacher->getFullName())
+                    ->setEmail($form->get('email')->getData());
 
                 $teacherDuty = $teacher->getDuty()->getDuty();
                 if ($teacherDuty == ConstantsClass::HEADMASTER_DUTY || $teacherDuty == ConstantsClass::DIRECTOR_DUTY) 
@@ -124,7 +129,8 @@ class EditTeacherController extends AbstractController
                 $user = new User();
                 $user->setUsername($teacher->getAdministrativeNumber().$teacher->getId())
                 ->setFullName($teacher->getFullName())
-                ->setTeacher($teacher);
+                ->setTeacher($teacher)
+                ->setEmail($form->get('email')->getData());
 
                 $hash = $this->encoder->hashPassword($user, ConstantsClass::DEFAULT_TEACHER_PASSWORD);
 

@@ -29,44 +29,50 @@
     </head>     
     <body>
         <div class="header">
-            <h1>Merci pour la confiance que vous faites au Lycée Bilingue d'ODZA / Thank you for your confidence in G.B.H.S ODZA</h1>
+            <h1>
+                {% trans %}Thank you for trusting{% endtrans %}
+                {{ menuSchoolName }}
+                /
+                {% trans %}Thank you for your confidence in{% endtrans %}
+                {{ menuSchoolName }}
+            </h1>
         </div>
         <div class="content">
-            <p>Bonjour Chèr Parent / Hello dear parent</p>
+            <p>{% trans %}Dear Parent / Hello dear parent{% endtrans %}</p>
             <p>
-                Tout en espérant que vous allez bien, vous trouverez en pièce jointe le relevé de notes de votre enfant {{ student ? student.fullName : studentName }} en classe de {{ student ? student.classroom.classroom : classroom.classroom }} pour le compte du
+                {% trans %}We hope you are well. Please find attached your child's report card{% endtrans %} {{ student ? student.fullName : studentName }} {% trans %}in class{% endtrans %} {{ student ? student.classroom.classroom : classroom.classroom }} {% trans %}for the{% endtrans %}
                 {{ term.term }} 
                 {% if term.term == 1 %}
-                    er 
+                    {% trans %}er{% endtrans %} 
                     {% else %}
-                    ème
-                {% endif %} trimestre.
+                    {% trans %}th{% endtrans %}
+                {% endif %} {% trans %}term.{% endtrans %}
                 <br>
                 <br>
-                Hoping tha you are well, you will find attached the transcript of you child marks {{ student ? student.fullName : studentName }} in class {{ student ? student.classroom.classroom : classroom.classroom }} for the 
+                {% trans %}Hoping tha you are well, you will find attached the transcript of you child marks{% endtrans %} {{ student ? student.fullName : studentName }} {% trans %}in class{% endtrans %} {{ student ? student.classroom.classroom : classroom.classroom }} {% trans %}for the{% endtrans %} 
                 {{ term.term }} 
                 {% if term.term == 1 %}
-                    st 
+                    {% trans %}st{% endtrans %} 
                     {% else %}
                     {% if term.term == 2 %}
-                        nd
+                        {% trans %}nd{% endtrans %}
                         {% else %}
                         {% if term.term == 3 %}
-                            rd 
+                            {% trans %}rd{% endtrans %} 
                         {% endif %}
                     {% endif %}
-                {% endif %} term.
+                {% endif %} {% trans %}term.{% endtrans %}
                     
             </p>
             
             <p>
-                L'administration du Lycée / School administration
-                <a href="mailto:ovonobeng5@gmail.com">Lycée Bilingue d'ODZA / G.B.H.S ODZA</a>.
+                {% trans %}School administration / School administration{% endtrans %}
+                <a href="mailto:ovonobeng5@gmail.com">{{ menuSchoolName }}</a>.
             </p>
-            <p>Merci de votre confiance. / Thank you for your confidence.</p>
+            <p>{% trans %}Thank you for your trust. / Thank you for your confidence.{% endtrans %}</p>
         </div>
         <div class="footer">
-            <p>&copy; {{ "now"|date("Y") }} | Freeschool | Tous droits réservés / All rights reserved.</p>
+            <p>{% trans %}&copy;{% endtrans %} {{ "now"|date("Y") }} {% trans %}| Freeschool | All rights reserved / All rights reserved.{% endtrans %}</p>
         </div>
     </body>
 </html>

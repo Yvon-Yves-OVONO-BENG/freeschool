@@ -57,7 +57,7 @@ class ReportService
      * @param Term $term
      * @return array
      */
-    public function getRankedStudents(array $studentMarkTerm, Classroom $classroom, Term $term, int $pv = 0): array
+    public function getRankedStudents(array $studentMarkTerm, Classroom $classroom, Term $term, $school, int $pv = 0): array
     {
         $rankedStudents = [];
         $rankedCaterory1 = [];
@@ -407,6 +407,7 @@ class ReportService
         $allRanked['rankedCategory1'] = $rankedCaterory1;
         $allRanked['rankedCategory2'] = $rankedCaterory2;
         $allRanked['rankedCategory3'] = $rankedCaterory3;
+        $allRanked['rankedCategory4'] = $rankedCaterory4;
         $allRanked['rankedTerm'] = $rankedStudents;
 
         return $allRanked;

@@ -1,0 +1,120 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{% trans %}Import students{% endtrans %}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+
+	<style>
+		/* Empêche le contenu de passer derrière le menu horizontal fixe */
+		@media (min-width: 992px) {
+			.hor-content.main-content {
+				padding-top: 75px !important;
+			}
+		}
+
+		/* Conservation d'un espacement correct sur mobile */
+		@media (max-width: 991.98px) {
+			.hor-content.main-content {
+				padding-top: 20px !important;
+			}
+		}
+
+		.page-header {
+			position: relative;
+			z-index: 1;
+			margin-bottom: 24px;
+		}
+	</style>
+{% endblock %}
+
+{% block body %}
+
+	<!-- App-Content -->
+	<div class="hor-content main-content">
+		<div
+			class="container">
+			<!--Page header-->
+			<div class="page-header">
+				<div class="page-leftheader">
+					<h4 class="page-title mb-0 text-primary"><i class="fa fa-users me-2"></i> {% trans %}Import students{% endtrans %}</h4>
+				</div>
+				<div class="page-rightheader">
+					<div class="btn-list">
+						<a class="btn btn-outline-primary" href="{{ path ('student_displayStudent') }}">
+							<i class="fa fa-eye me-2"></i>
+							{% trans %}Display students{% endtrans %}
+						</a>
+
+						<a class="btn btn-outline-danger" href="MODELE-IMPORTATION-ELEVES.xlsx">
+							<i class="fa fa-download me-2"></i>
+							{% trans %}Download specimen file{% endtrans %}
+						</a>
+					</div>
+				</div>
+			</div>
+			<!--End Page header-->
+
+			<!-- Row -->
+							
+			<div class="row">
+				<div class="col-xl-12 col-lg-12">
+					<div class="card border-primary text-start user-contact-list">
+						<div class="card-body">
+							
+							<form action="{{path('importation_student')}}" method="post" enctype="multipart/form-data" class="row g-3 needs-validation" novalidate>
+								<div class="row">
+									<div class="col-md-4 position-relative">
+										<div class="form-group">
+											<label for="">
+												<i class="fa fa-user me-2"></i>
+												{% trans %}Choose classroom{% endtrans %}
+											</label>
+											<select class="form-control select2-show-search" data-placeholder="{% trans %}Choose a classroom{% endtrans %}" name="classroom" id="classroom" required style="border: 1px solid #0f0;">
+												<option value="" label="{% trans %}Choose a classroom{% endtrans %}">
+													{% trans %}Choose a classroom{% endtrans %}
+												</option>
+												{% if subSystem == 'Francophone / French Speaker' %}
+													{% if school.education.education == 'Général' %}
+														{% include "includes/_selectClassrooms.html.twig" %}
+														{% else %}
+															{% include "includes/_selectClassroomsTech.html.twig" %}
+													{% endif %}
+													{% else %}
+														{% include "includes/_selectClassroomsEn.html.twig" %}
+												{% endif %}
+											</select>
+											<div class="invalid-feedback">
+												{% trans %}Please choose a classroom !{% endtrans %}
+											</div>
+										</div>
+									</div>
+									<div class="col-md-4 position-relative">
+										<label for="">
+											<i class="fa fa-file-excel-o me-2"></i>
+											{% trans %}Load excel file{% endtrans %}
+										</label>
+										<input type="file" class="form-control" id="excel_file" name="excelfile" required>
+										<div class="invalid-feedback">
+											{% trans %}Please choose a file.{% endtrans %}
+										</div>
+									</div>
+									<div class="col-md-4 position-relative" style="text-align:center; margin-top:30px;">
+										<button class="btn btn-outline-primary" type="submit" name="import"><i class="fa fa-download me-2"></i> {% trans %}Import{% endtrans %}</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+
+			</div>
+				
+			<!-- End Row -->
+
+		</div>
+	</div>
+	<!-- right app-content-->
+</div>{% endblock %}

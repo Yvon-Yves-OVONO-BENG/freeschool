@@ -13,13 +13,22 @@ class Pagination extends Fpdf
 
 		$this->AliasNbPages('{totalPages}');
 		$this->SetFont('Times','BI',8);
-		// Page number
-		// $this->Cell(100, 5, utf8_decode("Lycée Bilingue d'Odza / G.B.H.S ODZA"), 0, 0, 'L');
-		// $this->Cell(0,5,utf8_decode("L.B NGUELEMENDOUKA / G.B.H.S NGUELEMENDOUKA     - - -     Page ".$this->PageNo().'/{totalPages}'),0,0,'R');
+		// Page number 
+		// $this->Cell(0,5,utf8_decode("Collège MVOM NAM / MVOM NAM College    - - -     Page ".$this->PageNo().'/{totalPages}'),0,0,'R');
+		// $this->Cell(0,5,utf8_decode("Collège Bilingue EEJ / Bilingual College EEJ    - - -     Page ".$this->PageNo().'/{totalPages}'),0,0,'R');
+		// $this->Cell(0,5,utf8_decode("Lycée de Yaoundé / G.H.S Yaoundé    - - -     Page ".$this->PageNo().' / {totalPages}'),0,0,'R');
+		$this->Cell(0,5,utf8_decode("Lycée Bilingue d'Odza / G.B.H.S ODZA    - - -     Page ".$this->PageNo().' / {totalPages}'),0,0,'R');
+		// $this->Cell(0,5,utf8_decode("Lycée de Libongo / G.H.S Libongo    - - -     Page ".$this->PageNo().'/{totalPages}'),0,0,'R');
+		// $this->Cell(0,5,utf8_decode("Lycée de Ndemba I / G.H.S Ndemba I    - - -     Page ".$this->PageNo().'/{totalPages}'),0,0,'R');
+		// $this->Cell(0,5,utf8_decode("Lycée Technique d'Akonolinga / G.T.H.S Akonolinga    - - -     Page ".$this->PageNo().' / {totalPages}'),0,0,'R');
+		
+		// $this->Cell(0,5,utf8_decode("Lycée Bilingue Nguelemendouka / G.B.H.S Nguelemendouka    - - -     Page ".$this->PageNo().'/{totalPages}'),0,0,'R');
+		// $this->Cell(0,5,utf8_decode("Lycée de Bouli / G.H.S Bouli    - - -     Page ".$this->PageNo().'/{totalPages}'),0,0,'R');
 		// $this->Cell(0,5,utf8_decode("C.E.S Ankom / G.H.S Ankom     - - -     Page ".$this->PageNo().'/{totalPages}'),0,0,'R');
-		// $this->Cell(0,5,utf8_decode("Lycée Bilingue d'Odza / G.B.H.S Odza    - - -     Page ".$this->PageNo().' / {totalPages}'),0,0,'R');
-		$this->Cell(0,5,utf8_decode("Lycée Technique d'Ayos / G.T.H.S Ayos    - - -     Page ".$this->PageNo().' / {totalPages}'),0,0,'R');
+		// $this->Cell(0,5,utf8_decode("Collège La Madonne / La Madonne College   - - -     Page ".$this->PageNo().' / {totalPages}'),0,0,'R');
+		// $this->Cell(0,5,utf8_decode("Lycée Technique d'Ayos / G.T.H.S Ayos    - - -     Page ".$this->PageNo().' / {totalPages}'),0,0,'R');
 		// $this->Cell(0,5,utf8_decode("Lycée de Martap / G.H.S Martap    - - -     Page ".$this->PageNo().' / {totalPages}'),0,0,'R');
+		// $this->Cell(0,5,utf8_decode("Lycée de Mboma / G.H.S Mboma    - - -     Page ".$this->PageNo().' / {totalPages}'),0,0,'R');
     }
 
     public function RotatedText($x,$y,$txt,$angle)

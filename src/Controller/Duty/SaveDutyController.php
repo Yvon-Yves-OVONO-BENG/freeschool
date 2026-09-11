@@ -15,17 +15,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/duty")]
 class SaveDutyController extends AbstractController
 {
     public function __construct(protected DutyRepository $dutyRepository, protected EntityManagerInterface $em, protected SchoolYearService $schoolYearService, protected TranslatorInterface $translator, protected SchoolRepository $schoolRepository)
-    {
-    }
+    {}
 
     #[Route("/saveDuty", name:"duty_saveDuty")]
     public function saveDuty(Request $request): Response

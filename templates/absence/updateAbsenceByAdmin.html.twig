@@ -3,72 +3,167 @@
 {% block title %}{% trans %}Editing an absence{% endtrans %}{% endblock %}
 
 {% block subTitle %}
-    {% trans %}MODIFICATION OF A HOUR OF ABSENCE BY THE ADMINISTRATOR{% endtrans %}
+	{% trans %}MODIFICATION OF A HOUR OF ABSENCE BY THE ADMINISTRATOR{% endtrans %}
 {% endblock %}
-     
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-update-absence-admin-premium.css') }}">
+{% endblock %}
+
 {% block body %}
-<!-- App-Content -->
-	<div class="hor-content main-content">
+	<div class="hor-content main-content fs-update-absence-page">
 		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary"></h4>
-                </div>
-                <div class="page-rightheader">
-                    <div class="btn-list">
-                        
-                    </div>
-                </div>
-            </div>
-            <!--End Page header-->
+			<div class="fs-update-absence-menu-safe-space" aria-hidden="true"></div>
 
-            <div class="card border-danger">
-                <div class="card-header">
-                    <span class="page-title mb-0 text-primary">
-                        <i class="fe fe-user-check me-2"></i>{% trans %}Modification of a hours of by the administrator{% endtrans %}
-                    </span>
-                </div>
-                <div class="card-body ">
-                     <form method="post" action="{{ path('absence_updateAbsenceByAdmin') }}">
-                        <div class="row mt-3 mb-3">
-                            <div class="col-md-2">
-                            </div>
-                            <div class="col-md-5">
-                                <div class="form-group">
-                                    <select name="teacher" id="teacher" class="form-control select2-show-search" data-placeholder="Veuillez choisir un surveillant" required autofocus>
-                                        <option label="Veuillez choisir un surveillant">
-                                            {% trans %}Choose a supervisor
-                                            {% endtrans %}
-                                        </option>
-                                        {% for teacher in teachers %}
-                                            <option value="{{ teacher.id }}">
-                                                {{ teacher.fullName }}
-                                            </option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="updateAbsenceExtra">
-                                        <i class="fe fe-log-in me-2"></i>
-                                        {% trans %}Enter{% endtrans %}
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+			<section class="fs-update-absence-hero">
+				<div class="fs-update-absence-hero__content">
+					<div>
+						<span class="fs-update-absence-eyebrow">
+							<i class="fe fe-user-check"></i>
+							{% trans %}Administrative absence workspace{% endtrans %}
+						</span>
 
+						<h1 class="fs-update-absence-title">
+							{% trans %}Modification of absence hours by the administrator{% endtrans %}
+						</h1>
+
+						<p class="fs-update-absence-subtitle">
+							{% trans %}Select a supervisor to access absence hour updating with a clean, secure and responsive premium interface.{% endtrans %}
+						</p>
+					</div>
+
+					<div class="fs-update-absence-hero__actions">
+						<div class="fs-update-absence-hero-stat">
+							<span class="fs-update-absence-hero-stat__icon">
+								<i class="fe fe-users"></i>
+							</span>
+							<span class="fs-update-absence-hero-stat__label">{% trans %}Supervisors{% endtrans %}</span>
+							<strong class="fs-update-absence-hero-stat__value">{{ teachers|length }}</strong>
+						</div>
+
+						<div class="fs-update-absence-hero-stat fs-update-absence-hero-stat--danger">
+							<span class="fs-update-absence-hero-stat__icon">
+								<i class="fe fe-shield"></i>
+							</span>
+							<span class="fs-update-absence-hero-stat__label">{% trans %}Access{% endtrans %}</span>
+							<strong class="fs-update-absence-hero-stat__value">{% trans %}Admin{% endtrans %}</strong>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="fs-update-absence-grid">
+				<div class="fs-update-absence-card">
+					<div class="fs-update-absence-card__header">
+						<div>
+							<span class="fs-update-absence-chip">
+								<i class="fe fe-filter"></i>
+								{% trans %}Supervisor selection{% endtrans %}
+							</span>
+
+							<h2>{% trans %}Choose a supervisor{% endtrans %}</h2>
+
+							<p>
+								{% trans %}Select the supervisor whose absence hours must be updated, then enter the update workspace.{% endtrans %}
+							</p>
+						</div>
+
+						<span class="fs-update-absence-card__icon">
+							<i class="fe fe-user-check"></i>
+						</span>
+					</div>
+
+					<form method="post" action="{{ path('absence_updateAbsenceByAdmin') }}" class="fs-update-absence-form needs-validation" novalidate>
+						<div class="fs-floating-field fs-required-field">
+							<select name="teacher" id="teacher" class="form-control select2-show-search fs-floating-control" data-placeholder="" required autofocus>
+								<option label="" value="">
+									
+								</option>
+
+								{% for teacher in teachers %}
+									<option value="{{ teacher.id }}">
+										{{ teacher.fullName }}
+									</option>
+								{% endfor %}
+							</select>
+
+							<label class="fs-floating-label" for="teacher">
+								<i class="fe fe-user"></i>
+								{% trans %}Supervisor{% endtrans %}
+							</label>
+
+							<div class="invalid-feedback">
+								{% trans %}Please choose a supervisor !{% endtrans %}
+							</div>
+						</div>
+
+						<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+						<div class="fs-update-absence-form__actions">
+							<button class="fs-update-absence-btn fs-update-absence-btn--primary fs-update-absence-submit-btn" type="submit" name="updateAbsenceExtra">
+								<span class="fs-update-absence-submit-spinner" aria-hidden="true"></span>
+								<i class="fe fe-log-in fs-update-absence-submit-icon"></i>
+								<span>{% trans %}Enter{% endtrans %}</span>
+							</button>
+						</div>
+					</form>
+				</div>
+
+				<aside class="fs-update-absence-preview-card">
+					<div class="fs-update-absence-preview-card__visual">
+						<div class="fs-update-absence-document">
+							<div class="fs-update-absence-document__shield">
+								<i class="fe fe-clock"></i>
+							</div>
+
+							<div class="fs-update-absence-document__line fs-update-absence-document__line--wide"></div>
+							<div class="fs-update-absence-document__line"></div>
+							<div class="fs-update-absence-document__line fs-update-absence-document__line--short"></div>
+
+							<div class="fs-update-absence-document__score">
+								<span>08</span>
+								<small>{% trans %}hours{% endtrans %}</small>
+							</div>
+						</div>
+					</div>
+
+					<div class="fs-update-absence-preview-card__content">
+						<span class="fs-update-absence-chip fs-update-absence-chip--soft">
+							<i class="fe fe-lock"></i>
+							{% trans %}Secure action{% endtrans %}
+						</span>
+
+						<h3>{% trans %}Ready to update absences{% endtrans %}</h3>
+
+						<p>
+							{% trans %}Your existing route, CSRF token and submit button name are preserved to avoid breaking the controller logic.{% endtrans %}
+						</p>
+
+						<div class="fs-update-absence-benefits">
+							<div class="fs-update-absence-benefit">
+								<i class="fe fe-check-circle"></i>
+								<span>{% trans %}Route preserved{% endtrans %}</span>
+							</div>
+
+							<div class="fs-update-absence-benefit">
+								<i class="fe fe-check-circle"></i>
+								<span>{% trans %}CSRF token preserved{% endtrans %}</span>
+							</div>
+
+							<div class="fs-update-absence-benefit">
+								<i class="fe fe-check-circle"></i>
+								<span>{% trans %}No controller change required{% endtrans %}</span>
+							</div>
+						</div>
+					</div>
+				</aside>
+			</section>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-update-absence-admin-premium.js') }}"></script>
 {% endblock %}

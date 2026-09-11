@@ -15,11 +15,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/registration")]
 class UpdateStudentFeesController extends AbstractController
 {
@@ -46,10 +42,21 @@ class UpdateStudentFeesController extends AbstractController
 
         if(!$mySession)
         {
+            $schoolYear = $mySession->get('schoolYear');
+        }
+        else {
             return $this->redirectToRoute("app_logout");
         }
         
-        $student = $this->studentRepository->findOneBySlug(['slug' => $slugStudent]);
+        $student = $this->studentRepository->findOneBy([
+            'slug' => $slugStudent,
+            'schoolYear' => $schoolYear
+        ]);
+
+        if (!$student) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
 
         $registrationHistory = $this->registrationHistoryRepository->findOneBy([
             'student' => $student

@@ -11,11 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/teacher")]
 class PrintAssumedDutyController extends AbstractController
 {
@@ -83,9 +79,14 @@ class PrintAssumedDutyController extends AbstractController
         }else
         {
             // l'impression vient de l'enseignant
-            $teachers[] = $this->teacherRepository->findOneBySlug([
+            $teachers[] = $this->teacherRepository->findOneBy([
                 'slug' => $slug
             ]);
+
+            if (!$teachers) 
+            {
+                return $this->redirectToRoute('page_error');
+            }
         }
 
         $pdf = $this->teacherService->printAssumedDuty($school, $schoolYear, $teachers, $asd, $pe);
@@ -107,6 +108,11 @@ class PrintAssumedDutyController extends AbstractController
             }else
             {
                 $teachers = $this->teacherRepository->findAllToDisplay($schoolYear, $subSystem );
+
+                if (!$teachers) 
+                {
+                    return $this->redirectToRoute('page_error');
+                }
 
                 if ($subSystem->getId() == 1 ) 
                 {

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ActivateSaveExpelledController!{% endblock %}
+{% block title %}{% trans %}Hello ActivateSaveExpelledController!{% endtrans %}{% endblock %}
 
 {% block body %}
 <style>
@@ -9,12 +9,12 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <h1>{% trans %}Hello{% endtrans %} {{ controller_name }}! ✅</h1>
 
-    This friendly message is coming from:
+    {% trans %}This friendly message is coming from:{% endtrans %}
     <ul>
-        <li>Your controller at <code><a href="{{ 'C:/wamp64/www/freeschool-new/src/Controller/ActivateSaveExpelledController.php'|file_link(0) }}">src/Controller/ActivateSaveExpelledController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/wamp64/www/freeschool-new/templates/activate_save_expelled/index.html.twig'|file_link(0) }}">templates/activate_save_expelled/index.html.twig</a></code></li>
+        <li>{% trans %}Your controller at{% endtrans %} <code><a href="{{ 'C:/wamp64/www/freeschool-new/src/Controller/ActivateSaveExpelledController.php'|file_link(0) }}">{% trans %}src/Controller/ActivateSaveExpelledController.php{% endtrans %}</a></code></li>
+        <li>{% trans %}Your template at{% endtrans %} <code><a href="{{ 'C:/wamp64/www/freeschool-new/templates/activate_save_expelled/index.html.twig'|file_link(0) }}">{% trans %}templates/activate_save_expelled/index.html.twig{% endtrans %}</a></code></li>
     </ul>
 </div>
 {% endblock %}

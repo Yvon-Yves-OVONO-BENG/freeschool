@@ -11,11 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 class PrintQuitusController extends AbstractController
 {
     public function __construct(
@@ -43,7 +39,12 @@ class PrintQuitusController extends AbstractController
 
         $school = $this->schoolRepository->findOneBySchoolYear($schoolYear);
 
-        $student = $this->studentRepository->findOneBySlug(['slug' => $slugStudent]);
+        $student = $this->studentRepository->findOneBy(['slug' => $slugStudent]);
+
+        if (!$student) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
 
         $pdf = $this->quitusService->printStudentQuitus($school, $schoolYear, $student);
 

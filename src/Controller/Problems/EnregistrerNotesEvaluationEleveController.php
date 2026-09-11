@@ -8,6 +8,7 @@ use App\Repository\LessonRepository;
 use App\Repository\StudentRepository;
 use App\Repository\SequenceRepository;
 use App\Repository\EvaluationRepository;
+use App\Service\ReportRefreshService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,10 +16,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/problems")]
 class EnregistrerNotesEvaluationEleveController extends AbstractController
 {
@@ -29,6 +27,7 @@ class EnregistrerNotesEvaluationEleveController extends AbstractController
         protected StudentRepository $studentRepository,
         protected SequenceRepository $sequenceRepository,
         protected EvaluationRepository $evaluationRepository,
+        protected ReportRefreshService $reportRefreshService,
     )
     {}
 
@@ -79,51 +78,63 @@ class EnregistrerNotesEvaluationEleveController extends AbstractController
         #je récupère la séquence
         $sequence = $this->sequenceRepository->find($sequenceId);
 
+        if (!$student || !$sequence) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
+
         // dump($evaluations);
         
         # je récupère les données du formulaire
         $datas = $request->request->all();
 
-        #je parcours mes données
-        foreach ($datas as $key => $value) 
+        if ($request->request->has('submitOneNote')) 
         {
-            if(preg_match('/^evaluationId(\d+)$/', $key, $matches))
-            { 
-                # je récupère l'index
-                $index = $matches[1];
+            // dd("j'arrive ici pour enregistrer une note");
+            #je parcours mes données
+            foreach ($datas as $key => $value) 
+            {
+                if(preg_match('/^evaluationId(\d+)$/', $key, $matches))
+                { 
+                    # je récupère l'index
+                    $index = $matches[1];
 
-                #je récupère l'id de l'évaluation
-                $evaluationId = $value;
+                    #je récupère l'id de l'évaluation
+                    $evaluationId = $value;
 
-                #Je construit la clé correspondante
-                $noteKey = "mark".$index;
+                    #Je construit la clé correspondante
+                    $noteKey = "mark".$index;
 
-                if(isset($datas[$noteKey]))
-                {
-                    #je récupère la note
-                    $noteValue = $datas[$noteKey];
-
-                    $evaluation = $this->evaluationRepository->find($evaluationId);
-                    #jes teste les evaluationId
-                    if ($evaluation) 
+                    if(isset($datas[$noteKey]))
                     {
-                        $evaluation->setMark($noteValue)
-                                    ->setUpdatedBy($this->getUser())
-                                    ->setUpdatedAt(new DateTime('now'));
+                        #je récupère la note
+                        $noteValue = $datas[$noteKey];
 
-                        $this->em->persist($evaluation);
+                        $evaluation = $this->evaluationRepository->find($evaluationId);
+                        #jes teste les evaluationId
+                        if ($evaluation) 
+                        {
+                            $evaluation->setMark($noteValue)
+                                        ->setUpdatedBy($this->getUser())
+                                        ->setUpdatedAt(new DateTime('now'));
+
+                            $this->em->persist($evaluation);
+                        }
                     }
+                    
                 }
                 
             }
             
-        }
+            $this->em->flush();
+            $this->reportRefreshService->refreshAfterSequence($sequence, $student->getClassroom());
         
-        $this->em->flush();
-       
-        $this->addFlash('info', $this->translator->trans('Mark save with success !'));
-                
-        $maSession->set('ajout', 1);
+            $this->addFlash('info', $this->translator->trans('Mark save with success !'));
+                    
+            $maSession->set('ajout', 1);
+        } 
+        
+        
 
         // Redirection vers la page des détails
         return $this->redirectToRoute('details_evaluations_sequence_student', [

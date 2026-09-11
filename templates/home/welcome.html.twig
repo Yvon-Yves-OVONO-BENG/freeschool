@@ -1,11 +1,11 @@
 {% extends 'base_super_admin.html.twig' %}
 
 {% block title %}
-   Welcome
+   {% trans %}Welcome{% endtrans %}
 {% endblock %}
 
 {% block subTitle %}
-     Freeschool ! The best way to fill free in school management 
+     {% trans %}Freeschool ! The best way to fill free in school management{% endtrans %} 
 {% endblock %}
 
 {% block body %}
@@ -19,14 +19,14 @@
                         <div class="row mb-5 mt-5">
                             <div class="col-md-2"></div>
                             <div class="col-md-8 text-center">
-                                <a class="btn btn-perso form-control" href="{{ path('home_basicAdministration')}}" title="Cliquez pour saisir les données de base">{% trans %}Basic Administration{% endtrans %}</a>
+                                <a class="btn btn-perso form-control" href="{{ path('home_basicAdministration')}}" title="{% trans %}Click to enter basic data{% endtrans %}">{% trans %}Basic Administration{% endtrans %}</a>
                             </div>
                             <div class="col-md-2"></div>
                         </div>
                         <div class="row  mb-5 mt-5">
                             <div class="col-md-2"></div>
                             <div class="col-md-8 text-center">
-                                <a class="btn btn-perso form-control" href="{{ path('home_chooseSchoolYear')}}" title="Cliquez pour commencer">{% trans %}Start with freeschool{% endtrans %}</a>
+                                <a class="btn btn-perso form-control" href="{{ path('home_chooseSchoolYear')}}" title="{% trans %}Click to start{% endtrans %}">{% trans %}Start with freeschool{% endtrans %}</a>
                             </div>
                             <div class="col-md-2"></div>
                         </div>

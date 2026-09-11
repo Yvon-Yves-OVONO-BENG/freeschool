@@ -17,11 +17,7 @@ use App\Service\PrintTopFiveStudentsByCycleService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/register_and_list")]
 class PrintTopFiveStudentsByCycleController extends AbstractController
 {
@@ -63,8 +59,8 @@ class PrintTopFiveStudentsByCycleController extends AbstractController
         $cycle = $this->cycleRepository->find($request->request->get('cycle'));
 
         $term = $this->termRepository->find($request->request->get('term'));
-        
-        $topFiveStudents = $this->reportRepository->findTopFiveStudentsByCycle($schoolYear, $subSystem, $cycle, $term);
+
+        $topFiveStudents = $this->reportRepository->findTopFiveStudentsByCycle($schoolYear->getId(), $subSystem->getId(), $cycle->getId(), $term->getId());
         
         $pdf = $this->printTopFiveStudentsByCycleService->printTopFiveStudentsByCycleService($topFiveStudents, $schoolYear, $school, $subSystem, $cycle, $term);
         

@@ -17,11 +17,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/report")]
 class PrintTranscriptTermController extends AbstractController
 {
@@ -40,7 +36,7 @@ class PrintTranscriptTermController extends AbstractController
 
     #[Route("/print-transcript-term-student/{slugStudent}/{slugTerm}", name:"print_transcript_term_student")]
     #[Route("/print-transcript-term-classroom/{slugClassroom}/{slugTerm}", name:"print_transcript_term_classroom")]
-    public function printTranscript(Request $request, string $slugStudent = null, string $slugClassroom = null, string $slugTerm = null, $sequenceId = 0): Response
+    public function printTranscript(Request $request, ?string $slugStudent = null, ?string $slugClassroom = null, string $slugTerm = null, $sequenceId = 0): Response
     {
         $mySession = $request->getSession();
 
@@ -66,12 +62,18 @@ class PrintTranscriptTermController extends AbstractController
             return $this->redirectToRoute('home_mainMenu');
         }
 
-        $student = $this->studentRepository->findOneBySlug([
+        $student = $this->studentRepository->findOneBy([
             'slug' => $slugStudent
         ]);
+
         $school = $this->schoolRepository->findOneBy(['schoolYear' => $schoolYear]);
 
         $classroom = $this->classroomRepository->findOneBy(['slug' => $slugClassroom]);
+
+        if (!$student) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
 
         $term = null;
         $sequence = null;
@@ -79,6 +81,11 @@ class PrintTranscriptTermController extends AbstractController
         if($slugTerm && !$slugClassroom)
         {
             $term = $this->termRepository->findOneBy(['slug' => $slugTerm]);
+
+            if (!$term) 
+            {
+                return $this->redirectToRoute('page_error');
+            }
 
             $releves = $this->lessonRepository->getEvaluationsByStudentAndTrimester($student->getId(), $term->getId());
             
@@ -89,6 +96,10 @@ class PrintTranscriptTermController extends AbstractController
         if ($request->request->has('slugClassroom') && $request->request->has('term')) 
         {
             $term = $this->termRepository->find($request->request->get('term'));
+            if (!$term) 
+            {
+                return $this->redirectToRoute('page_error');
+            }
             $classroom = $this->classroomRepository->findOneBy(['slug' => $request->request->get('slugClassroom')] );
             
             $relevesTermClasse = $this->lessonRepository->getSubjectsWithGradesByClassAndTrimester($classroom->getId(), $term->getId());
@@ -129,11 +140,15 @@ class PrintTranscriptTermController extends AbstractController
         }
         
         
-       
         if ($request->request->has('slugClassroom') && $request->request->has('term')) 
         {
             $classroom = $this->classroomRepository->findOneBy(['slug' => $request->request->get('slugClassroom')] );
             
+            if (!$classroom) 
+            {
+                return $this->redirectToRoute('page_error');
+            }
+
             if ($subSystem->getId() == 1 ) 
             {
                 return new Response($pdf->Output(utf8_decode("Transcript's of ".$classroom->getClassroom()), "I"), 200, ['Content-Type' => 'application/pdf']) ;

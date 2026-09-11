@@ -19,11 +19,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/registration")]
 class FeesStatementController extends AbstractController
 {
@@ -65,7 +61,12 @@ class FeesStatementController extends AbstractController
         {
             // On ajoute le classroom à la request pour permettre l'affichage des students
             //  et non le formulaire de choix de la classe
-            $id = $this->classroomRepository->findOneBySlug(['slug' => $slugClassroom])->getId();
+            
+            $id = $this->classroomRepository->findOneBy(['slug' => $slugClassroom])->getId();
+            if (!$id) 
+            {
+                return $this->redirectToRoute('page_error');
+            }
             $request->request->set('classroom', $id);
         }
        

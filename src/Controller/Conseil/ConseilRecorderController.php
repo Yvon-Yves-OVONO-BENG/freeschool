@@ -22,11 +22,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/conseil")]
 class ConseilRecorderController extends AbstractController
 {
@@ -71,10 +67,16 @@ class ConseilRecorderController extends AbstractController
 
         $terms = $this->termRepository->findBy([], ['term' => 'ASC']);
         
-        $teacher = $this->teacherRepository->findOneBySlug([
-            'slug' => $slug
+        $teacher = $this->teacherRepository->findOneBy([
+            'slug' => $slug,
+            'schoolYear' => $schoolYear
         ]);
 
+        if (!$teacher) 
+        {
+            return $this->redirectToRoute('page_error');
+        } 
+        
         $classrooms = $this->classroomRepository->findSupervisorClassrooms($teacher, $schoolYear, $subSystem);
 
         $conseilToUpdate = null;

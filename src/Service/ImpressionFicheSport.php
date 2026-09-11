@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Service;
+use App\Entity\Classroom;
+use App\Entity\School;
+use App\Entity\SchoolYear;
 use Fpdf\Fpdf;
 use App\Repository\SchoolRepository;
 
@@ -10,9 +13,21 @@ class ImpressionFicheSport extends FPDF
     public function __construct(protected SchoolRepository $etablissementRepository)
     {}
 
-    public function impresionFiche(array $eleves, $classe): Fpdf
+    public function impresionFiche(
+        array $eleves,
+        Classroom $classe,
+        SchoolYear $schoolYear,
+        ?School $school = null
+    ): Fpdf
     {
         $pdf = new Fpdf();
+        $sessionYear = $this->sessionYear($schoolYear);
+        $schoolName = $school ? $school->getFrenchName() : 'ETABLISSEMENT';
+        $examCenter = $school
+            ? trim($school->getPlace().' '.$school->getFrenchName())
+            : $schoolName;
+        $series = strtoupper((string) $classe->getClassroom());
+
         foreach ($eleves as $eleve) {
             $pdf->addPage('P');
             $pdf->SetLeftMargin(10);
@@ -25,7 +40,7 @@ class ImpressionFicheSport extends FPDF
             $pdf->SetFont('Arial', '', 9);
             $pdf->Cell(95, 8, "SESSION ", 0, 0, 'R');
             $pdf->SetFont('Arial', 'BI', 9);
-            $pdf->Cell(8, 8, "2024", 0, 1, 'C');
+            $pdf->Cell(14, 8, $sessionYear, 0, 1, 'C');
 
             if($eleve->getPhoto())
             {
@@ -85,7 +100,7 @@ class ImpressionFicheSport extends FPDF
             $pdf->SetFont('Arial', 'I', 8);
             $pdf->Cell(32, 5, "Accommodation Center :", 0, 0, 'L');
             $pdf->SetFont('Arial', 'B', 8);
-            $pdf->Cell(35, 5, "YAOUNDE LYCEE ODZA", 0, 1, 'L');
+            $pdf->Cell(35, 5, strtoupper(utf8_decode($examCenter)), 0, 1, 'L');
 
             $pdf->SetX(65);
             $pdf->SetFont('Arial', 'B', 8);
@@ -100,30 +115,7 @@ class ImpressionFicheSport extends FPDF
             $pdf->Cell(20, 5, "Series/Trade :", 0, 0, 'L');
             $pdf->SetFont('Arial', 'B', 8);
             
-            switch($eleve->getClassroom()->getId())
-            {
-                case 144 :
-                $pdf->Cell(10, 5, "ALL", 0, 1, 'L');
-                break;
-
-                case 146 :
-                $pdf->Cell(10, 5, "ESP", 0, 1, 'L');
-                break;
-
-                case 147 :
-                $pdf->Cell(10, 5, "ESP", 0, 1, 'L');
-                break;
-
-                case 148 :
-                $pdf->Cell(10, 5, "ITA", 0, 1, 'L');
-                break;
-
-                case 181 :
-                $pdf->Cell(10, 5, "CHI", 0, 1, 'L');
-                break;
-
-
-            }
+            $pdf->Cell(25, 5, utf8_decode($series), 0, 1, 'L');
             
 
             $pdf->SetX(65);
@@ -132,7 +124,7 @@ class ImpressionFicheSport extends FPDF
             $pdf->SetFont('Arial', 'I', 8);
             $pdf->Cell(12, 5, "School :", 0, 0, 'L');
             $pdf->SetFont('Arial', 'B', 8);
-            $pdf->Cell(35, 5, "LYCEE ODZA", 0, 1, 'L');
+            $pdf->Cell(85, 5, strtoupper(utf8_decode($schoolName)), 0, 1, 'L');
 
             $pdf->Image('logo/fond.png', 67, 60, 100, 40);
 
@@ -193,7 +185,7 @@ class ImpressionFicheSport extends FPDF
             $pdf->SetFont('Arial', '', 8);
             $pdf->Cell(40, 4,"SESSION ", 0, 0, 'R');
             $pdf->SetFont('Arial', 'B', 8);
-            $pdf->Cell(45, 4,"2024", 0, 0, 'L');
+            $pdf->Cell(45, 4, $sessionYear, 0, 0, 'L');
             $pdf->Cell(30, 4,utf8_decode(""), 'LR', 1, 'L');
 
             $pdf->SetX(24);
@@ -203,31 +195,7 @@ class ImpressionFicheSport extends FPDF
             $pdf->Cell(23, 4,"Series/Trade :", 0, 0, 'L');
             $pdf->SetFont('Arial', 'B', 8);
 
-            // $pdf->Cell(17, 4,$eleve->getClassroom()->getClassroom(), 0, 0, 'L');
-            switch($eleve->getClassroom()->getId())
-            {
-                case 144 :
-                $pdf->Cell(17, 4, "ALL", 0, 0, 'L');
-                break;
-
-                case 146 :
-                $pdf->Cell(17, 4, "ESP", 0, 0, 'L');
-                break;
-
-                case 147 :
-                $pdf->Cell(17, 4, "ESP", 0, 0, 'L');
-                break;
-
-                case 148 :
-                $pdf->Cell(17, 4, "ITA", 0, 0, 'L');
-                break;
-
-                case 181 :
-                $pdf->Cell(17, 4, "CHI", 0, 0, 'L');
-                break;
-
-
-            }
+            $pdf->Cell(17, 4, utf8_decode($series), 0, 0, 'L');
 
             $pdf->SetFont('Arial', 'B', 8);
             $pdf->Cell(20, 4,"Sexe /", 0, 0, 'R');
@@ -519,5 +487,18 @@ class ImpressionFicheSport extends FPDF
         }
         $pdf->AliasNbPages();
         return $pdf;
+    }
+
+    private function sessionYear(SchoolYear $schoolYear): string
+    {
+        preg_match_all('/(?:19|20)\\d{2}/', (string) $schoolYear->getSchoolYear(), $matches);
+
+        if (!empty($matches[0])) {
+            $years = $matches[0];
+
+            return (string) end($years);
+        }
+
+        return (string) $schoolYear->getSchoolYear();
     }
 }

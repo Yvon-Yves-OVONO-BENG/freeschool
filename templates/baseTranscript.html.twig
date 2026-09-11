@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+	<head>
+		<!-- Meta data -->
+		<meta charset="UTF-8">
+		<meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=0'>
+		<meta content="Freeschool - Application complète de gestions scolaire" name="description">
+		<meta content="Yvon Yves Noel OVONO BENG" name="author">
+		<meta name="keywords" content="admin, admin template, dashboard, admin dashboard, responsive, bootstrap, bootstrap 5, admin theme, admin themes, bootstrap admin template, scss, ui, crm, modern, flat">
+		<title>
+			{% block title %}{% trans %}Bienvenue{% endtrans %}
+			{% endblock %}
+		</title>
+
+		<meta name="description" content=""/>
+
+		<!--Favicon -->
+		<link rel="icon" href="{{ asset ('build/custom2/images/brand/favicon.png')}}" type="image/x-icon"/>
+
+		<!--Bootstrap css -->
+		<link href="{{ asset ('build/custom2/plugins/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+
+		<!-- Style css -->
+		<link href="{{ asset ('build/custom2/css/style.css')}}" rel="stylesheet"/>
+		<link href="{{ asset ('build/custom2/css/dark.css')}}" rel="stylesheet"/>
+		<link href="{{ asset ('build/custom2/css/skin-modes.css')}}" rel="stylesheet"/>
+
+		<!-- Animate css -->
+		<link href="{{ asset ('build/custom2/css/animated.css')}}" rel="stylesheet"/>
+
+		<!-- P-scroll bar css-->
+		<link href="{{ asset ('build/custom2/plugins/p-scrollbar/p-scrollbar.css')}}" rel="stylesheet"/>
+
+		<!---Icons css-->
+		<link href="{{ asset ('build/custom2/css/icons.css')}}" rel="stylesheet"/>
+
+		<!-- Simplebar css -->
+		<link rel="stylesheet" href="{{ asset ('build/custom2/plugins/simplebar/css/simplebar.css')}}">
+
+		<!-- INTERNAL Morris Charts css -->
+		<link href="{{ asset ('build/custom2/plugins/morris/morris.css')}}" rel="stylesheet"/>
+
+		<!-- INTERNAL Select2 css -->
+		<link href="{{ asset ('build/custom2/plugins/select2/select2.min.css')}}" rel="stylesheet"/>
+
+		<!--Date Picker-->
+		<link href="{{ asset ('build/custom2/plugins/bootstrap-datepicker/bootstrap-datepicker.css')}}" rel="stylesheet" />
+
+		<!-- Color Skin css -->
+		<link id="theme" href="{{ asset ('build/custom2/colors/color1.css')}}" rel="stylesheet" type="text/css"/>
+		<link id="theme" href="{{ asset ('mesStylesSwal/style.css')}}" rel="stylesheet" type="text/css"/>
+
+		<!-- INTERNAL File Uploads css -->
+		<link href="{{ asset ('build/custom2/plugins/fancyuploder/fancy_fileupload.css')}}" rel="stylesheet" />
+		
+		<!-- INTERNAL Prism Css -->
+		<link href="{{ asset ('build/custom2/plugins/prism/prism.css')}}" rel="stylesheet">
+
+	</head>
+
+	<body class="app fs-saas-premium">
+
+		<!---Global-loader-->
+		<div id="global-loader" >
+			<img src="{{ asset ('build/custom2/images/svgs/loader3.svg')}}" alt="loader" style="width: 74px; height: 74px;">
+		</div>
+
+		<!--- End Global-loader-->
+		<!-- Page -->
+		<div class="page">
+			<div class="page-main">
+				
+				<div class="hor-header header top-header" style="background-image: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 51%, rgba(0,212,255,1) 80%);">
+					<div class="container">
+						<div class="d-flex">
+							<a class="animated-arrow hor-toggle horizontal-navtoggle"><span></span></a>
+							<a class="header-brand" href="javascript:void(0);">
+								<img src="{{asset('build/custom2/images/brand/logo_white.png')}}" class="header-brand-img desktop-lgo" alt="Freedom logo">
+								<img src="{{asset('build/custom2/images/brand/logo_white.png')}}" class="header-brand-img dark-logo" alt="Freedom logo">
+								<img src="{{asset('build/custom2/images/brand/favicon.png')}}" class="header-brand-img mobile-logo" alt="Freedom logo">
+								<img src="{{asset('build/custom2/images/brand/favicon1.png')}}" class="header-brand-img darkmobile-logo" alt="Freedom logo">
+							</a>
+							<div class="mt-1 d-md-block d-none text-center">
+								<form class="form-inline text-center">
+									<div class="search-element text-center">
+
+										<h3 class="page-title mb-0 text-primary" style="font-size: 16px; text-align:center; color: #ffffff !important; ">
+											<b>
+												{% if subSystem == 'Francophone / French Speaker' %}
+													{{ school.frenchName }}
+													{% else %}
+													{{ school.englishName }}
+												{% endif %}
+												- {{ school.schoolYear.schoolyear }}
+											</b>
+										</h3>
+										
+										<h3 class="page-title mb-0 text-primary" style="font-size: 14px; text-align:center; color: #ffffff !important;">
+											{% if subSystem == 'Francophone / French Speaker' %}
+												<img src="{{asset('build/custom/images/fr.png')}}" alt="img" class="me-2 country">
+												{% else %}
+													<img src="{{asset('build/custom/images/en.png')}}" alt="img" class="me-2 country">
+											{% endif %}
+											<b> {% trans %}Section : {% endtrans %} {{ subSystem }}</b>
+										</h3>
+
+									</div>
+								</form>
+							</div>
+							<!-- SEARCH --><!-- SEARCH -->
+							<div class="d-flex order-lg-2 ms-auto main-header-end">
+								<button  class="navbar-toggler navresponsive-toggler d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent-4" aria-controls="navbarSupportedContent-4" aria-expanded="true" aria-label="{% trans %}Toggle navigation{% endtrans %}">
+									<i class="fe fe-more-vertical header-icons navbar-toggler-icon"></i>
+								</button>
+								<div class="navbar navbar-expand-lg navbar-collapse responsive-navbar p-0">
+									<div class="collapse navbar-collapse" id="navbarSupportedContent-4">
+										<div class="d-flex order-lg-2">
+											<!-- SEARCH -->
+											<div class="dropdown d-flex">
+												<a class="nav-link icon theme-layout nav-link-bg layout-setting">
+													<span class="light-layout"><svg xmlns="http://www.w3.org/2000/svg" class="header-icon" width="24" height="24" viewBox="0 0 24 24"><path d="M20.742 13.045a8.088 8.088 0 0 1-2.077.271c-2.135 0-4.14-.83-5.646-2.336a8.025 8.025 0 0 1-2.064-7.723A1 1 0 0 0 9.73 2.034a10.014 10.014 0 0 0-4.489 2.582c-3.898 3.898-3.898 10.243 0 14.143a9.937 9.937 0 0 0 7.072 2.93 9.93 9.93 0 0 0 7.07-2.929 10.007 10.007 0 0 0 2.583-4.491 1.001 1.001 0 0 0-1.224-1.224zm-2.772 4.301a7.947 7.947 0 0 1-5.656 2.343 7.953 7.953 0 0 1-5.658-2.344c-3.118-3.119-3.118-8.195 0-11.314a7.923 7.923 0 0 1 2.06-1.483 10.027 10.027 0 0 0 2.89 7.848 9.972 9.972 0 0 0 7.848 2.891 8.036 8.036 0 0 1-1.484 2.059z"/></svg></span>
+													<span class="dark-layout"><svg xmlns="http://www.w3.org/2000/svg" class="header-icon" width="24" height="24" viewBox="0 0 24 24"><path d="M6.993 12c0 2.761 2.246 5.007 5.007 5.007s5.007-2.246 5.007-5.007S14.761 6.993 12 6.993 6.993 9.239 6.993 12zM12 8.993c1.658 0 3.007 1.349 3.007 3.007S13.658 15.007 12 15.007 8.993 13.658 8.993 12 10.342 8.993 12 8.993zM10.998 19h2v3h-2zm0-17h2v3h-2zm-9 9h3v2h-3zm17 0h3v2h-3zM4.219 18.363l2.12-2.122 1.415 1.414-2.12 2.122zM16.24 6.344l2.122-2.122 1.414 1.414-2.122 2.122zM6.342 7.759 4.22 5.637l1.415-1.414 2.12 2.122zm13.434 10.605-1.414 1.414-2.122-2.122 1.414-1.414z"/></svg></span>
+												</a>
+											</div><!-- Theme-Layout -->
+											<div class="dropdown  header-fullscreen d-flex" >
+												<a  class="nav-link icon full-screen-link p-0"  id="fullscreen-button">
+													<svg xmlns="http://www.w3.org/2000/svg" class="header-icon" width="24" height="24" viewBox="0 0 24 24"><path d="M5 5h5V3H3v7h2zm5 14H5v-5H3v7h7zm11-5h-2v5h-5v2h7zm-2-4h2V3h-7v2h5z"/></svg>
+												</a>
+											</div>
+											<div class="dropdown country-selector d-flex">
+												<a href="javascript:void(0);" class="nav-link leading-none" data-bs-toggle="dropdown">
+													<span class="header-avatar1">
+													{% if app.request.locale == 'fr' %}
+														<img src="{{asset('build/custom/images/fr.png')}}" alt="img" class="me-2 country">
+														{% elseif app.request.locale == 'en' %}
+														<img src="{{asset('build/custom/images/en.png')}}" alt="img" class="me-2 country">
+													{% endif %}
+														<span class="fs-14 font-weight-semibold mt-2">{% trans %}Langue{% endtrans %} </span>
+													</span>
+												</a>
+												<div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow animated border-primary">
+													{% for locale in locales %}
+														{% if locale == 'fr' %}
+														<a class="dropdown-item d-flex" href="{{ path('translation_changeLocale', {'locale': locale}) }}">
+															<img src="{{asset('build/custom/images/fr.png')}}" alt="img" class="me-2 country mt-1">
+															<span class="fs-13">{% trans %}French{% endtrans %} </span>
+														</a>
+														{% endif %}
+
+														{% if locale == 'en' %}
+															<a class="dropdown-item d-flex" href="{{ path('translation_changeLocale', {'locale': locale}) }}">
+																<img src="{{asset('build/custom/images/en.png')}}" alt="img" class="me-2 country mt-1">
+																<span class="fs-13">{% trans %}Anglais{% endtrans %} </span>
+															</a>
+														{% endif %}
+													
+													{% endfor %}
+												</div>
+											</div>
+											
+											<div class="dropdown profile-dropdown d-flex">
+												<a href="javascript:void(0);" class="nav-link pe-0 leading-none" data-bs-toggle="dropdown">
+													<span class="header-avatar1">
+														{# <img src="{{asset('build/custom2/images/users/2.jpg" alt="img')}}" class="avatar avatar-md brround"> #}
+														<svg class="header-icon me-2" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM7.07 18.28c.43-.9 3.05-1.78 4.93-1.78s4.51.88 4.93 1.78C15.57 19.36 13.86 20 12 20s-3.57-.64-4.93-1.72zm11.29-1.45c-1.43-1.74-4.9-2.33-6.36-2.33s-4.93.59-6.36 2.33C4.62 15.49 4 13.82 4 12c0-4.41 3.59-8 8-8s8 3.59 8 8c0 1.82-.62 3.49-1.64 4.83zM12 6c-1.94 0-3.5 1.56-3.5 3.5S10.06 13 12 13s3.5-1.56 3.5-3.5S13.94 6 12 6zm0 5c-.83 0-1.5-.67-1.5-1.5S11.17 8 12 8s1.5.67 1.5 1.5S12.83 11 12 11z"/></svg>
+
+														{{ 'Anonyme' }}
+														 
+													</span>
+													
+												</a>
+												
+
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				{# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+				{% block stylesheets %}
+					{# {{ encore_entry_link_tags('app') }} #}
+				{% endblock %}
+
+				{% block javascripts %}
+					{# {{ encore_entry_script_tags('app') }} #}
+				{% endblock %}
+
+				{% block body %}{% endblock %}
+				
+				{% include "includes/_footer.html.twig" %}
+							
+				<!-- End Footer-->
+			</div>
+		</div>
+				<!-- End Footer-->
+		<!-- End Page -->
+
+		<!--/ Layout wrapper -->
+
+		<!-- Back to top -->
+		<a href="#top" id="back-to-top"> <i class="fe fe-chevron-up"></i></a>
+
+		<!-- INTERNAL Clipboard js -->
+		<script src="{{ asset ('build/custom2/plugins/clipboard/clipboard.min.js')}}"></script>
+		<script src="{{ asset ('build/custom2/plugins/clipboard/clipboard.js')}}"></script>
+
+		<!-- INTERNAl Timeline js -->
+		<script src="{{ asset ('build/custom2/plugins/timeline/js/jquery.timelify.js')}}"></script>
+		<script src="{{ asset ('build/custom2/js/timeline.js')}}"></script>
+
+		<!-- Vertical Scroll-->
+		<script src="{{ asset ('build/custom2/js/jquery.bootstrap.newsbox.js')}}"></script>
+		<script src="{{ asset ('build/custom2/js/vertical-scroll.js')}}"></script>
+
+		<!-- INTERNAL Prism js -->
+		<script src="{{ asset ('build/custom2/plugins/prism/prism.js')}}"></script>
+
+		<!-- Jquery js-->
+		<script src="{{ asset ('build/custom2/js/jquery.min.js')}}"></script>
+
+		<!-- Bootstrap5 js-->
+		<script src="{{ asset ('build/custom2/plugins/bootstrap/popper.min.js')}}"></script>
+		<script src="{{ asset ('build/custom2/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
+
+		<!--Othercharts js-->
+		<script src="{{ asset ('build/custom2/plugins/othercharts/jquery.sparkline.min.js')}}"></script>
+
+		<!-- Circle-progress js-->
+		<script src="{{ asset ('build/custom2/js/circle-progress.min.js')}}"></script>
+
+		<!-- Jquery-rating js-->
+		<script src="{{ asset ('build/custom2/plugins/rating/jquery.rating-stars.js')}}"></script>
+
+		<!--Horizontal-menu js-->
+		<script src="{{ asset ('build/custom2/plugins/horizontal-menu/horizontal-menu.js')}}"></script>
+
+		<!-- Sticky js-->
+		<script src="{{ asset ('build/custom2/js/stiky.js')}}"></script>
+
+		<!-- P-scroll js-->
+		<script src="{{ asset ('build/custom2/plugins/p-scrollbar/p-scrollbar.js')}}"></script>
+		<script src="{{ asset ('build/custom2/plugins/p-scrollbar/p-scroll.js')}}"></script>
+
+		<!-- INTERNAL Chart js -->
+		<script src="{{ asset ('build/custom2/plugins/chart/chart.bundle.js')}}"></script>
+		<script src="{{ asset ('build/custom2/plugins/chart/utils.js')}}"></script>
+
+		<!-- INTERNAL Apexchart js -->
+		<script src="{{ asset ('build/custom2/js/apexcharts.js')}}"></script>
+
+		<!--INTERNAL Moment js-->
+		<script src="{{ asset ('build/custom2/plugins/moment/moment.js')}}"></script>
+
+		<!--INTERNAL Index js-->
+		<script src="{{ asset ('build/custom2/js/index1.js')}}"></script>
+
+
+		<!-- Simplebar JS -->
+		<script src="{{ asset ('build/custom2/plugins/simplebar/js/simplebar.min.js')}}"></script>
+
+		<!-- Rounded bar chart js-->
+		<script src="{{ asset ('build/custom2/js/rounded-barchart.js')}}"></script>
+
+		<!-- Custom js-->
+		<script src="{{ asset ('build/custom2/js/custom.js')}}"></script>
+
+		<!-- INTERNAL File uploads js -->
+        <script src="{{ asset ('build/custom2/plugins/fileupload/js/dropify.js')}}"></script>
+		<script src="{{ asset ('build/custom2/js/filupload.js')}}"></script>
+
+		<!-- INTERNAL popover js -->
+        <script src="{{ asset ('build/custom2/js/popover.js')}}"></script>
+		
+
+		{% include "includes/_saas_premium_theme.html.twig" %}
+
+	</body>
+</html>

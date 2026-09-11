@@ -3,71 +3,150 @@
 {% block title %}{% trans %}Assumed Duty{% endtrans %}{% endblock %}
 
 {% block subTitle %}
-{% trans %}MANAGEMENT OF STARTS / RETURNS OF SERVICE AND EFFECTIVE PRESENCE{% endtrans %}
+	{% trans %}MANAGEMENT OF STARTS / RETURNS OF SERVICE AND EFFECTIVE PRESENCE{% endtrans %}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-assumed-duty-premium.css') }}">
 {% endblock %}
 
 {% block body %}
-<!-- App-Content -->
-	<div class="hor-content main-content">
+	<div class="hor-content main-content fs-assumed-duty-page">
 		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary"></h4>
-                </div>
-                <div class="page-rightheader">
-                    <div class="btn-list">
-                        
-                    </div>
-                </div>
-            </div>
-            <!--End Page header-->
+			<div class="fs-assumed-duty-menu-safe-space" aria-hidden="true"></div>
 
-            <div class="card border-primary">
-                <div class="card-header">
-                    <span class="page-title mb-0 text-primary"><i class="fa fa-file-pdf-o me-2"></i> {% trans %}Printing of service pick-ups/returns and actual presences at the post{% endtrans %}</span> 
-                </div>
-                <div class="card-body pt-5 ">
-                    <form action="{{ path('teacher_printAssumedDuty') }}" method="post" target="_blank">
-                        <div class="row">
-                            <div class="col-md-1">
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="teacher">{% trans %}Teacher{% endtrans %}</label>
-                                    <select name="teacher" id="teacher" class="form-control select2-show-search" data-placeholder="Choisir un enseignant" required>
-                                        <option label="Choisir un enseignant"></option>
-                                        <option value="0">{% trans %}All teachers{% endtrans %}</option>
-                                        {% for teacher in teachers %}
-                                            <option value="{{ teacher.id }}">{{ teacher.fullName }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label style="color: #fff;">{% trans %}Print take/retake{% endtrans %}</label>
-                                    <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="asd">
-                                        <i class="fa fa-print"></i>
-                                        {% trans %}Print take/retake{% endtrans %}</button>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label style="color: #fff;">{% trans %}Print effective presence{% endtrans %}</label>
-                                    <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="pe">
-                                        <i class="fa fa-print"></i>
-                                        {% trans %}Print effective presence{% endtrans %}</button>
-                                </div>
-                            </div>
-                            <div class="col-md-1">
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+			<section class="fs-assumed-duty-hero">
+				<div class="fs-assumed-duty-hero__content">
+					<div>
+						<span class="fs-assumed-duty-eyebrow">
+							<i class="fa fa-file-pdf-o"></i>
+							{% trans %}Teacher administrative workspace{% endtrans %}
+						</span>
+
+						<h1 class="fs-assumed-duty-title">
+							{% trans %}Printing of service pick-ups/returns and actual presences at the post{% endtrans %}
+						</h1>
+
+						<p class="fs-assumed-duty-subtitle">
+							{% trans %}Select one teacher or all teachers, then print service take/retake documents or effective presence reports in a refined premium interface.{% endtrans %}
+						</p>
+					</div>
+
+					<div class="fs-assumed-duty-hero__actions">
+						<div class="fs-assumed-duty-hero-stat">
+							<span class="fs-assumed-duty-hero-stat__icon">
+								<i class="fe fe-users"></i>
+							</span>
+							<span class="fs-assumed-duty-hero-stat__label">{% trans %}Teachers{% endtrans %}</span>
+							<strong class="fs-assumed-duty-hero-stat__value">{{ teachers|length }}</strong>
+						</div>
+
+						<div class="fs-assumed-duty-hero-stat fs-assumed-duty-hero-stat--soft">
+							<span class="fs-assumed-duty-hero-stat__icon">
+								<i class="fe fe-printer"></i>
+							</span>
+							<span class="fs-assumed-duty-hero-stat__label">{% trans %}Output{% endtrans %}</span>
+							<strong class="fs-assumed-duty-hero-stat__value">{% trans %}PDF{% endtrans %}</strong>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="fs-assumed-duty-card">
+				<div class="fs-assumed-duty-card__header">
+					<div>
+						<span class="fs-assumed-duty-chip">
+							<i class="fe fe-filter"></i>
+							{% trans %}Printing filters{% endtrans %}
+						</span>
+
+						<h2>{% trans %}Choose teacher and document type{% endtrans %}</h2>
+
+						<p>
+							{% trans %}Use the same form to print a take/retake document or the effective presence statement for the selected teacher.{% endtrans %}
+						</p>
+					</div>
+
+					<span class="fs-assumed-duty-card__icon">
+						<i class="fa fa-file-pdf-o"></i>
+					</span>
+				</div>
+
+				<form action="{{ path('teacher_printAssumedDuty') }}" method="post" target="_blank" class="fs-assumed-duty-form needs-validation" novalidate data-no-spinner="1">
+					<div class="fs-floating-field fs-required-field">
+						<select name="teacher" id="teacher" class="form-control select2-show-search fs-floating-control" data-placeholder="" required>
+							<option value="" label="">
+								
+							</option>
+
+							<option value="0">{% trans %}All teachers{% endtrans %}</option>
+
+							{% for teacher in teachers %}
+								<option value="{{ teacher.id }}">{{ teacher.fullName }}</option>
+							{% endfor %}
+						</select>
+
+						<label class="fs-floating-label" for="teacher">
+							<i class="fe fe-user"></i>
+							{% trans %}Teacher{% endtrans %}
+						</label>
+
+						<div class="invalid-feedback">
+							{% trans %}Please choose a teacher !{% endtrans %}
+						</div>
+					</div>
+
+					<div class="fs-assumed-duty-form__actions">
+						<button class="fs-assumed-duty-btn fs-assumed-duty-btn--primary fs-assumed-duty-submit-btn" type="submit" name="asd">
+							<i class="fa fa-print fs-assumed-duty-submit-icon"></i>
+							<span>{% trans %}Print take/retake{% endtrans %}</span>
+						</button>
+
+						<button class="fs-assumed-duty-btn fs-assumed-duty-btn--secondary fs-assumed-duty-submit-btn" type="submit" name="pe">
+							<i class="fa fa-print fs-assumed-duty-submit-icon"></i>
+							<span>{% trans %}Print effective presence{% endtrans %}</span>
+						</button>
+					</div>
+				</form>
+			</section>
+
+			<section class="fs-assumed-duty-info-grid">
+				<div class="fs-assumed-duty-info-card">
+					<span class="fs-assumed-duty-info-card__icon">
+						<i class="fe fe-users"></i>
+					</span>
+					<div>
+						<span>{% trans %}All teachers{% endtrans %}</span>
+						<strong>{% trans %}The All teachers option is preserved exactly as in your original template.{% endtrans %}</strong>
+					</div>
+				</div>
+
+				<div class="fs-assumed-duty-info-card">
+					<span class="fs-assumed-duty-info-card__icon fs-assumed-duty-info-card__icon--cyan">
+						<i class="fe fe-refresh-cw"></i>
+					</span>
+					<div>
+						<span>{% trans %}Take / retake{% endtrans %}</span>
+						<strong>{% trans %}The button name asd is preserved for your controller logic.{% endtrans %}</strong>
+					</div>
+				</div>
+
+				<div class="fs-assumed-duty-info-card">
+					<span class="fs-assumed-duty-info-card__icon fs-assumed-duty-info-card__icon--gold">
+						<i class="fe fe-check-circle"></i>
+					</span>
+					<div>
+						<span>{% trans %}Effective presence{% endtrans %}</span>
+						<strong>{% trans %}The button name pe is preserved for effective presence printing.{% endtrans %}</strong>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-assumed-duty-premium.js') }}"></script>
 {% endblock %}

@@ -9734,9 +9734,20 @@ class StatisticService
                 $pdf->Cell($cellWidth1, $cellHeight5, utf8_decode('ADMINISTRATION'), 1, 0, 'L');
                 $pdf->Cell($cellWidth2, $cellHeight5, utf8_decode($censor->getFullName()), 1, 0, 'L');
                 $pdf->Cell($cellWidth3, $cellHeight5, utf8_decode($censor->getGrade()->getGrade()), 1, 0, 'L');
-                $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode($censor->getDuty()->getDuty()), 1, 0, 'L');
+                
+                if($school->getEducation()->getEducation() == "Général")
+                {
+                    $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode($censor->getDuty()->getDuty()), 1, 0, 'L');
+                }
+                else
+                {
+                    $pdf->SetFont('Times', '', 8);
+                    $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode($censor->getDuty()->getDuty()." ENS. TECH"), 1, 0, 'L');
+                }
+                
                 $pdf->Cell($cellWidth5, $cellHeight5, '', 1, 1, 'L');
-            }else
+            }
+            else
             {
                 $pdf->Cell($cellWidth1, $cellHeight5, utf8_decode('ADMINISTRATION'), 1, 0, 'L');
                 $pdf->Cell($cellWidth2, $cellHeight5, utf8_decode(""), 1, 0, 'L');
@@ -9745,6 +9756,30 @@ class StatisticService
                 $pdf->Cell($cellWidth5, $cellHeight5, '', 1, 1, 'L');
             }
 
+            //AFFICHAGE DU CENSEUR DE L'ENSEIGNEMENT GENERAL POUR L'ENSEIGNEMENT TECHNIQUE
+            if($school->getEducation()->getEducation() == "Technique")
+            {
+                $censorEnsGen = $classroom->getCensorEnsGen();
+                if($censorEnsGen)
+                {
+                    $pdf->Cell($cellWidth1, $cellHeight5, utf8_decode('ADMINISTRATION'), 1, 0, 'L');
+                    $pdf->Cell($cellWidth2, $cellHeight5, utf8_decode($censorEnsGen->getFullName()), 1, 0, 'L');
+                    $pdf->Cell($cellWidth3, $cellHeight5, utf8_decode($censorEnsGen->getGrade()->getGrade()), 1, 0, 'L');
+                    $pdf->SetFont('Times', '', 8);
+                    $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode($censorEnsGen->getDuty()->getDuty()." ENS. GEN."), 1, 0, 'L');
+                    $pdf->Cell($cellWidth5, $cellHeight5, '', 1, 1, 'L');
+                }   
+                else 
+                {
+                    $pdf->Cell($cellWidth1, $cellHeight5, utf8_decode('ADMINISTRATION'), 1, 0, 'L');
+                    $pdf->Cell($cellWidth2, $cellHeight5, utf8_decode(""), 1, 0, 'L');
+                    $pdf->Cell($cellWidth3, $cellHeight5, utf8_decode(""), 1, 0, 'L');
+                    $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode("Cen. Ens. Gen."), 1, 0, 'L');
+                    $pdf->Cell($cellWidth5, $cellHeight5, '', 1, 1, 'L');
+                }   
+            }
+
+            $pdf->SetFont('Times', '', 10);
             // Affichage du surveillant general d'attache
             $supervisor = $classroom->getSupervisor();
             if($supervisor)
@@ -10636,7 +10671,18 @@ class StatisticService
                 $pdf->Cell($cellWidth1, $cellHeight5, utf8_decode('ADMINISTRATION'), 1, 0, 'L');
                 $pdf->Cell($cellWidth2, $cellHeight5, utf8_decode($censor->getFullName()), 1, 0, 'L');
                 $pdf->Cell($cellWidth3, $cellHeight5, utf8_decode($censor->getGrade()->getGrade()), 1, 0, 'L');
-                $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode("Vice-Principal"), 1, 0, 'L');
+                
+                if($school->getEducation()->getEducation() == "Général")
+                {
+                    $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode($censor->getDuty()->getDuty()), 1, 0, 'L');
+                }
+                else
+                {
+                    $pdf->SetFont('Times', '', 8);
+                    $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode($censor->getDuty()->getDuty()." TECH. TEACH"), 1, 0, 'L');
+                }
+
+                //$pdf->Cell($cellWidth4, $cellHeight5, utf8_decode("Vice-Principal"), 1, 0, 'L');
                 $pdf->Cell($cellWidth5, $cellHeight5, '', 1, 1, 'L');
             }
             else
@@ -10646,6 +10692,30 @@ class StatisticService
                 $pdf->Cell($cellWidth3, $cellHeight5, utf8_decode(""), 1, 0, 'L');
                 $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode("Vice-Principal"), 1, 0, 'L');
                 $pdf->Cell($cellWidth5, $cellHeight5, '', 1, 1, 'L');
+            }
+
+
+            //AFFICHAGE DU CENSEUR DE L'ENSEIGNEMENT GENERAL POUR L'ENSEIGNEMENT TECHNIQUE
+            if($school->getEducation()->getEducation() == "Technique")
+            {
+                $censorEnsGen = $classroom->getCensorEnsGen();
+                if($censorEnsGen)
+                {
+                    $pdf->Cell($cellWidth1, $cellHeight5, utf8_decode('ADMINISTRATION'), 1, 0, 'L');
+                    $pdf->Cell($cellWidth2, $cellHeight5, utf8_decode($censorEnsGen->getFullName()), 1, 0, 'L');
+                    $pdf->Cell($cellWidth3, $cellHeight5, utf8_decode($censorEnsGen->getGrade()->getGrade()), 1, 0, 'L');
+                    $pdf->SetFont('Times', '', 8);
+                    $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode($censorEnsGen->getDuty()->getDuty()." GEN. TEACH."), 1, 0, 'L');
+                    $pdf->Cell($cellWidth5, $cellHeight5, '', 1, 1, 'L');
+                }   
+                else 
+                {
+                    $pdf->Cell($cellWidth1, $cellHeight5, utf8_decode('ADMINISTRATION'), 1, 0, 'L');
+                    $pdf->Cell($cellWidth2, $cellHeight5, utf8_decode(""), 1, 0, 'L');
+                    $pdf->Cell($cellWidth3, $cellHeight5, utf8_decode(""), 1, 0, 'L');
+                    $pdf->Cell($cellWidth4, $cellHeight5, utf8_decode("Cen. Ens. Gen."), 1, 0, 'L');
+                    $pdf->Cell($cellWidth5, $cellHeight5, '', 1, 1, 'L');
+                }   
             }
 
             // Affichage du surveillant general d'attache

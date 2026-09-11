@@ -7,9 +7,11 @@ class ReportBody
     protected $rowsGroup1 = [];
     protected $rowsGroup2 = [];
     protected $rowsGroup3 = [];
+    protected $rowsGroup4 = [];
     protected $summaryGroup1;
     protected $summaryGroup2;
     protected $summaryGroup3;
+    protected $summaryGroup4;
 
 
     public function getRowsGroup1(): array
@@ -48,6 +50,20 @@ class ReportBody
         return $this;
     }
 
+    ////
+    public function getRowsGroup4(): array
+    {
+        return $this->rowsGroup4;
+    }
+
+    public function setRowsGroup4(array $rowsGroup4): self
+    {
+        $this->rowsGroup4 = $rowsGroup4;
+
+        return $this;
+    }
+    //
+
     public function getSummaryGroup1(): StudentResult
     {
         return $this->summaryGroup1;
@@ -80,6 +96,19 @@ class ReportBody
     public function setSummaryGroup3(StudentResult $summaryGroup3): self
     {
         $this->summaryGroup3 = $summaryGroup3;
+
+        return $this;
+    }
+
+    ////
+    public function getSummaryGroup4(): StudentResult
+    {
+        return $this->summaryGroup4;
+    }
+
+    public function setSummaryGroup4(StudentResult $summaryGroup4): self
+    {
+        $this->summaryGroup4 = $summaryGroup4;
 
         return $this;
     }

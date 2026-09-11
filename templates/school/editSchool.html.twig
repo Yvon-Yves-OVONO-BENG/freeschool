@@ -2,319 +2,441 @@
 
 {% block title %}{% trans %}Update School{% endtrans %}{% endblock %}
 
-
 {% block subTitle %}
-    {% trans %}FACILITY DATA MANAGEMENT{% endtrans %}
+	{% trans %}FACILITY DATA MANAGEMENT{% endtrans %}
 {% endblock %}
+
 {% block infoMessage %}
-    {% include "includes/_info_message.html.twig" %}
+	{% include "includes/_info_message.html.twig" %}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-school-premium.css') }}">
 {% endblock %}
 
 {% block body %}
-<!-- App-Content -->
-	<div class="hor-content main-content">
+	<div class="hor-content main-content fs-school-page">
 		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary"><i class="fe fe-home me-2"></i> {% trans %}Edit School{% endtrans %}</h4>
-                </div>
-                <div class="page-rightheader">
-                    <div class="btn-list">
-                        
-                    </div>
-                </div>
-            </div>
-            <!--End Page header-->
+			<div class="fs-school-menu-safe-space" aria-hidden="true"></div>
 
-            <div class="card border-primary">
-                <div class="card-header">
-                    <div class="col-md-4 text-left">
-                        <button type="button" class="btn btn-primary mt-1 mb-1 me-3 form-control-sm">
-                            <span>{% trans %}Number of registered staff{% endtrans %}</span>
-                            <span class="badge bg-white text-dark rounded-pill">{{ numberOfTeachers }}</span>
-                        </button>
-                    </div>
-                    <div class="col-md-4 text-center">
-                        <button type="button" class="btn btn-primary mt-1 mb-1 me-3 form-control-sm">
-                            <span>{% trans %}Number of registered students{% endtrans %}</span>
-                            <span class="badge bg-white text-dark rounded-pill">{{ numberOfStudentInSchool }}</span>
-                        </button>
-                    </div>
-                    <div class="col-md-4 text-right">
-                        <button type="button" class="btn btn-primary mt-1 mb-1 me-3 form-control-sm">
-                            <span>{% trans %}Number of registered classrooms {% endtrans %}</span>
-                            <span class="badge bg-white text-dark rounded-pill">{{ numberOfClassrooms }}</span>
-                        </button>
-                    </div>
-                    
-                </div>
-                <div class="card-body ">
-                    {{ form_start(formSchool) }}
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    {{ form_row(formSchool.logoFile, {'attr': {'class': 'dropify', 'data-height': "180"}}) }}
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    {{ form_row(formSchool.filigreeFile, {'attr': {'class': 'dropify', 'data-height': "180"}}) }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    {{ form_row(formSchool.headmaster, {'attr': {'class': 'form-control select2-show-search'}}) }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mb-5">
-                            <div class="col-md-6">
-                                <fieldset class="my-fieldset">
-                                    <legend>{% trans %}Information in French{% endtrans %}</legend>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            {{ form_row(formSchool.frenchName, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            {{ form_row(formSchool.frenchMotto, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            {{ form_row(formSchool.frenchCountry, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            {{ form_row(formSchool.frenchCountryMotto, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            {{ form_row(formSchool.frenchMinister, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            {{ form_row(formSchool.frenchRegion, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            {{ form_row(formSchool.frenchDivision, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            {{ form_row(formSchool.frenchSubDivision, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                </div>
-                                </fieldset>
-                            </div>
-                            <div class="col-md-6">
-                                <fieldset class="my-fieldset">
-                                    <legend>{% trans %}Information in English{% endtrans %}</legend>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            {{ form_row(formSchool.englishName, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            {{ form_row(formSchool.englishMotto, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            {{ form_row(formSchool.englishCountry, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            {{ form_row(formSchool.englishCountryMotto, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            {{ form_row(formSchool.englishMinister, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            {{ form_row(formSchool.englishRegion, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            {{ form_row(formSchool.englishDivision, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            {{ form_row(formSchool.englishSubDivision, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                </div>
-                                </fieldset>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    {{ form_row(formSchool.pobox, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    {{ form_row(formSchool.telephone, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    {{ form_row(formSchool.place, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                        {{ form_row(formSchool.email, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    {{ form_row(formSchool.serviceNote, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                </div>
-                            </div>
+			<section class="fs-school-hero">
+				<div class="fs-school-hero__content">
+					<div>
+						<span class="fs-school-eyebrow">
+							<i class="fe fe-home"></i>
+							{% trans %}Facility workspace{% endtrans %}
+						</span>
 
-                            <div class="col-md-3" >
-                                <label for="validationCustom01" class="form-label">{% trans %}Education{% endtrans %}</label>
-                                <div class="form-group">
-                                    <div class="selectgroup selectgroup-pills">
-                                        <label class="selectgroup-item">
-                                        
-                                            {% if school.education.education == "Général" %}
-                                                <input type="radio" name="education" value="1" class="selectgroup-input" checked="">
-                                                {% else %}
-                                                <input type="radio" name="education" value="1" class="selectgroup-input">
-                                            {% endif %}
-                                            
-                                            <span class="selectgroup-button">{% trans %}General{% endtrans %}</span>
-                                        </label>
-                                        <label class="selectgroup-item">
-                                            {% if school.education.education == "Technique" %}
-                                                <input type="radio" name="education" value="2" class="selectgroup-input"  checked="">
-                                                {% else %}
-                                                <input type="radio" name="education" value="2" class="selectgroup-input">
-                                            {% endif %}
-                                            <span class="selectgroup-button">{% trans %}Technical{% endtrans %}</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
+						<h1 class="fs-school-title">{% trans %}FACILITY DATA MANAGEMENT{% endtrans %}</h1>
 
-                            <div class="col-md-3" id="schoolType">
-                                <label for="validationCustom01" class="form-label">{% trans %}School type{% endtrans %}</label>
-                                <div class="form-group">
-                                    <div class="selectgroup selectgroup-pills">
-                                        <label class="selectgroup-item" id="public">
-                                            {% if school.public %}
-                                                <input type="radio" name="public" value="1" class="selectgroup-input" checked="">
-                                                {% else %}
-                                                <input type="radio" name="public" value="1" class="selectgroup-input">
-                                            {% endif %}
-                                            
-                                            <span class="selectgroup-button">{% trans %}Public{% endtrans %}</span>
-                                        </label>
-                                        <label class="selectgroup-item" id="private">
-                                            {% if school.public %}
-                                                <input type="radio" name="public" value="0" class="selectgroup-input">
-                                                {% else %}
-                                                <input type="radio" name="public" value="0" class="selectgroup-input" checked="">
-                                            {% endif %}
-                                            <span class="selectgroup-button">{% trans %}Private{% endtrans %}</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
+						<p class="fs-school-subtitle">
+							{% trans %}Update school identity, bilingual official information, contacts and institutional settings through a refined premium workspace.{% endtrans %}
+						</p>
+					</div>
 
-                            <div class="col-md-3" id="lycee" style="display: none !important;">
-                                <label for="validationCustom01" class="form-label">{% trans %}G.H.S or College{% endtrans %}</label>
-                                <div class="form-group">
-                                    <div class="selectgroup selectgroup-pills">
-                                        <label class="selectgroup-item" id="enseignant">
-                                            {% if school.lycee %}
-                                                <input type="radio" name="lycee" value="1" class="selectgroup-input" checked="">
-                                                {% else %}
-                                                    <input type="radio" name="lycee" value="1" class="selectgroup-input">
-                                            {% endif %}
-                                            
+					<div class="fs-school-hero__right">
+						<div class="fs-school-stat">
+							<span class="fs-school-stat__icon"><i class="fe fe-users"></i></span>
+							<span class="fs-school-stat__label">{% trans %}Registered staff{% endtrans %}</span>
+							<strong class="fs-school-stat__value">{{ numberOfTeachers }}</strong>
+						</div>
 
-                                            <span class="selectgroup-button">{% trans %}G.H.S{% endtrans %}</span>
-                                        </label>
-                                        <label class="selectgroup-item" id="eleve">
-                                            {% if school.lycee %}
-                                                <input type="radio" name="lycee" value="0" class="selectgroup-input">
-                                                {% else %}
-                                                    <input type="radio" name="lycee" value="0" class="selectgroup-input" checked="">
-                                            {% endif %}
-                                            <span class="selectgroup-button">{% trans %}College{% endtrans %}</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
+						<div class="fs-school-stat">
+							<span class="fs-school-stat__icon"><i class="fe fe-user-check"></i></span>
+							<span class="fs-school-stat__label">{% trans %}Registered students{% endtrans %}</span>
+							<strong class="fs-school-stat__value">{{ numberOfStudentInSchool }}</strong>
+						</div>
 
-                        </div>
-                        <div class="row">
-                        <div class="col-md-9"></div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label style="color: #fff;">
-                                        {% trans %}Save{% endtrans %}
-                                    </label>
-                                    <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="addgrade">
-                                        <i class="fa fa-save"></i>
-                                        {% trans %}Save Changes{% endtrans %}
-                                    </button>
-                                </div>
-                            </div> 
-                        </div>
-                        <script src="{{asset('build/custom/js/school.js')}}"></script>
-                    {{ form_end(formSchool) }}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+						<div class="fs-school-stat">
+							<span class="fs-school-stat__icon"><i class="fe fe-grid"></i></span>
+							<span class="fs-school-stat__label">{% trans %}Registered classrooms{% endtrans %}</span>
+							<strong class="fs-school-stat__value">{{ numberOfClassrooms }}</strong>
+						</div>
+					</div>
+				</div>
+			</section>
 
+			<section class="fs-school-card">
+				<div class="fs-school-card__header">
+					<div>
+						<span class="fs-school-card-badge">
+							<i class="fe fe-edit"></i>
+							{% trans %}Edit School{% endtrans %}
+						</span>
+
+						<h2 class="fs-school-card-title">{% trans %}School profile{% endtrans %}</h2>
+					</div>
+
+					<div class="fs-school-soft-note">
+						<i class="fe fe-info"></i>
+						<span>{% trans %}Keep official information clean and consistent for reports and documents.{% endtrans %}</span>
+					</div>
+				</div>
+
+				<div class="fs-school-card__body">
+					{{ form_start(formSchool, {
+                            'attr': {
+                                'class': 'fs-school-form',
+                                'enctype': 'multipart/form-data'
+                            }
+                        }) }}
+
+                        <input type="hidden" name="addgrade" value="1">
+						<div class="fs-school-collapse is-open">
+							<button type="button" class="fs-school-collapse__button" data-fs-collapse="media">
+								<span class="fs-school-section-title">
+									<span class="fs-school-section-icon fs-school-section-icon--primary">
+										<i class="fe fe-image"></i>
+									</span>
+									<span>
+										<strong>{% trans %}Visual identity{% endtrans %}</strong>
+										<small>{% trans %}Logo, filigree and headmaster assignment{% endtrans %}</small>
+									</span>
+								</span>
+								<i class="fe fe-chevron-down"></i>
+							</button>
+
+							<div class="fs-school-collapse__body" data-fs-collapse-panel="media">
+								<div class="fs-school-upload-grid">
+									<div class="fs-upload-card">
+										<span class="fs-upload-card__label">
+											<i class="fe fe-image"></i>
+											{% trans %}School logo{% endtrans %}
+										</span>
+										{{ form_widget(formSchool.logoFile, {'attr': {'class': 'dropify fs-dropify', 'data-height': "180"}}) }}
+										<div class="fs-field-error">{{ form_errors(formSchool.logoFile) }}</div>
+									</div>
+
+									<div class="fs-upload-card">
+										<span class="fs-upload-card__label">
+											<i class="fe fe-droplet"></i>
+											{% trans %}Filigree{% endtrans %}
+										</span>
+										{{ form_widget(formSchool.filigreeFile, {'attr': {'class': 'dropify fs-dropify', 'data-height': "180"}}) }}
+										<div class="fs-field-error">{{ form_errors(formSchool.filigreeFile) }}</div>
+									</div>
+								</div>
+
+								<div class="fs-school-grid fs-school-grid--one">
+									<div class="fs-floating-field">
+										{{ form_widget(formSchool.headmaster, {'attr': {'class': 'form-control select2-show-search fs-floating-control', 'placeholder': ' '}}) }}
+										<label class="fs-floating-label">
+											<i class="fe fe-user-check"></i>
+											{% trans %}Headmaster{% endtrans %}
+										</label>
+										<div class="fs-field-error">{{ form_errors(formSchool.headmaster) }}</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="fs-school-language-grid">
+							<div class="fs-school-collapse is-open">
+								<button type="button" class="fs-school-collapse__button" data-fs-collapse="fr">
+									<span class="fs-school-section-title">
+										<span class="fs-school-section-icon fs-school-section-icon--success">
+											<i class="fe fe-globe"></i>
+										</span>
+										<span>
+											<strong>{% trans %}Information in French{% endtrans %}</strong>
+											<small>{% trans %}Official French document headers{% endtrans %}</small>
+										</span>
+									</span>
+									<i class="fe fe-chevron-down"></i>
+								</button>
+
+								<div class="fs-school-collapse__body" data-fs-collapse-panel="fr">
+									<div class="fs-school-grid fs-school-grid--two">
+										<div class="fs-floating-field">
+											{{ form_widget(formSchool.frenchName, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+											<label class="fs-floating-label">{% trans %}French name{% endtrans %}</label>
+											<div class="fs-field-error">{{ form_errors(formSchool.frenchName) }}</div>
+										</div>
+
+										<div class="fs-floating-field">
+											{{ form_widget(formSchool.frenchMotto, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+											<label class="fs-floating-label">{% trans %}French motto{% endtrans %}</label>
+											<div class="fs-field-error">{{ form_errors(formSchool.frenchMotto) }}</div>
+										</div>
+
+										<div class="fs-floating-field">
+											{{ form_widget(formSchool.frenchCountry, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+											<label class="fs-floating-label">{% trans %}French country{% endtrans %}</label>
+											<div class="fs-field-error">{{ form_errors(formSchool.frenchCountry) }}</div>
+										</div>
+
+										<div class="fs-floating-field">
+											{{ form_widget(formSchool.frenchCountryMotto, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+											<label class="fs-floating-label">{% trans %}French country motto{% endtrans %}</label>
+											<div class="fs-field-error">{{ form_errors(formSchool.frenchCountryMotto) }}</div>
+										</div>
+
+										<div class="fs-floating-field fs-col-span-2">
+											{{ form_widget(formSchool.frenchMinister, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+											<label class="fs-floating-label">{% trans %}French minister{% endtrans %}</label>
+											<div class="fs-field-error">{{ form_errors(formSchool.frenchMinister) }}</div>
+										</div>
+
+										<div class="fs-floating-field fs-col-span-2">
+											{{ form_widget(formSchool.frenchRegion, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+											<label class="fs-floating-label">{% trans %}French region{% endtrans %}</label>
+											<div class="fs-field-error">{{ form_errors(formSchool.frenchRegion) }}</div>
+										</div>
+
+										<div class="fs-floating-field fs-col-span-2">
+											{{ form_widget(formSchool.frenchDivision, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+											<label class="fs-floating-label">{% trans %}French division{% endtrans %}</label>
+											<div class="fs-field-error">{{ form_errors(formSchool.frenchDivision) }}</div>
+										</div>
+
+										<div class="fs-floating-field fs-col-span-2">
+											{{ form_widget(formSchool.frenchSubDivision, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+											<label class="fs-floating-label">{% trans %}French subdivision{% endtrans %}</label>
+											<div class="fs-field-error">{{ form_errors(formSchool.frenchSubDivision) }}</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="fs-school-collapse is-open">
+								<button type="button" class="fs-school-collapse__button" data-fs-collapse="en">
+									<span class="fs-school-section-title">
+										<span class="fs-school-section-icon fs-school-section-icon--violet">
+											<i class="fe fe-globe"></i>
+										</span>
+										<span>
+											<strong>{% trans %}Information in English{% endtrans %}</strong>
+											<small>{% trans %}Official English document headers{% endtrans %}</small>
+										</span>
+									</span>
+									<i class="fe fe-chevron-down"></i>
+								</button>
+
+								<div class="fs-school-collapse__body" data-fs-collapse-panel="en">
+									<div class="fs-school-grid fs-school-grid--two">
+										<div class="fs-floating-field">
+											{{ form_widget(formSchool.englishName, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+											<label class="fs-floating-label">{% trans %}English name{% endtrans %}</label>
+											<div class="fs-field-error">{{ form_errors(formSchool.englishName) }}</div>
+										</div>
+
+										<div class="fs-floating-field">
+											{{ form_widget(formSchool.englishMotto, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+											<label class="fs-floating-label">{% trans %}English motto{% endtrans %}</label>
+											<div class="fs-field-error">{{ form_errors(formSchool.englishMotto) }}</div>
+										</div>
+
+										<div class="fs-floating-field">
+											{{ form_widget(formSchool.englishCountry, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+											<label class="fs-floating-label">{% trans %}English country{% endtrans %}</label>
+											<div class="fs-field-error">{{ form_errors(formSchool.englishCountry) }}</div>
+										</div>
+
+										<div class="fs-floating-field">
+											{{ form_widget(formSchool.englishCountryMotto, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+											<label class="fs-floating-label">{% trans %}English country motto{% endtrans %}</label>
+											<div class="fs-field-error">{{ form_errors(formSchool.englishCountryMotto) }}</div>
+										</div>
+
+										<div class="fs-floating-field fs-col-span-2">
+											{{ form_widget(formSchool.englishMinister, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+											<label class="fs-floating-label">{% trans %}English minister{% endtrans %}</label>
+											<div class="fs-field-error">{{ form_errors(formSchool.englishMinister) }}</div>
+										</div>
+
+										<div class="fs-floating-field fs-col-span-2">
+											{{ form_widget(formSchool.englishRegion, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+											<label class="fs-floating-label">{% trans %}English region{% endtrans %}</label>
+											<div class="fs-field-error">{{ form_errors(formSchool.englishRegion) }}</div>
+										</div>
+
+										<div class="fs-floating-field fs-col-span-2">
+											{{ form_widget(formSchool.englishDivision, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+											<label class="fs-floating-label">{% trans %}English division{% endtrans %}</label>
+											<div class="fs-field-error">{{ form_errors(formSchool.englishDivision) }}</div>
+										</div>
+
+										<div class="fs-floating-field fs-col-span-2">
+											{{ form_widget(formSchool.englishSubDivision, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+											<label class="fs-floating-label">{% trans %}English subdivision{% endtrans %}</label>
+											<div class="fs-field-error">{{ form_errors(formSchool.englishSubDivision) }}</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="fs-school-collapse is-open">
+							<button type="button" class="fs-school-collapse__button" data-fs-collapse="contacts">
+								<span class="fs-school-section-title">
+									<span class="fs-school-section-icon fs-school-section-icon--info">
+										<i class="fe fe-phone"></i>
+									</span>
+									<span>
+										<strong>{% trans %}Contacts and administrative details{% endtrans %}</strong>
+										<small>{% trans %}P.O. box, phone, email, location and registration information{% endtrans %}</small>
+									</span>
+								</span>
+								<i class="fe fe-chevron-down"></i>
+							</button>
+
+							<div class="fs-school-collapse__body" data-fs-collapse-panel="contacts">
+								<div class="fs-school-grid fs-school-grid--four">
+									<div class="fs-floating-field">
+										{{ form_widget(formSchool.pobox, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+										<label class="fs-floating-label">{% trans %}P.O. Box{% endtrans %}</label>
+										<div class="fs-field-error">{{ form_errors(formSchool.pobox) }}</div>
+									</div>
+
+									<div class="fs-floating-field">
+										{{ form_widget(formSchool.telephone, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+										<label class="fs-floating-label">{% trans %}Telephone{% endtrans %}</label>
+										<div class="fs-field-error">{{ form_errors(formSchool.telephone) }}</div>
+									</div>
+
+									<div class="fs-floating-field">
+										{{ form_widget(formSchool.place, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+										<label class="fs-floating-label">{% trans %}Place{% endtrans %}</label>
+										<div class="fs-field-error">{{ form_errors(formSchool.place) }}</div>
+									</div>
+
+									<div class="fs-floating-field">
+										{{ form_widget(formSchool.email, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+										<label class="fs-floating-label">{% trans %}Email{% endtrans %}</label>
+										<div class="fs-field-error">{{ form_errors(formSchool.email) }}</div>
+									</div>
+
+									<div class="fs-floating-field fs-col-span-2">
+										{{ form_widget(formSchool.serviceNote, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+										<label class="fs-floating-label">{% trans %}Service note{% endtrans %}</label>
+										<div class="fs-field-error">{{ form_errors(formSchool.serviceNote) }}</div>
+									</div>
+
+									<div class="fs-floating-field fs-col-span-2">
+										{{ form_widget(formSchool.matricule, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' '}}) }}
+										<label class="fs-floating-label">{% trans %}Matricule{% endtrans %}</label>
+										<div class="fs-field-error">{{ form_errors(formSchool.matricule) }}</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="fs-school-collapse is-open">
+							<button type="button" class="fs-school-collapse__button" data-fs-collapse="settings">
+								<span class="fs-school-section-title">
+									<span class="fs-school-section-icon fs-school-section-icon--warning">
+										<i class="fe fe-sliders"></i>
+									</span>
+									<span>
+										<strong>{% trans %}Institution settings{% endtrans %}</strong>
+										<small>{% trans %}Education type, school type and institution category{% endtrans %}</small>
+									</span>
+								</span>
+								<i class="fe fe-chevron-down"></i>
+							</button>
+
+							<div class="fs-school-collapse__body" data-fs-collapse-panel="settings">
+								<div class="fs-school-settings-grid">
+									<div class="fs-choice-card">
+										<span class="fs-choice-card__title">{% trans %}Education{% endtrans %}</span>
+
+										<div class="fs-choice-group">
+											<label class="fs-choice-pill">
+												{% if school.education.education == "Général" %}
+													<input type="radio" name="education" value="1" checked="">
+												{% else %}
+													<input type="radio" name="education" value="1">
+												{% endif %}
+												<span>{% trans %}General{% endtrans %}</span>
+											</label>
+
+											<label class="fs-choice-pill">
+												{% if school.education.education == "Technique" %}
+													<input type="radio" name="education" value="2" checked="">
+												{% else %}
+													<input type="radio" name="education" value="2">
+												{% endif %}
+												<span>{% trans %}Technical{% endtrans %}</span>
+											</label>
+										</div>
+									</div>
+
+									<div class="fs-choice-card" id="schoolType">
+										<span class="fs-choice-card__title">{% trans %}School type{% endtrans %}</span>
+
+										<div class="fs-choice-group">
+											<label class="fs-choice-pill" id="public">
+												{% if school.public %}
+													<input type="radio" name="public" value="1" checked="">
+												{% else %}
+													<input type="radio" name="public" value="1">
+												{% endif %}
+												<span>{% trans %}Public{% endtrans %}</span>
+											</label>
+
+											<label class="fs-choice-pill" id="private">
+												{% if school.public %}
+													<input type="radio" name="public" value="0">
+												{% else %}
+													<input type="radio" name="public" value="0" checked="">
+												{% endif %}
+												<span>{% trans %}Private{% endtrans %}</span>
+											</label>
+										</div>
+									</div>
+
+									<div class="fs-choice-card" id="lycee">
+										<span class="fs-choice-card__title">{% trans %}G.H.S or College{% endtrans %}</span>
+
+										<div class="fs-choice-group">
+											<label class="fs-choice-pill" id="enseignant">
+												{% if school.lycee %}
+													<input type="radio" name="lycee" value="1" checked="">
+												{% else %}
+													<input type="radio" name="lycee" value="1">
+												{% endif %}
+												<span>{% trans %}G.H.S{% endtrans %}</span>
+											</label>
+
+											<label class="fs-choice-pill" id="eleve">
+												{% if school.lycee %}
+													<input type="radio" name="lycee" value="0">
+												{% else %}
+													<input type="radio" name="lycee" value="0" checked="">
+												{% endif %}
+												<span>{% trans %}College{% endtrans %}</span>
+											</label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="fs-school-submit-zone">
+							<div class="fs-school-submit-zone__hint">
+								<i class="fe fe-shield"></i>
+								<span>{% trans %}Please review facility data before saving changes.{% endtrans %}</span>
+							</div>
+
+							<div class="fs-school-submit-zone__actions">
+								<button type="submit" class="fs-school-btn fs-school-btn--primary fs-school-submit-btn" name="addgrade" value="1">
+                                    <span class="fs-school-submit-spinner" aria-hidden="true"></span>
+                                    <i class="fe fe-save fs-school-submit-icon"></i>
+                                    <span>{% trans %}Save Changes{% endtrans %}</span>
+                                </button>
+							</div>
+						</div>
+
+						<script src="{{ asset('build/custom/js/school.js') }}"></script>
+					{{ form_end(formSchool) }}
+				</div>
+			</section>
+		</div>
+	</div>
 {% endblock %}
 
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-school-premium.js') }}"></script>
+{% endblock %}

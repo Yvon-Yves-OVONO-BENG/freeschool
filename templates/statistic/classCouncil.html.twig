@@ -3,91 +3,127 @@
 {% block title %}{% trans %}Class Council{% endtrans %}{% endblock %}
 
 {% block subTitle %}
-    {% trans %}MANAGEMENT OF CLASS COUNCIL SHEETS{% endtrans %}
+	{% trans %}MANAGEMENT OF CLASS COUNCIL SHEETS{% endtrans %}
+{% endblock %}
+
+{% block infoMessage %}
+	{% include "includes/_info_message.html.twig" %}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-statistics-suite-premium.css') }}">
 {% endblock %}
 
 {% block body %}
- <!-- App-Content -->
-	<div class="hor-content main-content">
+	<div class="hor-content main-content fs-stat-page">
 		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary"></h4>
-                </div>
-                <div class="page-rightheader">
-                    <div class="btn-list">
-                        
-                    </div>
-                </div>
-            </div>
-            <!--End Page header-->
+			<div class="fs-stat-menu-safe-space" aria-hidden="true"></div>
 
-            <div class="card border-primary">
-                <div class="card-header">
-                    <span class="page-title mb-0 text-primary">
-                        <i class="fa fa-file-pdf-o me-2"></i>{% trans %}Printing of class council reports{% endtrans %}
-                    </span>
-                </div>
-                <div class="card-body ">
-                    <form action="{{ path('statistic_printClassCouncil') }}" method="post" target="_blank">
-                        <div class="row">
-                            <div class="col-md-1">
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <select name="classroom" id="classroom" class="form-control select2-show-search" data-placeholder="Choose a classroom" required>
-                                        <option label="Choose a classroom">
-                                            {% trans %}Chosse a classroom{% endtrans %}
-                                        </option>
-                                        
-                                        {% if subSystem == 'Francophone / French Speaker' %}
-                                            {% if school.education.education == 'Général' %}
-                                                {% include "includes/_selectClassroomsWithoutSelected.html.twig" %}
-                                                {% else %}
-                                                    {% include "includes/_selectClassroomsWithoutSelectedTech.html.twig" %}
-                                            {% endif %}
-                                            {% else %}
-                                                {% include "includes/_selectClassroomsWithoutSelectedEn.html.twig" %}
-                                        {% endif %}
+			<section class="fs-stat-hero">
+				<div class="fs-stat-hero__content">
+					<div>
+						<span class="fs-stat-eyebrow">
+							<i class="fa fa-file-pdf-o"></i>
+							{% trans %}Class council{% endtrans %}
+						</span>
 
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <select name="term" id="term" class="form-control select2 custom-select" data-placeholder="Choose a period" required>
-                                        <option label="Choose a period">
-                                            {% trans %}Choose a period{% endtrans %}</option>
-                                            {% for term in terms %}
-                                                {% if term.term != annualTerm %}
-                                                    <option value="{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
-                                                {% endif %}
-                                            {% endfor %}
-                                            {% for term in terms %}
-                                                {% if term.term == annualTerm %}
-                                                    <option value="{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
-                                                {% endif %}
-                                            {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-1">
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printClassConcil">
-                                        <i class="fa fa-print"></i>
-                                        {% trans %}Print{% endtrans %}</button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+						<h1 class="fs-stat-title">{% trans %}Printing of class council reports{% endtrans %}</h1>
+
+						<p class="fs-stat-subtitle">
+							{% trans %}Choose a classroom and period to print class council reports.{% endtrans %}
+						</p>
+					</div>
+
+					<div class="fs-stat-hero__actions">
+						
+						<div class="fs-stat-hero-stat">
+							<span class="fs-stat-hero-stat__icon">
+								<i class="fe fe-printer"></i>
+							</span>
+							<span class="fs-stat-hero-stat__label">{% trans %}Output{% endtrans %}</span>
+							<strong class="fs-stat-hero-stat__value">{% trans %}PDF{% endtrans %}</strong>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<div class="fs-stat-grid fs-stat-grid--single">
+				
+<section class="fs-stat-card">
+	<div class="fs-stat-card__header">
+		<div>
+			<span class="fs-stat-chip">
+				<i class="fa fa-file-pdf-o"></i>
+				{% trans %}Printing workspace{% endtrans %}
+			</span>
+			<h2 class="fs-stat-card__title">{% trans %}Printing of class council reports{% endtrans %}</h2>
+			<p class="fs-stat-card__subtitle">{% trans %}Select the target classroom and the period before printing.{% endtrans %}</p>
+		</div>
+		<span class="fs-stat-card__icon">
+			<i class="fa fa-file-pdf-o"></i>
+		</span>
+	</div>
+	<div class="fs-stat-card__body">
+		<form action="{{ path('statistic_printClassCouncil') }}" method="post" target="_blank" class="fs-stat-form needs-validation" novalidate data-no-spinner="1">
+			<div class="fs-floating-field fs-required-field">
+	<select name="classroom" id="classroom" class="form-control select2-show-search fs-floating-control" data-placeholder="" required>
+		<option value="" label=""></option>
+		{% if subSystem == 'Francophone / French Speaker' %}
+			{% if school.education.education == 'Général' %}
+				{% include "includes/_selectClassroomsWithoutSelected.html.twig" %}
+			{% else %}
+				{% include "includes/_selectClassroomsWithoutSelectedTech.html.twig" %}
+			{% endif %}
+		{% else %}
+			{% include "includes/_selectClassroomsWithoutSelectedEn.html.twig" %}
+		{% endif %}
+	</select>
+	<label class="fs-floating-label" for="classroom">
+		<i class="fe fe-home"></i>
+		{% trans %}Classroom{% endtrans %}
+	</label>
+	<div class="invalid-feedback">{% trans %}Please choose a classroom !{% endtrans %}</div>
 </div>
+<div class="fs-floating-field fs-required-field">
+	<select name="term" id="term" class="form-control select2 custom-select fs-floating-control" data-placeholder="" required>
+		<option value="" label=""></option>
+		<optgroup label="{% trans %}Trimestres{% endtrans %}">
+			{% for term in terms %}
+				{% if term.term != annualTerm %}
+					<option value="{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
+				{% endif %}
+			{% endfor %}
+		</optgroup>
+		{% for term in terms %}
+			{% if term.term == annualTerm %}
+				<option value="{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
+			{% endif %}
+		{% endfor %}
+	</select>
+	<label class="fs-floating-label" for="term">
+		<i class="fe fe-calendar"></i>
+		{% trans %}Period{% endtrans %}
+	</label>
+	<div class="invalid-feedback">{% trans %}Please choose a period !{% endtrans %}</div>
+</div>
+			<div class="fs-stat-form__actions">
+				<button class="fs-stat-btn fs-stat-btn--primary fs-stat-submit-btn" type="submit" name="printClassConcil">
+					<i class="fa fa-print fs-stat-submit-icon"></i>
+					<span>{% trans %}Print{% endtrans %}</span>
+				</button>
+			</div>
+		</form>
+		
+	</div>
+</section>
 
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-statistics-suite-premium.js') }}"></script>
 {% endblock %}

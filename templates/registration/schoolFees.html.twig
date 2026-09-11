@@ -3,589 +3,550 @@
 {% block title %}{% trans %}Registration school fees{% endtrans %}{% endblock %}
 
 {% block subTitle %}
-    {% trans %}MANAGEMENT OF FEES PAYABLE{% endtrans %}
+	{% trans %}MANAGEMENT OF FEES PAYABLE{% endtrans %}
 {% endblock %}
+
 {% block infoMessage %}
-    {% include "includes/_info_message.html.twig" %}
+	{% include "includes/_info_message.html.twig" %}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-registration-school-fees-premium.css') }}">
 {% endblock %}
 
 {% block body %}
-<!-- App-Content -->
-	<div class="hor-content main-content">
+	<div class="hor-content main-content fs-school-fees-page">
 		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary"></h4>
-                </div>
-                <div class="page-rightheader">
-                    <div class="btn-list">
-                        
-                    </div>
-                </div>
-            </div>
-            <!--End Page header-->
+			<div class="fs-school-fees-menu-safe-space" aria-hidden="true"></div>
 
-            <!-- Row -->
-            <div class="row">
-                <div class="col-md-12 col-lg-12">
-                    <div class="card border-primary">
-                        <div class="row" style="margin-top: 13px;margin-left: 10px;margin-right: 10px;">
-                            <div class="col-md-6">
-                                <form action="{{ path('registration_feesStatement', {'headmasterFees': headmasterFees}) }}" method="post">
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <select class="form-control select2-show-search" data-placeholder="Choose a classroom" name="classroom" id="classroom" required style="border: 1px solid #0f0;">
-                                                    <option label="Choose a classroom">
-                                                    </option>
-                                                    {% if subSystem == 'Francophone / French Speaker' %}
-                                                    {% if school.education.education == 'Général' %}
-                                                        {% include "includes/_selectClassrooms.html.twig" %}
-                                                        {% else %}
-                                                            {% include "includes/_selectClassroomsTech.html.twig" %}
-                                                    {% endif %}
-                                                    {% else %}
-                                                        {% include "includes/_selectClassroomsEn.html.twig" %}
-                                                {% endif %}
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="displayStudents">
-                                                    <i class="fa fa-list"></i>
-                                                    {% trans %}Display{% endtrans %}
-                                                </button>
-                                            </div>
-                                        </div>
-                                        
-                                    </div>
-                                </form>
-                    
-                            </div>
-                            <div class="col-md-3">
-                            </div>
-                    
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <a href="{{ path('student_saveStudent') }}" class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="displayStudents">
-                                        <i class="fa fa-plus"></i>
-                                        {% trans %}Add student{% endtrans %}
-                                    </a>
-                                </div>
-                            </div>
-                        </div> 
-                    </div>
-                </div>
-            </div>
-            <!-- End Row -->
-            
-            <!-- Row -->
-            <div class="row">
-                <div class="col-xl-3 col-lg-12 col-md-12">
-                    <div class="card border-primary">
-                        <div class="card-body">
-                            <div class="box-widget widget-user text-center">
-                                <div class="widget-user-image mx-auto">
-                                    {% if student.photo %}
-                                        <img alt="Photo eleve" class="rounded-circle" src="{{ asset ('images/students/' ~ student.photo) }}" width="200" height="110">
-                                        {% else %}
-                                        {% if student.sex.sex == "F" %}
-                                            <img alt="Photo eleve" class="rounded-circle" src="{{ asset ('images/students/fille.jpg')}}" width="200" height="110">
-                                            {% else %}
-                                            <img alt="Photo eleve" class="rounded-circle" src="{{ asset ('images/students/garcon.jpg')}}" width="200" height="110">
-                                        {% endif %}
-                                    {% endif %}
-                                
-                                </div>
-                                <div class="mt-4 ms-sm-5 ms-0">
-                                    <h4 class="pro-user-username  mb-2 font-weight-bold">{{ student.fullName }}</h4>
-                                    <div>
-                                        <span class="badge fs-13 bg-primary-transparent text-primary border-primary  me-2">{% trans %}Classroom{% endtrans %}  : {{ student.classroom.classroom }}</span>
+			<section class="fs-school-fees-hero">
+				<div class="fs-school-fees-hero__content">
+					<div>
+						<span class="fs-school-fees-eyebrow">
+							<i class="fa fa-money"></i>
+							{% trans %}Fees payable workspace{% endtrans %}
+						</span>
 
-                                        <span class="badge fs-13 bg-info-transparent text-primary border-primary  me-2">{{ student.sex.sex }}</span>
-                                        <span class="badge fs-13 bg-primary-transparent text-primary border-primary">{% trans %}Repeat {% endtrans %} : {{ student.repeater.repeater }}</span>
-                                    </div>
-                                    <div class="wideget-user-rating mt-2">
-                                        <span>Contact : {{ student.telephonePere }}</span>
-                                    </div>
-                                    <a href="{{ path('student_editStudent', {'slug': student.slug}) }}" class="btn btn-outline-primary mt-3"><i class="fa fa-pencil"></i> {% trans %}Edit Student{% endtrans %}</a>
-                                    
-                                    <form action="{{ path('student_deleteStudent', {'slug': student.slug}) }}" method="post" style="display: inline-block; " onsubmit="return confirm('{% trans %}-You really want to remove the student{% endtrans %} --- {{ student.fullName }} --- {% trans %}of the class of{% endtrans %} --- {{ selectedClassroom.classroom }} --- {% trans %}with all his notes, his hours of absence and his expenses ?{% endtrans %}');">
-                                        <button type="submit" class="btn btn-outline-danger" name="deleteStudent" data-bs-toggle="tooltip" title="{% trans %}Delete{% endtrans %} {{ student.fullName }}" style="margin-top:12px;">
-                                            <i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card border-primary">
-                        <div class="card-header ">
-                            <div class="card-title">{% trans %}Birth{% endtrans %}</div>
-                        </div>
-                        <div class="card-body">
-                            <div class="main-profile-contact-list">
-                                <div class="media me-5 mt-0">
-                                    <div class="media-icon bg-info-transparent text-info me-4">
-                                        <i class="fa fa-calendar"></i>
-                                    </div>
-                                    <div class="media-body">
-                                        <h6 class="font-weight-bold mb-1">{% trans %}Birthday{% endtrans %} : {{ student.birthday|date('d-m-Y') }}</h6>
-                                        <span></span>
-                                        <br>
-                                    </div>
-                                </div>
-                                <div class="media me-5">
-                                    <div class="media-icon bg-success-transparent text-success me-4">
-                                        <i class="fa fa-map-marker"></i>
-                                    </div>
-                                    <div class="media-body">
-                                        <h6 class="font-weight-bold mb-1">{% trans %}Birthplace{% endtrans %} : {{ student.birthplace }}</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-9 col-lg-12 col-md-12">
-                    <div class="card border-primary">
-                        <div class="card-header">
-                            <div class="row">
-                                <div class="col-md-10" style="margin-top:10px;">
+						<h1 class="fs-school-fees-title">
+							{% trans %}Registration school fees{% endtrans %}
+						</h1>
 
-                                    <button type="button" class="btn btn-primary position-relative me-5 mb-2">
-											{% trans %}Fees Statment of : {% endtrans %}
-											<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-											  {{ student.fullName }}
-											  <span class="visually-hidden">unread messages</span>
-											</span>
-										</button>
+						<p class="fs-school-fees-subtitle">
+							{% trans %}Manage student payments, advances and remaining balances with a refined, secure and responsive premium interface.{% endtrans %}
+						</p>
+					</div>
 
-                                    
-                                </div>
-                                <div class="col-md-2">
-                                    <button type="button" class="btn btn-info  mt-1 mb-1 me-3 form-control-sm">
-                                        <span>{% trans %}Devise{% endtrans %}</span>
-                                        <span class="badge bg-white text-dark rounded-pill">F CFA</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body pt-3 ">
-                            <div class="row">
-                                <div class="col-md-3 border-bottom-0 orange-gradient"></div>
-                                <div class="col-md-2 border-bottom-0 indigo-gradient">{% trans %}Amount{% endtrans %}</div>    
-                                <div class="col-md-2 border-bottom-0 green-gradient"> {% trans %}Advance{% endtrans %}</div>
-                                <div class="col-md-2 border-bottom-0 orange-gradient"> {% trans %}Rest{% endtrans %} </div>
-                                <div class="col-md-3 border-bottom-0 blue-gradient">
-                                    {% if headmasterFees == 0 %}
-                                    {% trans %}Cash{% endtrans %} 
-                                    {% endif %}
-                                    
-                                </div>
-                            </div>
+					<div class="fs-school-fees-hero__actions">
+						<div class="fs-school-fees-hero-stat">
+							<span class="fs-school-fees-hero-stat__icon">
+								<i class="fe fe-user"></i>
+							</span>
+							<span class="fs-school-fees-hero-stat__label">{% trans %}Student{% endtrans %}</span>
+							<strong class="fs-school-fees-hero-stat__value fs-school-fees-hero-stat__value--small">{{ student.fullName }}</strong>
+						</div>
 
-                            {% set classroomLevel = selectedClassroom.level.level %}
+						<div class="fs-school-fees-hero-stat fs-school-fees-hero-stat--soft">
+							<span class="fs-school-fees-hero-stat__icon">
+								<i class="fe fe-home"></i>
+							</span>
+							<span class="fs-school-fees-hero-stat__label">{% trans %}Classroom{% endtrans %}</span>
+							<strong class="fs-school-fees-hero-stat__value fs-school-fees-hero-stat__value--small">{{ student.classroom.classroom }}</strong>
+						</div>
 
-                            {# {% if classroomLevel == 4 or classroomLevel == 6 or classroomLevel == 7 %} #}
-                                {# {% set totalRest = feesTable.schoolFees + feesTable.apeeFees + feesTable.computerFees + feesTable.medicalBookletFees + feesTable.cleanSchoolFees + feesTable.photoFees + feesTable.stampFees + feesTable.examFees - registration.schoolFees - registration.apeeFees - registration.computerFees - registration.medicalBookletFees - registration.cleanSchoolFees - registration.photoFees - registration.stampFees - registration.examFees %} #}
+						<div class="fs-school-fees-hero-stat fs-school-fees-hero-stat--gold">
+							<span class="fs-school-fees-hero-stat__icon">
+								<i class="fe fe-credit-card"></i>
+							</span>
+							<span class="fs-school-fees-hero-stat__label">{% trans %}Devise{% endtrans %}</span>
+							<strong class="fs-school-fees-hero-stat__value">{% trans %}F CFA{% endtrans %}</strong>
+						</div>
+					</div>
+				</div>
+			</section>
 
-                                {# {% else %} #}
-                                    {% set totalRest = feesTable.apeeFees + feesTable.computerFees + feesTable.medicalBookletFees + feesTable.cleanSchoolFees + feesTable.photoFees - registration.apeeFees - registration.computerFees - registration.medicalBookletFees - registration.cleanSchoolFees - registration.photoFees %}
+			<section class="fs-school-fees-filter-card">
+				<div class="fs-school-fees-filter-card__header">
+					<div>
+						<span class="fs-school-fees-chip">
+							<i class="fe fe-filter"></i>
+							{% trans %}Classroom filter{% endtrans %}
+						</span>
 
-                            {# {% endif %} #}
-                            
-                            {% if headmasterFees == 0 %}
-                                {% if totalRest != 0 %}
-                                    <form method="post" action="{{ path('registration_saveSchoolFees', {'slugStudent': student.slug}) }}">
-                                {% endif %}
-                            {% endif %}
-                                <div class="row">
-                                    <div class="col-md-3 border-bottom-0 indigo-gradient">
-                                        <div class="form-group">
-                                            {# <label for="schoolFeesName"></label> #}<br>
-                                            <label class="">
-                                                {% trans %}School fees{% endtrans %}
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="schoolFeesAmount"></label>
-                                            <input class="form-control form-control-sm" type="text" name="schoolFeesAmount" id="schoolFeesAmount"  value="{{ feesTable.schoolFees }}" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="schoolFeesAdvance"></label>
-                                            <input class="form-control form-control-sm" type="text" name="schoolFeesAdvance" id="schoolFeesAdvance"  value="{{ registration.schoolFees }}" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        {% set rest = feesTable.schoolFees - registration.schoolFees %}
-                                        <div class="form-group">
-                                            <label for="schoolFeesRest"></label>
-                                            <input class="form-control form-control-sm" type="text" name="schoolFeesRest" id="schoolFeesRest"  value="{{ rest }}" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            {# {% if headmasterFees == 0 %} #}
-                                                {% if rest != 0 %}
-                                                    <label for="schoolFeesDeposit"></label>
-                                                    <input class="form-control form-control-sm" type="number" min="0" max="{{ rest }}" step="5" name="schoolFeesDeposit" id="schoolFeesDeposit"  value="0" required>
-                                                {% else %}
-                                                    <label></label>
-                                                    <span class="form-control form-control-sm bg-teal-transparent"> {% trans %}Pay{% endtrans %} <i class="fa fa-thumbs-up"></i></span>
-                                                {% endif %}
-                                            {# {% endif %} #}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-3 border-bottom-0 green-gradient">
-                                    <div class="form-group">
-                                            <br>
-                                            <label>{% trans %}PTA fees{% endtrans %} </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="apeeAmount"></label>
-                                            <input class="form-control form-control-sm" type="text" name="apeeAmount" id="apeeAmount"  value="{{ feesTable.apeeFees }}" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="apeeAdvance"></label>
-                                            <input class="form-control form-control-sm" type="text" name="apeeAdvance" id="apeeAdvance"  value="{{ registration.apeeFees }}" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                            {% set rest = feesTable.apeeFees - registration.apeeFees %}
-                                        <div class="form-group">
-                                            <label for="apeeRest"></label>
-                                            <input class="form-control form-control-sm" type="text" name="apeeRest" id="apeeRest"  value="{{ rest }}" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            {# {% if headmasterFees == 0 %} #}
-                                                {% if rest != 0 %}
-                                                    <label for="apeeFeesDeposit"></label>
-                                                    <input class="form-control form-control-sm" type="number" min="0" max="{{ rest }}" step="5" name="apeeFeesDeposit" id="apeeFeesDeposit"  value="0" required>
-                                                {% else %}
-                                                    <label></label>
-                                                    <span class="form-control form-control-sm bg-teal-transparent"> {% trans %}Pay{% endtrans %} <i class="fa fa-thumbs-up"></i></span>
-                                                {% endif %}
-                                            {# {% endif %} #}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-3 border-bottom-0 orange-gradient">
-                                    <div class="form-group">
-                                        <br>
-                                            <label>{% trans %}IT costs{% endtrans %}</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="computerFeesAmount"></label>
-                                            <input class="form-control form-control-sm" type="text" name="computerFeesAmount" id="computerFeesAmount"  value="{{ feesTable.computerFees }}" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="computerFeesAdvance"></label>
-                                            <input class="form-control form-control-sm" type="text" name="computerFeesAdvance" id="computerFeesAdvance"  value="{{ registration.computerFees }}" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        {% set rest = feesTable.computerFees - registration.computerFees %}
-                                        <div class="form-group">
-                                            <label for="computerFeesRest"></label>
-                                            <input class="form-control form-control-sm" type="text" name="computerFeesRest" id="computerFeesRest"  value="{{ rest }}" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            {# {% if headmasterFees == 0 %} #}
-                                                {% if rest != 0 %}
-                                                    <label for="computerFeesDeposit"></label>
-                                                    <input class="form-control form-control-sm" type="number" min="0" max="{{ rest }}" step="5" name="computerFeesDeposit" id="computerFeesDeposit" value="0" required="required">
-                                                {% else %}
-                                                    <label></label>
-                                                    <span class="form-control form-control-sm bg-teal-transparent"> {% trans %}Pay{% endtrans %} <i class="fa fa-thumbs-up"></i></span>
-                                                {% endif %}
-                                            {# {% endif %} #}
-                                        </div>
-                                    </div>
-                                </div>
+						<h2>{% trans %}Choose another classroom{% endtrans %}</h2>
 
-                                <div class="row">
-                                    <div class="col-md-3 border-bottom-0 indigo-gradient">
-                                    <div class="form-group">
-                                        <br>
-                                            <label>{% trans %}Clean school{% endtrans %}</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="cleanSchoolFeesAmount"></label>
-                                            <input class="form-control form-control-sm" type="text" name="cleanSchoolFeesAmount" id="cleanSchoolFeesAmount"  value="{{ feesTable.cleanSchoolFees }}" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="cleanSchoolFeesAdvance"></label>
-                                            <input class="form-control form-control-sm" type="text" name="cleanSchoolFeesAdvance" id="cleanSchoolFeesAdvance"  value="{{ registration.cleanSchoolFees }}" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        {% set rest = feesTable.cleanSchoolFees - registration.cleanSchoolFees %}
-                                        <div class="form-group">
-                                            <label for="cleanSchoolFeesRest"></label>
-                                            <input class="form-control form-control-sm" type="text" name="cleanSchoolFeesRest" id="cleanSchoolFeesRest"  value="{{ rest }}" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            {# {% if headmasterFees == 0 %} #}
-                                                {% if rest != 0 %}
-                                                    <label for="cleanSchoolFeesDeposit"></label>
-                                                    <input class="form-control form-control-sm" type="number" min="0" max="{{ rest }}" step="5" name="cleanSchoolFeesDeposit" id="cleanSchoolFeesDeposit" value="0" required="required">
-                                                {% else %}
-                                                    <label></label>
-                                                    <span class="form-control form-control-sm bg-teal-transparent"> {% trans %}Pay{% endtrans %} <i class="fa fa-thumbs-up"></i></span>
-                                                {% endif %}
-                                            {# {% endif %} #}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-3 border-bottom-0 blue-gradient">
-                                    <div class="form-group">
-                                        <br>
-                                            <label>{% trans %}Medical booklet{% endtrans %}</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="medicalBookletFeesAmount"></label>
-                                            <input class="form-control form-control-sm" type="text" name="medicalBookletFeesAmount" id="medicalBookletFeesAmount"  value="{{ feesTable.medicalBookletFees }}" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="medicalBookletFeesAdvance"></label>
-                                            <input class="form-control form-control-sm" type="text" name="medicalBookletFeesAdvance" id="medicalBookletFeesAdvance"  value="{{ registration.medicalBookletFees }}" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        {% set rest = feesTable.medicalBookletFees - registration.medicalBookletFees %}
-                                        <div class="form-group">
-                                            <label for="medicalBookletFeesRest"></label>
-                                            <input class="form-control form-control-sm" type="text" name="medicalBookletFeesRest" id="medicalBookletFeesRest"  value="{{ rest }}" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            {# {% if headmasterFees == 0 %} #}
-                                                {% if rest != 0 %}
-                                                    <label for="medicalBookletFeesDeposit"></label>
-                                                    <input class="form-control form-control-sm" type="number" min="0" max="{{ rest }}" step="5" name="medicalBookletFeesDeposit" id="medicalBookletFeesDeposit" value="0" required="required">
-                                                {% else %}
-                                                    <label></label>
-                                                    <span class="form-control form-control-sm bg-teal-transparent"> {% trans %}Pay{% endtrans %} <i class="fa fa-thumbs-up"></i></span>
-                                                {% endif %}
-                                            {# {% endif %} #}
-                                        </div>
-                                    </div>
-                                </div>
+						<p>{% trans %}Display another classroom financial statement or add a new student without leaving this workspace.{% endtrans %}</p>
+					</div>
+				</div>
 
-                                <div class="row">
-                                    <div class="col-md-3 border-bottom-0 green-gradient">
-                                    <div class="form-group">
-                                        <br>
-                                            <label>{% trans %}Photo{% endtrans %}</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="photoFeesAmount"></label>
-                                            <input class="form-control form-control-sm" type="text" name="photoFeesAmount" id="photoFeesAmount"  value="{{ feesTable.photoFees }}" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="photoFeesAdvance"></label>
-                                            <input class="form-control form-control-sm" type="text" name="photoFeesAdvance" id="photoFeesAdvance"  value="{{ registration.photoFees }}" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        {% set rest = feesTable.photoFees - registration.photoFees %}
-                                        <div class="form-group">
-                                            <label for="photoFeesRest"></label>
-                                            <input class="form-control form-control-sm" type="text" name="photoFeesRest" id="photoFeesRest"  value="{{ rest }}" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            {# {% if headmasterFees == 0 %} #}
-                                                {% if rest != 0 %}
-                                                    <label for="photoFeesDeposit"></label>
-                                                    <input class="form-control form-control-sm" type="number" min="0" max="{{ rest }}" step="5" name="photoFeesDeposit" id="photoFeesDeposit" value="0" required="required">
-                                                {% else %}
-                                                    <label></label>
-                                                    <span class="form-control form-control-sm bg-teal-transparent"> {% trans %}Pay{% endtrans %} <i class="fa fa-thumbs-up"></i></span>
-                                                {% endif %}
-                                            {# {% endif %} #}
-                                        </div>
-                                    </div>
-                                </div>
+				<form action="{{ path('registration_feesStatement', {'headmasterFees': headmasterFees}) }}" method="post" class="fs-school-fees-filter-form needs-validation" novalidate>
+					<div class="fs-floating-field fs-required-field">
+						<select class="form-control select2-show-search fs-floating-control" data-placeholder="" name="classroom" id="classroom" required>
+							<option label="" value="">
+								
+							</option>
 
-                                {% if classroomLevel == 4 or classroomLevel == 6 or classroomLevel == 7 %}
-                                    <div class="row">
-                                        <div class="col-md-3 border-bottom-0 orange-gradient">
-                                            <div class="form-group">
-                                                <br>
-                                                    <label>{% trans %}Exam fees{% endtrans %}</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-group">
-                                                    <label for="examFeesAmount"></label>
-                                                    <input class="form-control form-control-sm" type="text" name="examFeesAmount" id="examFeesAmount"  value="{{ feesTable.examFees }}" readonly>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-group">
-                                                    <label for="examFeesAdvance"></label>
-                                                    <input class="form-control form-control-sm" type="text" name="examFeesAdvance" id="examFeesAdvance"  value="{{ registration.examFees }}" readonly>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                {% set rest = feesTable.examFees - registration.examFees %}
-                                                <div class="form-group">
-                                                    <label for="examFeesRest"></label>
-                                                    <input class="form-control form-control-sm" type="text" name="examFeesRest" id="examFeesRest"  value="{{ rest }}" readonly>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    {# {% if headmasterFees == 0 %} #}
-                                                        {% if rest != 0 %}
-                                                            <label for="examFeesDeposit"></label>
-                                                            <input class="form-control form-control-sm" type="number" min="0" max="{{ rest }}" step="5" name="examFeesDeposit" id="examFeesDeposit" value="0" required="required">
-                                                        {% else %}
-                                                            <label></label>
-                                                            <span class="form-control form-control-sm bg-teal-transparent"> {% trans %}Pay{% endtrans %} <i class="fa fa-thumbs-up"></i></span>
-                                                        {% endif %}
-                                                    {# {% endif %} #}
-                                                </div>
-                                            </div>
-                                    </div>
+							{% if subSystem == 'Francophone / French Speaker' %}
+								{% if school.education.education == 'Général' %}
+									{% include "includes/_selectClassrooms.html.twig" %}
+								{% else %}
+									{% include "includes/_selectClassroomsTech.html.twig" %}
+								{% endif %}
+							{% else %}
+								{% include "includes/_selectClassroomsEn.html.twig" %}
+							{% endif %}
+						</select>
 
-                                    <div class="row">
-                                        <div class="col-md-3 border-bottom-0 blue-gradient">
-                                            <div class="form-group">
-                                                <br>
-                                                    <label>{% trans %}Stamp{% endtrans %}</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-group">
-                                                    <label for="stampFeesAmount"></label>
-                                                    <input class="form-control form-control-sm" type="text" name="stampFeesAmount" id="stampFeesAmount"  value="{{ feesTable.stampFees }}" readonly>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-group">
-                                                    <label for="stampFeesAdvance"></label>
-                                                    <input class="form-control form-control-sm" type="text" name="stampFeesAdvance" id="stampFeesAdvance"  value="{{ registration.stampFees }}" readonly>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                {% set rest = feesTable.stampFees - registration.stampFees %}
-                                                <div class="form-group">
-                                                    <label for="stampFeesRest"></label>
-                                                    <input class="form-control form-control-sm" type="text" name="stampFeesRest" id="stampFeesRest"  value="{{ rest }}" readonly>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <div class="form-group">
-                                                    {# {% if headmasterFees == 0 %} #}
-                                                        {% if rest != 0 %}
-                                                            <label for="stampFeesDeposit"></label>
-                                                            <input class="form-control form-control-sm" type="number" min="0" max="{{ rest }}" step="5" name="stampFeesDeposit" id="stampFeesDeposit" value="0" required="required">
-                                                        {% else %}
-                                                            <label></label>
-                                                            <span class="form-control form-control-sm bg-teal-transparent"> {% trans %}Pay{% endtrans %} <i class="fa fa-thumbs-up"></i></span>
-                                                        {% endif %}
-                                                    {# {% endif %} #}
-                                                </div>
-                                            </div>
-                                    </div>
-                                {% endif %}
+						<label class="fs-floating-label" for="classroom">
+							<i class="fe fe-home"></i>
+							{% trans %}Classroom{% endtrans %}
+						</label>
 
+						<div class="invalid-feedback">
+							{% trans %}Please choose a classroom !{% endtrans %}
+						</div>
+					</div>
 
-                                <div class="row">
-                                    <div class="col-md-3  border-bottom-0 indigo-gradient"></div>
-                                    <div class="col-md-2 border-bottom-0 indigo-gradient">{% trans %}Amount{% endtrans %}</div>
-                                    <div class="col-md-2 border-bottom-0 green-gradient">Advance</div>
-                                    <div class="col-md-2 border-bottom-0 orange-gradient">Rest</div>
-                                    <div class="col-md-3 border-bottom-0 blue-gradient">
-                                        {# {% if headmasterFees == 0 %} #}
-                                            Encaisser
-                                        {# {% endif %} #}
-                                        
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="printStudentFees"></label>
-                                            <a class="btn btn-outline-primary btn-medium w-100 br-7" href="{{ path('registration_printStudentFeesHistory', {'slugStudent': student.slug}) }}" target="_blank">
-                                                <i class="fa fa-print"></i>
-                                                {% trans %}Payment history{% endtrans %}</a>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                        <label for="updateStudentFees"></label>
-                                            <a class="btn btn-outline-secondary btn-medium w-100 br-7" href="{{ path('registration_printPaymentReceipt', {'slugStudent': student.slug}) }}" target="_blank">
-                                                <i class="fa fa-print"></i> {% trans %}Payment receipt{% endtrans %}</a>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            {# {% if headmasterFees == 0 %} #}
-                                            
-                                                    {% if totalRest != 0 %}
-                                                    <label for="saveStdentFees"></label>
-                                                    <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="saveSchoolFees">
-                                                        <i class="fa fa-save"></i>
-                                                        {% trans %}Save payment{% endtrans %}
-                                                    </button>
-                                                    {% endif %}
-                                                    
-                                            {# {% endif %} #}
+					<div class="fs-school-fees-filter-form__actions">
+						<button class="fs-school-fees-btn fs-school-fees-btn--primary fs-school-fees-submit-btn" type="submit" name="displayStudents">
+							<span class="fs-school-fees-submit-spinner" aria-hidden="true"></span>
+							<i class="fa fa-list fs-school-fees-submit-icon"></i>
+							<span>{% trans %}Display{% endtrans %}</span>
+						</button>
 
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- End Row -->
-        </div>
-    </div>
-</div>
+						<a href="{{ path('student_saveStudent') }}" class="fs-school-fees-btn fs-school-fees-btn--ghost" name="displayStudents">
+							<i class="fa fa-plus"></i>
+							<span>{% trans %}Add student{% endtrans %}</span>
+						</a>
+					</div>
+				</form>
+			</section>
+
+			<div class="fs-school-fees-layout">
+				<aside class="fs-school-fees-profile">
+					<div class="fs-school-fees-profile__main">
+						<div class="fs-school-fees-profile__photo-wrap">
+							{% if student.photo %}
+								<img alt="Photo eleve" class="fs-school-fees-profile__photo" src="{{ asset ('images/students/' ~ student.photo) }}">
+							{% else %}
+								{% if student.sex.sex == "F" %}
+									<img alt="Photo eleve" class="fs-school-fees-profile__photo" src="{{ asset ('images/students/fille.jpg')}}">
+								{% else %}
+									<img alt="Photo eleve" class="fs-school-fees-profile__photo" src="{{ asset ('images/students/garcon.jpg')}}">
+								{% endif %}
+							{% endif %}
+						</div>
+
+						<h2>{{ student.fullName }}</h2>
+
+						<div class="fs-school-fees-profile__badges">
+							<span>{% trans %}Classroom{% endtrans %} : {{ student.classroom.classroom }}</span>
+							<span>{{ student.sex.sex }}</span>
+							<span>{% trans %}Repeat {% endtrans %} : {{ student.repeater.repeater }}</span>
+						</div>
+
+						<div class="fs-school-fees-contact">
+							<i class="fe fe-phone"></i>
+							<span>{% trans %}Contact :{% endtrans %} {{ student.telephonePere }}</span>
+						</div>
+
+						<div class="fs-school-fees-profile__actions">
+							<a href="{{ path('student_editStudent', {'slug': student.slug}) }}" class="fs-school-fees-btn fs-school-fees-btn--ghost">
+								<i class="fa fa-pencil"></i>
+								<span>{% trans %}Edit Student{% endtrans %}</span>
+							</a>
+
+							<form action="{{ path('student_deleteStudent', {'slug': student.slug}) }}" method="post" onsubmit="return confirm('{% trans %}-You really want to remove the student{% endtrans %} --- {{ student.fullName }} --- {% trans %}of the class of{% endtrans %} --- {{ selectedClassroom.classroom }} --- {% trans %}with all his notes, his hours of absence and his expenses ?{% endtrans %}');">
+								<button type="submit" class="fs-school-fees-btn fs-school-fees-btn--danger" name="deleteStudent" data-bs-toggle="tooltip" title="{% trans %}Delete{% endtrans %} {{ student.fullName }}">
+									<i class="fa fa-trash"></i>
+									<span>{% trans %}Delete{% endtrans %}</span>
+								</button>
+							</form>
+						</div>
+					</div>
+
+					<div class="fs-school-fees-profile__info">
+						<h3>
+							<i class="fe fe-calendar"></i>
+							{% trans %}Birth{% endtrans %}
+						</h3>
+
+						<div class="fs-school-fees-profile-line">
+							<span class="fs-school-fees-profile-line__icon">
+								<i class="fa fa-calendar"></i>
+							</span>
+							<div>
+								<span>{% trans %}Birthday{% endtrans %}</span>
+								<strong>{{ student.birthday|date('d-m-Y') }}</strong>
+							</div>
+						</div>
+
+						<div class="fs-school-fees-profile-line">
+							<span class="fs-school-fees-profile-line__icon fs-school-fees-profile-line__icon--green">
+								<i class="fa fa-map-marker"></i>
+							</span>
+							<div>
+								<span>{% trans %}Birthplace{% endtrans %}</span>
+								<strong>{{ student.birthplace }}</strong>
+							</div>
+						</div>
+					</div>
+				</aside>
+
+				<section class="fs-school-fees-card">
+					<div class="fs-school-fees-card__header">
+						<div>
+							<span class="fs-school-fees-chip fs-school-fees-chip--soft">
+								<i class="fe fe-credit-card"></i>
+								{% trans %}Fees statement{% endtrans %}
+							</span>
+
+							<h2>{% trans %}Fees Statment of : {% endtrans %} {{ student.fullName }}</h2>
+						</div>
+
+						<div class="fs-school-fees-devise">
+							<span>{% trans %}Devise{% endtrans %}</span>
+							<strong>{% trans %}F CFA{% endtrans %}</strong>
+						</div>
+					</div>
+
+					<div class="fs-school-fees-card__body">
+						{% set classroomLevel = selectedClassroom.level.level %}
+						{% set totalRest = feesTable.apeeFees + feesTable.computerFees + feesTable.medicalBookletFees + feesTable.cleanSchoolFees + feesTable.photoFees - registration.apeeFees - registration.computerFees - registration.medicalBookletFees - registration.cleanSchoolFees - registration.photoFees %}
+
+						{% if headmasterFees == 0 %}
+							{% if totalRest != 0 %}
+								<form method="post" action="{{ path('registration_saveSchoolFees', {'slugStudent': student.slug}) }}" class="fs-school-fees-payment-form needs-validation" novalidate>
+							{% endif %}
+						{% endif %}
+
+						<div class="fs-school-fees-table-head">
+							<span></span>
+							<span>{% trans %}Amount{% endtrans %}</span>
+							<span>{% trans %}Advance{% endtrans %}</span>
+							<span>{% trans %}Rest{% endtrans %}</span>
+							<span>
+								{% if headmasterFees == 0 %}
+									{% trans %}Cash{% endtrans %}
+								{% endif %}
+							</span>
+						</div>
+
+						{% set rest = feesTable.schoolFees - registration.schoolFees %}
+						<div class="fs-school-fees-row">
+							<div class="fs-school-fees-row__label fs-school-fees-row__label--blue">
+								<i class="fe fe-book-open"></i>
+								<span>{% trans %}School fees{% endtrans %}</span>
+							</div>
+
+							<div class="fs-floating-field fs-has-value">
+								<input class="form-control fs-floating-control" type="text" name="schoolFeesAmount" id="schoolFeesAmount" value="{{ feesTable.schoolFees }}" readonly>
+								<label class="fs-floating-label" for="schoolFeesAmount">{% trans %}Amount{% endtrans %}</label>
+							</div>
+
+							<div class="fs-floating-field fs-has-value">
+								<input class="form-control fs-floating-control" type="text" name="schoolFeesAdvance" id="schoolFeesAdvance" value="{{ registration.schoolFees }}" readonly>
+								<label class="fs-floating-label" for="schoolFeesAdvance">{% trans %}Advance{% endtrans %}</label>
+							</div>
+
+							<div class="fs-floating-field fs-has-value">
+								<input class="form-control fs-floating-control" type="text" name="schoolFeesRest" id="schoolFeesRest" value="{{ rest }}" readonly>
+								<label class="fs-floating-label" for="schoolFeesRest">{% trans %}Rest{% endtrans %}</label>
+							</div>
+
+							<div>
+								{% if rest != 0 %}
+									<div class="fs-floating-field fs-required-field fs-has-value">
+										<input class="form-control fs-floating-control" type="number" min="0" max="{{ rest }}" step="5" name="schoolFeesDeposit" id="schoolFeesDeposit" value="0" required>
+										<label class="fs-floating-label" for="schoolFeesDeposit">{% trans %}Cash{% endtrans %}</label>
+										<div class="invalid-feedback">{% trans %}Required field{% endtrans %}</div>
+									</div>
+								{% else %}
+									<span class="fs-school-fees-paid">{% trans %}Pay{% endtrans %} <i class="fa fa-thumbs-up"></i></span>
+								{% endif %}
+							</div>
+						</div>
+
+						{% set rest = feesTable.apeeFees - registration.apeeFees %}
+						<div class="fs-school-fees-row">
+							<div class="fs-school-fees-row__label fs-school-fees-row__label--green">
+								<i class="fe fe-users"></i>
+								<span>{% trans %}PTA fees{% endtrans %}</span>
+							</div>
+
+							<div class="fs-floating-field fs-has-value">
+								<input class="form-control fs-floating-control" type="text" name="apeeAmount" id="apeeAmount" value="{{ feesTable.apeeFees }}" readonly>
+								<label class="fs-floating-label" for="apeeAmount">{% trans %}Amount{% endtrans %}</label>
+							</div>
+
+							<div class="fs-floating-field fs-has-value">
+								<input class="form-control fs-floating-control" type="text" name="apeeAdvance" id="apeeAdvance" value="{{ registration.apeeFees }}" readonly>
+								<label class="fs-floating-label" for="apeeAdvance">{% trans %}Advance{% endtrans %}</label>
+							</div>
+
+							<div class="fs-floating-field fs-has-value">
+								<input class="form-control fs-floating-control" type="text" name="apeeRest" id="apeeRest" value="{{ rest }}" readonly>
+								<label class="fs-floating-label" for="apeeRest">{% trans %}Rest{% endtrans %}</label>
+							</div>
+
+							<div>
+								{% if rest != 0 %}
+									<div class="fs-floating-field fs-required-field fs-has-value">
+										<input class="form-control fs-floating-control" type="number" min="0" max="{{ rest }}" step="5" name="apeeFeesDeposit" id="apeeFeesDeposit" value="0" required>
+										<label class="fs-floating-label" for="apeeFeesDeposit">{% trans %}Cash{% endtrans %}</label>
+										<div class="invalid-feedback">{% trans %}Required field{% endtrans %}</div>
+									</div>
+								{% else %}
+									<span class="fs-school-fees-paid">{% trans %}Pay{% endtrans %} <i class="fa fa-thumbs-up"></i></span>
+								{% endif %}
+							</div>
+						</div>
+
+						{% set rest = feesTable.computerFees - registration.computerFees %}
+						<div class="fs-school-fees-row">
+							<div class="fs-school-fees-row__label fs-school-fees-row__label--orange">
+								<i class="fe fe-monitor"></i>
+								<span>{% trans %}IT costs{% endtrans %}</span>
+							</div>
+
+							<div class="fs-floating-field fs-has-value">
+								<input class="form-control fs-floating-control" type="text" name="computerFeesAmount" id="computerFeesAmount" value="{{ feesTable.computerFees }}" readonly>
+								<label class="fs-floating-label" for="computerFeesAmount">{% trans %}Amount{% endtrans %}</label>
+							</div>
+
+							<div class="fs-floating-field fs-has-value">
+								<input class="form-control fs-floating-control" type="text" name="computerFeesAdvance" id="computerFeesAdvance" value="{{ registration.computerFees }}" readonly>
+								<label class="fs-floating-label" for="computerFeesAdvance">{% trans %}Advance{% endtrans %}</label>
+							</div>
+
+							<div class="fs-floating-field fs-has-value">
+								<input class="form-control fs-floating-control" type="text" name="computerFeesRest" id="computerFeesRest" value="{{ rest }}" readonly>
+								<label class="fs-floating-label" for="computerFeesRest">{% trans %}Rest{% endtrans %}</label>
+							</div>
+
+							<div>
+								{% if rest != 0 %}
+									<div class="fs-floating-field fs-required-field fs-has-value">
+										<input class="form-control fs-floating-control" type="number" min="0" max="{{ rest }}" step="5" name="computerFeesDeposit" id="computerFeesDeposit" value="0" required="required">
+										<label class="fs-floating-label" for="computerFeesDeposit">{% trans %}Cash{% endtrans %}</label>
+										<div class="invalid-feedback">{% trans %}Required field{% endtrans %}</div>
+									</div>
+								{% else %}
+									<span class="fs-school-fees-paid">{% trans %}Pay{% endtrans %} <i class="fa fa-thumbs-up"></i></span>
+								{% endif %}
+							</div>
+						</div>
+
+						{% set rest = feesTable.cleanSchoolFees - registration.cleanSchoolFees %}
+						<div class="fs-school-fees-row">
+							<div class="fs-school-fees-row__label fs-school-fees-row__label--violet">
+								<i class="fe fe-shield"></i>
+								<span>{% trans %}Clean school{% endtrans %}</span>
+							</div>
+
+							<div class="fs-floating-field fs-has-value">
+								<input class="form-control fs-floating-control" type="text" name="cleanSchoolFeesAmount" id="cleanSchoolFeesAmount" value="{{ feesTable.cleanSchoolFees }}" readonly>
+								<label class="fs-floating-label" for="cleanSchoolFeesAmount">{% trans %}Amount{% endtrans %}</label>
+							</div>
+
+							<div class="fs-floating-field fs-has-value">
+								<input class="form-control fs-floating-control" type="text" name="cleanSchoolFeesAdvance" id="cleanSchoolFeesAdvance" value="{{ registration.cleanSchoolFees }}" readonly>
+								<label class="fs-floating-label" for="cleanSchoolFeesAdvance">{% trans %}Advance{% endtrans %}</label>
+							</div>
+
+							<div class="fs-floating-field fs-has-value">
+								<input class="form-control fs-floating-control" type="text" name="cleanSchoolFeesRest" id="cleanSchoolFeesRest" value="{{ rest }}" readonly>
+								<label class="fs-floating-label" for="cleanSchoolFeesRest">{% trans %}Rest{% endtrans %}</label>
+							</div>
+
+							<div>
+								{% if rest != 0 %}
+									<div class="fs-floating-field fs-required-field fs-has-value">
+										<input class="form-control fs-floating-control" type="number" min="0" max="{{ rest }}" step="5" name="cleanSchoolFeesDeposit" id="cleanSchoolFeesDeposit" value="0" required="required">
+										<label class="fs-floating-label" for="cleanSchoolFeesDeposit">{% trans %}Cash{% endtrans %}</label>
+										<div class="invalid-feedback">{% trans %}Required field{% endtrans %}</div>
+									</div>
+								{% else %}
+									<span class="fs-school-fees-paid">{% trans %}Pay{% endtrans %} <i class="fa fa-thumbs-up"></i></span>
+								{% endif %}
+							</div>
+						</div>
+
+						{% set rest = feesTable.medicalBookletFees - registration.medicalBookletFees %}
+						<div class="fs-school-fees-row">
+							<div class="fs-school-fees-row__label fs-school-fees-row__label--blue">
+								<i class="fe fe-file-text"></i>
+								<span>{% trans %}Medical booklet{% endtrans %}</span>
+							</div>
+
+							<div class="fs-floating-field fs-has-value">
+								<input class="form-control fs-floating-control" type="text" name="medicalBookletFeesAmount" id="medicalBookletFeesAmount" value="{{ feesTable.medicalBookletFees }}" readonly>
+								<label class="fs-floating-label" for="medicalBookletFeesAmount">{% trans %}Amount{% endtrans %}</label>
+							</div>
+
+							<div class="fs-floating-field fs-has-value">
+								<input class="form-control fs-floating-control" type="text" name="medicalBookletFeesAdvance" id="medicalBookletFeesAdvance" value="{{ registration.medicalBookletFees }}" readonly>
+								<label class="fs-floating-label" for="medicalBookletFeesAdvance">{% trans %}Advance{% endtrans %}</label>
+							</div>
+
+							<div class="fs-floating-field fs-has-value">
+								<input class="form-control fs-floating-control" type="text" name="medicalBookletFeesRest" id="medicalBookletFeesRest" value="{{ rest }}" readonly>
+								<label class="fs-floating-label" for="medicalBookletFeesRest">{% trans %}Rest{% endtrans %}</label>
+							</div>
+
+							<div>
+								{% if rest != 0 %}
+									<div class="fs-floating-field fs-required-field fs-has-value">
+										<input class="form-control fs-floating-control" type="number" min="0" max="{{ rest }}" step="5" name="medicalBookletFeesDeposit" id="medicalBookletFeesDeposit" value="0" required="required">
+										<label class="fs-floating-label" for="medicalBookletFeesDeposit">{% trans %}Cash{% endtrans %}</label>
+										<div class="invalid-feedback">{% trans %}Required field{% endtrans %}</div>
+									</div>
+								{% else %}
+									<span class="fs-school-fees-paid">{% trans %}Pay{% endtrans %} <i class="fa fa-thumbs-up"></i></span>
+								{% endif %}
+							</div>
+						</div>
+
+						{% set rest = feesTable.photoFees - registration.photoFees %}
+						<div class="fs-school-fees-row">
+							<div class="fs-school-fees-row__label fs-school-fees-row__label--green">
+								<i class="fe fe-image"></i>
+								<span>{% trans %}Photo{% endtrans %}</span>
+							</div>
+
+							<div class="fs-floating-field fs-has-value">
+								<input class="form-control fs-floating-control" type="text" name="photoFeesAmount" id="photoFeesAmount" value="{{ feesTable.photoFees }}" readonly>
+								<label class="fs-floating-label" for="photoFeesAmount">{% trans %}Amount{% endtrans %}</label>
+							</div>
+
+							<div class="fs-floating-field fs-has-value">
+								<input class="form-control fs-floating-control" type="text" name="photoFeesAdvance" id="photoFeesAdvance" value="{{ registration.photoFees }}" readonly>
+								<label class="fs-floating-label" for="photoFeesAdvance">{% trans %}Advance{% endtrans %}</label>
+							</div>
+
+							<div class="fs-floating-field fs-has-value">
+								<input class="form-control fs-floating-control" type="text" name="photoFeesRest" id="photoFeesRest" value="{{ rest }}" readonly>
+								<label class="fs-floating-label" for="photoFeesRest">{% trans %}Rest{% endtrans %}</label>
+							</div>
+
+							<div>
+								{% if rest != 0 %}
+									<div class="fs-floating-field fs-required-field fs-has-value">
+										<input class="form-control fs-floating-control" type="number" min="0" max="{{ rest }}" step="5" name="photoFeesDeposit" id="photoFeesDeposit" value="0" required="required">
+										<label class="fs-floating-label" for="photoFeesDeposit">{% trans %}Cash{% endtrans %}</label>
+										<div class="invalid-feedback">{% trans %}Required field{% endtrans %}</div>
+									</div>
+								{% else %}
+									<span class="fs-school-fees-paid">{% trans %}Pay{% endtrans %} <i class="fa fa-thumbs-up"></i></span>
+								{% endif %}
+							</div>
+						</div>
+
+						{% if classroomLevel == 4 or classroomLevel == 6 or classroomLevel == 7 %}
+							{% set rest = feesTable.examFees - registration.examFees %}
+							<div class="fs-school-fees-row">
+								<div class="fs-school-fees-row__label fs-school-fees-row__label--orange">
+									<i class="fe fe-award"></i>
+									<span>{% trans %}Exam fees{% endtrans %}</span>
+								</div>
+
+								<div class="fs-floating-field fs-has-value">
+									<input class="form-control fs-floating-control" type="text" name="examFeesAmount" id="examFeesAmount" value="{{ feesTable.examFees }}" readonly>
+									<label class="fs-floating-label" for="examFeesAmount">{% trans %}Amount{% endtrans %}</label>
+								</div>
+
+								<div class="fs-floating-field fs-has-value">
+									<input class="form-control fs-floating-control" type="text" name="examFeesAdvance" id="examFeesAdvance" value="{{ registration.examFees }}" readonly>
+									<label class="fs-floating-label" for="examFeesAdvance">{% trans %}Advance{% endtrans %}</label>
+								</div>
+
+								<div class="fs-floating-field fs-has-value">
+									<input class="form-control fs-floating-control" type="text" name="examFeesRest" id="examFeesRest" value="{{ rest }}" readonly>
+									<label class="fs-floating-label" for="examFeesRest">{% trans %}Rest{% endtrans %}</label>
+								</div>
+
+								<div>
+									{% if rest != 0 %}
+										<div class="fs-floating-field fs-required-field fs-has-value">
+											<input class="form-control fs-floating-control" type="number" min="0" max="{{ rest }}" step="5" name="examFeesDeposit" id="examFeesDeposit" value="0" required="required">
+											<label class="fs-floating-label" for="examFeesDeposit">{% trans %}Cash{% endtrans %}</label>
+											<div class="invalid-feedback">{% trans %}Required field{% endtrans %}</div>
+										</div>
+									{% else %}
+										<span class="fs-school-fees-paid">{% trans %}Pay{% endtrans %} <i class="fa fa-thumbs-up"></i></span>
+									{% endif %}
+								</div>
+							</div>
+
+							{% set rest = feesTable.stampFees - registration.stampFees %}
+							<div class="fs-school-fees-row">
+								<div class="fs-school-fees-row__label fs-school-fees-row__label--blue">
+									<i class="fe fe-bookmark"></i>
+									<span>{% trans %}Stamp{% endtrans %}</span>
+								</div>
+
+								<div class="fs-floating-field fs-has-value">
+									<input class="form-control fs-floating-control" type="text" name="stampFeesAmount" id="stampFeesAmount" value="{{ feesTable.stampFees }}" readonly>
+									<label class="fs-floating-label" for="stampFeesAmount">{% trans %}Amount{% endtrans %}</label>
+								</div>
+
+								<div class="fs-floating-field fs-has-value">
+									<input class="form-control fs-floating-control" type="text" name="stampFeesAdvance" id="stampFeesAdvance" value="{{ registration.stampFees }}" readonly>
+									<label class="fs-floating-label" for="stampFeesAdvance">{% trans %}Advance{% endtrans %}</label>
+								</div>
+
+								<div class="fs-floating-field fs-has-value">
+									<input class="form-control fs-floating-control" type="text" name="stampFeesRest" id="stampFeesRest" value="{{ rest }}" readonly>
+									<label class="fs-floating-label" for="stampFeesRest">{% trans %}Rest{% endtrans %}</label>
+								</div>
+
+								<div>
+									{% if rest != 0 %}
+										<div class="fs-floating-field fs-required-field fs-has-value">
+											<input class="form-control fs-floating-control" type="number" min="0" max="{{ rest }}" step="5" name="stampFeesDeposit" id="stampFeesDeposit" value="0" required="required">
+											<label class="fs-floating-label" for="stampFeesDeposit">{% trans %}Cash{% endtrans %}</label>
+											<div class="invalid-feedback">{% trans %}Required field{% endtrans %}</div>
+										</div>
+									{% else %}
+										<span class="fs-school-fees-paid">{% trans %}Pay{% endtrans %} <i class="fa fa-thumbs-up"></i></span>
+									{% endif %}
+								</div>
+							</div>
+						{% endif %}
+
+						<div class="fs-school-fees-actions">
+							<a class="fs-school-fees-btn fs-school-fees-btn--ghost" href="{{ path('registration_printStudentFeesHistory', {'slugStudent': student.slug}) }}" target="_blank">
+								<i class="fa fa-print"></i>
+								<span>{% trans %}Payment history{% endtrans %}</span>
+							</a>
+
+							<a class="fs-school-fees-btn fs-school-fees-btn--secondary" href="{{ path('registration_printPaymentReceipt', {'slugStudent': student.slug}) }}" target="_blank">
+								<i class="fa fa-print"></i>
+								<span>{% trans %}Payment receipt{% endtrans %}</span>
+							</a>
+
+							{% if totalRest != 0 %}
+								<button class="fs-school-fees-btn fs-school-fees-btn--primary fs-school-fees-submit-btn" type="submit" name="saveSchoolFees">
+									<span class="fs-school-fees-submit-spinner" aria-hidden="true"></span>
+									<i class="fa fa-save fs-school-fees-submit-icon"></i>
+									<span>{% trans %}Save payment{% endtrans %}</span>
+								</button>
+							{% endif %}
+						</div>
+
+						{% if headmasterFees == 0 %}
+							{% if totalRest != 0 %}
+								</form>
+							{% endif %}
+						{% endif %}
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-registration-school-fees-premium.js') }}"></script>
 {% endblock %}

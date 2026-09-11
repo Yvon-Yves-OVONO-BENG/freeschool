@@ -5,7 +5,7 @@
 		<meta charset="UTF-8">
 		<meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=0'>
 		<meta content="Freeschool - Application complète de gestions scolaire" name="description">
-		<meta content="Spruko Private Limited" name="author">
+		<meta content="Yvon Yves Noel OVONO BENG" name="author">
 		<meta name="keywords" content="admin, admin template, dashboard, admin dashboard, responsive, bootstrap, bootstrap 5, admin theme, admin themes, bootstrap admin template, scss, ui, crm, modern, flat">
 
 		<!-- Title -->
@@ -48,7 +48,7 @@
 
 	</head>
 
-	<body class="bg-primary register-2">
+	<body class="bg-primary register-2 fs-saas-premium">
 		{# On recupère la session #}
 		{% set mySession = app.session.get('mySession') %}
 		{% set currentSchoolYear = "Since 2019" %}
@@ -172,6 +172,119 @@
 			}, 20000);
 		</script>
 
-		{% block javascripts %}{% endblock %}
+		{% block javascripts %}
+			<script>
+								(function () {
+									document.addEventListener('submit', function (event) {
+										const form = event.target;
+										if (!form) return;
+			
+										const submitter = event.submitter || form.querySelector('button[type="submit"], input[type="submit"]');
+										const target = (form.getAttribute('target') || '').toLowerCase();
+										const visibleLabel = submitter && submitter.textContent ? submitter.textContent.toLowerCase() : '';
+										const action = (form.getAttribute('action') || '').toLowerCase();
+										const isPrintSubmission =
+											form.dataset.noSpinner === '1' ||
+											target === '_blank' ||
+											/(print|imprim|pdf)/i.test(visibleLabel + ' ' + action);
+			
+										if (!isPrintSubmission) return;
+			
+										const buttons = Array.from(form.querySelectorAll('button[type="submit"], input[type="submit"]'));
+										const snapshots = buttons.map(function (button) {
+											return {
+												button: button,
+												disabled: button.disabled,
+												html: button.tagName === 'BUTTON' ? button.innerHTML : null,
+												className: button.className
+											};
+										});
+			
+										// Après tous les autres handlers de submit, on restaure immédiatement le bouton d'impression.
+										window.setTimeout(function () {
+											form.dataset.submitting = '0';
+											snapshots.forEach(function (snapshot) {
+												const button = snapshot.button;
+												button.disabled = snapshot.disabled;
+												button.className = snapshot.className;
+												if (snapshot.html !== null) {
+													button.innerHTML = snapshot.html;
+												}
+												delete button.dataset.originalHtml;
+											});
+										}, 0);
+									}, true);
+								})();
+							</script>
+		{% endblock %}
+		<script>
+			(function () {
+				document.addEventListener('submit', function (event) {
+					const form = event.target;
+					if (!form || form.dataset.submitting === '1') {
+						return;
+					}
+
+					if (form.checkValidity && !form.checkValidity()) {
+						return;
+					}
+
+					const submitter = event.submitter || form.querySelector('button[type="submit"], input[type="submit"]');
+
+					const target = (form.getAttribute('target') || '').toLowerCase();
+					const submitterSignature = [
+						submitter && submitter.textContent,
+						form.getAttribute('action')
+					].filter(Boolean).join(' ').toLowerCase();
+
+					// Les impressions/PDF ne doivent jamais verrouiller le bouton ni afficher de spinner.
+					const isPrintSubmission =
+						form.dataset.noSpinner === '1' ||
+						target === '_blank' ||
+						/(print|imprim|pdf)/i.test(submitterSignature);
+
+					if (isPrintSubmission) {
+						return;
+					}
+
+					if (submitter && submitter.name) {
+						const hiddenSubmitter = document.createElement('input');
+						hiddenSubmitter.type = 'hidden';
+						hiddenSubmitter.name = submitter.name;
+						hiddenSubmitter.value = submitter.value || '1';
+						form.appendChild(hiddenSubmitter);
+					}
+
+					form.dataset.submitting = '1';
+
+					const buttons = form.querySelectorAll('button[type="submit"], input[type="submit"]');
+					buttons.forEach(function (button) {
+						button.disabled = true;
+
+						if (button.tagName === 'BUTTON') {
+							const label = button.textContent.trim() || 'Traitement...';
+							button.dataset.originalHtml = button.innerHTML;
+							button.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>' + label;
+						}
+					});
+
+					if ((form.getAttribute('target') || '').toLowerCase() === '_blank') {
+						window.setTimeout(function () {
+							form.dataset.submitting = '0';
+							buttons.forEach(function (button) {
+								button.disabled = false;
+
+								if (button.dataset.originalHtml) {
+									button.innerHTML = button.dataset.originalHtml;
+								}
+							});
+						}, 3000);
+					}
+				}, true);
+			})();
+		</script>
+
+		{% include "includes/_saas_premium_theme.html.twig" %}
+
 	</body>
 </html>

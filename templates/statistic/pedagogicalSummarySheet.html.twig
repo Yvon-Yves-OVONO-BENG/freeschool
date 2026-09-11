@@ -3,92 +3,133 @@
 {% block title %}{% trans %}Pedagogical summary sheet{% endtrans %}{% endblock %}
 
 {% block subTitle %}
-    {% trans %}PEDAGOGICAL SUMMARY SHEET{% endtrans %}
+	{% trans %}PEDAGOGICAL SUMMARY SHEET{% endtrans %}
 {% endblock %}
+
 {% block infoMessage %}
-    {% include "includes/_info_message.html.twig" %}
+	{% include "includes/_info_message.html.twig" %}
 {% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-statistics-suite-premium.css') }}">
+{% endblock %}
+
 {% block body %}
-
-<!-- App-Content -->
-	<div class="hor-content main-content">
+	<div class="hor-content main-content fs-stat-page">
 		<div class="container">
+			<div class="fs-stat-menu-safe-space" aria-hidden="true"></div>
 
-        <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary">
-                        {% trans %}Printing of the pedagogical summary sheet{% endtrans %}
-                    </h4>
-                </div>
-                <div class="page-rightheader">
-                    <div class="btn-list">
-                        <a href="{{ path('student_displayStudent') }}" class="btn btn-outline-primary">
-                            <i class="fa fa-list"></i>
-                            {% trans %}Display registered students{% endtrans %}
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <!--End Page header-->
-            <div class="card border-primary">
-                <div class="card-body ">
-                    <form action="{{ path('print_fiche_synthese_pedagogique') }}" method="post" target="_blank">
-                        <div class="row">
-                            <div class="col-md-1">
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <select name="subject" id="subject" class="form-control select2-show-search" data-placeholder="Choose a subject" required>
-                                        <option label="Choose a subject">Choose a subject</option>
-                                        <option value="0">{% trans %}All Subjects{% endtrans %}</option>
-                                        {% for subject in subjects %}
-                                            <option value="{{ subject.id }}">{{ subject.subject }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    {# <select name="term" id="term" class="form-control select2 custom-select" data-placeholder="Choose a period" required> #}
-                                        <select name="period" id="period" class="form-control select2-show-search" data-placeholder="Choose a period" required>
-                                            <option label="Choose a period">{% trans %}Choose a period{% endtrans %}</option>
-                                            <optgroup label="Evaluations">
-                                                {% for sequence in sequences %}
-                                                    <option value="s{{ sequence.id }}">{% trans %}Evaluation{% endtrans %} {{ sequence.sequence }}</option>
-                                                {% endfor %}
-                                            </optgroup>
-                                            <optgroup label="Trimestres">
-                                                {% for term in terms %}
-                                                    {% if term.term != annualTerm %}
-                                                        <option value="t{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
-                                                    {% endif %}
-                                                {% endfor %}
-                                            </optgroup>
-                                                {% for term in terms %}
-                                                    {% if term.term == annualTerm %}
-                                                        <option value="a{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
-                                                    {% endif %}
-                                                {% endfor %}
-                                        </select>
-                                </div>
-                            </div>
-                            <div class="col-md-1">
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printSlipPerSubject">
-                                        <i class="fa fa-print"></i>
-                                        {% trans %}Print{% endtrans %}</button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
+			<section class="fs-stat-hero">
+				<div class="fs-stat-hero__content">
+					<div>
+						<span class="fs-stat-eyebrow">
+							<i class="fa fa-graduation-cap"></i>
+							{% trans %}Pedagogical synthesis{% endtrans %}
+						</span>
 
-        </div>
-    </div>
+						<h1 class="fs-stat-title">{% trans %}Printing of the pedagogical summary sheet{% endtrans %}</h1>
+
+						<p class="fs-stat-subtitle">
+							{% trans %}Print the pedagogical summary sheet by subject and period.{% endtrans %}
+						</p>
+					</div>
+
+					<div class="fs-stat-hero__actions">
+						<a href="{{ path('student_displayStudent') }}" class="fs-stat-btn fs-stat-btn--light">
+							<i class="fa fa-list"></i>
+							<span>{% trans %}Display registered students{% endtrans %}</span>
+						</a>
+						<div class="fs-stat-hero-stat">
+							<span class="fs-stat-hero-stat__icon">
+								<i class="fe fe-printer"></i>
+							</span>
+							<span class="fs-stat-hero-stat__label">{% trans %}Output{% endtrans %}</span>
+							<strong class="fs-stat-hero-stat__value">{% trans %}PDF{% endtrans %}</strong>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<div class="fs-stat-grid fs-stat-grid--single">
+				
+<section class="fs-stat-card">
+	<div class="fs-stat-card__header">
+		<div>
+			<span class="fs-stat-chip">
+				<i class="fa fa-graduation-cap"></i>
+				{% trans %}Printing workspace{% endtrans %}
+			</span>
+			<h2 class="fs-stat-card__title">{% trans %}Printing of the pedagogical summary sheet{% endtrans %}</h2>
+			<p class="fs-stat-card__subtitle">{% trans %}Choose a subject and a period before printing the pedagogical synthesis.{% endtrans %}</p>
+		</div>
+		<span class="fs-stat-card__icon">
+			<i class="fa fa-graduation-cap"></i>
+		</span>
+	</div>
+	<div class="fs-stat-card__body">
+		<form action="{{ path('print_fiche_synthese_pedagogique') }}" method="post" target="_blank" class="fs-stat-form needs-validation" novalidate data-no-spinner="1">
+			<div class="fs-floating-field fs-required-field">
+	<select name="subject" id="subject_summary" class="form-control select2-show-search fs-floating-control" data-placeholder="" required>
+		<option value="" label=""></option>
+		<option value="0">{% trans %}All Subjects{% endtrans %}</option>
+		{% for subject in subjects %}
+			<option value="{{ subject.id }}">{{ subject.subject }}</option>
+		{% endfor %}
+	</select>
+	<label class="fs-floating-label" for="subject_summary">
+		<i class="fe fe-book"></i>
+		{% trans %}Subject{% endtrans %}
+	</label>
+	<div class="invalid-feedback">{% trans %}Please choose a subject !{% endtrans %}</div>
 </div>
+<div class="fs-floating-field fs-required-field">
+	<select name="period" id="period_summary" class="form-control select2-show-search fs-floating-control" data-placeholder="" required>
+		<option value="" label=""></option>
+		<optgroup label="{% trans %}Evaluations{% endtrans %}">
+			{% for sequence in sequences %}
+				<option value="s{{ sequence.id }}">{% trans %}Evaluation{% endtrans %} {{ sequence.sequence }}</option>
+			{% endfor %}
+		</optgroup>
+		<optgroup label="{% trans %}Trimestres{% endtrans %}">
+			{% for term in terms %}
+				{% if term.term != annualTerm %}
+					<option value="t{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
+				{% endif %}
+			{% endfor %}
+		</optgroup>
+		{% for term in terms %}
+			{% if term.term == annualTerm %}
+				<option value="a{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
+			{% endif %}
+		{% endfor %}
+	</select>
+	<label class="fs-floating-label" for="period_summary">
+		<i class="fe fe-calendar"></i>
+		{% trans %}Period{% endtrans %}
+	</label>
+	<div class="invalid-feedback">{% trans %}Please choose a period !{% endtrans %}</div>
+</div>
+			<div class="fs-stat-form__actions">
+				<button class="fs-stat-btn fs-stat-btn--primary fs-stat-submit-btn" type="submit" name="printSlipPerSubject">
+					<i class="fa fa-print fs-stat-submit-icon"></i>
+					<span>{% trans %}Print{% endtrans %}</span>
+				</button>
+			</div>
+		</form>
+		<div class="fs-stat-note">
+	<i class="fe fe-info"></i>
+	<span>{% trans %}The registered students list link from the old header has been preserved as a premium hero action.{% endtrans %}</span>
+</div>
+	</div>
+</section>
 
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-statistics-suite-premium.js') }}"></script>
 {% endblock %}

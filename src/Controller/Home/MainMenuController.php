@@ -25,57 +25,13 @@ class MainMenuController extends AbstractController
     #[Route('/home-mainMenu', name: 'home_mainMenu')]
     public function mainMenu(Request $request): Response
     {
-        #je récupère ma session
-        $mySession = $request->getSession();
-
-        #je récupère l'école de l'année
-        $school = $mySession->get('school');
-        
-        if($request->request->has('schoolYear') && $request->request->has('subSystem'))
-        {
-            #je récupère ma session
-            $mySession = $request->getSession();
-
-            #je récupère l'année scolaire choisi
-            $schoolYear = $this->schoolYearRepository->find($request->request->get('schoolYear'));
-
-            #je récupère le sous système choisi
-            $subSystem = $this->subSystemRepository->find($request->request->get('subSystem'));
-            // dd($subSystem);
-            #je récupère l'école de l'année
-            $school = $this->schoolRepository->findOneBySchoolYear($schoolYear);
-
-            #je récupère le verrou de l'année
-            $verrou = $this->verrouRepository->findOneBySchoolYear($schoolYear);
-
-            #je set ma sassion
-            $mySession->set('school', $school);
-            $school = $mySession->get('school');
-            
-            $mySession->set('verrou', $verrou);
-            $mySession->set('subSystem', $subSystem);
-            $mySession->set('schoolYear', $schoolYear);
-
-            $mySession->set('ajout',null);
-            $mySession->set('suppression', null);
-            $mySession->set('miseAjour', null);
-            $mySession->set('saisiNotes', null);
-            
+        // L'ancien menu de choix du type utilisateur est supprimé.
+        // Toute connexion passe désormais par l'écran unique : sous-système, année, personnel, mot de passe.
+        if ($this->getUser()) {
+            return $this->redirectToRoute('home_dashboard');
         }
 
-        #mon rendu twig
-        return $this->render('home/mainMenu.html.twig', [
-            'home' => true,
-            'school' => $school,
-            'teacherDuty' => ConstantsClass::TEACHER_DUTY,
-            'supervisorDuty' => ConstantsClass::SUPERVISOR_DUTY,
-            'censorDuty' => ConstantsClass::CENSOR_DUTY,
-            'councellorDuty' => ConstantsClass::COUNSELLOR_DUTY,
-            'treasurerDuty' => ConstantsClass::TREASURER_DUTY,
-            'headmasterDuty' => ConstantsClass::HEADMASTER_DUTY,
-            'secretaryDuty' => ConstantsClass::SECRETARY_DUTY,
-            'apDuty' => ConstantsClass::AP_DUTY
-        ]);
+        return $this->redirectToRoute('home_chooseSchoolYear');
     }
 
 }

@@ -1,110 +1,188 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    {% trans %}Edit unranked coefficients{% endtrans %}
+	{% trans %}Edit unranked coefficients{% endtrans %}
 {% endblock %}
 
 {% block subTitle %}
-    {% trans %}UPDATING LIMIT COEFFICIENT/MARK{% endtrans %}
+	{% trans %}UPDATING LIMIT COEFFICIENT/MARK{% endtrans %}
 {% endblock %}
+
 {% block infoMessage %}
-    {% include "includes/_info_message.html.twig" %}
+	{% include "includes/_info_message.html.twig" %}
 {% endblock %}
 
 {% block currentUser %}
-    {{teacher.fullName }}
+	{{ teacher.fullName }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-edit-unranked-coefficient-premium.css') }}">
 {% endblock %}
 
 {% block body %}
-<!-- App-Content -->
-	<div class="hor-content main-content">
+	<div class="hor-content main-content fs-edit-unranked-page">
 		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary"></h4>
-                </div>
-                <div class="page-rightheader">
-                    <div class="btn-list">
-                        
-                    </div>
-                </div>
-            </div>
-            <div class="card border-primary">
-                <div class="card-header">
-                    <div class="col-md-7">
-                        <span class="page-title mb-0 text-primary">
-                            {% trans %}Updating coefficients/marks limit allowing to be ranked or unranked {% endtrans %}
-                        </span>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="{{ path('report_defineUnrankedCoefficient') }}" class="btn btn-outline-primary btn-medium w-100 br-7">{% trans %}Show limit coefficients{% endtrans %}</a>
-                    </div>
-                    <div class="col-md-2">
-                        <a href="{{ path('report_report') }}" class="btn btn-outline-primary btn-medium w-100 br-7">{% trans %}Reports{% endtrans %}</a>
-                    </div>
-                </div>
-                <div class="card-body ">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <table border="1" class="table table-striped text-left">
-                                <form action="{{ path('report_editUnrankedCoefficient') }}" method="post">
-                                    <input type="hidden" name="level" value="{{ level }}">
-                                    <input type="hidden" name="id" value="{{ id }}">
-                                    <div class="row">
-                                        <div class="col-md-2">{% trans %}Level{% endtrans %}</div>
-                                        <div class="col-md-2">{% trans %}Limit coefficient/mark{% endtrans %}</div>
-                                        <div class="col-md-2">{% trans %}Section concerned{% endtrans %}</div>
-                                        <div class="col-md-2">{% trans %}Apply on{% endtrans %}</div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <label class="form-control form-control-sm">
-                                                    {{ levelName }}
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <input class="form-control form-control-sm"  type="number" name="coefficient" id="coefficient" min="1" step="0.5" value="{{ coefficient }}">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <select class="form-control select2 custom-select" name="forMark" id="forMark">
-                                                    <option value="0" {% if selectedUnrankedCoefficient.forMark == false %}selected{% endif %}>{% trans %}Coefficient{% endtrans %}</option>
-                                                    <option value="1" {% if selectedUnrankedCoefficient.forMark == true %}selected{% endif %}>{% trans %}Mark{% endtrans %}</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <select class="form-control select2 custom-select" name="application" id="application">
-                                                    <option value="0" {% if selectedUnrankedCoefficient.forFirstGroup == false %}selected{% endif %}>{% trans %}All subjects{% endtrans %}</option>
-                                                    <option value="1" {% if selectedUnrankedCoefficient.forFirstGroup == true %}selected{% endif %}>{% trans %}Vocational subjects{% endtrans %}</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-1">
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="unrankedCoefficientUpdated">
-                                                    <i class="fa fa-save"></i>
-                                                    {% trans %}Save changes{% endtrans %}</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-                        
+			<div class="fs-edit-unranked-menu-safe-space" aria-hidden="true"></div>
+
+			<section class="fs-edit-unranked-hero">
+				<div class="fs-edit-unranked-hero__content">
+					<div>
+						<span class="fs-edit-unranked-eyebrow">
+							<i class="fe fe-sliders"></i>
+							{% trans %}Report configuration{% endtrans %}
+						</span>
+
+						<h1 class="fs-edit-unranked-title">
+							{% trans %}UPDATING LIMIT COEFFICIENT/MARK{% endtrans %}
+						</h1>
+
+						<p class="fs-edit-unranked-subtitle">
+							{% trans %}Update the selected coefficient or mark limit used to decide whether students are ranked or unranked in report calculations.{% endtrans %}
+						</p>
+					</div>
+
+					<div class="fs-edit-unranked-hero__actions">
+						<a href="{{ path('report_defineUnrankedCoefficient') }}" class="fs-edit-unranked-btn fs-edit-unranked-btn--light">
+							<i class="fe fe-list"></i>
+							<span>{% trans %}Show limit coefficients{% endtrans %}</span>
+						</a>
+
+						<a href="{{ path('report_report') }}" class="fs-edit-unranked-btn fs-edit-unranked-btn--light">
+							<i class="fe fe-file-text"></i>
+							<span>{% trans %}Reports{% endtrans %}</span>
+						</a>
+					</div>
+				</div>
+			</section>
+
+			<section class="fs-edit-unranked-grid">
+				<div class="fs-edit-unranked-stat-card">
+					<span class="fs-edit-unranked-stat-card__icon">
+						<i class="fe fe-layers"></i>
+					</span>
+					<span class="fs-edit-unranked-stat-card__label">{% trans %}Level{% endtrans %}</span>
+					<strong class="fs-edit-unranked-stat-card__value">{{ levelName }}</strong>
+				</div>
+
+				<div class="fs-edit-unranked-stat-card fs-edit-unranked-stat-card--soft">
+					<span class="fs-edit-unranked-stat-card__icon">
+						<i class="fe fe-target"></i>
+					</span>
+					<span class="fs-edit-unranked-stat-card__label">{% trans %}Current limit{% endtrans %}</span>
+					<strong class="fs-edit-unranked-stat-card__value">{{ coefficient }}</strong>
+				</div>
+
+				<div class="fs-edit-unranked-stat-card fs-edit-unranked-stat-card--violet">
+					<span class="fs-edit-unranked-stat-card__icon">
+						<i class="fe fe-user-check"></i>
+					</span>
+					<span class="fs-edit-unranked-stat-card__label">{% trans %}Current user{% endtrans %}</span>
+					<strong class="fs-edit-unranked-stat-card__value fs-edit-unranked-stat-card__value--small">{{ teacher.fullName }}</strong>
+				</div>
+			</section>
+
+			<section class="fs-edit-unranked-card">
+				<div class="fs-edit-unranked-card__header">
+					<div>
+						<span class="fs-edit-unranked-chip">
+							<i class="fe fe-edit-3"></i>
+							{% trans %}Edit mode{% endtrans %}
+						</span>
+
+						<h2 class="fs-edit-unranked-card-title">
+							{% trans %}Updating coefficients/marks limit allowing to be ranked or unranked{% endtrans %}
+						</h2>
+					</div>
+
+					<div class="fs-edit-unranked-soft-note">
+						<i class="fe fe-info"></i>
+						<span>{% trans %}Review the limit and application scope before saving.{% endtrans %}</span>
+					</div>
+				</div>
+
+				<div class="fs-edit-unranked-card__body">
+					<form action="{{ path('report_editUnrankedCoefficient') }}" method="post" class="fs-edit-unranked-form needs-validation" novalidate>
+						<input type="hidden" name="level" value="{{ level }}">
+						<input type="hidden" name="id" value="{{ id }}">
+
+						<div class="fs-edit-unranked-form-grid">
+							<div class="fs-floating-field fs-has-value">
+								<input class="form-control fs-floating-control" type="text" value="{{ levelName }}" readonly>
+								<label class="fs-floating-label">
+									<i class="fe fe-layers"></i>
+									{% trans %}Level{% endtrans %}
+								</label>
+							</div>
+
+							<div class="fs-floating-field fs-required-field">
+								<input class="form-control fs-floating-control" type="number" name="coefficient" id="coefficient" min="1" step="0.5" value="{{ coefficient }}" placeholder=" " required>
+								<label class="fs-floating-label" for="coefficient">
+									<i class="fe fe-target"></i>
+									{% trans %}Limit coefficient/mark{% endtrans %}
+								</label>
+								<div class="invalid-feedback">
+									{% trans %}Please enter a valid coefficient or mark limit.{% endtrans %}
+								</div>
+							</div>
+
+							<div class="fs-floating-field fs-has-value">
+								<select class="form-control select2 custom-select fs-floating-control" name="forMark" id="forMark">
+									<option value="0" {% if selectedUnrankedCoefficient.forMark == false %}selected{% endif %}>{% trans %}Coefficient{% endtrans %}</option>
+									<option value="1" {% if selectedUnrankedCoefficient.forMark == true %}selected{% endif %}>{% trans %}Mark{% endtrans %}</option>
+								</select>
+								<label class="fs-floating-label" for="forMark">
+									<i class="fe fe-bar-chart-2"></i>
+									{% trans %}Section concerned{% endtrans %}
+								</label>
+							</div>
+
+							<div class="fs-floating-field fs-has-value">
+								<select class="form-control select2 custom-select fs-floating-control" name="application" id="application">
+									<option value="0" {% if selectedUnrankedCoefficient.forFirstGroup == false %}selected{% endif %}>{% trans %}All subjects{% endtrans %}</option>
+									<option value="1" {% if selectedUnrankedCoefficient.forFirstGroup == true %}selected{% endif %}>{% trans %}Vocational subjects{% endtrans %}</option>
+								</select>
+								<label class="fs-floating-label" for="application">
+									<i class="fe fe-check-square"></i>
+									{% trans %}Apply on{% endtrans %}
+								</label>
+							</div>
+						</div>
+
+						<div class="fs-edit-unranked-preview">
+							<div class="fs-edit-unranked-preview__icon">
+								<i class="fe fe-shield"></i>
+							</div>
+
+							<div>
+								<strong>{% trans %}Configuration summary{% endtrans %}</strong>
+								<p>
+									{% trans %}The selected level will use this value as the ranking limit according to the chosen section and application scope.{% endtrans %}
+								</p>
+							</div>
+						</div>
+
+						<div class="fs-edit-unranked-form-actions">
+							<a href="{{ path('report_defineUnrankedCoefficient') }}" class="fs-edit-unranked-btn fs-edit-unranked-btn--ghost">
+								<i class="fe fe-arrow-left"></i>
+								<span>{% trans %}Back{% endtrans %}</span>
+							</a>
+
+							<button class="fs-edit-unranked-btn fs-edit-unranked-btn--primary fs-edit-unranked-submit-btn" type="submit" name="unrankedCoefficientUpdated" value="1">
+								<span class="fs-edit-unranked-submit-spinner" aria-hidden="true"></span>
+								<i class="fe fe-save fs-edit-unranked-submit-icon"></i>
+								<span>{% trans %}Save changes{% endtrans %}</span>
+							</button>
+						</div>
+					</form>
+				</div>
+			</section>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-edit-unranked-coefficient-premium.js') }}"></script>
 {% endblock %}

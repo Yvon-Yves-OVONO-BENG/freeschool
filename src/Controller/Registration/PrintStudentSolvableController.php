@@ -11,11 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/registration")]
 class PrintStudentSolvableController extends AbstractController
 {
@@ -49,9 +45,15 @@ class PrintStudentSolvableController extends AbstractController
 
         if($slugClassroom != null)
         {
-            $classroom = $this->classroomRepository->findOneBySlug([
-                'slug' => $slugClassroom
+            $classroom = $this->classroomRepository->findOneBy([
+                'slug' => $slugClassroom,
+                'schoolYear' => $schoolYear
             ]);
+
+            if (!$classroom) 
+            {
+                return $this->redirectToRoute('page_error');
+            }
         }else 
         {
             $classrooms = $this->classroomRepository->findForSelect($schoolYear, $subSystem);

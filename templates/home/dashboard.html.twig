@@ -2,64 +2,1370 @@
 
 {% block title %}{% trans %}Dashboard{% endtrans %}{% endblock %}
 
+{% block subTitle %}
+    {% if dashboardType == 'admin' %}
+        {% trans %}Administrator dashboard{% endtrans %}
+    {% else %}
+        {% trans %}Teacher dashboard{% endtrans %}
+    {% endif %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .fs-dashboard-shell { padding-bottom: 2rem; }
+        .fs-dashboard-hero {
+            border: 0;
+            border-radius: 24px;
+            padding: 1.6rem;
+            color: #fff;
+            background: linear-gradient(135deg, #0f172a 0%, #1d4ed8 54%, #06b6d4 100%);
+            box-shadow: 0 24px 60px rgba(15, 23, 42, .16);
+        }
+        .fs-dashboard-hero h2, .fs-dashboard-hero h3, .fs-dashboard-hero p { color: #fff; }
+        .fs-dashboard-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 1rem; }
+        .fs-stat-card, .fs-panel {
+            border: 0;
+            border-radius: 22px;
+            box-shadow: 0 12px 35px rgba(15, 23, 42, .08);
+            background: #fff;
+        }
+        .fs-stat-card { padding: 1.1rem 1.2rem; min-height: 100%; }
+        .fs-stat-icon {
+            width: 54px; height: 54px; border-radius: 16px; display: inline-flex; align-items: center; justify-content: center;
+            font-size: 1.3rem; margin-bottom: .75rem;
+        }
+        .fs-stat-label { color: #64748b; font-size: .9rem; font-weight: 700; }
+        .fs-stat-value { font-size: 1.7rem; font-weight: 900; color: #0f172a; }
+        .fs-panel { padding: 1.25rem; }
+        .fs-panel-title { font-size: 1.05rem; font-weight: 800; color: #0f172a; margin-bottom: 1rem; }
+        .fs-quick-actions a { margin: 0 .55rem .55rem 0; }
+        .fs-mini-kpi { display: flex; justify-content: space-between; align-items: center; padding: .9rem 1rem; border-radius: 16px; background: #f8fafc; margin-bottom: .8rem; }
+        .fs-mini-kpi strong { font-size: 1.05rem; color: #0f172a; }
+        .fs-table-clean th { font-weight: 800; font-size: .82rem; color: #475569; border-top: 0 !important; }
+        .fs-table-clean td { vertical-align: middle; }
+        .fs-list-pill { display: inline-flex; align-items: center; gap: .45rem; border-radius: 999px; background: #eef2ff; color: #1d4ed8; padding: .45rem .8rem; font-weight: 700; margin: 0 .4rem .5rem 0; }
+        .fs-warning-banner {
+            border: 0; border-radius: 18px; background: linear-gradient(135deg, #fff7ed, #fffbeb); color: #9a3412;
+            box-shadow: 0 12px 30px rgba(245, 158, 11, .12);
+        }
+        @media (max-width: 991px) {
+            .fs-dashboard-grid { grid-template-columns: repeat(1, 1fr); }
+        }
+    
+        /* Header dashboard compact : boutons en haut à droite */
+        .fs-dashboard-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 1rem !important;
+        }
+
+        .fs-school-subtitle {
+            margin-top: .25rem;
+            font-size: .85rem;
+            font-weight: 800;
+            color: #64748b;
+        }
+
+        .fs-top-actions {
+            display: flex;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            gap: .45rem;
+        }
+
+        .fs-top-actions .btn {
+            border-radius: 10px;
+            font-weight: 800;
+            box-shadow: 0 8px 18px rgba(15, 23, 42, .08);
+        }
+
+        /* Réduit l'espace vertical global */
+        .fs-dashboard-shell {
+            padding-bottom: 1rem !important;
+        }
+
+        .page-header {
+            padding-top: .5rem !important;
+            padding-bottom: .5rem !important;
+        }
+
+        @media (max-width: 991px) {
+            .fs-dashboard-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .fs-top-actions {
+                justify-content: flex-start;
+            }
+        }
+
+        /* MOBILE : supprimer le grand espace sous le header */
+        @media (max-width: 767px) {
+            .hor-content.main-content.fs-dashboard-shell,
+            .hor-content.main-content,
+            .main-content {
+                padding-top: 0 !important;
+                margin-top: 0 !important;
+            }
+
+            .fs-dashboard-shell {
+                padding-top: 0 !important;
+                padding-bottom: 1rem !important;
+            }
+
+            .fs-dashboard-shell .container {
+                padding-top: 0 !important;
+                margin-top: 0 !important;
+            }
+
+            .page-header,
+            .fs-dashboard-header {
+                margin-top: 0 !important;
+                padding-top: 8px !important;
+                padding-bottom: 8px !important;
+                margin-bottom: 10px !important;
+            }
+
+            .page-title {
+                margin-top: 0 !important;
+                margin-bottom: 6px !important;
+                font-size: 20px !important;
+                line-height: 1.15 !important;
+            }
+
+            .fs-school-subtitle {
+                margin-top: 0 !important;
+                margin-bottom: 10px !important;
+                font-size: 13px !important;
+                line-height: 1.2 !important;
+            }
+
+            .fs-top-actions {
+                margin-top: 0 !important;
+                gap: 6px !important;
+            }
+
+            .fs-top-actions .btn {
+                padding: 7px 10px !important;
+                font-size: 12px !important;
+            }
+        }
+
+        .fs-evaluation-board {
+            border: 0;
+            border-radius: 22px;
+            padding: 1.15rem;
+            background: #fff;
+            box-shadow: 0 12px 35px rgba(15, 23, 42, .08);
+        }
+
+        .fs-evaluation-done {
+            background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 55%);
+        }
+
+        .fs-evaluation-waiting {
+            background: linear-gradient(135deg, #fff7ed 0%, #ffffff 55%);
+        }
+
+        .fs-evaluation-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .fs-evaluation-head h5 {
+            margin: 0;
+            color: #0f172a;
+            font-weight: 900;
+            font-size: 1.05rem;
+        }
+
+        .fs-evaluation-head p {
+            margin: .25rem 0 0;
+            color: #64748b;
+            font-size: .8rem;
+            font-weight: 700;
+        }
+
+        .fs-evaluation-head span {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            color: #0f172a;
+            font-weight: 900;
+            box-shadow: 0 8px 20px rgba(15, 23, 42, .08);
+        }
+
+        .fs-evaluation-table thead th {
+            border-top: 0 !important;
+            color: #64748b;
+            font-size: .75rem;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .fs-evaluation-table td {
+            vertical-align: middle;
+            font-size: .85rem;
+            font-weight: 700;
+        }
+
+        .fs-class-pill {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 999px;
+            padding: .28rem .6rem;
+            background: #eef2ff;
+            color: #1d4ed8;
+            font-size: .75rem;
+            font-weight: 900;
+        }
+
+        @media (max-width: 767px) {
+            .fs-evaluation-board {
+                padding: .9rem;
+            }
+
+            .fs-evaluation-head {
+                flex-direction: column;
+                gap: .6rem;
+            }
+
+            .fs-evaluation-table {
+                min-width: 520px;
+            }
+        }
+
+        .fs-stat-done {
+            background: linear-gradient(135deg, #fff 0%, #fffbeb 100%);
+        }
+
+        .fs-stat-pending {
+            background: linear-gradient(135deg, #fff 0%, #fff1f2 100%);
+        }
+
+        .fs-eval-followup {
+            border: 0;
+            border-radius: 22px;
+            padding: 1.25rem;
+            background: #fff;
+            box-shadow: 0 12px 35px rgba(15, 23, 42, .08);
+        }
+
+        .fs-eval-followup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .fs-eval-followup-header h4 {
+            margin: 0;
+            font-size: 1.15rem;
+            font-weight: 900;
+            color: #0f172a;
+        }
+
+        .fs-eval-followup-header p {
+            margin: .25rem 0 0;
+            font-size: .85rem;
+            font-weight: 700;
+            color: #64748b;
+        }
+
+        .fs-eval-box {
+            border-radius: 18px;
+            padding: 1rem;
+            min-height: 100%;
+        }
+
+        .fs-eval-box-done {
+            background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%);
+        }
+
+        .fs-eval-box-pending {
+            background: linear-gradient(135deg, #fff7ed 0%, #ffffff 100%);
+        }
+
+        .fs-eval-box-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: .8rem;
+            margin-bottom: .8rem;
+            font-size: .88rem;
+            font-weight: 900;
+            color: #0f172a;
+        }
+
+        .fs-eval-box-title strong {
+            min-width: 32px;
+            height: 32px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            box-shadow: 0 6px 14px rgba(15, 23, 42, .08);
+        }
+
+        .fs-eval-table th {
+            border-top: 0 !important;
+            font-size: .72rem;
+            font-weight: 900;
+            color: #64748b;
+            text-transform: uppercase;
+        }
+
+        .fs-eval-table td {
+            vertical-align: middle;
+            font-size: .82rem;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .fs-class-badge {
+            display: inline-flex;
+            border-radius: 999px;
+            padding: .28rem .55rem;
+            background: #eef2ff;
+            color: #1d4ed8;
+            font-size: .72rem;
+            font-weight: 900;
+            white-space: nowrap;
+        }
+
+        .fs-eval-note {
+            margin-top: .85rem;
+            font-size: .75rem;
+            font-weight: 800;
+            color: #64748b;
+        }
+
+        .fs-quick-actions .btn {
+            color: #fff !important;
+            border: 0 !important;
+            font-weight: 800;
+            border-radius: 10px;
+            margin: 0 .45rem .45rem 0;
+        }
+
+        .fs-quick-actions .btn-warning {
+            color: #111827 !important;
+        }
+
+        @media (max-width: 767px) {
+            .fs-eval-followup {
+                padding: 1rem;
+            }
+
+            .fs-eval-followup-header {
+                flex-direction: column;
+            }
+
+            .fs-eval-followup-header .btn {
+                width: 100%;
+            }
+        }
+
+        .fs-stat-done {
+            background: linear-gradient(135deg, #ffffff 0%, #fffbeb 100%);
+        }
+
+        .fs-stat-pending {
+            background: linear-gradient(135deg, #ffffff 0%, #fff1f2 100%);
+        }
+
+        .fs-term-card {
+            border: 0;
+            border-radius: 22px;
+            padding: 1.1rem;
+            background: #fff;
+            box-shadow: 0 12px 35px rgba(15, 23, 42, .08);
+        }
+
+        .fs-term-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: .9rem;
+        }
+
+        .fs-term-label {
+            display: block;
+            font-size: .72rem;
+            font-weight: 900;
+            color: #64748b;
+            text-transform: uppercase;
+        }
+
+        .fs-term-card h5 {
+            margin: .15rem 0 0;
+            font-size: 1.05rem;
+            font-weight: 900;
+            color: #0f172a;
+        }
+
+        .fs-term-percent {
+            min-width: 46px;
+            height: 46px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #eef2ff;
+            color: #1d4ed8;
+            font-weight: 900;
+        }
+
+        .fs-term-progress {
+            height: 9px;
+            border-radius: 999px;
+            overflow: hidden;
+            background: #e5e7eb;
+            margin-bottom: 1rem;
+        }
+
+        .fs-term-progress div {
+            height: 100%;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #22c55e, #3b82f6);
+        }
+
+        .fs-term-values {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: .75rem;
+        }
+
+        .fs-term-value {
+            border-radius: 16px;
+            padding: .8rem;
+            background: #f8fafc;
+        }
+
+        .fs-term-value span {
+            display: block;
+            font-size: .75rem;
+            font-weight: 800;
+            color: #64748b;
+        }
+
+        .fs-term-value strong {
+            display: block;
+            margin-top: .2rem;
+            font-size: 1.45rem;
+            font-weight: 900;
+            color: #0f172a;
+        }
+
+        .fs-term-value.done {
+            background: #ecfdf5;
+        }
+
+        .fs-term-value.pending {
+            background: #fff1f2;
+        }
+
+        .fs-term-total {
+            margin-top: .85rem;
+            font-size: .8rem;
+            font-weight: 800;
+            color: #64748b;
+        }
+
+        .fs-eval-followup {
+            border: 0;
+            border-radius: 22px;
+            padding: 1.25rem;
+            background: #fff;
+            box-shadow: 0 12px 35px rgba(15, 23, 42, .08);
+        }
+
+        .fs-eval-followup-header {
+            margin-bottom: 1rem;
+        }
+
+        .fs-eval-followup-header h4 {
+            margin: 0;
+            font-size: 1.15rem;
+            font-weight: 900;
+            color: #0f172a;
+        }
+
+        .fs-eval-followup-header p {
+            margin: .25rem 0 0;
+            font-size: .85rem;
+            font-weight: 700;
+            color: #64748b;
+        }
+
+        .fs-term-section {
+            border-top: 1px solid #eef2f7;
+            padding-top: 1rem;
+            margin-top: 1rem;
+        }
+
+        .fs-term-section:first-of-type {
+            border-top: 0;
+            padding-top: 0;
+            margin-top: 0;
+        }
+
+        .fs-term-section-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: .85rem;
+        }
+
+        .fs-term-section-title h5 {
+            margin: 0;
+            font-size: .95rem;
+            font-weight: 900;
+            color: #0f172a;
+        }
+
+        .fs-term-section-title span {
+            font-size: .75rem;
+            font-weight: 900;
+            color: #64748b;
+        }
+
+        .fs-eval-box {
+            border-radius: 18px;
+            padding: 1rem;
+            min-height: 100%;
+        }
+
+        .fs-eval-box-done {
+            background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%);
+        }
+
+        .fs-eval-box-pending {
+            background: linear-gradient(135deg, #fff7ed 0%, #ffffff 100%);
+        }
+
+        .fs-eval-box-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: .8rem;
+            margin-bottom: .8rem;
+            font-size: .82rem;
+            font-weight: 900;
+            color: #0f172a;
+        }
+
+        .fs-eval-box-title strong {
+            min-width: 30px;
+            height: 30px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            box-shadow: 0 6px 14px rgba(15, 23, 42, .08);
+        }
+
+        .fs-eval-table th {
+            border-top: 0 !important;
+            font-size: .72rem;
+            font-weight: 900;
+            color: #64748b;
+            text-transform: uppercase;
+        }
+
+        .fs-eval-table td {
+            vertical-align: middle;
+            font-size: .82rem;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .fs-class-badge {
+            display: inline-flex;
+            border-radius: 999px;
+            padding: .28rem .55rem;
+            background: #eef2ff;
+            color: #1d4ed8;
+            font-size: .72rem;
+            font-weight: 900;
+            white-space: nowrap;
+        }
+
+        .fs-quick-actions .btn {
+            color: #fff !important;
+            border: 0 !important;
+            font-weight: 800;
+            border-radius: 10px;
+            margin: 0 .45rem .45rem 0;
+        }
+
+        @media (max-width: 767px) {
+            .fs-term-values {
+                grid-template-columns: 1fr;
+            }
+
+            .fs-term-section-title {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .fs-eval-followup {
+                padding: 1rem;
+            }
+        }
+
+
+        /* =========================================================
+           CARTES STATISTIQUES DASHBOARD - STYLE COMME L'IMAGE
+           ========================================================= */
+        .fs-dashboard-stat-row {
+            --bs-gutter-x: 1.5rem;
+            --bs-gutter-y: 1.1rem;
+            margin-bottom: .6rem;
+        }
+
+        .fs-dashboard-stat-row > [class*="col-"] {
+            margin-bottom: 0 !important;
+        }
+
+        .fs-stat-card {
+            position: relative;
+            min-height: 164px;
+            height: 100%;
+            padding: 18px 20px 20px !important;
+            border-radius: 20px !important;
+            background: #ffffff !important;
+            border: 1px solid rgba(226, 232, 240, .55) !important;
+            box-shadow: 0 18px 45px rgba(15, 23, 42, .075) !important;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            overflow: hidden;
+            transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+        }
+
+        .fs-stat-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(37, 99, 235, .20) !important;
+            box-shadow: 0 24px 60px rgba(15, 23, 42, .11) !important;
+        }
+
+        .fs-stat-icon {
+            width: 54px !important;
+            height: 54px !important;
+            min-width: 54px !important;
+            border-radius: 16px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 1.35rem !important;
+            margin: 0 0 14px 0 !important;
+            line-height: 1 !important;
+        }
+
+        .fs-stat-icon i {
+            line-height: 1 !important;
+        }
+
+        .fs-stat-label {
+            display: block;
+            width: 100%;
+            margin: 0 0 4px 0 !important;
+            color: #475569 !important;
+            font-size: .92rem !important;
+            font-weight: 800 !important;
+            line-height: 1.2 !important;
+            letter-spacing: -.01em;
+        }
+
+        .fs-stat-value {
+            display: block;
+            margin: 0 !important;
+            color: #020617 !important;
+            font-size: 1.85rem !important;
+            font-weight: 950 !important;
+            line-height: 1.05 !important;
+            letter-spacing: -.04em;
+        }
+
+        @media (min-width: 1200px) {
+            .fs-dashboard-stat-row .col-xl-4 {
+                flex: 0 0 auto;
+                width: 33.333333%;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            .fs-dashboard-stat-row {
+                --bs-gutter-x: .9rem;
+                --bs-gutter-y: .9rem;
+            }
+
+            .fs-stat-card {
+                min-height: 142px;
+                padding: 16px 18px !important;
+                border-radius: 18px !important;
+            }
+
+            .fs-stat-icon {
+                width: 50px !important;
+                height: 50px !important;
+                min-width: 50px !important;
+                margin-bottom: 12px !important;
+            }
+
+            .fs-stat-label {
+                font-size: .88rem !important;
+            }
+
+            .fs-stat-value {
+                font-size: 1.65rem !important;
+            }
+        }
+
+
+        
+
+    </style>
+    
+    <style>
+        /* KPI compact : icône + label + valeur sur une seule ligne */
+        .fs-stat-card {
+            min-height: auto !important;
+            padding: 1rem 1.15rem !important;
+            display: grid !important;
+            grid-template-columns: 54px minmax(0, 1fr) auto !important;
+            align-items: center !important;
+            column-gap: 14px !important;
+        }
+
+        .fs-stat-icon {
+            width: 54px !important;
+            height: 54px !important;
+            margin-bottom: 0 !important;
+            grid-column: 1 !important;
+            grid-row: 1 !important;
+        }
+
+        .fs-stat-label {
+            grid-column: 2 !important;
+            grid-row: 1 !important;
+            color: #475569 !important;
+            font-size: .9rem !important;
+            font-weight: 800 !important;
+            line-height: 1.15 !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+        }
+
+        .fs-stat-value {
+            grid-column: 3 !important;
+            grid-row: 1 !important;
+            font-size: 1.75rem !important;
+            font-weight: 950 !important;
+            line-height: 1 !important;
+            color: #020617 !important;
+            text-align: right !important;
+            white-space: nowrap !important;
+        }
+
+        @media (max-width: 575.98px) {
+            .fs-stat-card {
+                grid-template-columns: 48px minmax(0, 1fr) auto !important;
+                column-gap: 10px !important;
+                padding: .9rem !important;
+            }
+
+            .fs-stat-icon {
+                width: 48px !important;
+                height: 48px !important;
+                border-radius: 15px !important;
+            }
+
+            .fs-stat-label {
+                font-size: .82rem !important;
+            }
+
+            .fs-stat-value {
+                font-size: 1.45rem !important;
+            }
+        }
+
+            /* Box statistiques cliquables */
+        .fs-stat-card-link {
+            display: grid !important;
+            text-decoration: none !important;
+            color: inherit !important;
+            cursor: pointer;
+            position: relative;
+            transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+        }
+
+        .fs-stat-card-link:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 45px rgba(37, 99, 235, .16) !important;
+        }
+
+        .fs-stat-card-link::after {
+            content: "\2192";
+            position: absolute;
+            right: 18px;
+            bottom: 14px;
+            width: 28px;
+            height: 28px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #eff6ff;
+            color: #2563eb;
+            font-weight: 900;
+            opacity: 0;
+            transform: translateX(-6px);
+            transition: .18s ease;
+        }
+
+        .fs-stat-card-link:hover::after {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    </style>
+    
+    
+    <style>
+        /* =========================================================
+           FIX DESKTOP - SUPPRIME LE GRAND VIDE SOUS LE MENU FIXE
+           ========================================================= */
+        @media (min-width: 992px) {
+            body.fs4-has-header.fs4-has-menu .hor-content.main-content.fs-dashboard-shell,
+            body.fs4-has-header.fs4-has-menu .fs-dashboard-shell {
+                padding-top: 1rem !important;
+                margin-top: 0 !important;
+            }
+
+            body.fs4-has-header.fs4-has-menu .fs-dashboard-shell > .container,
+            body.fs4-has-header.fs4-has-menu .fs-dashboard-shell .container {
+                padding-top: 0 !important;
+                margin-top: 0 !important;
+            }
+
+            body.fs4-has-header.fs4-has-menu .page-header.fs-dashboard-header,
+            body.fs4-has-header.fs4-has-menu .fs-dashboard-header {
+                margin-top: 0 !important;
+                margin-bottom: 1rem !important;
+                padding-top: 0 !important;
+                padding-bottom: .5rem !important;
+                min-height: auto !important;
+            }
+
+            body.fs4-has-header.fs4-has-menu .page-title {
+                margin-top: 0 !important;
+                margin-bottom: 0 !important;
+                line-height: 1.2 !important;
+            }
+        }
+    </style>
+
+    <style>
+        /* =========================================================
+        FIX POSITION DASHBOARD SOUS LE MENU FIXE
+        ========================================================= */
+        @media (min-width: 992px) {
+            body.fs4-has-header.fs4-has-menu .hor-content.main-content.fs-dashboard-shell,
+            body.fs4-has-header.fs4-has-menu .fs-dashboard-shell {
+                padding-top: 85px !important;
+                margin-top: 0 !important;
+            }
+
+            body.fs4-has-header.fs4-has-menu .fs-dashboard-shell > .container,
+            body.fs4-has-header.fs4-has-menu .fs-dashboard-shell .container {
+                padding-top: 0 !important;
+                margin-top: 0 !important;
+            }
+
+            body.fs4-has-header.fs4-has-menu .page-header.fs-dashboard-header,
+            body.fs4-has-header.fs4-has-menu .fs-dashboard-header {
+                margin-top: 0 !important;
+                padding-top: .5rem !important;
+            }
+        }
+    </style>
+
+{% endblock %}
+
 {% block body %}
+<div class="hor-content main-content fs-dashboard-shell mt-5">
+    <div class="container">
+        <div class="page-header fs-dashboard-header mt-5">
+            <div class="page-leftheader mt-4">
+                <h4 class="page-title mb-0 text-primary">
+                    {% trans %}Dashboard {% endtrans %}
+                </h4>
+                
+            </div>
 
-        <!-- App-Content -->
-        <div class="hor-content main-content">
-            <div class="container">
+            <div class="page-rightheader fs-top-actions mt-4">
+                {% if dashboardType == 'admin' %}
+                    <a class="btn btn-outline-primary" href="{{ path('student_displayStudent', {'headmasterFees': 0, 'id': 0, 'a': 0, 'm': 0, 's': 0}) }}">
+                        <i class="fe fe-users me-1"></i> {% trans %}Students{% endtrans %}
+                    </a>
 
-                <!-- Row -->
-                <div class="row row-sm" style="margin-top: 40px;">
-                    <div class="col-md-12 col-lg-12">
-                        <div class="card border-primary">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                            
-                                        <div class="text-primary">
-                                            <div class="display-1 mb-5 font-weight-bold error-text" style="font-size: 60px; text-align:center;">{% trans %}Welcome{% endtrans %} <br>
-                                            {{app.user.fullName}} 
-                                            </div>
-                                        </div>
-                                        
+                    <a class="btn btn-outline-success" href="{{ path('teacher_displayTeacher', {'displayLaters': 0, 'a': 0, 'm': 0, 's': 0, 'rPwd': 0}) }}">
+                        <i class="fe fe-user-check me-1"></i> {% trans %}Staff{% endtrans %}
+                    </a>
+
+                    <a class="btn btn-outline-warning" href="{{ path('classroom_displayClassroom', {'a': 0, 'm': 0, 's': 0}) }}">
+                        <i class="fe fe-grid me-1"></i> {% trans %}Classs{% endtrans %}
+                    </a>
+
+                    <a class="btn btn-outline-primary" href="{{ path('statistiques_admin_index') }}">
+                        <i class="fe fe-bar-chart-2"></i>
+                        {% trans %}Statistics{% endtrans %}
+                    </a>
+
+                {% elseif teacherStats is not null %}
+
+                    <a class="btn btn-outline-primary" href="{{ path('evaluation_markRecorder', {'slugTeacher': teacherStats.teacher.slug, 'a': 0, 'm': 0, 's': 0, 'deleteAllMarks': 0, 'sequenceSelectionnee': 0, 'lessonSelectionnee': 0}) }}">
+                        <i class="fe fe-mic me-1"></i> {% trans %}Enter Grades{% endtrans %}
+                    </a>
+
+                    <a class="btn btn-outline-success" target="_blank" href="{{ path('print_timetable_teacher', {'slug': teacherStats.teacher.slug}) }}">
+                        <i class="fe fe-printer me-1"></i> {% trans %}Timetable{% endtrans %}
+                    </a>
+
+                    <a class="btn btn-outline-warning" href="{{ path('teacher_editTeacher', {'slug': teacherStats.teacher.slug, 'pe': 1}) }}">
+                        <i class="fe fe-edit me-1"></i> {% trans %}My Profile{% endtrans %}
+                    </a>
+
+                    <a class="btn btn-outline-info" href="{{ path('teacher_dashboard_charts') }}">
+                        <i class="fe fe-bar-chart-2 me-1"></i> {% trans %}Class Statistics{% endtrans %}
+                    </a>
+
+                {% endif %}
+
+                {# <a class="btn btn-outline-info" href="{{ path('school_ai_universal_index') }}">
+                    <i class="fe fe-cpu me-1"></i> {% trans %}AI Assistant{% endtrans %}
+                </a> #}
+            </div>
+        </div>
+
+        {% if emailReminderNeeded and teacherStats is not null %}
+            <div class="alert fs-warning-banner d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4">
+                <div class="me-md-3 mb-3 mb-md-0">
+                
+                    <h5 class="mb-1">
+                        <i class="fe fe-mail me-2"></i>
+                        {% trans %}Email not provided{% endtrans %}
+                    </h5>
+
+                    <div>
+                        {% trans %}Add your email address so you can easily reset your password if you forget it.{% endtrans %}
+                    </div>
+
+                </div>
+
+                <a class="btn btn-warning" href="{{ path('teacher_editTeacher', {'slug': teacherStats.teacher.slug, 'pe': 1}) }}">
+                    <i class="fe fe-edit me-2"></i>
+                    {% trans %}Provide my email{% endtrans %}
+                </a>
+            </div>
+        {% endif %}
+
+        
+
+        {% if dashboardType == 'admin' %}
+            {% set adminStatLinks = [
+                path('student_displayStudent', {'headmasterFees': 0, 'id': 0, 'a': 0, 'm': 0, 's': 0}),
+                path('teacher_displayTeacher', {'displayLaters': 0, 'a': 0, 'm': 0, 's': 0, 'rPwd': 0}),
+                path('classroom_displayClassroom', {'a': 0, 'm': 0, 's': 0}),
+                path('subject_displaySubject', {'a': 0, 'm': 0, 's': 0}),
+                null,
+                null
+            ] %}
+
+                <div class="row fs-dashboard-stat-row">
+                    {% for card in adminStats.cards %}
+                        {% set cardLink = adminStatLinks[loop.index0]|default(null) %}
+
+                        <div class="col-12 col-md-6 col-xl-4 mb-4">
+                            {% if cardLink %}
+                                <a class="fs-stat-card fs-stat-card-link" href="{{ cardLink }}">
+                                    <div class="fs-stat-icon bg-{{ card.variant }}-transparent text-{{ card.variant }}">
+                                        <i class="{{ card.icon }}"></i>
                                     </div>
+                                    <div class="fs-stat-label">{{ card.label }}</div>
+                                    <div class="fs-stat-value">{{ card.value }}</div>
+                                </a>
+                            {% else %}
+                                <div class="fs-stat-card">
+                                    <div class="fs-stat-icon bg-{{ card.variant }}-transparent text-{{ card.variant }}">
+                                        <i class="{{ card.icon }}"></i>
+                                    </div>
+                                    <div class="fs-stat-label">{{ card.label }}</div>
+                                    <div class="fs-stat-value">{{ card.value }}</div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-sm-6 col-md-6">
-                                        <div class="alert alert-info">
-                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true">×</button>
-                                            <strong><i class="fa fa-info-circle me-2" aria-hidden="true"></i> Info Message : {% trans %}Note entry{% endtrans %}</strong>
-                                            <hr class="message-inner-separator">
-                                            <p><strong>{% trans %}If a student has not composed, {% endtrans %}</strong></p>
-                                            <p>{% trans %}If he has justified the absence, enter : {% endtrans %} <strong>0.1</strong>, {% trans %}Else enter{% endtrans %} <strong>0</strong></p>
-                                            
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6 col-md-6">
-                                        <div class="alert alert-info">
-                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true">×</button>
-                                            <strong><i class="fa fa-info-circle me-2" aria-hidden="true"></i> Info Message : Evaluation</strong>
-                                            <hr class="message-inner-separator">
-                                            <p>{% trans %}If a subject is not avaluated as is the case in History-Geography, click on the button "Not assessed"{% endtrans %}
-                                            {% if app.request.locale == 'fr' %}
-                                            <img src="{{asset('build/custom/images/nonEvaluee.jpg')}}" alt="" height="38">
-                                            {% elseif app.request.locale == 'en' %}
-                                            <img src="{{asset('build/custom/images/notAssessed.jpg')}}" alt="" height="38">
-                                            {% endif %}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="row">
+                    <div class="col-xl-6 mb-4">
+                        <div class="fs-panel">
+                            <div class="fs-panel-title">{% trans %}Financial summary{% endtrans %}</div>
+
+                            <div class="fs-mini-kpi">
+                                <span>{% trans %}Revenue{% endtrans %}</span>
+                                <strong>{{ adminStats.finance.revenue|number_format(0, ',', ' ') }} {% trans %}FCFA{% endtrans %}</strong>
+                            </div>
+
+                            <div class="fs-mini-kpi">
+                                <span>{% trans %}Expenses{% endtrans %}</span>
+                                <strong>{{ adminStats.finance.expense|number_format(0, ',', ' ') }} {% trans %}FCFA{% endtrans %}</strong>
+                            </div>
+
+                            <div class="fs-mini-kpi">
+                                <span>{% trans %}Estimated balance{% endtrans %}</span>
+                                <strong>{{ adminStats.finance.balance|number_format(0, ',', ' ') }} {% trans %}FCFA{% endtrans %}</strong>
+                            </div>
+
+                            <div class="mt-3 text-muted small">
+                                {% trans %}Registrations recorded{% endtrans %} :
+                                <strong>{{ adminStats.finance.registrations }}</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-6 mb-4">
+                        <div class="fs-panel">
+                            <div class="fs-panel-title">{% trans %}Academic tracking{% endtrans %}</div>
+
+                            <div class="fs-mini-kpi">
+                                <span>{% trans %}Assessments without grade{% endtrans %}</span>
+                                <strong>{{ adminStats.pedagogy.pendingMarks }}</strong>
+                            </div>
+
+                            <div class="fs-mini-kpi">
+                                <span>{% trans %}Graded assessments{% endtrans %}</span>
+                                <strong>{{ adminStats.pedagogy.completedMarks }}</strong>
+                            </div>
+
+                            <div class="fs-mini-kpi">
+                                <span>{% trans %}Assigned lessons{% endtrans %}</span>
+                                <strong>{{ adminStats.cards[4].value }}</strong>
+                            </div>
+
+                            <div class="mt-3">
+                                <a class="btn btn-outline-primary btn-sm"
+                                href="{{ path('teacher_displayTeacher', {'displayLaters': 1, 'a': 0, 'm': 0, 's': 0, 'rPwd': 0}) }}">
+                                    {% trans %}View pending grades{% endtrans %}
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
-              
-                <!--End Row -->
-                
-            </div>
-        </div>
-    
-    </div>
 
+                <div class="row">
+                    <div class="col-xl-4 mb-4">
+                        <div class="fs-panel h-100">
+                            <div class="fs-panel-title">{% trans %}Latest staff{% endtrans %}</div>
+
+                            <div class="table-responsive">
+                                <table class="table fs-table-clean table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>{% trans %}Name{% endtrans %}</th>
+                                            <th>{% trans %}Role{% endtrans %}</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    {% for teacher in adminStats.recentTeachers %}
+                                        <tr>
+                                            <td>{{ teacher.fullName }}</td>
+                                            <td>{{ teacher.duty ? teacher.duty.duty : '-' }}</td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="2" class="text-muted">
+                                                {% trans %}No data available.{% endtrans %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 mb-4">
+                        <div class="fs-panel h-100">
+                            <div class="fs-panel-title">{% trans %}Latest students{% endtrans %}</div>
+
+                            <div class="table-responsive">
+                                <table class="table fs-table-clean table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>{% trans %}Student{% endtrans %}</th>
+                                            <th>{% trans %}Class{% endtrans %}</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    {% for student in adminStats.recentStudents %}
+                                        <tr>
+                                            <td>{{ student.fullName }}</td>
+                                            <td>{{ student.classroom ? student.classroom.classroom : '-' }}</td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="2" class="text-muted">
+                                                {% trans %}No data available.{% endtrans %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 mb-4">
+                        <div class="fs-panel h-100">
+                            <div class="fs-panel-title">{% trans %}Recent classes{% endtrans %}</div>
+
+                            <div>
+                                {% for classroom in adminStats.recentClassrooms %}
+                                    <span class="fs-list-pill">
+                                        <i class="fe fe-grid"></i>{{ classroom.classroom }}
+                                    </span>
+                                {% else %}
+                                    <div class="text-muted">
+                                        {% trans %}No classes recorded.{% endtrans %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% elseif teacherStats is not null %}
+                {% set evaluationSubmittedTotal = teacherStats.evaluationSubmittedTotal|default(teacherStats.evaluationCount|default(0)) %}
+                {% set evaluationPendingTotal = teacherStats.evaluationPendingTotal|default(teacherStats.pendingMarks|default(0)) %}
+                {% set evaluationTerms = teacherStats.evaluationTerms|default([]) %}
+
+                <div class="row">
+                    <div class="col-sm-6 col-xl-3 mb-4">
+                        <div class="fs-stat-card">
+                            <div class="fs-stat-icon bg-primary-transparent text-primary">
+                                <i class="fe fe-layers"></i>
+                            </div>
+                            <div class="fs-stat-label">{% trans %}Assigned lessons{% endtrans %}</div>
+                            <div class="fs-stat-value">{{ teacherStats.assignedLessons }}</div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-xl-3 mb-4">
+                        <div class="fs-stat-card">
+                            <div class="fs-stat-icon bg-success-transparent text-success">
+                                <i class="fe fe-grid"></i>
+                            </div>
+                            <div class="fs-stat-label">{% trans %}Tracked classes{% endtrans %}</div>
+                            <div class="fs-stat-value">{{ teacherStats.classroomCount }}</div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-xl-3 mb-4">
+                        <div class="fs-stat-card fs-stat-done">
+                            <div class="fs-stat-icon bg-warning-transparent text-warning">
+                                <i class="fe fe-check-circle"></i>
+                            </div>
+                            <div class="fs-stat-label">{% trans %}Submitted assessments{% endtrans %}</div>
+                            <div class="fs-stat-value">{{ teacherStats.evaluationSubmittedTotal }}</div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-xl-3 mb-4">
+                        <div class="fs-stat-card fs-stat-pending">
+                            <div class="fs-stat-icon bg-danger-transparent text-danger">
+                                <i class="fe fe-alert-circle"></i>
+                            </div>
+                            <div class="fs-stat-label">{% trans %}Remaining grades{% endtrans %}</div>
+                            <div class="fs-stat-value">{{ teacherStats.evaluationPendingTotal }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    {% for term in teacherStats.evaluationTerms %}
+                        {% set percent = term.totalCount > 0 ? ((term.doneCount / term.totalCount) * 100)|round : 0 %}
+
+                        <div class="col-md-4 mb-4">
+                            <div class="fs-term-card h-100">
+                                <div class="fs-term-card-header">
+                                    <div>
+                                        <span class="fs-term-label">{% trans %}Term{% endtrans %}</span>
+                                        <h5>{{ term.name }}</h5>
+                                    </div>
+
+                                    <div class="fs-term-percent">
+                                        {{ percent }}%
+                                    </div>
+                                </div>
+
+                                <div class="fs-term-progress">
+                                    <div style="width: {{ percent }}%;"></div>
+                                </div>
+
+                                <div class="fs-term-values">
+                                    <div class="fs-term-value done">
+                                        <span>{% trans %}Submitted assessments{% endtrans %}</span>
+                                        <strong>{{ term.doneCount }}</strong>
+                                    </div>
+
+                                    <div class="fs-term-value pending">
+                                        <span>{% trans %}Remaining grades{% endtrans %}</span>
+                                        <strong>{{ term.pendingCount }}</strong>
+                                    </div>
+                                </div>
+
+                                <div class="fs-term-total">
+                                    {% trans %}Expected total{% endtrans %} :
+                                    <strong>{{ term.totalCount }}</strong>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="row">
+                    <div class="col-xl-12 mb-4">
+                        <div class="fs-eval-followup">
+                            <div class="fs-eval-followup-header">
+                                <h4>{% trans %}Assessment tracking{% endtrans %}</h4>
+                                <p>{% trans %}List of submitted assessments and remaining grades by term.{% endtrans %}</p>
+                            </div>
+
+                            {% for term in teacherStats.evaluationTerms %}
+                                <div class="fs-term-section">
+                                    <div class="fs-term-section-title">
+                                        <h5>{{ term.name }}</h5>
+                                        <span>
+                                            {{ term.doneCount }} {% trans %}submitted{% endtrans %} /
+                                            {{ term.pendingCount }} {% trans %}remaining{% endtrans %}
+                                        </span>
+                                    </div>
+
+                                    <div class="row g-3">
+                                        <div class="col-lg-6">
+                                            <div class="fs-eval-box fs-eval-box-done">
+                                                <div class="fs-eval-box-title">
+                                                    <span>
+                                                        <i class="fe fe-check-circle me-1"></i>
+                                                        {% trans %}Submitted assessments{% endtrans %}
+                                                    </span>
+                                                    <strong>{{ term.doneCount }}</strong>
+                                                </div>
+
+                                                <div class="table-responsive">
+                                                    <table class="table table-sm fs-eval-table mb-0">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>{% trans %}Assessment{% endtrans %}</th>
+                                                                <th>{% trans %}Class{% endtrans %}</th>
+                                                                <th>{% trans %}Subject{% endtrans %}</th>
+                                                            </tr>
+                                                        </thead>
+
+                                                        <tbody>
+                                                            {% for item in term.done %}
+                                                                <tr>
+                                                                    <td>{{ item.sequence }}</td>
+                                                                    <td>
+                                                                        <span class="fs-class-badge">{{ item.classroom }}</span>
+                                                                    </td>
+                                                                    <td>{{ item.subject }}</td>
+                                                                </tr>
+                                                            {% else %}
+                                                                <tr>
+                                                                    <td colspan="3" class="text-muted text-center py-3">
+                                                                        {% trans %}No submitted assessments.{% endtrans %}
+                                                                    </td>
+                                                                </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-6">
+                                            <div class="fs-eval-box fs-eval-box-pending">
+                                                <div class="fs-eval-box-title">
+                                                    <span>
+                                                        <i class="fe fe-clock me-1"></i>
+                                                        {% trans %}Pending assessments{% endtrans %}
+                                                    </span>
+                                                    <strong>{{ term.pendingCount }}</strong>
+                                                </div>
+
+                                                <div class="table-responsive">
+                                                    <table class="table table-sm fs-eval-table mb-0">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>{% trans %}Assessment{% endtrans %}</th>
+                                                                <th>{% trans %}Class{% endtrans %}</th>
+                                                                <th>{% trans %}Subject{% endtrans %}</th>
+                                                            </tr>
+                                                        </thead>
+
+                                                        <tbody>
+                                                            {% for item in term.pending %}
+                                                                <tr>
+                                                                    <td>{{ item.sequence }}</td>
+                                                                    <td>
+                                                                        <span class="fs-class-badge">{{ item.classroom }}</span>
+                                                                    </td>
+                                                                    <td>{{ item.subject }}</td>
+                                                                </tr>
+                                                            {% else %}
+                                                                <tr>
+                                                                    <td colspan="3" class="text-muted text-center py-3">
+                                                                        {% trans %}No pending assessments.{% endtrans %}
+                                                                    </td>
+                                                                </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+            {% endif %}
+    </div>
+</div>
 {% endblock %}

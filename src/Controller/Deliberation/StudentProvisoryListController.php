@@ -12,23 +12,14 @@ use App\Service\ClassroomService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
-/**
- * @Route("/deliberation")
- */
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
+#[Route('/deliberation')]
 class StudentProvisoryListController extends AbstractController
 {
     public function __construct(protected ClassroomRepository $classroomRepository, protected SchoolYearRepository $schoolYearRepository, protected NextYearRepository $nextYearRepository,  protected ClassroomService $classroomService, protected SchoolRepository $schoolRepository)
-    {
-    }
+    {}
 
-    /**
-     * @Route("/studentProvisoryList", name="delibeartion_studentProvisoryList")
-     */
+    #[Route('/studentProvisoryList', name: 'delibeartion_studentProvisoryList')]
     public function studentProvisoryList(Request $request)
     {
         $mySession = $request->getSession();

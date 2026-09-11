@@ -14,11 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/classroom")]
 class DeleteClassroomController extends AbstractController
 {
@@ -42,7 +38,13 @@ class DeleteClassroomController extends AbstractController
         $mySession->set('miseAjour', null);
         $mySession->set('saisiNotes', null);
 
-        if(!$mySession)
+        if($mySession)
+        {
+            $schoolYear = $mySession->get('schoolYear');
+            $subSystem = $mySession->get('subSystem');
+
+        }
+        else 
         {
             return $this->redirectToRoute("app_logout");
         }
@@ -55,37 +57,46 @@ class DeleteClassroomController extends AbstractController
             return $this->redirectToRoute('home_mainMenu');
         }
 
-        $classroom = $this->classroomRepository->findOneBySlug([
-            'slug' => $slug
+        $classroom = $this->classroomRepository->findOneBy([
+            'slug' => $slug,
+            'schoolYear' => $schoolYear,
         ]);
 
-        $unrankedCoefficient = $this->unrankedCoefficientRepository->findOneByClassroom($classroom);
+        if ($classroom) 
+        {
+            $unrankedCoefficient = $this->unrankedCoefficientRepository->findOneByClassroom($classroom);
 
-        if(count($classroom->getStudents()))
-        {
-            $this->addFlash('info', $this->translator->trans('Impossible to delete a classroom with students'));
-            $mySession->set('suppression', 1);
-            return $this->redirectToRoute('classroom_displayClassroom', [ 's' => 1]);
-        }
-        elseif(count($classroom->getLessons()))
-        {
-            $this->addFlash('info', $this->translator->trans('Impossible to delete a classroom where lessons are scheduled'));
-            $mySession->set('suppression', 1);
-            return $this->redirectToRoute('classroom_displayClassroom',[ 's' => 1]);
-        }
+            if(count($classroom->getStudents()))
+            {
+                $this->addFlash('info', $this->translator->trans('Impossible to delete a classroom with students'));
+                $mySession->set('suppression', 1);
+                return $this->redirectToRoute('classroom_displayClassroom', [ 's' => 1]);
+            }
+            elseif(count($classroom->getLessons()))
+            {
+                $this->addFlash('info', $this->translator->trans('Impossible to delete a classroom where lessons are scheduled'));
+                $mySession->set('suppression', 1);
+                return $this->redirectToRoute('classroom_displayClassroom',[ 's' => 1]);
+            }
+            else 
+            {
+                $this->em->remove($unrankedCoefficient);
+                $this->em->remove($classroom);
+                $this->em->flush();
+
+                $this->addFlash('info', $this->translator->trans('Classroom deleted with success !'));
+                $mySession->set('suppression', 1);
+
+                return $this->redirectToRoute('classroom_displayClassroom', [ 's' => 1]);
+            }
+        } 
         else 
         {
-            $this->em->remove($unrankedCoefficient);
-            $this->em->remove($classroom);
-            $this->em->flush();
-
-            $this->addFlash('info', $this->translator->trans('Classroom deleted with success !'));
-            $mySession->set('suppression', 1);
-
-            return $this->redirectToRoute('classroom_displayClassroom', [ 's' => 1]);
+            return $this->redirectToRoute('page_error');
         }
-
         
+        
+
     }
 
 }

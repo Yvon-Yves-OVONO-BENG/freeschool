@@ -15,11 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/super/admin")]
 class UserController extends AbstractController
 {
@@ -86,36 +82,44 @@ class UserController extends AbstractController
                 'slug' => $slug,
                 'schoolYear' => $schoolYear,
             ], []);
-
-        $users = $this->userRepository->findBy([
+        
+        if ($teacher) 
+        {
+            $users = $this->userRepository->findBy([
                 'teacher' => $teacher
             ],[]);
 
-        $user = $users[0];
-        $fullName = $user->getFullName();
-        
+            $user = $users[0];
+            $fullName = $user->getFullName();
             
-        // $user = $this->userRepository->find($idU);
-        
-        $form = $this->createForm(ChangePasswordType::class, $user);
-        $form->handleRequest($request);
-        
-        if($form->isSubmitted() && $form->isValid())
+                
+            // $user = $this->userRepository->find($idU);
+            
+            $form = $this->createForm(ChangePasswordType::class, $user);
+            $form->handleRequest($request);
+            
+            if($form->isSubmitted() && $form->isValid())
+            {
+                $user->setPassword($this->encoder->hashPassword($user, $user->getPassword()));
+
+                $this->em->flush();
+
+                $this->addFlash('info', $this->translator->trans('Password updated with success !'));
+                
+                return $this->redirectToRoute('teacher_displayTeacher', ['displayLaters' => 0, 'm' => 1]);
+            }
+            
+            return $this->render('user/changePassword.html.twig', [
+                'userForm' => $form->createView(),
+                'fullName' => $fullName,
+                'id' => $slug,
+                'school' => $school,
+            ]);
+        } 
+        else 
         {
-            $user->setPassword($this->encoder->hashPassword($user, $user->getPassword()));
-
-            $this->em->flush();
-
-            $this->addFlash('info', $this->translator->trans('Password updated with success !'));
-            
-            return $this->redirectToRoute('teacher_displayTeacher', ['displayLaters' => 0, 'm' => 1]);
+            return $this->redirectToRoute('page_error');
         }
         
-        return $this->render('user/changePassword.html.twig', [
-            'userForm' => $form->createView(),
-            'fullName' => $fullName,
-            'id' => $slug,
-            'school' => $school,
-        ]);
     }
 }

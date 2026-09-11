@@ -21,6 +21,9 @@ class Category
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Subject::class)]
     private Collection $subjects;
 
+    #[ORM\ManyToOne(inversedBy: 'categories')]
+    private ?Education $education = null;
+
     public function __construct()
     {
         $this->subjects = new ArrayCollection();
@@ -69,6 +72,18 @@ class Category
                 $subject->setCategory(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getEducation(): ?Education
+    {
+        return $this->education;
+    }
+
+    public function setEducation(?Education $education): self
+    {
+        $this->education = $education;
 
         return $this;
     }

@@ -3,166 +3,259 @@
 {% block title %}{% trans %}Student ID card management{% endtrans %}{% endblock %}
 
 {% block subTitle %}
-    {% trans %}STUDENT ID CARD MANAGMENT{% endtrans %}
+	{% trans %}STUDENT ID CARD MANAGMENT{% endtrans %}
 {% endblock %}
 
 {% block stylesheets %}
-	<style>
-		th,
-		tfoot {
-			font-size: 15px !important;
-			text-align: center !important;
-			font-weight: bold !important;
-			background-color: #F1F1F1 !important;
-		}
-
-		tr:hover {
-			background-color: rgba(62, 128, 235, 0.2) !important;
-			color: #3e80eb !important;
-		}
-	</style>
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-student-id-card-premium.css') }}">
 {% endblock %}
 
 {% block body %}
-<!-- App-Content -->
-	<div class="hor-content main-content">
+	<div class="hor-content main-content fs-card-page">
 		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary"><i class="fa fa-address-card-o"></i> {% trans %}Student's card management{% endtrans %}</h4>
-                </div>
-                <div class="page-rightheader">
-                    <div class="btn-list">
-                        
-                    </div>
-                </div>
-            </div>
-            <!--End Page header-->
+			<div class="fs-card-menu-safe-space" aria-hidden="true"></div>
 
+			<section class="fs-card-hero">
+				<div class="fs-card-hero__content">
+					<div>
+						<span class="fs-card-eyebrow">
+							<i class="fa fa-address-card-o"></i>
+							{% trans %}Student identity workspace{% endtrans %}
+						</span>
 
-            <!-- Row -->
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="expanel expanel-primary border-primary">
-                        <div class="expanel-heading">
-                            <h3 class="expanel-title">{% trans %}Choose a class{% endtrans %}</h3>
-                        </div>
-                        <div class="expanel-body">
-                            <div class="row">
-                                <div class="col-md-9">
-                                    <form action="{{ path('report_studentCard') }}" method="post">
-                                        <div class="row">
-                                            <div class="col-md-8">
-                                                <div class="form-group">
-                                                    <select class="form-control select2-show-search" data-placeholder="Choose a classroom" name="classroom" id="classroom" required style="border: 1px solid #0f0;">
-                                                        <option label="Choose a classroom">
-                                                            {% trans %}Choose a classroom{% endtrans %}
-                                                        </option>
-                                                        {% if subSystem == 'Francophone / French Speaker' %}
-                                                    {% if school.education.education == 'Général' %}
-                                                        {% include "includes/_selectClassrooms.html.twig" %}
-                                                        {% else %}
-                                                            {% include "includes/_selectClassroomsTech.html.twig" %}
-                                                    {% endif %}
-                                                    {% else %}
-                                                        {% include "includes/_selectClassroomsEn.html.twig" %}
-                                                {% endif %}
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="displayStudents">
-                                                        <i class="fa fa-eye"></i>
-                                                        {% trans %}Display{% endtrans %}
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="col-md-3">
-                                    {% if students|length > 0 %}
-                                        <form action="{{ path('report_printStudentCard', {'slugClassroom': selectedClassroom.slug}) }}" method="post" target="_blank">
-                                            <div class="form-group">
-                                                <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="printStudentCard">
-                                                    <i class="fa fa-print"></i>
-                                                    {% trans %}Print all students ID cards{% endtrans %}
-                                                </button>
-                                                
-                                            </div>
-                                        </form>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-			<!--End Row -->
-            {% if methodIsPost %}
-                <div class="card border-primary">
-                    <div class="card-header">
-                        {% if selectedClassroom.id is not null %}
-                            
-                                <div class="col-md-6 text-left">
-                                    <button type="button" class="btn btn-primary mt-1 mb-1 me-3">
-                                        <span>{% trans %}Classroom{% endtrans %}</span>
-                                        <span class="badge bg-white text-dark rounded-pill">{{ selectedClassroom.classroom }}</span>
-                                    </button>
-                                </div>
-                                <div class="col-md-6 text-right">  
-                                    <button type="button" class="btn btn-primary mt-1 mb-1 me-3">
-                                        <span>{% trans %}Number of students{% endtrans %}</span>
-                                        <span class="badge bg-white text-dark rounded-pill">{{ students|length }}</span>
-                                    </button>
-                                </div>
-                            
-                        {% endif %}
-                    </div>
+						<h1 class="fs-card-title">
+							{% trans %}Student's card management{% endtrans %}
+						</h1>
 
-                    <div class="card-body ">
-                        <div class="table-responsive">
-                            
-                            <table border="1" class="table table-bordered text-nowrap" id="example2" width="100%" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th class="border-bottom-0 indigo-gradient">{% trans %}N°{% endtrans %}</th>
-                                        <th class="border-bottom-0 indigo-gradient">{% trans %}Full name{% endtrans %}</th>
-                                        <th class="border-bottom-0 green-gradient">{% trans %}Students ID cards{% endtrans %}</th>
-                                    </tr>
-                                </thead>
-                                <tfoot>
-                                    <tr>
-                                        <th class="border-bottom-0 indigo-gradient">{% trans %}N°{% endtrans %}</th>
-                                        <th class="border-bottom-0 indigo-gradient">{% trans %}Full name{% endtrans %}</th>
-                                        <th class="border-bottom-0 green-gradient">{% trans %}Students ID cards{% endtrans %}</th>
-                                    </tr>
-                                </tfoot>
-                                <tbody>
-                                {% set i = 1 %}
-                                    {% for student in students %}
-                                        <tr class="table-row">
-                                            <td style="vertical-align:middle; text-align: center !important;">{{ i }}</td>
-                                            <td style="vertical-align:middle;">{{ student.fullName }}</td>
-                                            <td style="text-align: center; vertical-align:middle;"> 
-                                                <a href="{{ path('report_printStudentCard', {'slugClassroom': selectedClassroom.slug, 'slugStudent': student.slug}) }}" target="_blank" class="btn btn-outline-primary" data-bs-toggle="tooltip" title="Dowload ID card of {{ student.fullName }}">
-                                                    <i class="fa fa-download me-2"></i>{% trans %}Download{% endtrans %}
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        {% set i = i + 1 %}
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-        </div>
-    </div>
-</div>
+						<p class="fs-card-subtitle">
+							{% trans %}Display, download and print student ID cards by classroom through a refined premium workspace.{% endtrans %}
+						</p>
+					</div>
+
+					<div class="fs-card-hero__actions">
+						{% if methodIsPost and selectedClassroom.id is not null %}
+							<div class="fs-card-stat">
+								<span class="fs-card-stat__icon">
+									<i class="fe fe-home"></i>
+								</span>
+								<span class="fs-card-stat__label">{% trans %}Classroom{% endtrans %}</span>
+								<strong class="fs-card-stat__value">{{ selectedClassroom.classroom }}</strong>
+							</div>
+
+							<div class="fs-card-stat">
+								<span class="fs-card-stat__icon">
+									<i class="fe fe-users"></i>
+								</span>
+								<span class="fs-card-stat__label">{% trans %}Students{% endtrans %}</span>
+								<strong class="fs-card-stat__value">{{ students|length }}</strong>
+							</div>
+						{% endif %}
+
+						{% if students|length > 0 %}
+							<form action="{{ path('report_printStudentCard', {'slugClassroom': selectedClassroom.slug}) }}" method="post" target="_blank" class="fs-card-hero-form" data-no-spinner="1">
+								<button type="submit" class="fs-card-btn fs-card-btn--light" name="printStudentCard">
+									<i class="fa fa-print"></i>
+									<span>{% trans %}Print all students ID cards{% endtrans %}</span>
+								</button>
+							</form>
+						{% endif %}
+					</div>
+				</div>
+			</section>
+
+			<section class="fs-card-filter-card">
+				<div class="fs-card-filter-card__header">
+					<div>
+						<span class="fs-card-chip">
+							<i class="fe fe-filter"></i>
+							{% trans %}Classroom selection{% endtrans %}
+						</span>
+
+						<h2>{% trans %}Choose a class{% endtrans %}</h2>
+					</div>
+				</div>
+
+				<form action="{{ path('report_studentCard') }}" method="post" class="fs-card-form fs-card-filter-form needs-validation" novalidate>
+					<div class="fs-floating-field fs-required-field">
+						<select class="form-control select2-show-search fs-floating-control" data-placeholder="" name="classroom" id="classroom" required>
+							<option value="" label=""></option>
+
+							{% if subSystem == 'Francophone / French Speaker' %}
+								{% if school.education.education == 'Général' %}
+									{% include "includes/_selectClassrooms.html.twig" %}
+								{% else %}
+									{% include "includes/_selectClassroomsTech.html.twig" %}
+								{% endif %}
+							{% else %}
+								{% include "includes/_selectClassroomsEn.html.twig" %}
+							{% endif %}
+						</select>
+
+						<label class="fs-floating-label" for="classroom">
+							<i class="fe fe-home"></i>
+							{% trans %}Classroom{% endtrans %}
+						</label>
+
+						<div class="invalid-feedback">
+							{% trans %}Please choose a classroom !{% endtrans %}
+						</div>
+					</div>
+
+					<button class="fs-card-btn fs-card-btn--primary fs-card-submit-btn" type="submit" name="displayStudents">
+						<span class="fs-card-submit-spinner" aria-hidden="true"></span>
+						<i class="fa fa-eye fs-card-submit-icon"></i>
+						<span>{% trans %}Display{% endtrans %}</span>
+					</button>
+				</form>
+			</section>
+
+			{% if methodIsPost %}
+				<section class="fs-card-table-card">
+					<div class="fs-card-table-card__header">
+						<div>
+							<span class="fs-card-chip">
+								<i class="fe fe-grid"></i>
+								{% trans %}Dynamic table{% endtrans %}
+							</span>
+
+							<h2 class="fs-card-table-title">
+								{% trans %}Students ID cards{% endtrans %}
+							</h2>
+						</div>
+
+						<div class="fs-card-table-actions">
+							<div class="fs-card-search">
+								<i class="fe fe-search"></i>
+								<input type="text" id="fsCardSearch" class="fs-card-search-input" placeholder="{% trans %}Search student...{% endtrans %}">
+							</div>
+
+							<button type="button" class="fs-card-btn fs-card-btn--ghost fs-card-print-table">
+								<i class="fe fe-printer"></i>
+								<span>{% trans %}Print table{% endtrans %}</span>
+							</button>
+						</div>
+					</div>
+
+					{% if selectedClassroom.id is not null %}
+						<div class="fs-card-actions-panel">
+							<div class="fs-card-mini-stat">
+								<span class="fs-card-mini-stat__icon">
+									<i class="fe fe-home"></i>
+								</span>
+								<span class="fs-card-mini-stat__label">{% trans %}Classroom{% endtrans %}</span>
+								<strong class="fs-card-mini-stat__value">{{ selectedClassroom.classroom }}</strong>
+							</div>
+
+							<div class="fs-card-mini-stat">
+								<span class="fs-card-mini-stat__icon">
+									<i class="fe fe-users"></i>
+								</span>
+								<span class="fs-card-mini-stat__label">{% trans %}Number of students{% endtrans %}</span>
+								<strong class="fs-card-mini-stat__value">{{ students|length }}</strong>
+							</div>
+
+							{% if students|length > 0 %}
+								<form action="{{ path('report_printStudentCard', {'slugClassroom': selectedClassroom.slug}) }}" method="post" target="_blank" class="fs-card-actions-panel__form" data-no-spinner="1">
+									<button type="submit" class="fs-card-btn fs-card-btn--primary" name="printStudentCard">
+										<i class="fa fa-print"></i>
+										<span>{% trans %}Print all students ID cards{% endtrans %}</span>
+									</button>
+								</form>
+							{% endif %}
+						</div>
+					{% endif %}
+
+					<div class="fs-card-table-wrap">
+						<table class="table fs-card-table fs-card-dynamic-table" id="fsCardTable">
+							<thead>
+								<tr>
+									<th>
+										<button type="button" class="fs-card-sort" data-sort-index="0">
+											<span>{% trans %}N°{% endtrans %}</span>
+											<i class="fe fe-chevron-down"></i>
+										</button>
+									</th>
+									<th>
+										<button type="button" class="fs-card-sort" data-sort-index="1">
+											<span>{% trans %}Full name{% endtrans %}</span>
+											<i class="fe fe-chevron-down"></i>
+										</button>
+									</th>
+									<th class="text-center">{% trans %}Students ID cards{% endtrans %}</th>
+								</tr>
+							</thead>
+
+							<tbody>
+								{% set i = 1 %}
+								{% for student in students %}
+									<tr class="table-row">
+										<td data-label="{% trans %}N°{% endtrans %}">
+											<span class="fs-card-index">{{ i }}</span>
+										</td>
+
+										<td data-label="{% trans %}Full name{% endtrans %}">
+											<div class="fs-card-student-cell">
+												<span class="fs-card-avatar">{{ student.fullName|slice(0, 1)|upper }}</span>
+												<div>
+													<strong>{{ student.fullName }}</strong>
+													<span class="fs-card-status">
+														<i class="fe fe-credit-card"></i>
+														{% trans %}ID card ready{% endtrans %}
+													</span>
+												</div>
+											</div>
+										</td>
+
+										<td class="text-center" data-label="{% trans %}Students ID cards{% endtrans %}">
+											<a href="{{ path('report_printStudentCard', {'slugClassroom': selectedClassroom.slug, 'slugStudent': student.slug}) }}" target="_blank" class="fs-card-action fs-card-action--download" data-bs-toggle="tooltip" title="{% trans %}Dowload ID card of {{ student.fullName }}{% endtrans %}">
+												<i class="fa fa-download"></i>
+												<span>{% trans %}Download{% endtrans %}</span>
+											</a>
+										</td>
+									</tr>
+									{% set i = i + 1 %}
+								{% else %}
+									<tr>
+										<td colspan="3">
+											<div class="fs-card-empty">
+												<i class="fe fe-folder"></i>
+												<strong>{% trans %}No student found{% endtrans %}</strong>
+												<span>{% trans %}Choose another classroom to display student ID cards.{% endtrans %}</span>
+											</div>
+										</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+
+					<div class="fs-card-table-footer">
+						<div class="fs-card-table-footer__left">
+							<span class="fs-card-result-count"></span>
+						</div>
+
+						<div class="fs-card-footer-controls">
+							<label class="fs-card-page-size">
+								<span>{% trans %}Rows{% endtrans %}</span>
+								<select class="fs-card-rows-per-page">
+									<option value="5">5</option>
+									<option value="10" selected>10</option>
+									<option value="25">25</option>
+									<option value="50">50</option>
+								</select>
+							</label>
+
+							<div class="fs-card-pagination" aria-label="{% trans %}Pagination{% endtrans %}"></div>
+						</div>
+					</div>
+				</section>
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-student-id-card-premium.js') }}"></script>
 {% endblock %}

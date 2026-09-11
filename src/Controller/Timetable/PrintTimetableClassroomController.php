@@ -13,11 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/student")]
 class PrintTimetableClassroomController extends AbstractController
 {
@@ -56,26 +52,33 @@ class PrintTimetableClassroomController extends AbstractController
             return $this->redirectToRoute('home_mainMenu');
         }
 
-        $classroom = $this->classroomRepository->findOneBySlug(['slug' => $slug]);
+        $classroom = $this->classroomRepository->findOneBy(['slug' => $slug]);
         
-        $timeTables = $this->timeTableRepository->findBy([
+        if ($classroom) 
+        {
+            $timeTables = $this->timeTableRepository->findBy([
                 'classroom' => $classroom,
                 'schoolYear' => $schoolYear,
             ]);
         
         
-        $school = $this->schoolRepository->findOneBy(['schoolYear' => $schoolYear]);
+            $school = $this->schoolRepository->findOneBy(['schoolYear' => $schoolYear]);
 
-        $pdf = $this->printTimetableClassroomService->print($timeTables, $school, $schoolYear, $classroom);
+            $pdf = $this->printTimetableClassroomService->print($timeTables, $school, $schoolYear, $classroom);
+            
+            if($subSystem->getId() == 1)
+            {
+                return new Response($pdf->Output("Time table of - ".$classroom->getClassroom(),'I'), 200, ['Content-Type' => 'application/pdf']);
+            }
+            else
+            {  
+                return new Response($pdf->Output("Emploi du temps de - ".$classroom->getClassroom(),'I'), 200, ['Content-Type' => 'application/pdf']);
+            }
+        } else {
+            return $this->redirectToRoute('page_error');
+        }
         
-        if($subSystem->getId() == 1)
-        {
-            return new Response($pdf->Output("Time table of - ".$classroom->getClassroom(),'I'), 200, ['Content-Type' => 'application/pdf']);
-        }
-        else
-        {  
-            return new Response($pdf->Output("Emploi du temps de - ".$classroom->getClassroom(),'I'), 200, ['Content-Type' => 'application/pdf']);
-        }
+        
         
     }
 

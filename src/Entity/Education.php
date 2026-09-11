@@ -21,9 +21,13 @@ class Education
     #[ORM\OneToMany(mappedBy: 'education', targetEntity: School::class)]
     private Collection $schools;
 
+    #[ORM\OneToMany(mappedBy: 'education', targetEntity: Category::class)]
+    private Collection $categories;
+
     public function __construct()
     {
         $this->schools = new ArrayCollection();
+        $this->categories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -67,6 +71,36 @@ class Education
             // set the owning side to null (unless already changed)
             if ($school->getEducation() === $this) {
                 $school->setEducation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Category>
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function addCategory(Category $category): self
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories->add($category);
+            $category->setEducation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(Category $category): self
+    {
+        if ($this->categories->removeElement($category)) {
+            // set the owning side to null (unless already changed)
+            if ($category->getEducation() === $this) {
+                $category->setEducation(null);
             }
         }
 

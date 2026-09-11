@@ -113,6 +113,32 @@ class ClassroomRepository extends ServiceEntityRepository
             ->getResult()    
         ;
     }
+
+    /**
+     * Classes autorisees pour l'impression des fiches sport.
+     *
+     * @param int[] $levels
+     * @return Classroom[]
+     */
+    public function findForSportSheets(SchoolYear $schoolYear, SubSystem $subSystem, array $levels): array
+    {
+        return $this->createQueryBuilder('c')
+            ->innerJoin('c.level', 'lv')
+            ->addSelect('lv')
+            ->andWhere('c.schoolYear = :schoolYear')
+            ->andWhere('c.subSystem = :subSystem')
+            ->andWhere('lv.level IN (:levels)')
+            ->setParameters([
+                'schoolYear' => $schoolYear,
+                'subSystem' => $subSystem,
+                'levels' => array_map('strval', $levels),
+            ])
+            ->orderBy('lv.level', 'ASC')
+            ->addOrderBy('c.classroom', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
     
     // Liste des classes à afficher dans un formulaire
     public function findForForm(SchoolYear $schoolYear, SubSystem $subSystem)
@@ -211,6 +237,30 @@ class ClassroomRepository extends ServiceEntityRepository
 
         return $query->execute();
     }
+
+
+    /**
+     * Classes d'un niveau d'examen pour l'export SPIDER.
+     */
+    public function findExamLevelClassrooms(SchoolYear $schoolYear, SubSystem $subSystem, string $levelName): array
+    {
+        return $this->createQueryBuilder('c')
+            ->innerJoin('c.level', 'l')
+            ->addSelect('l')
+            ->andWhere('c.schoolYear = :schoolYear')
+            ->andWhere('c.subSystem = :subSystem')
+            ->andWhere('l.level = :levelName')
+            ->setParameters([
+                'schoolYear' => $schoolYear,
+                'subSystem' => $subSystem,
+                'levelName' => $levelName,
+            ])
+            ->orderBy('c.classroom', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
 
     // /**
     //  * @return Classroom[] Returns an array of Classroom objects

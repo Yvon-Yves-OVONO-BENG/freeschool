@@ -17,11 +17,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/report")]
 class PrintTranscriptSequenceController extends AbstractController
 {
@@ -66,13 +62,19 @@ class PrintTranscriptSequenceController extends AbstractController
             return $this->redirectToRoute('home_mainMenu');
         }
 
-        $student = $this->studentRepository->findOneBySlug([
+        $student = $this->studentRepository->findOneBy([
             'slug' => $slugStudent
         ]);
+
         
         $school = $this->schoolRepository->findOneBy(['schoolYear' => $schoolYear]);
 
         $classroom = $this->classroomRepository->findOneBy(['slug' => $slugClassroom]);
+
+        if (!$student) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
 
         $term = null;
         $sequence = null;
@@ -80,6 +82,10 @@ class PrintTranscriptSequenceController extends AbstractController
         if ($sequenceId && !$slugClassroom) 
         {
             $sequence = $this->sequenceRepository->find($sequenceId);
+            if (!$sequence) 
+            {
+                return $this->redirectToRoute('page_error');
+            }
             $releves = $this->lessonRepository->getEvaluationsByStudentAndSequence($student->getId(), $sequence->getId());
             
             $pdf = $this->printTranscriptService->printTranscriptStudentSequence($subSystem, $schoolYear, $school, $student->getClassroom(), $releves, $student, $term, $sequence);

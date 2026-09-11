@@ -1,115 +1,188 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    {% if slug == 0 %}
-        {% trans %}Save Subject{% endtrans %}
-        {% else %}
-        {% trans %}Edit Subject{% endtrans %}
-    {% endif %}
+	{% if slug == 0 %}
+		{% trans %}Save Subject{% endtrans %}
+	{% else %}
+		{% trans %}Edit Subject{% endtrans %}
+	{% endif %}
 {% endblock %}
+
 {% block subTitle %}
-    {% if slug != 0 %}
-        {% trans %}UPDATING SUBJECT{% endtrans %}
-    {% else %}
-        {% trans %}ADDING NEW SUBJECT{% endtrans %}
-    {% endif %}
+	{% if slug != 0 %}
+		{% trans %}UPDATING SUBJECT{% endtrans %}
+	{% else %}
+		{% trans %}ADDING NEW SUBJECT{% endtrans %}
+	{% endif %}
 {% endblock %}
+
 {% block infoMessage %}
-    {% include "includes/_info_message.html.twig" %}
+	{% include "includes/_info_message.html.twig" %}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-subject-form-premium.css') }}">
 {% endblock %}
 
 {% block body %}
- <!-- App-Content -->
-	<div class="hor-content main-content">
+	<div class="hor-content main-content fs-subject-form-page">
 		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary">
-                        {% if slug != 0 %}
-                            <i class="fa fa-edit me-2"></i>{% trans %}UPDATING SUBJECT{% endtrans %}
-                        {% else %}
-                            <i class="fa fa-plus me-2"></i>{% trans %}ADDING NEW SUBJECT{% endtrans %}
-                        {% endif %}
-                    </h4>
-                </div>
-                <div class="page-rightheader">
-                    <div class="btn-list">
-                        <a href="{{ path('subject_displaySubject') }}" class="btn btn-outline-primary">
-                            <i class="fa fa-list"></i>
-                            {% trans %}Display registered subjects{% endtrans %}
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <!--End Page header-->
-            {% if slug == 0 %}
-                <div class="card border-primary">
-                {% else %}
-                <div class="card border-danger">
-            {% endif %}
-                <div class="card-header">
-                    {# ligne afficher les subjects #}
-                
-                            <div class="col-md-5 text-left">
-                                <button type="button" class="btn btn-primary  mt-1 mb-1 me-3 form-control-sm">
-                                    <span><i class="fa fa-book me-2"></i>{% trans %}Number of registered departments{% endtrans %}</span>
-                                    <span class="badge bg-white text-dark rounded-pill">{{ subjects|length }}</span>
-                                </button>
-                            </div>
-                            <div class="col-md-4 text-right">
-                                
-                            </div>
-                   
-                    {# Fin ligne afficher les subjects #}
-                </div>
-                <div class="card-body ">
-                    <div class="row">
-                        <div class="col-md-12">
-                            {{ form_start(formSubject, {'attr': {'class':'row g-4 needs-validation', 'novalidate':""}}) }}
-                                <div class="row mb-3 mt-3">
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            {{ form_row(formSubject.subject, {'attr': {'class': 'form-control form-control-sm', 'id':'validationCustom01'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            {{ form_row(formSubject.category, {'attr': {'class': 'form-control select2 custom-select', 'id':'validationCustom01'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            {{ form_row(formSubject.department, {'attr': {'class': 'form-control select2-show-search', 'id':'validationCustom01'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label style="color: #fff;">
-                                                {% trans %}Save{% endtrans %}
-                                            </label>
-                                                {% if slug == 0 %}
-                                                    <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="addSubject">
-                                                        <i class="fa fa-save"></i>
-                                                        {% trans %}Save{% endtrans %}
-                                                    </button>
-                                                {% else %}
-                                                    <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="editSubject">
-                                                        <i class="fa fa-save"></i>
-                                                        {% trans %}Save changes{% endtrans %}
-                                                    </button>
-                                                {% endif %}
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                            {{ form_end(formSubject) }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+			<div class="fs-subject-form-menu-safe-space" aria-hidden="true"></div>
+
+			<section class="fs-subject-form-hero">
+				<div class="fs-subject-form-hero__content">
+					<div>
+						<span class="fs-subject-form-eyebrow">
+							{% if slug != 0 %}
+								<i class="fe fe-edit-3"></i>
+								{% trans %}Subject update workspace{% endtrans %}
+							{% else %}
+								<i class="fe fe-plus"></i>
+								{% trans %}Subject creation workspace{% endtrans %}
+							{% endif %}
+						</span>
+
+						<h1 class="fs-subject-form-title">
+							{% if slug != 0 %}
+								{% trans %}UPDATING SUBJECT{% endtrans %}
+							{% else %}
+								{% trans %}ADDING NEW SUBJECT{% endtrans %}
+							{% endif %}
+						</h1>
+
+						<p class="fs-subject-form-subtitle">
+							{% trans %}Create and organize subjects by group and department through a refined premium workspace.{% endtrans %}
+						</p>
+					</div>
+
+					<div class="fs-subject-form-hero__right">
+						<div class="fs-subject-form-stat">
+							<span class="fs-subject-form-stat__icon">
+								<i class="fe fe-book"></i>
+							</span>
+							<span class="fs-subject-form-stat__label">{% trans %}Registered subjects{% endtrans %}</span>
+							<strong class="fs-subject-form-stat__value">{{ subjects|length }}</strong>
+						</div>
+
+						<a href="{{ path('subject_displaySubject') }}" class="fs-subject-form-btn fs-subject-form-btn--hero">
+							<i class="fe fe-list"></i>
+							<span>{% trans %}Display registered subjects{% endtrans %}</span>
+						</a>
+					</div>
+				</div>
+			</section>
+
+			<section class="fs-subject-form-card {% if slug != 0 %}fs-subject-form-card--edit{% else %}fs-subject-form-card--create{% endif %}">
+				<div class="fs-subject-form-card__header">
+					<div>
+						<span class="fs-subject-form-card-badge">
+							{% if slug != 0 %}
+								<i class="fe fe-edit"></i>
+								{% trans %}Edit mode{% endtrans %}
+							{% else %}
+								<i class="fe fe-plus"></i>
+								{% trans %}Creation mode{% endtrans %}
+							{% endif %}
+						</span>
+
+						<h2 class="fs-subject-form-card-title">
+							{% if slug != 0 %}
+								{% trans %}UPDATING SUBJECT{% endtrans %}
+							{% else %}
+								{% trans %}ADDING NEW SUBJECT{% endtrans %}
+							{% endif %}
+						</h2>
+					</div>
+
+					<div class="fs-subject-form-soft-note">
+						<i class="fe fe-info"></i>
+						<span>{% trans %}Fill in subject name, group and department before saving.{% endtrans %}</span>
+					</div>
+				</div>
+
+				<div class="fs-subject-form-card__body">
+					{{ form_start(formSubject, {'attr': {'class': 'fs-subject-form needs-validation', 'novalidate': 'novalidate'}}) }}
+
+						<div class="fs-subject-form-section">
+							<div class="fs-subject-form-section__header">
+								<div class="fs-subject-form-section-title">
+									<span class="fs-subject-form-section-icon">
+										<i class="fe fe-book-open"></i>
+									</span>
+									<div>
+										<h3>{% trans %}Subject information{% endtrans %}</h3>
+										<p>{% trans %}Enter the subject and attach it to a group and department.{% endtrans %}</p>
+									</div>
+								</div>
+							</div>
+
+							<div class="fs-subject-form-grid">
+								<div class="fs-floating-field fs-required-field">
+									{{ form_widget(formSubject.subject, {'attr': {'class': 'form-control form-control-sm fs-floating-control', 'placeholder': ' ', 'required': 'required'}}) }}
+									<label class="fs-floating-label">
+										<i class="fe fe-book-open"></i>
+										{% trans %}Subject{% endtrans %}
+									</label>
+									<div class="fs-field-error">{{ form_errors(formSubject.subject) }}</div>
+								</div>
+
+								<div class="fs-floating-field fs-required-field">
+									{{ form_widget(formSubject.category, {'attr': {'class': 'form-control select2 custom-select fs-floating-control', 'placeholder': ' ', 'required': 'required'}}) }}
+									<label class="fs-floating-label">
+										<i class="fe fe-layers"></i>
+										{% trans %}Group{% endtrans %}
+									</label>
+									<div class="fs-field-error">{{ form_errors(formSubject.category) }}</div>
+								</div>
+
+								<div class="fs-floating-field fs-required-field">
+									{{ form_widget(formSubject.department, {'attr': {'class': 'form-control select2-show-search fs-floating-control', 'placeholder': ' ', 'required': 'required'}}) }}
+									<label class="fs-floating-label">
+										<i class="fe fe-grid"></i>
+										{% trans %}Department{% endtrans %}
+									</label>
+									<div class="fs-field-error">{{ form_errors(formSubject.department) }}</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="fs-subject-submit-zone">
+							<div class="fs-subject-submit-zone__hint">
+								<i class="fe fe-shield"></i>
+								<span>{% trans %}Please review the information before saving.{% endtrans %}</span>
+							</div>
+
+							<div class="fs-subject-submit-zone__actions">
+								<a href="{{ path('subject_displaySubject') }}" class="fs-subject-form-btn fs-subject-form-btn--ghost">
+									<i class="fe fe-arrow-left"></i>
+									<span>{% trans %}Back{% endtrans %}</span>
+								</a>
+
+								{% if slug == 0 %}
+									<button type="submit" class="fs-subject-form-btn fs-subject-form-btn--primary fs-subject-submit-btn" name="addSubject">
+										<span class="fs-subject-submit-spinner" aria-hidden="true"></span>
+										<i class="fe fe-save fs-subject-submit-icon"></i>
+										<span>{% trans %}Save{% endtrans %}</span>
+									</button>
+								{% else %}
+									<button type="submit" class="fs-subject-form-btn fs-subject-form-btn--primary fs-subject-submit-btn" name="editSubject">
+										<span class="fs-subject-submit-spinner" aria-hidden="true"></span>
+										<i class="fe fe-save fs-subject-submit-icon"></i>
+										<span>{% trans %}Save changes{% endtrans %}</span>
+									</button>
+								{% endif %}
+							</div>
+						</div>
+
+					{{ form_end(formSubject) }}
+				</div>
+			</section>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-subject-form-premium.js') }}"></script>
 {% endblock %}

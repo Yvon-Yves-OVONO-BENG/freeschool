@@ -3,64 +3,162 @@
 {% block title %}{% trans %}Absence Report{% endtrans %}{% endblock %}
 
 {% block subTitle %}
-    {% trans %}ABSENCE HOURS MANAGMENT{% endtrans %}
+	{% trans %}ABSENCE HOURS MANAGMENT{% endtrans %}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-absence-report-premium.css') }}">
 {% endblock %}
 
 {% block body %}
-<!-- App-Content -->
-	<div class="hor-content main-content">
+	<div class="hor-content main-content fs-absence-page">
 		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary"></h4>
-                </div>
-                <div class="page-rightheader">
-                    <div class="btn-list">
-                        
-                    </div>
-                </div>
-            </div>
-            <!--End Page header-->
+			<div class="fs-absence-menu-safe-space" aria-hidden="true"></div>
 
-            <div class="card border-primary">
-                <div class="card-header">
-                    <span class="page-title mb-0 text-primary">
-                        <i class="fa fa-pencil me-2"></i>{% trans %}Absence hours printing{% endtrans %}
-                    </span>
-                </div>
-                <div class="card-body pt-5 ">
-                    <form action="{{ path('register_and_list_printAbsenceReport') }}" method="post" target="_blank">
-                        <div class="row">
-                            <div class="col-md-2">
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <select name="teacher" id="teacher" class="form-control select2-show-search" data-placeholder="Choose a supervisor" required>
-                                        <option label="Choose a supervisor"></option>
-                                        <option value="0">{% trans %}All supervisors{% endtrans %}</option>
-                                        {% for teacher in teachers %}
-                                            <option value="{{ teacher.id }}">{{ teacher.fullName }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printAbsenceReport">
-                                        <i class="fa fa-print"></i>
-                                        {% trans %}Print{% endtrans %}</button>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+			<section class="fs-absence-hero">
+				<div class="fs-absence-hero__content">
+					<div>
+						<span class="fs-absence-eyebrow">
+							<i class="fa fa-pencil"></i>
+							{% trans %}Attendance supervision{% endtrans %}
+						</span>
 
+						<h1 class="fs-absence-title">
+							{% trans %}Absence hours printing{% endtrans %}
+						</h1>
+
+						<p class="fs-absence-subtitle">
+							{% trans %}Print absence hour reports by supervisor through a clean, responsive and premium workspace.{% endtrans %}
+						</p>
+					</div>
+
+					<div class="fs-absence-hero__actions">
+						<div class="fs-absence-hero-stat">
+							<span class="fs-absence-hero-stat__icon">
+								<i class="fe fe-users"></i>
+							</span>
+							<span class="fs-absence-hero-stat__label">{% trans %}Supervisors{% endtrans %}</span>
+							<strong class="fs-absence-hero-stat__value">{{ teachers|length }}</strong>
+						</div>
+
+						<div class="fs-absence-hero-stat fs-absence-hero-stat--soft">
+							<span class="fs-absence-hero-stat__icon">
+								<i class="fe fe-printer"></i>
+							</span>
+							<span class="fs-absence-hero-stat__label">{% trans %}Output{% endtrans %}</span>
+							<strong class="fs-absence-hero-stat__value">{% trans %}PDF{% endtrans %}</strong>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="fs-absence-grid">
+				<div class="fs-absence-card">
+					<div class="fs-absence-card__header">
+						<div>
+							<span class="fs-absence-chip">
+								<i class="fe fe-filter"></i>
+								{% trans %}Supervisor selection{% endtrans %}
+							</span>
+
+							<h2>{% trans %}Choose a supervisor{% endtrans %}</h2>
+
+							<p>
+								{% trans %}Select a supervisor or choose all supervisors before printing the absence hours report.{% endtrans %}
+							</p>
+						</div>
+
+						<span class="fs-absence-card__icon">
+							<i class="fa fa-pencil"></i>
+						</span>
+					</div>
+
+					<form action="{{ path('register_and_list_printAbsenceReport') }}" method="post" target="_blank" class="fs-absence-form needs-validation" novalidate data-no-spinner="1">
+						<div class="fs-floating-field fs-required-field">
+							<select name="teacher" id="teacher" class="form-control select2-show-search fs-floating-control" data-placeholder="" required>
+								<option value="" label=""></option>
+								<option value="0">{% trans %}All supervisors{% endtrans %}</option>
+
+								{% for teacher in teachers %}
+									<option value="{{ teacher.id }}">{{ teacher.fullName }}</option>
+								{% endfor %}
+							</select>
+
+							<label class="fs-floating-label" for="teacher">
+								<i class="fe fe-user-check"></i>
+								{% trans %}Supervisor{% endtrans %}
+							</label>
+
+							<div class="invalid-feedback">
+								{% trans %}Please choose a supervisor !{% endtrans %}
+							</div>
+						</div>
+
+						<div class="fs-absence-form__actions">
+							<button class="fs-absence-btn fs-absence-btn--primary fs-absence-submit-btn" type="submit" name="printAbsenceReport">
+								<i class="fa fa-print fs-absence-submit-icon"></i>
+								<span>{% trans %}Print{% endtrans %}</span>
+							</button>
+						</div>
+					</form>
+				</div>
+
+				<aside class="fs-absence-preview-card">
+					<div class="fs-absence-preview-card__visual">
+						<div class="fs-absence-document">
+							<div class="fs-absence-document__top"></div>
+							<div class="fs-absence-document__line fs-absence-document__line--wide"></div>
+							<div class="fs-absence-document__line"></div>
+							<div class="fs-absence-document__line fs-absence-document__line--short"></div>
+
+							<div class="fs-absence-document__table">
+								<span></span>
+								<span></span>
+								<span></span>
+								<span></span>
+								<span></span>
+								<span></span>
+							</div>
+						</div>
+					</div>
+
+					<div class="fs-absence-preview-card__content">
+						<span class="fs-absence-chip fs-absence-chip--soft">
+							<i class="fe fe-shield"></i>
+							{% trans %}Secure printing{% endtrans %}
+						</span>
+
+						<h3>{% trans %}Ready to print{% endtrans %}</h3>
+
+						<p>
+							{% trans %}The form keeps your existing route and opens the generated report in a new tab.{% endtrans %}
+						</p>
+
+						<div class="fs-absence-benefits">
+							<div class="fs-absence-benefit">
+								<i class="fe fe-check-circle"></i>
+								<span>{% trans %}All supervisors option preserved{% endtrans %}</span>
+							</div>
+
+							<div class="fs-absence-benefit">
+								<i class="fe fe-check-circle"></i>
+								<span>{% trans %}Target blank preserved{% endtrans %}</span>
+							</div>
+
+							<div class="fs-absence-benefit">
+								<i class="fe fe-check-circle"></i>
+								<span>{% trans %}No controller change required{% endtrans %}</span>
+							</div>
+						</div>
+					</div>
+				</aside>
+			</section>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-absence-report-premium.js') }}"></script>
 {% endblock %}

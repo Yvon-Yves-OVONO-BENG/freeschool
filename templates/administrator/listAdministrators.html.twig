@@ -1,156 +1,306 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-   {% trans %}List of administrators{% endtrans %}
+	{% trans %}List of administrators{% endtrans %}
 {% endblock %}
 
 {% block stylesheets %}
-	<style>
-		th,
-		tfoot {
-			font-size: 15px !important;
-			text-align: center !important;
-			font-weight: bold !important;
-			background-color: #F1F1F1 !important;
-		}
-
-		tr:hover {
-			background-color: rgba(62, 128, 235, 0.2) !important;
-			color: #3e80eb !important;
-		}
-
-        td {
-			font-size: 12px !important;
-			text-align: center !important;
-		}
-	</style>
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-administrators-premium.css') }}">
 {% endblock %}
 
-
-
 {% block body %}
-<!-- App-Content -->
-<div class="hor-content main-content">
-	<div class="container">
+	{% set canConfigureStudentRights = is_granted('ROLE_PROVISEUR') %}
+	<div class="hor-content main-content fs-admin-page">
+		<div class="container">
+			<div class="fs-admin-menu-safe-space" aria-hidden="true"></div>
 
-		<!--Page header-->
-		<div class="page-header">
-			<div class="page-leftheader">
-				<h4 class="page-title mb-0 text-primary"><i class="si si-people me-2"></i>{% trans %}List of administrators{% endtrans %}</h4>
-			</div>
-			<div class="page-rightheader">
-				<div class="btn-list">
-					<a href="{{ path ('add_administrator') }}" class="btn btn-outline-primary"><i class="fe fe-plus me-2"></i>
-						{% trans %}Add an administrator{% endtrans %}</a>
-					<a href="javascript:void(0);" class="btn btn-outline-primary"><i class="fe fe-printer me-2"></i>
-						{% trans %}Print{% endtrans %}</a>
-					
-				</div>
-			</div>
-		</div>
-		<!--End Page header-->
+			<section class="fs-admin-hero">
+				<div class="fs-admin-hero__content">
+					<div>
+						<span class="fs-admin-eyebrow">
+							<i class="si si-people"></i>
+							{% trans %}Administrators workspace{% endtrans %}
+						</span>
 
-		<!--Row-->
-		<div class="row">
-			<div class="col-xl-12 col-lg-12 col-md-12">
-				<div class="card border-primary">
-					<div class="card-header">
-						<div class="col-xl-8 col-lg-8 col-md-8">
-							<h3 class="card-title">
-								<i class="si si-people me-2"></i>{% trans %}Administrators saved{% endtrans %}
-							</h3>
-						</div>
-						<div class="col-xl-4 col-lg-4 col-md-4 text-right">
-							
-							<button class="btn btn-outline-primary">
-								<span class="badge  bg-primary rounded-pill">{{ administrators|length }}</span>
-								<span>{% trans %}administrators{% endtrans %}</span>
-							</button>
-							
-						</div>
+						<h1 class="fs-admin-title">
+							{% trans %}List of administrators{% endtrans %}
+						</h1>
+
+						<p class="fs-admin-subtitle">
+							{% trans %}View, search, sort and manage registered administrators with a modern premium interface.{% endtrans %}
+						</p>
 					</div>
-					<div class="card-body">
-						<div class="table-responsive">
-							<table class="table table-bordered table-striped card-table table-vcenter text-nowrap" id="datatable">
-								<thead>
-									<tr>
-										<th>{% trans %}N°{% endtrans %}</th>
-										<th>{% trans %}Full name{% endtrans %}</th>
-										<th>{% trans %}Operations{% endtrans %}</th>
-										<th>{% trans %}Enable / Disable{% endtrans %}</th>
-									</tr>
-								</thead>
-								<tfoot>
-									<tr>
-										<th>{% trans %}N°{% endtrans %}</th>
-										<th>{% trans %}Full name{% endtrans %}</th>
-										<th>{% trans %}Operations{% endtrans %}</th>
-										<th>{% trans %}Enable / Disable{% endtrans %}</th>
-									</tr>
-								</tfoot>
-								<tbody>
-									{% set i = 1 %}
-									{% for administrator in administrators %}
-										{# {% if administrator.roles[0] == 'ROLE_ADMIN' %} #}
-											<tr>
-												<td>
-													<h5 class="text-blue"><span class="badge bg-primary">{{ i }}</span></h5>
-												</td>
-												
-												<td>
-													<span class="tag tag-primary mt-2">{{ administrator.fullName }}</span>
-												</td>
 
-												<td>
-													<a href="{{ path ('edit_administrator', {'slug': administrator.slug })}}" class="btn btn-outline-primary"><i class="fa fa-edit me-2"></i>{% trans %}Edit{% endtrans %}</a>
-
-													<a class="btn btn-outline-danger" href="javascript:void(0);" 
-														onclick="swal({
-															'title': 'Danger', 
-															'type': 'error', 
-															'text': 'Do you want to delete administrator ' + ' {{ administrator.fullName }} ?', 
-															'showCancelButton': true, 
-															'confirmButtonText': 'Yes', 
-															'confirmButtonColor': '#f00', 
-															'cancelButtonText': 'No', 
-															'cancelButtonColor': '#186106', 
-															'confirmButtonPath': '{{ path('delete_administrator', {'slug': administrator.slug }) }} '});">
-														<i class="fa fa-trash me-2"></i> {% trans %}Delete{% endtrans %}
-													</a>
-												
-												</td>
-												
-												<td>
-													{% if administrator.roles[0] == 'ROLE_ADMIN' %} 
-														<div class="form-group">
-															<label class="custom-switch">
-																{# {% if administrator.user.etat %}
-																	<span class="custom-switch-description me-2">{% trans %}Bloqué(e){% endtrans %}</span>
-																{% else %}
-																	<span class="custom-switch-description me-2">{% trans %}Débloqué(e){% endtrans %}</span>
-																{% endif %} #}
-																<input type="checkbox" class="custom-switch-input" data-id="{{ administrator.id }}" {% if administrator.bloque %}checked{% endif %} >
-																
-																<span class="custom-switch-indicator custom-switch-indicator-lg"></span>
-															</label>
-														</div>
-													{% endif %}
-												</td>
-											</tr>
-										{# {% endif %} #}
-										
-										{% set i = i + 1 %}
-									{% endfor %}
-									
-								</tbody>
-							</table>
+					<div class="fs-admin-hero__actions">
+						<div class="fs-admin-hero-stat">
+							<span class="fs-admin-hero-stat__icon">
+								<i class="si si-people"></i>
+							</span>
+							<span class="fs-admin-hero-stat__label">{% trans %}Administrators{% endtrans %}</span>
+							<strong class="fs-admin-hero-stat__value">{{ administrators|length }}</strong>
 						</div>
+
+						<a href="{{ path('add_administrator') }}" class="fs-admin-btn fs-admin-btn--success-light">
+							<i class="fe fe-plus"></i>
+							<span>{% trans %}Add an administrator{% endtrans %}</span>
+						</a>
+
+						<a href="javascript:void(0);" class="fs-admin-btn fs-admin-btn--light fs-admin-print-btn">
+							<i class="fe fe-printer"></i>
+							<span>{% trans %}Print{% endtrans %}</span>
+						</a>
 					</div>
 				</div>
-			</div>
+			</section>
+
+			<section class="fs-admin-summary-grid">
+				<div class="fs-admin-summary-card">
+					<span class="fs-admin-summary-card__icon">
+						<i class="si si-people"></i>
+					</span>
+					<span>{% trans %}Administrators saved{% endtrans %}</span>
+					<strong>{{ administrators|length }}</strong>
+				</div>
+
+				<div class="fs-admin-summary-card">
+					<span class="fs-admin-summary-card__icon fs-admin-summary-card__icon--green">
+						<i class="fe fe-user-check"></i>
+					</span>
+					<span>{% trans %}Account management{% endtrans %}</span>
+					<strong>{% trans %}Enabled{% endtrans %}</strong>
+				</div>
+
+				<div class="fs-admin-summary-card">
+					<span class="fs-admin-summary-card__icon fs-admin-summary-card__icon--gold">
+						<i class="fe fe-toggle-right"></i>
+					</span>
+					<span>{% trans %}Enable / Disable{% endtrans %}</span>
+					<strong>{% trans %}Switch{% endtrans %}</strong>
+				</div>
+			</section>
+
+			<section class="fs-admin-table-card">
+				<div class="fs-admin-card__header">
+					<div>
+						<span class="fs-admin-chip">
+							<i class="fe fe-grid"></i>
+							{% trans %}Dynamic table{% endtrans %}
+						</span>
+
+						<h2>{% trans %}Administrators saved{% endtrans %}</h2>
+
+						<p>{% trans %}Search, sort, edit, delete and enable or disable administrators from the same premium table.{% endtrans %}</p>
+					</div>
+
+					<div class="fs-admin-search">
+						<i class="fe fe-search"></i>
+						<input type="text" class="fs-admin-search-input" placeholder="{% trans %}Search administrator...{% endtrans %}">
+					</div>
+				</div>
+
+				<div class="fs-admin-card__body">
+					<div class="fs-admin-table-wrap">
+						<table class="table fs-admin-table fs-admin-dynamic-table" id="fsAdministratorsTable">
+							<thead>
+								<tr>
+									<th><button type="button" class="fs-admin-sort" data-sort-index="0"><span>{% trans %}N°{% endtrans %}</span><i class="fe fe-chevron-down"></i></button></th>
+									<th><button type="button" class="fs-admin-sort" data-sort-index="1"><span>{% trans %}Full name{% endtrans %}</span><i class="fe fe-chevron-down"></i></button></th>
+									<th>{% trans %}Operations{% endtrans %}</th>
+									<th>{% trans %}Enable / Disable{% endtrans %}</th>
+									{% if canConfigureStudentRights %}
+										<th>{% trans %}Student add / edit{% endtrans %}</th>
+									{% endif %}
+								</tr>
+							</thead>
+
+							<tbody>
+								{% set i = 1 %}
+								{% for administrator in administrators %}
+									<tr>
+										<td data-label="{% trans %}N°{% endtrans %}">
+											<span class="fs-admin-rank">{{ i }}</span>
+										</td>
+
+										<td data-label="{% trans %}Full name{% endtrans %}">
+											<div class="fs-admin-user-cell">
+												<span class="fs-admin-user-initial">{{ administrator.fullName|slice(0, 1)|upper }}</span>
+												<div>
+													<strong>{{ administrator.fullName }}</strong>
+													<span>
+														<i class="fe fe-shield"></i>
+														{% trans %}Administrator{% endtrans %}
+													</span>
+												</div>
+											</div>
+										</td>
+
+										<td data-label="{% trans %}Operations{% endtrans %}" class="fs-admin-actions">
+											<div class="fs-admin-action-group">
+												<a href="{{ path('edit_administrator', {'slug': administrator.slug }) }}" class="fs-admin-action-btn fs-admin-action-btn--edit">
+													<i class="fa fa-edit"></i>
+													<span>{% trans %}Edit{% endtrans %}</span>
+												</a>
+
+												<a class="fs-admin-action-btn fs-admin-action-btn--delete" href="javascript:void(0);"
+													onclick="swal({
+														'title': 'Danger',
+														'type': 'error',
+														'text': 'Do you want to delete administrator ' + ' {{ administrator.fullName }} ?',
+														'showCancelButton': true,
+														'confirmButtonText': 'Yes',
+														'confirmButtonColor': '#f00',
+														'cancelButtonText': 'No',
+														'cancelButtonColor': '#186106',
+														'confirmButtonPath': '{{ path('delete_administrator', {'slug': administrator.slug }) }}'});">
+													<i class="fa fa-trash"></i>
+													<span>{% trans %}Delete{% endtrans %}</span>
+												</a>
+											</div>
+										</td>
+
+										<td data-label="{% trans %}Enable / Disable{% endtrans %}">
+											{% if administrator.roles[0] == 'ROLE_ADMIN' %}
+												<div class="fs-admin-switch-line">
+													<span class="fs-admin-state-label {% if administrator.bloque %}is-disabled{% else %}is-enabled{% endif %}" data-admin-switch-label>
+														{% if administrator.bloque %}
+															{% trans %}Disabled{% endtrans %}
+														{% else %}
+															{% trans %}Enabled{% endtrans %}
+														{% endif %}
+													</span>
+
+													<label class="fs-admin-switch">
+														<input type="checkbox" class="custom-switch-input fs-admin-legacy-switch" data-id="{{ administrator.id }}" {% if administrator.bloque %}checked{% endif %}>
+														<span class="fs-admin-slider">
+															<span class="fs-admin-slider__icon fs-admin-slider__icon--off">
+																<i class="fe fe-check"></i>
+															</span>
+															<span class="fs-admin-slider__icon fs-admin-slider__icon--on">
+																<i class="fe fe-x"></i>
+															</span>
+														</span>
+													</label>
+												</div>
+											{% endif %}
+										</td>
+
+										{% if canConfigureStudentRights %}
+											<td data-label="{% trans %}Student add / edit{% endtrans %}">
+												{% if 'ROLE_ADMIN' in administrator.roles %}
+													<div class="fs-admin-switch-line">
+														<span class="fs-admin-state-label {% if administrator.studentManagementBlocked %}is-disabled{% else %}is-enabled{% endif %}" data-student-management-label>
+															{% if administrator.studentManagementBlocked %}
+																{% trans %}Blocked{% endtrans %}
+															{% else %}
+																{% trans %}Allowed{% endtrans %}
+															{% endif %}
+														</span>
+
+														<label class="fs-admin-switch" title="{% trans %}Checked: student addition and modification are blocked{% endtrans %}">
+															<input
+																type="checkbox"
+																class="custom-switch-input fs-student-management-switch"
+																data-url="{{ path('toggle_administrator_student_management', {'id': administrator.id}) }}"
+																data-token="{{ csrf_token('toggle_student_management_' ~ administrator.id) }}"
+																{% if administrator.studentManagementBlocked %}checked{% endif %}>
+															<span class="fs-admin-slider">
+																<span class="fs-admin-slider__icon fs-admin-slider__icon--off"><i class="fe fe-check"></i></span>
+																<span class="fs-admin-slider__icon fs-admin-slider__icon--on"><i class="fe fe-lock"></i></span>
+															</span>
+														</label>
+													</div>
+												{% endif %}
+											</td>
+										{% endif %}
+									</tr>
+									{% set i = i + 1 %}
+								{% else %}
+									<tr>
+										<td colspan="{{ canConfigureStudentRights ? 5 : 4 }}">
+											<div class="fs-admin-empty">
+												<i class="fe fe-folder"></i>
+												<strong>{% trans %}No administrator found{% endtrans %}</strong>
+												<span>{% trans %}Add an administrator to display it here.{% endtrans %}</span>
+											</div>
+										</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+
+					<div class="fs-admin-table-footer">
+						<div class="fs-admin-result-count"></div>
+
+						<div class="fs-admin-footer-controls">
+							<label class="fs-admin-page-size">
+								<span>{% trans %}Rows{% endtrans %}</span>
+								<select class="fs-admin-rows-per-page">
+									<option value="5">5</option>
+									<option value="10" selected>10</option>
+									<option value="25">25</option>
+									<option value="50">50</option>
+								</select>
+							</label>
+
+							<div class="fs-admin-pagination" aria-label="{% trans %}Pagination{% endtrans %}"></div>
+						</div>
+					</div>
+				</div>
+			</section>
 		</div>
 	</div>
-</div>
-<!-- End app-content-->
-<script src="{{ asset ('myJs/activerDesactiverUser.js')}}"></script>
+
+	<script src="{{ asset('myJs/activerDesactiverUser.js') }}"></script>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-administrators-premium.js') }}"></script>
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			document.querySelectorAll('.fs-student-management-switch').forEach(function (toggle) {
+				toggle.addEventListener('change', function () {
+					var previousState = !toggle.checked;
+					var row = toggle.closest('td');
+					var label = row ? row.querySelector('[data-student-management-label]') : null;
+					var body = new URLSearchParams();
+					body.append('_token', toggle.dataset.token);
+					body.append('blocked', toggle.checked ? '1' : '0');
+					toggle.disabled = true;
+
+					fetch(toggle.dataset.url, {
+						method: 'POST',
+						headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+						body: body.toString(),
+						credentials: 'same-origin'
+					})
+					.then(function (response) {
+						return response.json().then(function (data) {
+							if (!response.ok || !data.success) throw new Error(data.message || 'Modification impossible.');
+							return data;
+						});
+					})
+					.then(function (data) {
+						toggle.checked = data.blocked;
+						if (label) {
+							label.textContent = data.blocked ? '{% trans %}Blocked{% endtrans %}' : '{% trans %}Allowed{% endtrans %}';
+							label.classList.toggle('is-disabled', data.blocked);
+							label.classList.toggle('is-enabled', !data.blocked);
+						}
+					})
+					.catch(function (error) {
+						toggle.checked = previousState;
+						if (typeof swal === 'function') {
+							swal('Erreur', error.message, 'error');
+						} else {
+							alert(error.message);
+						}
+					})
+					.finally(function () { toggle.disabled = false; });
+				});
+			});
+		});
+	</script>
 {% endblock %}

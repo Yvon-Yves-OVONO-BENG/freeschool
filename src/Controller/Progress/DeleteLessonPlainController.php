@@ -12,11 +12,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/progress")]
 class DeleteLessonPlainController extends AbstractController
 {
@@ -34,8 +30,13 @@ class DeleteLessonPlainController extends AbstractController
         $mySession->set('miseAjour', null);
         $mySession->set('saisiNotes', null);
         
-        $plainLesson = $this->lessonRepository->findOneBySlug(['slug' => $slug]);
+        $plainLesson = $this->lessonRepository->findOneBy(['slug' => $slug]);
         
+        if (!$plainLesson) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
+
         $this->em->remove($plainLesson);
         $this->em->flush();
             

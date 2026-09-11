@@ -14,7 +14,7 @@
 {% block infoMessage %}
     {% include "includes/_info_message.html.twig" %}
 
-    <form action="{{ path('registration_printSchoolFeesStatement') }}" method="post"  target="_blank">
+    <form action="{{ path('registration_printSchoolFeesStatement') }}" method="post"  target="_blank" data-no-spinner="1">
         <div class="form-group">
             <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="printSchoolFeesStatement">
                 <i class="fa fa-print"></i>
@@ -81,8 +81,8 @@
                                 <div class="row">
                                     <div class="col-md-8">
                                         <div class="form-group">
-                                            <select class="form-control select2-show-search" data-placeholder="Choose a classroom" name="classroom" id="classroom" required style="border: 1px solid #0f0;">
-                                                <option label="Choose a classroom">
+                                            <select class="form-control select2-show-search" data-placeholder="{% trans %}Choose a classroom{% endtrans %}" name="classroom" id="classroom" required style="border: 1px solid #0f0;">
+                                                <option label="{% trans %}Choose a classroom{% endtrans %}">
                                                     {% trans %}Choose a classroom{% endtrans %}
                                                 </option>
                                                 {% if subSystem == 'Francophone / French Speaker' %}
@@ -111,7 +111,7 @@
                         
                         <div class="col-md-4">
                             {% if students|length > 0 %}
-                                <form action="{{ path('registration_printSchoolFeesStatement', {'idC': selectedClassroom.id}) }}" method="post" target="_blank">
+                                <form action="{{ path('registration_printSchoolFeesStatement', {'idC': selectedClassroom.id}) }}" method="post" target="_blank" data-no-spinner="1">
                                     <div class="form-group">
                                         <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="printSchoolFeesStatement"><i class="fa fa-print"></i> 
                                         {% trans %}Print the class financial statement{% endtrans %}
@@ -263,7 +263,7 @@
                                                 {% endif %}
 
                                     </td>
-                                    <td style="vertical-align: middle;">{{ student.birthday|date('d-m-Y') }} à {{ student.birthplace }}</td>
+                                    <td style="vertical-align: middle;">{{ student.birthday|date('d-m-Y') }} {% trans %}in{% endtrans %} {{ student.birthplace }}</td>
                                     <td style="vertical-align: middle;">{{ student.sex.sex }}</td>
                                     <td style="vertical-align: middle;">{{ student.repeater.repeater }}</td>
                                     <td style="vertical-align: middle;">{{ student.telephone }}</td>
@@ -275,7 +275,7 @@
                                                     <div class="col-6" style="vertical-align: middle;">
                                                         <form action="{{ path('student_editStudent', {'id': student.id}) }}" method="post" style="display: inline-block;">
                                                             <div class="form-group">
-                                                                <button type="submit" class="btn btn-outline-primary" name="updateStudent" data-bs-toggle="tooltip" title="Modifier {{ student.fullName }}">
+                                                                <button type="submit" class="btn btn-outline-primary" name="updateStudent" data-bs-toggle="tooltip" title="{% trans %}Edit {{ student.fullName }}{% endtrans %}">
                                                                     <i class="fa fa-pencil-square-o"></i>
                                                                 </button>
                                                             </div>

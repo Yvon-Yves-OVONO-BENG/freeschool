@@ -1,107 +1,178 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-{% trans %}Unranked coefficients management{% endtrans %}
+	{% trans %}Unranked coefficients management{% endtrans %}
 {% endblock %}
 
 {% block subTitle %}
-    {% trans %}COEFFICIENT/MARKS LIMITS MANAGMENT{% endtrans %}
+	{% trans %}COEFFICIENT/MARKS LIMITS MANAGMENT{% endtrans %}
 {% endblock %}
+
 {% block infoMessage %}
-    {% include "includes/_info_message.html.twig" %}
+	{% include "includes/_info_message.html.twig" %}
 {% endblock %}
 
 {% block currentUser %}
-    {{teacher.fullName }}
+	{{ teacher.fullName }}
 {% endblock %}
 
 {% block stylesheets %}
-	<style>
-		th,
-		tfoot {
-			font-size: 15px !important;
-			text-align: center !important;
-			font-weight: bold !important;
-			background-color: #F1F1F1 !important;
-		}
-
-		tr:hover {
-			background-color: rgba(62, 128, 235, 0.2) !important;
-			color: #3e80eb !important;
-		}
-        td{
-            text-align: center !important;
-            vertical-align: middle !important;
-        }
-	</style>
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-unranked-coefficients-premium.css') }}">
 {% endblock %}
 
 {% block body %}
-<!-- App-Content -->
-	<div class="hor-content main-content">
+	<div class="hor-content main-content fs-unranked-page">
 		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary"></h4>
-                </div>
-                <div class="page-rightheader">
-                    <div class="btn-list">
-                        
-                    </div>
-                </div>
-            </div>
-            <!--End Page header-->
+			<div class="fs-unranked-menu-safe-space" aria-hidden="true"></div>
 
-            <div class="card border-primary">
-                <div class="card-header">
-                    <div class="col-md-10">
-                        <span class="page-title mb-0 text-primary">
-                            {% trans %}Choice of the number of limit coefficients/marks allowing to be ranked or unranked{% endtrans %}
-                        </span>
-                    </div>
-                    <div class="col-md-2">
-                        <a href="{{ path('report_report') }}" class="btn btn-outline-primary btn-medium w-100 br-7">
-                            <i class="fa fa-list"></i> {% trans %}Bulletins{% endtrans %}
-                        </a>
-                    </div>
-                </div>
-                <div class="card-body ">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <table border="1" class="table table-bordered text-nowrap" id="example2" width="100%" cellspacing="0">
-                                <thead>
-                                    <th class="border-bottom-0 indigo-gradient">{% trans %}Level{% endtrans %}</th>
-                                    <th class="border-bottom-0 green-gradient">{% trans %}Limit coefficient/mark{% endtrans %}</th>
-                                    <th class="border-bottom-0 orange-gradient">{% trans %}Section concerned{% endtrans %}</th>
-                                    <th class="border-bottom-0 blue-gradient">{% trans %}Apply on{% endtrans %}</th>
-                                    <th class="border-bottom-0 indigo-gradient">{% trans %}Update{% endtrans %}</th>
-                                </thead>
-                                <tfoot>
-                                    <th class="border-bottom-0 indigo-gradient">{% trans %}Level{% endtrans %}</th>
-                                    <th class="border-bottom-0 green-gradient">{% trans %}Limit coefficient/mark{% endtrans %}</th>
-                                    <th class="border-bottom-0 orange-gradient">{% trans %}Section concerned{% endtrans %}</th>
-                                    <th class="border-bottom-0 blue-gradient">{% trans %}Apply on{% endtrans %}</th>
-                                    <th class="border-bottom-0 indigo-gradient">{% trans %}Update{% endtrans %}</th>
-                                </tfoot>
-                                <tbody>
-                                    {% include "includes/_unranked_coefficient_row.html.twig" with {'levelsName': levelsName.level1, 'unrankedCoefficientCycle': unrankedCoefficientCycle.level1, 'level': 1, 'inputName': 'level1'} %}
-                                    {% include "includes/_unranked_coefficient_row.html.twig" with {'levelsName': levelsName.level2, 'unrankedCoefficientCycle': unrankedCoefficientCycle.level2, 'level': 2, 'inputName': 'level2'} %}
-                                    {% include "includes/_unranked_coefficient_row.html.twig" with {'levelsName': levelsName.level3, 'unrankedCoefficientCycle': unrankedCoefficientCycle.level3, 'level': 3, 'inputName': 'level3'} %}
-                                    {% include "includes/_unranked_coefficient_row.html.twig" with {'levelsName': levelsName.level4, 'unrankedCoefficientCycle': unrankedCoefficientCycle.level4, 'level': 4, 'inputName': 'level4'} %}
-                                    {% include "includes/_unranked_coefficient_row.html.twig" with {'levelsName': levelsName.level5, 'unrankedCoefficientCycle': unrankedCoefficientCycle.level5, 'level': 5, 'inputName': 'level5'} %}
-                                    {% include "includes/_unranked_coefficient_row.html.twig" with {'levelsName': levelsName.level6, 'unrankedCoefficientCycle': unrankedCoefficientCycle.level6, 'level': 6, 'inputName': 'level6'} %}
-                                    {% include "includes/_unranked_coefficient_row.html.twig" with {'levelsName': levelsName.level7, 'unrankedCoefficientCycle': unrankedCoefficientCycle.level7, 'level': 7, 'inputName': 'level7'} %}
+			<section class="fs-unranked-hero">
+				<div class="fs-unranked-hero__content">
+					<div>
+						<span class="fs-unranked-eyebrow">
+							<i class="fe fe-sliders"></i>
+							{% trans %}Report configuration{% endtrans %}
+						</span>
 
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-                        
+						<h1 class="fs-unranked-title">{% trans %}COEFFICIENT/MARKS LIMITS MANAGMENT{% endtrans %}</h1>
+
+						<p class="fs-unranked-subtitle">
+							{% trans %}Define the minimum coefficient or mark limits required for students to be ranked, unranked or excluded from report rankings.{% endtrans %}
+						</p>
+					</div>
+
+					<div class="fs-unranked-hero__actions">
+						<a href="{{ path('report_report') }}" class="fs-unranked-btn fs-unranked-btn--light">
+							<i class="fe fe-file-text"></i>
+							<span>{% trans %}Bulletins{% endtrans %}</span>
+						</a>
+
+						<div class="fs-unranked-stat">
+							<span class="fs-unranked-stat__icon"><i class="fe fe-layers"></i></span>
+							<span class="fs-unranked-stat__label">{% trans %}Levels{% endtrans %}</span>
+							<strong class="fs-unranked-stat__value">7</strong>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="fs-unranked-card">
+				<div class="fs-unranked-card__header">
+					<div>
+						<span class="fs-unranked-chip">
+							<i class="fe fe-grid"></i>
+							{% trans %}Dynamic table{% endtrans %}
+						</span>
+
+						<h2 class="fs-unranked-card-title">
+							{% trans %}Choice of the number of limit coefficients/marks allowing to be ranked or unranked{% endtrans %}
+						</h2>
+					</div>
+
+					<div class="fs-unranked-card__actions">
+						<div class="fs-unranked-search">
+							<i class="fe fe-search"></i>
+							<input type="text" id="fsUnrankedSearch" placeholder="{% trans %}Search level, section...{% endtrans %}">
+						</div>
+
+						<button type="button" class="fs-unranked-btn fs-unranked-btn--ghost" id="fsUnrankedPrintTable">
+							<i class="fe fe-printer"></i>
+							<span>{% trans %}Print table{% endtrans %}</span>
+						</button>
+					</div>
+				</div>
+
+				<div class="fs-unranked-info-strip">
+					<div class="fs-unranked-info-strip__item">
+						<span class="fs-unranked-info-icon fs-unranked-info-icon--primary">
+							<i class="fe fe-award"></i>
+						</span>
+						<div>
+							<strong>{% trans %}Ranking control{% endtrans %}</strong>
+							<small>{% trans %}Configure limits per level and section{% endtrans %}</small>
+						</div>
+					</div>
+
+					<div class="fs-unranked-info-strip__item">
+						<span class="fs-unranked-info-icon fs-unranked-info-icon--success">
+							<i class="fe fe-check-circle"></i>
+						</span>
+						<div>
+							<strong>{% trans %}Safe update{% endtrans %}</strong>
+							<small>{% trans %}Each row keeps its own update action{% endtrans %}</small>
+						</div>
+					</div>
+				</div>
+
+				<div class="fs-unranked-table-wrap">
+					<table class="table fs-unranked-table" id="fsUnrankedTable">
+						<thead>
+							<tr>
+								<th>
+									<button type="button" class="fs-unranked-sort" data-sort-index="0">
+										<span>{% trans %}Level{% endtrans %}</span>
+										<i class="fe fe-chevron-down"></i>
+									</button>
+								</th>
+								<th>
+									<button type="button" class="fs-unranked-sort" data-sort-index="1">
+										<span>{% trans %}Limit coefficient/mark{% endtrans %}</span>
+										<i class="fe fe-chevron-down"></i>
+									</button>
+								</th>
+								<th>
+									<button type="button" class="fs-unranked-sort" data-sort-index="2">
+										<span>{% trans %}Section concerned{% endtrans %}</span>
+										<i class="fe fe-chevron-down"></i>
+									</button>
+								</th>
+								<th>
+									<button type="button" class="fs-unranked-sort" data-sort-index="3">
+										<span>{% trans %}Apply on{% endtrans %}</span>
+										<i class="fe fe-chevron-down"></i>
+									</button>
+								</th>
+								<th class="text-center">{% trans %}Update{% endtrans %}</th>
+							</tr>
+						</thead>
+
+						<tbody>
+							{% include "includes/_unranked_coefficient_row.html.twig" with {'levelsName': levelsName.level1, 'unrankedCoefficientCycle': unrankedCoefficientCycle.level1, 'level': 1, 'inputName': 'level1'} %}
+							{% include "includes/_unranked_coefficient_row.html.twig" with {'levelsName': levelsName.level2, 'unrankedCoefficientCycle': unrankedCoefficientCycle.level2, 'level': 2, 'inputName': 'level2'} %}
+							{% include "includes/_unranked_coefficient_row.html.twig" with {'levelsName': levelsName.level3, 'unrankedCoefficientCycle': unrankedCoefficientCycle.level3, 'level': 3, 'inputName': 'level3'} %}
+							{% include "includes/_unranked_coefficient_row.html.twig" with {'levelsName': levelsName.level4, 'unrankedCoefficientCycle': unrankedCoefficientCycle.level4, 'level': 4, 'inputName': 'level4'} %}
+							{% include "includes/_unranked_coefficient_row.html.twig" with {'levelsName': levelsName.level5, 'unrankedCoefficientCycle': unrankedCoefficientCycle.level5, 'level': 5, 'inputName': 'level5'} %}
+							{% include "includes/_unranked_coefficient_row.html.twig" with {'levelsName': levelsName.level6, 'unrankedCoefficientCycle': unrankedCoefficientCycle.level6, 'level': 6, 'inputName': 'level6'} %}
+							{% include "includes/_unranked_coefficient_row.html.twig" with {'levelsName': levelsName.level7, 'unrankedCoefficientCycle': unrankedCoefficientCycle.level7, 'level': 7, 'inputName': 'level7'} %}
+						</tbody>
+					</table>
+				</div>
+
+				<div class="fs-unranked-table-footer">
+					<div class="fs-unranked-table-footer__left">
+						<span id="fsUnrankedResultCount"></span>
+					</div>
+
+					<div class="fs-unranked-footer-controls">
+						<label class="fs-unranked-page-size">
+							<span>{% trans %}Rows{% endtrans %}</span>
+							<select id="fsUnrankedRowsPerPage">
+								<option value="5" selected>5</option>
+								<option value="7">7</option>
+								<option value="10">10</option>
+								<option value="25">25</option>
+							</select>
+						</label>
+
+						<div class="fs-unranked-pagination" id="fsUnrankedPagination" aria-label="{% trans %}Pagination{% endtrans %}"></div>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-unranked-coefficients-premium.js') }}"></script>
 {% endblock %}

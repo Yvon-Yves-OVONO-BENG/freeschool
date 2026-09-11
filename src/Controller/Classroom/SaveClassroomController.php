@@ -19,22 +19,15 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-/**
- * @Route("/classroom")
- */
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
+#[Route("/classroom")]
 class SaveClassroomController extends AbstractController
 {
     public function __construct(protected ClassroomRepository $classroomRepository, protected EntityManagerInterface $em, protected SchoolYearRepository $schoolYearRepository, protected SchoolYearService $schoolYearService, protected TranslatorInterface $translator, protected SchoolRepository $schoolRepository, protected SubSystemRepository $subSystemRepository)
-    {
-    }
+    {}
 
-    /**
-     * @Route("/saveClassroom", name="classroom_saveClassroom")
-     */
+    
+    #[Route("/saveClassroom", name:"classroom_saveClassroom")]
     public function saveClassroom(Request $request, int $forNextYear = 0, int $id = 0): Response
     {
         $mySession = $request->getSession();
@@ -70,7 +63,7 @@ class SaveClassroomController extends AbstractController
 
         $classroom = new Classroom();       
         
-        $form = $this->createForm(ClassroomType::class, $classroom);
+        $form = $this->createForm(ClassroomType::class, $classroom, ['school' => $school]);
 
         $form->handleRequest($request);
 
@@ -135,12 +128,13 @@ class SaveClassroomController extends AbstractController
             $mySession->set('ajout',1);
             
             $classroom = new Classroom();
-            $form = $this->createForm(ClassroomType::class, $classroom);
+            $form = $this->createForm(ClassroomType::class, $classroom, ['school' => $school]);
         
         }
 
         $slug = 0;
         $classrooms = $this->classroomRepository->findAllToDisplay($schoolYear, $subSystem);
+        
         return $this->render('classroom/saveClassroom.html.twig', [
             'formClassroom' => $form->createView(),
             'forNextYear' => $forNextYear,

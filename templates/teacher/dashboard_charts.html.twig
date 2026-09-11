@@ -1,0 +1,256 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Statistiques par Term{% endtrans %}{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-term-statistics-charts-premium.css') }}">
+{% endblock %}
+
+{% block body %}
+	<div class="hor-content main-content fs-term-stats-page">
+		<div class="container">
+			<div class="fs-term-stats-menu-safe-space" aria-hidden="true"></div>
+
+			<section class="fs-term-stats-hero">
+				<div class="fs-term-stats-hero__content">
+					<div>
+						<span class="fs-term-stats-eyebrow">
+							<i class="fe fe-bar-chart-2"></i>
+							{% trans %}Academic analytics workspace{% endtrans %}
+						</span>
+
+						<h1 class="fs-term-stats-title">
+							{% trans %}Term and assessment statistics{% endtrans %}
+						</h1>
+
+						<p class="fs-term-stats-subtitle">
+							{% trans %}
+							Class-based analysis: pass rates, male/female averages, highest scores, and lowest scores.
+							{% endtrans %}
+						</p>
+					</div>
+
+					<div class="fs-term-stats-hero__actions">
+						<div class="fs-term-stats-hero-stat">
+							<span class="fs-term-stats-hero-stat__icon">
+								<i class="fe fe-calendar"></i>
+							</span>
+							<span class="fs-term-stats-hero-stat__label">{% trans %}Terms{% endtrans %}</span>
+							<strong class="fs-term-stats-hero-stat__value">{{ globalStats.termCount }}</strong>
+						</div>
+
+						<div class="fs-term-stats-hero-stat fs-term-stats-hero-stat--cyan">
+							<span class="fs-term-stats-hero-stat__icon">
+								<i class="fe fe-check-square"></i>
+							</span>
+							<span class="fs-term-stats-hero-stat__label">{% trans %}Assessments{% endtrans %}</span>
+							<strong class="fs-term-stats-hero-stat__value">{{ globalStats.evaluationCount }}</strong>
+						</div>
+
+						<div class="fs-term-stats-hero-stat fs-term-stats-hero-stat--gold">
+							<span class="fs-term-stats-hero-stat__icon">
+								<i class="fe fe-home"></i>
+							</span>
+							<span class="fs-term-stats-hero-stat__label">{% trans %}Tracked classes{% endtrans %}</span>
+							<strong class="fs-term-stats-hero-stat__value">{{ globalStats.classCount }}</strong>
+						</div>
+
+						<a href="{{ path('home_dashboard', {'a': 0, 'm': 0, 's': 0}) }}"
+						class="fs-term-stats-btn fs-term-stats-btn--light">
+							<i class="fe fe-arrow-left"></i>
+							<span>{% trans %}Back to dashboard{% endtrans %}</span>
+						</a>
+					</div>
+				</div>
+			</section>
+
+			<section class="fs-term-stats-global-grid">
+				<div class="fs-term-stats-global-card">
+					<span class="fs-term-stats-global-card__icon">
+						<i class="fe fe-calendar"></i>
+					</span>
+					<span>{% trans %}Terms{% endtrans %}</span>
+					<strong>{{ globalStats.termCount }}</strong>
+				</div>
+
+				<div class="fs-term-stats-global-card">
+					<span class="fs-term-stats-global-card__icon fs-term-stats-global-card__icon--cyan">
+						<i class="fe fe-check-square"></i>
+					</span>
+					<span>{% trans %}Assessments{% endtrans %}</span>
+					<strong>{{ globalStats.evaluationCount }}</strong>
+				</div>
+
+				<div class="fs-term-stats-global-card">
+					<span class="fs-term-stats-global-card__icon fs-term-stats-global-card__icon--gold">
+						<i class="fe fe-home"></i>
+					</span>
+					<span>{% trans %}Tracked classes{% endtrans %}</span>
+					<strong>{{ globalStats.classCount }}</strong>
+				</div>
+			</section>
+
+			{% for term in termStats %}
+				<section class="fs-term-stats-term-card">
+					<div class="fs-term-stats-term-header">
+						<div>
+							<span class="fs-term-stats-chip">
+								<i class="fe fe-calendar"></i>
+								{% trans %}Term{% endtrans %}
+							</span>
+
+							<h2>{{ term.name }}</h2>
+						</div>
+
+						<span class="fs-term-stats-pill">
+							{{ term.evaluations|length }} {% trans %}assessment(s){% endtrans %}
+						</span>
+					</div>
+
+					{% for evaluation in term.evaluations %}
+						<div class="fs-term-stats-evaluation-card">
+							<div class="fs-term-stats-evaluation-title">
+								<div>
+									<span class="fs-term-stats-chip fs-term-stats-chip--cyan">
+										<i class="fe fe-check-circle"></i>
+										{% trans %}Assessment{% endtrans %}
+									</span>
+
+									<h3>{{ evaluation.name }}</h3>
+								</div>
+
+								<span class="fs-term-stats-pill fs-term-stats-pill--cyan">
+									{{ evaluation.classes|length }} {% trans %}class(es){% endtrans %}
+								</span>
+							</div>
+
+							{% for classItem in evaluation.classes %}
+								{% set chartKey = evaluation.chartId ~ '_' ~ classItem.id %}
+
+								<article class="fs-term-stats-class-card">
+									<div class="fs-term-stats-class-header">
+										<div>
+											<span class="fs-term-stats-class-badge">
+												<i class="fe fe-home"></i>
+												{{ classItem.label }}
+											</span>
+										</div>
+
+										<span class="fs-term-stats-pill">
+											{{ classItem.totalMarks }} {% trans %}mark(s){% endtrans %}
+										</span>
+									</div>
+
+									<div class="fs-term-stats-kpi-grid">
+										<div class="fs-term-stats-kpi">
+											<span>{% trans %}Girls average{% endtrans %}</span>
+											<strong>{{ classItem.girlsAverageCount }}</strong>
+										</div>
+
+										<div class="fs-term-stats-kpi">
+											<span>{% trans %}Boys average{% endtrans %}</span>
+											<strong>{{ classItem.boysAverageCount }}</strong>
+										</div>
+
+										<div class="fs-term-stats-kpi">
+											<span>{% trans %}Girls max{% endtrans %}</span>
+											<strong>{{ classItem.girlsMaxMark is not null ? classItem.girlsMaxMark : '-' }}</strong>
+										</div>
+
+										<div class="fs-term-stats-kpi">
+											<span>{% trans %}Boys max{% endtrans %}</span>
+											<strong>{{ classItem.boysMaxMark is not null ? classItem.boysMaxMark : '-' }}</strong>
+										</div>
+
+										<div class="fs-term-stats-kpi">
+											<span>{% trans %}Girls min{% endtrans %}</span>
+											<strong>{{ classItem.girlsMinMark is not null ? classItem.girlsMinMark : '-' }}</strong>
+										</div>
+
+										<div class="fs-term-stats-kpi">
+											<span>{% trans %}Boys min{% endtrans %}</span>
+											<strong>{{ classItem.boysMinMark is not null ? classItem.boysMinMark : '-' }}</strong>
+										</div>
+
+										<div class="fs-term-stats-kpi fs-term-stats-kpi--max">
+											<span>{% trans %}Class max{% endtrans %}</span>
+											<strong>{{ classItem.classMaxMark is not null ? classItem.classMaxMark : '-' }}</strong>
+										</div>
+
+										<div class="fs-term-stats-kpi fs-term-stats-kpi--min">
+											<span>{% trans %}Class min{% endtrans %}</span>
+											<strong>{{ classItem.classMinMark is not null ? classItem.classMinMark : '-' }}</strong>
+										</div>
+
+										<div class="fs-term-stats-kpi fs-term-stats-kpi--success">
+											<span>{% trans %}Girls success rate{% endtrans %}</span>
+											<strong>{{ classItem.girlsSuccessRate }}%</strong>
+										</div>
+
+										<div class="fs-term-stats-kpi fs-term-stats-kpi--success">
+											<span>{% trans %}Boys success rate{% endtrans %}</span>
+											<strong>{{ classItem.boysSuccessRate }}%</strong>
+										</div>
+
+										<div class="fs-term-stats-kpi fs-term-stats-kpi--general">
+											<span>{% trans %}Overall success rate{% endtrans %}</span>
+											<strong>{{ classItem.classSuccessRate }}%</strong>
+										</div>
+									</div>
+
+									<div class="fs-term-stats-charts-grid">
+										<div class="fs-term-stats-chart-box fs-term-stats-chart-box--bar">
+											<div class="fs-term-stats-chart-box__header">
+												<span>{% trans %}Detailed comparison{% endtrans %}</span>
+											</div>
+											<canvas id="barChart_{{ chartKey }}"></canvas>
+										</div>
+
+										<div class="fs-term-stats-chart-box fs-term-stats-chart-box--pie">
+											<div class="fs-term-stats-chart-box__header">
+												<span>{% trans %}Overall success{% endtrans %}</span>
+											</div>
+											<canvas id="pieChart_{{ chartKey }}"></canvas>
+										</div>
+									</div>
+								</article>
+
+							{% else %}
+								<div class="fs-term-stats-empty-card">
+									<i class="fe fe-folder"></i>
+									<strong>{% trans %}No classes available{% endtrans %}</strong>
+									<span>{% trans %}No classes available for this assessment.{% endtrans %}</span>
+								</div>
+							{% endfor %}
+						</div>
+
+					{% else %}
+						<div class="fs-term-stats-empty-card">
+							<i class="fe fe-folder"></i>
+							<strong>{% trans %}No assessments available{% endtrans %}</strong>
+							<span>{% trans %}No assessments available for this term.{% endtrans %}</span>
+						</div>
+					{% endfor %}
+				</section>
+
+			{% else %}
+				<div class="fs-term-stats-empty-card">
+					<i class="fe fe-folder"></i>
+					<strong>{% trans %}No terms available{% endtrans %}</strong>
+					<span>{% trans %}No terms available.{% endtrans %}</span>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script>
+		window.fsTermStats = {{ termStats|json_encode|raw }};
+	</script>
+	<script src="{{ asset('build/custom/js/freeschool-term-statistics-charts-premium.js') }}"></script>
+{% endblock %}

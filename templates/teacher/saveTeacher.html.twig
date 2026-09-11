@@ -1,279 +1,366 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    {% if slug != 0 %}
-        {% trans %}Edit{% endtrans %}
-        {% else %}
-        {% trans %}Add{% endtrans %}
-    {% endif %}
-    teacher
+	{% if slug != 0 %}
+		{% trans %}Edit{% endtrans %}
+	{% else %}
+		{% trans %}Add{% endtrans %}
+	{% endif %}
+	{% trans %}teacher{% endtrans %}
 {% endblock %}
 
-{# {% block infoMessage %}
-    {% include "includes/_info_message.html.twig" %}
-{% endblock %} #}
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-teacher-form-premium.css') }}">
+{% endblock %}
 
 {% block body %}
-<!-- App-Content -->
-	<div class="hor-content main-content">
-		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary">
-                        {% if slug != 0 %}
-                            <i class="fe fe-edit me-2"></i> {% trans %}UPDATING STAFF{% endtrans %}
-                        {% else %}
-                            <i class="fe fe-plus-circle me-2"></i>{% trans %}ADDING NEW STAFF{% endtrans %}
-                        {% endif %}
-                    </h4>
-                </div>
-                {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
-                    <div class="page-rightheader">
-                        <div class="btn-list">
-                            <a href="{{ path('teacher_displayTeacher') }}" class="btn btn-outline-primary btn-medium w-100 br-7">
-                                <i class="fa fa-list"></i>
-                                {% trans %}Display registered staff{% endtrans %}
-                            </a>
-                        </div>
-                    </div>
-                {% endif %}
+<div class="hor-content main-content fs-staff-page">
+	<div class="container">
+		<div class="fs-staff-menu-safe-space" aria-hidden="true"></div>
 
-                {% if pe == 1 %}
-                    <div class="col-md-4">
-                        <a href="{{ path('teacher_printAssumedDuty', {'slug': slug, 'asd': 1, 'pe': 0}) }}" class="btn btn-outline-primary btn-medium w-100 br-7"  target="_blank">
-                            <i class="fa fa-print"></i>
-                        {% trans %}Print the service entry/resumption certificate{% endtrans %}
-                        </a>
-                    </div>
-                    
-                    <div class="col-md-4">
-                        <a href="{{ path('teacher_printAssumedDuty', {'slug': slug, 'asd': 0, 'pe': 1}) }}" class="btn btn-outline-primary btn-medium w-100 br-7"  target="_blank">
-                            <i class="fa fa-print"></i>
-                            {% trans %}Print the certificate of effective presence{% endtrans %}
-                        </a>
-                    </div>
-                {% endif %}
-                
-            </div>
-            <!--End Page header-->
-        
-                {% if slug == 0 %}
-                    <div class="card border-primary">
-                    {% else %}
-                    <div class="card border-danger">
-                {% endif %}
-                <div class="card-header">
-                    {# ligne afficher le personnel #}
-                            {% if pe == 0 %}
-                            <div class="col-md-4">
-                                <button type="button" class="btn btn-primary  mt-1 mb-1 me-3">
-                                    <span>{% trans %}Number of registered staff{% endtrans %}</span>
-                                    <span class="badge bg-white text-dark rounded-pill">{{ effectif }}</span>
-                                </button>
-                            </div>
-                            
-                            <div class="col-md-4">
-                                
-                            </div>
-                            {% endif %}
+		<section class="fs-staff-hero">
+			<div class="fs-staff-hero__content">
+				<div class="fs-staff-hero__left">
+					<span class="fs-staff-eyebrow">
+						{% if slug != 0 %}
+							<i class="fe fe-edit-3"></i>
+							{% trans %}Staff update workspace{% endtrans %}
+						{% else %}
+							<i class="fe fe-user-plus"></i>
+							{% trans %}Staff creation workspace{% endtrans %}
+						{% endif %}
+					</span>
 
-                        
-                    
-                    {# Fin ligne afficher les classes #}
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            {{ form_start(formTeacher) }}
-                                <div class="row mt-3">
-                                    <div class="col-md-1">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            {{ form_row(formTeacher.fullName, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            {{ form_row(formTeacher.administrativeNumber, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            {{ form_row(formTeacher.sex, {'attr': {'class': 'form-control select2 custom-select'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            {{ form_row(formTeacher.phoneNumber, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-1">
-                                    </div>
-                                </div>
+					<h1 class="fs-staff-title">
+						{% if slug != 0 %}
+							{% trans %}UPDATING STAFF{% endtrans %}
+						{% else %}
+							{% trans %}ADDING NEW STAFF{% endtrans %}
+						{% endif %}
+					</h1>
 
-                                <div class="row">
-                                    <div class="col-md-1">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            {{ form_row(formTeacher.grade, {'attr': {'class': 'form-control select2 custom-select'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            {{ form_row(formTeacher.duty, {'attr': {'class': 'form-control select2-show-search'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            {{ form_row(formTeacher.department, {'attr': {'class': 'form-control select2-show-search'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-1">
-                                    </div>
-                                </div>
+					<p class="fs-staff-subtitle">
+						{% trans %}Manage staff identity, duty, contact and administrative information through a refined premium workspace.{% endtrans %}
+					</p>
+				</div>
 
-                                {% if pe == 1 %}
-                                
-                                    <div class="row mb-2">
-                                        <div class="col-md-1">
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                {{ form_row(formTeacher.birthday, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                {{ form_row(formTeacher.birthplace, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                {{ form_row(formTeacher.integrationDate, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                            </div>
-                                        </div>
-                                        <div class="col-md-1">
-                                        </div>
-                                    </div>
+				<div class="fs-staff-hero__right">
+					{% if pe == 0 %}
+						<div class="fs-staff-hero-stat">
+							<span class="fs-staff-hero-stat__icon">
+								<i class="fe fe-users"></i>
+							</span>
+							<span class="fs-staff-hero-stat__label">{% trans %}Registered staff{% endtrans %}</span>
+							<strong class="fs-staff-hero-stat__value">{{ effectif }}</strong>
+						</div>
+					{% endif %}
 
-                                    <div class="row mb-2">
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                {{ form_row(formTeacher.firstDateFunction, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                {{ form_row(formTeacher.affectationDate, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                {{ form_row(formTeacher.firstDateActualFunction, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                            </div>
-                                        </div>
-                                    </div>
+					{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+						<a href="{{ path('teacher_displayTeacher') }}" class="fs-staff-btn fs-staff-btn--hero-soft">
+							<i class="fe fe-list"></i>
+							<span>{% trans %}Display registered staff{% endtrans %}</span>
+						</a>
+					{% endif %}
 
-                                    <div class="row mb-2">
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                {{ form_row(formTeacher.takeFunctiondate, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                {{ form_row(formTeacher.affectationNote, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                {{ form_row(formTeacher.previousPost, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                            </div>
-                                        </div>
-                                    </div>
+					{% if pe == 1 %}
+						<a href="{{ path('teacher_printAssumedDuty', {'slug': slug, 'asd': 1, 'pe': 0}) }}" class="fs-staff-btn fs-staff-btn--hero-soft" target="_blank">
+							<i class="fe fe-printer"></i>
+							<span>{% trans %}Service entry/resumption certificate{% endtrans %}</span>
+						</a>
 
-                                    <div class="row mb-2">
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                {{ form_row(formTeacher.diploma, {'attr': {'class': 'form-control select2-show-search'}}) }}
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                {{ form_row(formTeacher.speciality, {'attr': {'class': 'form-control select2-show-search'}}) }}
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                {{ form_row(formTeacher.teachingSubject, {'attr': {'class': 'form-control select2-show-search'}}) }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                
-                                    <div class="row mb-2">
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                {{ form_row(formTeacher.status, {'attr': {'class': 'form-control select2 custom-select'}}) }}
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                {{ form_row(formTeacher.matrimonialStatus, {'attr': {'class': 'form-control select2 custom-select'}}) }}
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                {{ form_row(formTeacher.region, {'attr': {'class': 'form-control select2-show-search'}}) }}
-                                            </div>
-                                        </div>
+						<a href="{{ path('teacher_printAssumedDuty', {'slug': slug, 'asd': 0, 'pe': 1}) }}" class="fs-staff-btn fs-staff-btn--hero-soft" target="_blank">
+							<i class="fe fe-printer"></i>
+							<span>{% trans %}Effective presence certificate{% endtrans %}</span>
+						</a>
+					{% endif %}
+				</div>
+			</div>
+		</section>
 
-                                        
-                                    </div>
+		<section class="fs-staff-shell">
+			<div class="fs-staff-shell__header">
+				<div>
+					<span class="fs-staff-card-badge">
+						{% if slug != 0 %}
+							<i class="fe fe-edit"></i>
+							{% trans %}Edit mode{% endtrans %}
+						{% else %}
+							<i class="fe fe-plus"></i>
+							{% trans %}Creation mode{% endtrans %}
+						{% endif %}
+					</span>
 
-                                    <div class="row mb-2">
-                                        
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                {{ form_row(formTeacher.division, {'attr': {'class': 'form-control select2-show-search'}}) }}
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                {{ form_row(formTeacher.subdivision, {'attr': {'class': 'form-control select2-show-search'}}) }}
-                                            </div>
-                                        </div>
-                                    </div>
+					<h2 class="fs-staff-card-title">
+						{% if slug != 0 %}
+							{% trans %}UPDATING STAFF{% endtrans %}
+						{% else %}
+							{% trans %}ADDING NEW STAFF{% endtrans %}
+						{% endif %}
+					</h2>
+				</div>
 
-                                {% endif %}
+				<div class="fs-staff-soft-note">
+					<i class="fe fe-info"></i>
+					<span>{% trans %}Fill in the required information carefully before saving.{% endtrans %}</span>
+				</div>
+			</div>
 
-                                <div class="row">
-                                    <div class="col-md-1"> </div>
-                                    <div class="col-md-6"></div>
-                                    <div class="col-md-4">
-                                        {% if slug == 0 %}
-                                            <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="addTeacher">
-                                                <i class="fa fa-save"></i>
-                                                {% trans %}Save{% endtrans %}
-                                            </button>
-                                        {% else %}
-                                            <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="editTeacher">
-                                                <i class="fa fa-save"></i>
-                                                {% trans %}Save changes{% endtrans %}
-                                            </button>
-                                        {% endif %}
-                                    </div>
-                                    <div class="col-md-1"></div>
-                                </div>
-                            {{ form_end(formTeacher) }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+			<div class="fs-staff-shell__body">
+				{{ form_start(formTeacher, {'attr': {'class': 'fs-staff-form needs-validation', 'novalidate': 'novalidate'}}) }}
+
+					<div class="fs-form-section">
+						<div class="fs-section-header">
+							<div class="fs-section-title">
+								<span class="fs-section-icon fs-section-icon-primary">
+									<i class="fe fe-user"></i>
+								</span>
+								<div>
+									<h3>{% trans %}Identity and contact{% endtrans %}</h3>
+									<p>{% trans %}Main staff identification information{% endtrans %}</p>
+								</div>
+							</div>
+						</div>
+
+						<div class="fs-form-grid fs-form-grid--identity">
+							<div class="fs-floating-field fs-required-field fs-col-span-2">
+								{{ form_widget(formTeacher.fullName, {'attr': {'class': 'form-control fs-floating-control', 'placeholder': ' ', 'required': 'required'}}) }}
+								<label class="fs-floating-label">{% trans %}Full name{% endtrans %}</label>
+								<div class="fs-field-error">{{ form_errors(formTeacher.fullName) }}</div>
+							</div>
+
+							<div class="fs-floating-field">
+								{{ form_widget(formTeacher.administrativeNumber, {'attr': {'class': 'form-control fs-floating-control', 'placeholder': ' '}}) }}
+								<label class="fs-floating-label">{% trans %}Administrative number{% endtrans %}</label>
+								<div class="fs-field-error">{{ form_errors(formTeacher.administrativeNumber) }}</div>
+							</div>
+
+							<div class="fs-floating-field fs-required-field">
+								{{ form_widget(formTeacher.sex, {'attr': {'class': 'form-control select2 custom-select fs-floating-control', 'placeholder': ' ', 'required': 'required'}}) }}
+								<label class="fs-floating-label">{% trans %}Sex{% endtrans %}</label>
+								<div class="fs-field-error">{{ form_errors(formTeacher.sex) }}</div>
+							</div>
+
+							<div class="fs-floating-field">
+								{{ form_widget(formTeacher.phoneNumber, {'attr': {'class': 'form-control fs-floating-control', 'placeholder': ' '}}) }}
+								<label class="fs-floating-label">{% trans %}Phone number{% endtrans %}</label>
+								<div class="fs-field-error">{{ form_errors(formTeacher.phoneNumber) }}</div>
+							</div>
+
+							<div class="fs-floating-field">
+								{{ form_widget(formTeacher.email, {'attr': {'class': 'form-control fs-floating-control', 'placeholder': ' '}}) }}
+								<label class="fs-floating-label">{% trans %}Email{% endtrans %}</label>
+								<div class="fs-field-error">{{ form_errors(formTeacher.email) }}</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="fs-form-section">
+						<div class="fs-section-header">
+							<div class="fs-section-title">
+								<span class="fs-section-icon fs-section-icon-success">
+									<i class="fe fe-briefcase"></i>
+								</span>
+								<div>
+									<h3>{% trans %}Professional assignment{% endtrans %}</h3>
+									<p>{% trans %}Rank, duty and department details{% endtrans %}</p>
+								</div>
+							</div>
+						</div>
+
+						<div class="fs-form-grid fs-form-grid--three">
+							<div class="fs-floating-field fs-required-field">
+								{{ form_widget(formTeacher.grade, {'attr': {'class': 'form-control select2 custom-select fs-floating-control', 'placeholder': ' ', 'required': 'required'}}) }}
+								<label class="fs-floating-label">{% trans %}Rank{% endtrans %}</label>
+								<div class="fs-field-error">{{ form_errors(formTeacher.grade) }}</div>
+							</div>
+
+							<div class="fs-floating-field fs-required-field">
+								{{ form_widget(formTeacher.duty, {'attr': {'class': 'form-control select2-show-search fs-floating-control', 'placeholder': ' ', 'required': 'required'}}) }}
+								<label class="fs-floating-label">{% trans %}Duty{% endtrans %}</label>
+								<div class="fs-field-error">{{ form_errors(formTeacher.duty) }}</div>
+							</div>
+
+							<div class="fs-floating-field">
+								{{ form_widget(formTeacher.department, {'attr': {'class': 'form-control select2-show-search fs-floating-control', 'placeholder': ' '}}) }}
+								<label class="fs-floating-label">{% trans %}Department{% endtrans %}</label>
+								<div class="fs-field-error">{{ form_errors(formTeacher.department) }}</div>
+							</div>
+						</div>
+					</div>
+
+					{% if pe == 1 %}
+						<div class="fs-form-section">
+							<div class="fs-section-header">
+								<div class="fs-section-title">
+									<span class="fs-section-icon fs-section-icon-warning">
+										<i class="fe fe-calendar"></i>
+									</span>
+									<div>
+										<h3>{% trans %}Administrative dates{% endtrans %}</h3>
+										<p>{% trans %}Birth, integration and duty assumption information{% endtrans %}</p>
+									</div>
+								</div>
+							</div>
+
+							<div class="fs-form-grid fs-form-grid--three">
+								<div class="fs-floating-field">
+									{{ form_widget(formTeacher.birthday, {'attr': {'class': 'form-control fs-floating-control', 'placeholder': ' '}}) }}
+									<label class="fs-floating-label">{% trans %}Birthday{% endtrans %}</label>
+									<div class="fs-field-error">{{ form_errors(formTeacher.birthday) }}</div>
+								</div>
+
+								<div class="fs-floating-field fs-col-span-2">
+									{{ form_widget(formTeacher.birthplace, {'attr': {'class': 'form-control fs-floating-control', 'placeholder': ' '}}) }}
+									<label class="fs-floating-label">{% trans %}Birthplace{% endtrans %}</label>
+									<div class="fs-field-error">{{ form_errors(formTeacher.birthplace) }}</div>
+								</div>
+
+								<div class="fs-floating-field">
+									{{ form_widget(formTeacher.integrationDate, {'attr': {'class': 'form-control fs-floating-control', 'placeholder': ' '}}) }}
+									<label class="fs-floating-label">{% trans %}Integration date{% endtrans %}</label>
+									<div class="fs-field-error">{{ form_errors(formTeacher.integrationDate) }}</div>
+								</div>
+
+								<div class="fs-floating-field">
+									{{ form_widget(formTeacher.firstDateFunction, {'attr': {'class': 'form-control fs-floating-control', 'placeholder': ' '}}) }}
+									<label class="fs-floating-label">{% trans %}First function date{% endtrans %}</label>
+									<div class="fs-field-error">{{ form_errors(formTeacher.firstDateFunction) }}</div>
+								</div>
+
+								<div class="fs-floating-field">
+									{{ form_widget(formTeacher.affectationDate, {'attr': {'class': 'form-control fs-floating-control', 'placeholder': ' '}}) }}
+									<label class="fs-floating-label">{% trans %}Affectation date{% endtrans %}</label>
+									<div class="fs-field-error">{{ form_errors(formTeacher.affectationDate) }}</div>
+								</div>
+
+								<div class="fs-floating-field">
+									{{ form_widget(formTeacher.firstDateActualFunction, {'attr': {'class': 'form-control fs-floating-control', 'placeholder': ' '}}) }}
+									<label class="fs-floating-label">{% trans %}First actual function date{% endtrans %}</label>
+									<div class="fs-field-error">{{ form_errors(formTeacher.firstDateActualFunction) }}</div>
+								</div>
+
+								<div class="fs-floating-field">
+									{{ form_widget(formTeacher.takeFunctiondate, {'attr': {'class': 'form-control fs-floating-control', 'placeholder': ' '}}) }}
+									<label class="fs-floating-label">{% trans %}Take function date{% endtrans %}</label>
+									<div class="fs-field-error">{{ form_errors(formTeacher.takeFunctiondate) }}</div>
+								</div>
+
+								<div class="fs-floating-field">
+									{{ form_widget(formTeacher.affectationNote, {'attr': {'class': 'form-control fs-floating-control', 'placeholder': ' '}}) }}
+									<label class="fs-floating-label">{% trans %}Affectation note{% endtrans %}</label>
+									<div class="fs-field-error">{{ form_errors(formTeacher.affectationNote) }}</div>
+								</div>
+
+								<div class="fs-floating-field">
+									{{ form_widget(formTeacher.previousPost, {'attr': {'class': 'form-control fs-floating-control', 'placeholder': ' '}}) }}
+									<label class="fs-floating-label">{% trans %}Previous post{% endtrans %}</label>
+									<div class="fs-field-error">{{ form_errors(formTeacher.previousPost) }}</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="fs-form-section">
+							<div class="fs-section-header">
+								<div class="fs-section-title">
+									<span class="fs-section-icon fs-section-icon-info">
+										<i class="fe fe-award"></i>
+									</span>
+									<div>
+										<h3>{% trans %}Qualification and profile{% endtrans %}</h3>
+										<p>{% trans %}Diploma, speciality, subject and civil information{% endtrans %}</p>
+									</div>
+								</div>
+							</div>
+
+							<div class="fs-form-grid fs-form-grid--three">
+								<div class="fs-floating-field">
+									{{ form_widget(formTeacher.diploma, {'attr': {'class': 'form-control select2-show-search fs-floating-control', 'placeholder': ' '}}) }}
+									<label class="fs-floating-label">{% trans %}Diploma{% endtrans %}</label>
+									<div class="fs-field-error">{{ form_errors(formTeacher.diploma) }}</div>
+								</div>
+
+								<div class="fs-floating-field">
+									{{ form_widget(formTeacher.speciality, {'attr': {'class': 'form-control select2-show-search fs-floating-control', 'placeholder': ' '}}) }}
+									<label class="fs-floating-label">{% trans %}Speciality{% endtrans %}</label>
+									<div class="fs-field-error">{{ form_errors(formTeacher.speciality) }}</div>
+								</div>
+
+								<div class="fs-floating-field">
+									{{ form_widget(formTeacher.teachingSubject, {'attr': {'class': 'form-control select2-show-search fs-floating-control', 'placeholder': ' '}}) }}
+									<label class="fs-floating-label">{% trans %}Teaching subject{% endtrans %}</label>
+									<div class="fs-field-error">{{ form_errors(formTeacher.teachingSubject) }}</div>
+								</div>
+
+								<div class="fs-floating-field">
+									{{ form_widget(formTeacher.status, {'attr': {'class': 'form-control select2 custom-select fs-floating-control', 'placeholder': ' '}}) }}
+									<label class="fs-floating-label">{% trans %}Status{% endtrans %}</label>
+									<div class="fs-field-error">{{ form_errors(formTeacher.status) }}</div>
+								</div>
+
+								<div class="fs-floating-field">
+									{{ form_widget(formTeacher.matrimonialStatus, {'attr': {'class': 'form-control select2 custom-select fs-floating-control', 'placeholder': ' '}}) }}
+									<label class="fs-floating-label">{% trans %}Matrimonial status{% endtrans %}</label>
+									<div class="fs-field-error">{{ form_errors(formTeacher.matrimonialStatus) }}</div>
+								</div>
+
+								<div class="fs-floating-field">
+									{{ form_widget(formTeacher.region, {'attr': {'class': 'form-control select2-show-search fs-floating-control', 'placeholder': ' '}}) }}
+									<label class="fs-floating-label">{% trans %}Region{% endtrans %}</label>
+									<div class="fs-field-error">{{ form_errors(formTeacher.region) }}</div>
+								</div>
+
+								<div class="fs-floating-field">
+									{{ form_widget(formTeacher.division, {'attr': {'class': 'form-control select2-show-search fs-floating-control', 'placeholder': ' '}}) }}
+									<label class="fs-floating-label">{% trans %}Division{% endtrans %}</label>
+									<div class="fs-field-error">{{ form_errors(formTeacher.division) }}</div>
+								</div>
+
+								<div class="fs-floating-field">
+									{{ form_widget(formTeacher.subdivision, {'attr': {'class': 'form-control select2-show-search fs-floating-control', 'placeholder': ' '}}) }}
+									<label class="fs-floating-label">{% trans %}Subdivision{% endtrans %}</label>
+									<div class="fs-field-error">{{ form_errors(formTeacher.subdivision) }}</div>
+								</div>
+							</div>
+						</div>
+					{% endif %}
+
+					<div class="fs-submit-zone">
+						<div class="fs-submit-zone__hint">
+							<i class="fe fe-shield"></i>
+							<span>{% trans %}Please review the information before saving.{% endtrans %}</span>
+						</div>
+
+						<div class="fs-submit-zone__actions">
+							<a href="{{ path('teacher_displayTeacher') }}" class="fs-staff-btn fs-staff-btn--ghost">
+								<i class="fe fe-arrow-left"></i>
+								<span>{% trans %}Back{% endtrans %}</span>
+							</a>
+
+							{% if slug == 0 %}
+								<button type="submit" class="fs-staff-btn fs-staff-btn--primary fs-submit-btn" name="addTeacher">
+									<span class="fs-submit-spinner" aria-hidden="true"></span>
+									<i class="fe fe-save fs-submit-icon"></i>
+									<span>{% trans %}Save{% endtrans %}</span>
+								</button>
+							{% else %}
+								<button type="submit" class="fs-staff-btn fs-staff-btn--primary fs-submit-btn" name="editTeacher">
+									<span class="fs-submit-spinner" aria-hidden="true"></span>
+									<i class="fe fe-save fs-submit-icon"></i>
+									<span>{% trans %}Save changes{% endtrans %}</span>
+								</button>
+							{% endif %}
+						</div>
+					</div>
+
+				{{ form_end(formTeacher) }}
+			</div>
+		</section>
+	</div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-teacher-form-premium.js') }}"></script>
 {% endblock %}

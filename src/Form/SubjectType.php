@@ -5,9 +5,12 @@ namespace App\Form;
 use App\Entity\Subject;
 use App\Entity\Category;
 use App\Entity\Department;
+use App\Entity\School;
 use App\Entity\SchoolYear;
 use App\Repository\CategoryRepository;
 use App\Repository\DepartmentRepository;
+use App\Repository\SchoolRepository;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -18,12 +21,21 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SubjectType extends AbstractType
 {
-    public function __construct(protected RequestStack $request, protected TranslatorInterface $translator)
-    {
-    }
+    public function __construct(protected RequestStack $request, protected TranslatorInterface $translator, 
+    protected SchoolRepository $schoolRepository)
+    {}
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        /**
+         * @var School $school
+         */
+        $school = $options['school'];
+        // dd($school);
+        $school = $this->schoolRepository->find($school->getId());
+        
+        $education = $school->getEducation();
+        // dd($education);
 
         $builder
             ->add('subject', TextType::class, [
@@ -36,8 +48,15 @@ class SubjectType extends AbstractType
                 'label' => $this->translator->trans('Group'),
                 'placeholder' => '---',
                 'class' => Category::class,
-                'query_builder' => function(CategoryRepository $categoryRepository){
-                    return $categoryRepository->createQueryBuilder('c')->orderBy('c.category', 'DESC');
+                // 'query_builder' => function(CategoryRepository $categoryRepository)
+                // {
+                //     return $categoryRepository->createQueryBuilder('c')->orderBy('c.category', 'DESC');
+                // },
+                'query_builder' => function(EntityRepository $er) use ($education)
+                {
+                    return $er->createQueryBuilder('c')
+                    ->where('c.education = :education')
+                    ->setParameter('education', $education);
                 },
                 'choice_label' => 'category'
             ])
@@ -60,6 +79,7 @@ class SubjectType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Subject::class,
+            'school' => null,
         ]);
     }
 }

@@ -4,21 +4,17 @@
                 <div class="p-4">
                     <div class="row align-items-center">
                         <div class="col-lg-6 col-md-6 d-md-block text-white">
-                            Copyright © 2019
-                            -
+                            {% trans %}Copyright © 2019
+                            -{% endtrans %}
                             <script>
                                 document.write(new Date().getFullYear());
                             </script>
-                            | <a href="javascript:void(0);">freeschool</a> |  {% trans %}All rights reserved.{% endtrans %}
+                            | <a href="javascript:void(0);">{% trans %}freeschool{% endtrans %}</a> |  {% trans %}All rights reserved.{% endtrans %}
                             
                         </div>
                         <div class="col-lg-6 col-md-6 text-end privacy text-white">
                             {% if app.user %}
                                 <a class="btn btn-link" >{% trans %}You are connected as : {% endtrans %} {{ app.user.fullName }}</a>
-                                {# {% if is_granted('ROLE_ADMINISTRATEUR') or is_granted('ROLE_DIRECTEUR') %} #}
-                                    {# <a class="btn btn-link" >{% trans %}Comme : ADMINISTRATEUR {% endtrans %} </a> #}
-                                    {# <a href="javascript:void(0);" class="btn btn-link" >{% trans %}Il vous reste {% endtrans %}{{ nombreJoursRestant }} {% trans %}jours d'utilisation{% endtrans %}</a> #}
-                                {# {% endif %} #}
                             {% endif %}
                             
                         </div>

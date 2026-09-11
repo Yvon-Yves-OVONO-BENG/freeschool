@@ -13,11 +13,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/department")]
 class PrintSubjectByDepartmentController extends AbstractController
 {
@@ -58,10 +54,16 @@ class PrintSubjectByDepartmentController extends AbstractController
             return $this->redirectToRoute('home_mainMenu');
         }
 
-        $department = $this->departmentRepository->findOneBySlug([
-            'slug' => $slug
+        $department = $this->departmentRepository->findOneBy([
+            'slug' => $slug,
+            'schoolYear' => $schoolYear
         ]);
         
+        if (!$department) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
+
         $school = $this->schoolRepository->findOneBy(['schoolYear' => $schoolYear]);
 
         $pdf = $this->printSubjectByDepartmentService->print($department, $school, $schoolYear);

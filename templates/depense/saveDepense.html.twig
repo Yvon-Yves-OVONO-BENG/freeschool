@@ -1,89 +1,131 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}{% trans %}Save depense{% endtrans %}{% endblock %}
+
 {% block infoMessage %}
-    {% include "includes/_info_message.html.twig" %}
+	{% include "includes/_info_message.html.twig" %}
 {% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-expenses-premium.css') }}">
+{% endblock %}
+
 {% block body %}
-
-<!-- App-Content -->
-	<div class="hor-content main-content">
+	<div class="hor-content main-content fs-expense-page">
 		<div class="container">
+			<div class="fs-expense-menu-safe-space" aria-hidden="true"></div>
 
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary"></h4>
-                </div>
-                <div class="page-rightheader">
-                    <div class="btn-list">
-                        
-                    </div>
-                </div>
-            </div>
-            <!--End Page header-->
-            <div class="card border-primary">
-                <div class="card-header">
-                    <div class="col-md-8">
-                        <button type="button" class="btn btn-info  mt-1 mb-1 me-3 form-control-sm">
-                            <span>{% trans %}Total expenses{% endtrans %}</span>
-                            <span class="badge bg-white text-dark rounded-pill">{{ numberOfDepenses }}</span>
-                        </button>
-                    </div>
-                    
-                    <div class="col-md-4 text-right">
-                        <a href="{{ path('display_depense') }}" class="btn btn-outline-primary">
-                            <i class="fa fa-eye"></i>
-                            {% trans %}Dislay expenses{% endtrans %}
-                        </a>
-                    </div>
-                    
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            {{ form_start(formDepense)}}
-                                <div class="row mb-1">
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            {{ form_row(formDepense.createdAt, {'attr': {'class': 'form-control form-control-sm '}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            {{ form_row(formDepense.montant, {'attr': {'class': 'form-control form-control-sm '}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            {{ form_row(formDepense.motif, {'attr': {'class': 'form-control form-control-sm'}}) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            {{ form_row(formDepense.rubrique, {'attr': {'class': 'form-control select2-show-search'}}) }}
-                                        </div>
-                                    </div> 
-                                </div>
+			<section class="fs-expense-hero">
+				<div class="fs-expense-hero__content">
+					<div>
+						<span class="fs-expense-eyebrow">
+							<i class="fa fa-money"></i>
+							{% trans %}Expenses workspace{% endtrans %}
+						</span>
 
-                                <div class="row">
-                                    <div class="col-md-4"></div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <button type="submit" class="btn btn-outline-primary btn-medium w-100 br-7" name="addStudent">
-                                                <i class="fa fa-save"></i>
-                                                {% trans %}Save{% endtrans %}
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4"></div>
-                                </div>
-                            {{ form_end(formDepense) }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+						<h1 class="fs-expense-title">
+							{% trans %}Save depense{% endtrans %}
+						</h1>
+
+						<p class="fs-expense-subtitle">
+							{% trans %}Register a new expense with date, amount, reason and rubric in a refined and responsive premium interface.{% endtrans %}
+						</p>
+					</div>
+
+					<div class="fs-expense-hero__actions">
+						<div class="fs-expense-hero-stat">
+							<span class="fs-expense-hero-stat__icon">
+								<i class="fe fe-list"></i>
+							</span>
+							<span class="fs-expense-hero-stat__label">{% trans %}Total expenses{% endtrans %}</span>
+							<strong class="fs-expense-hero-stat__value">{{ numberOfDepenses }}</strong>
+						</div>
+
+						<a href="{{ path('display_depense') }}" class="fs-expense-btn fs-expense-btn--light">
+							<i class="fa fa-eye"></i>
+							<span>{% trans %}Dislay expenses{% endtrans %}</span>
+						</a>
+					</div>
+				</div>
+			</section>
+
+			<section class="fs-expense-form-card">
+				<div class="fs-expense-card__header">
+					<div>
+						<span class="fs-expense-chip">
+							<i class="fe fe-edit"></i>
+							{% trans %}Expense form{% endtrans %}
+						</span>
+
+						<h2>{% trans %}Expense registration{% endtrans %}</h2>
+
+						<p>{% trans %}Fill the required information and save the expense. Your Symfony form fields are preserved.{% endtrans %}</p>
+					</div>
+
+					<span class="fs-expense-card__icon">
+						<i class="fa fa-save"></i>
+					</span>
+				</div>
+
+				{{ form_start(formDepense, {'attr': {'class': 'fs-expense-form needs-validation', 'novalidate': 'novalidate'}}) }}
+					<div class="fs-expense-form-grid">
+						<div class="fs-expense-field fs-expense-field--blue">
+							<span class="fs-expense-field__icon">
+								<i class="fe fe-calendar"></i>
+							</span>
+							<div class="fs-floating-field fs-symfony-row">
+								{{ form_row(formDepense.createdAt, {'attr': {'class': 'form-control form-control-sm fs-floating-control'}}) }}
+							</div>
+						</div>
+
+						<div class="fs-expense-field fs-expense-field--green">
+							<span class="fs-expense-field__icon">
+								<i class="fe fe-credit-card"></i>
+							</span>
+							<div class="fs-floating-field fs-symfony-row">
+								{{ form_row(formDepense.montant, {'attr': {'class': 'form-control form-control-sm fs-floating-control'}}) }}
+							</div>
+						</div>
+
+						<div class="fs-expense-field fs-expense-field--orange">
+							<span class="fs-expense-field__icon">
+								<i class="fe fe-message-square"></i>
+							</span>
+							<div class="fs-floating-field fs-symfony-row">
+								{{ form_row(formDepense.motif, {'attr': {'class': 'form-control form-control-sm fs-floating-control'}}) }}
+							</div>
+						</div>
+
+						<div class="fs-expense-field fs-expense-field--violet">
+							<span class="fs-expense-field__icon">
+								<i class="fe fe-layers"></i>
+							</span>
+							<div class="fs-floating-field fs-symfony-row">
+								{{ form_row(formDepense.rubrique, {'attr': {'class': 'form-control select2-show-search fs-floating-control'}}) }}
+							</div>
+						</div>
+					</div>
+
+					<div class="fs-expense-form-actions">
+						<a href="{{ path('display_depense') }}" class="fs-expense-btn fs-expense-btn--ghost">
+							<i class="fa fa-eye"></i>
+							<span>{% trans %}Dislay expenses{% endtrans %}</span>
+						</a>
+
+						<button type="submit" class="fs-expense-btn fs-expense-btn--primary fs-expense-submit-btn" name="addStudent">
+							<span class="fs-expense-submit-spinner" aria-hidden="true"></span>
+							<i class="fa fa-save fs-expense-submit-icon"></i>
+							<span>{% trans %}Save{% endtrans %}</span>
+						</button>
+					</div>
+				{{ form_end(formDepense) }}
+			</section>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-expenses-premium.js') }}"></script>
 {% endblock %}

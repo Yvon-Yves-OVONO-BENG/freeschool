@@ -10,11 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/student")]
 class ListStudentTrashController extends AbstractController
 {
@@ -71,6 +67,7 @@ class ListStudentTrashController extends AbstractController
         $studentTrashs = $this->studentRepository->findBy([
             'schoolYear' => $schoolYear, 
             'subSystem' => $subSystem, 
+            'supprime' => 1, 
         ]);
 
         return $this->render('student_trash/listStudentTrash.html.twig', [

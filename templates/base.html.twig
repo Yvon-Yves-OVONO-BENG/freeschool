@@ -5,10 +5,10 @@
 		<meta charset="UTF-8">
 		<meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=0'>
 		<meta content="Freeschool - Application complète de gestions scolaire" name="description">
-		<meta content="Spruko Private Limited" name="author">
+		<meta content="Yvon Yves Noel OVONO BENG" name="author">
 		<meta name="keywords" content="admin, admin template, dashboard, admin dashboard, responsive, bootstrap, bootstrap 5, admin theme, admin themes, bootstrap admin template, scss, ui, crm, modern, flat">
 		<title>
-			{% block title %}Bienvenue
+			{% block title %}{% trans %}Bienvenue{% endtrans %}
 			{% endblock %}
 		</title>
 
@@ -81,13 +81,103 @@
 		<!-- INTERNAL Prism Css -->
 		<link href="{{ asset ('build/custom2/plugins/prism/prism.css')}}" rel="stylesheet">
 
+		<style>
+			/* Toast / notification toujours au-dessus du menu */
+			#fs-toast-container,
+			.toast-container,
+			#toast-container,
+			.notyf,
+			.iziToast-wrapper,
+			.jq-toast-wrap,
+			.bootstrap-notify-container,
+			.alertify-notifier,
+			.swal2-container {
+				z-index: 2147483647 !important;
+			}
+
+			#fs-toast-container {
+				position: fixed !important;
+				top: 92px !important;
+				right: 22px !important;
+				width: min(380px, calc(100vw - 28px));
+				pointer-events: none;
+			}
+
+			#fs-toast-container .alert,
+			#fs-toast-container .toast,
+			#fs-toast-container .fs-toast {
+				pointer-events: auto;
+			}
+
+			.fs-toast {
+				border: 0;
+				border-radius: 14px;
+				padding: 14px 16px;
+				margin-bottom: 12px;
+				color: #fff;
+				font-weight: 800;
+				box-shadow: 0 18px 40px rgba(15, 23, 42, .22);
+				animation: fsToastIn .25s ease-out;
+			}
+
+			.fs-toast-success {
+				background: linear-gradient(135deg, #16a34a, #22c55e);
+			}
+
+			.fs-toast-info {
+				background: linear-gradient(135deg, #2563eb, #06b6d4);
+			}
+
+			.fs-toast-warning {
+				background: linear-gradient(135deg, #f59e0b, #f97316);
+			}
+
+			.fs-toast-danger,
+			.fs-toast-error {
+				background: linear-gradient(135deg, #dc2626, #ef4444);
+			}
+
+			@keyframes fsToastIn {
+				from {
+					opacity: 0;
+					transform: translateY(-10px) scale(.98);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0) scale(1);
+				}
+			}
+
+			@media (max-width: 767px) {
+				#fs-toast-container {
+					top: 78px !important;
+					right: 14px !important;
+					left: 14px !important;
+					width: auto;
+				}
+			}
+
+			/* Le loader initial ne doit jamais bloquer l'application pendant le
+			   chargement des scripts secondaires. */
+			#global-loader {
+				transition: opacity .18s ease, visibility .18s ease !important;
+			}
+
+			#global-loader.fs-global-loader--hidden {
+				opacity: 0 !important;
+				visibility: hidden !important;
+				pointer-events: none !important;
+			}
+		</style>
+
 		{% set mySession = app.session %}
 		
-		{% if mySession.get('ajout') is defined 
-			or mySession.get('miseAjour') is defined 
-			or mySession.get('suppression') is defined  
-			or mySession.get('saisiNotes') is defined   
-			or mySession.get('resetPwd') is defined   
+		{% if mySession.get('ajout') is not null 
+			or mySession.get('miseAjour') is not null 
+			or mySession.get('suppression') is not null  
+			or mySession.get('saisiNotes') is not null   
+			or mySession.get('sessionExpiree') is not null   
+			or mySession.get('resetPwd') is not null   
 			%}
 			<link href="{{ asset ('build/custom2/plugins/notify/css/notifIt.css')}}" rel="stylesheet"/> 
 		{% endif %}
@@ -95,11 +185,12 @@
 		<script src="{{ asset ('myJs/swal.js') }}"></script>
 	</head>
 
-	<body class="app">
+	<body class="app fs-saas-premium">
 		{# On recupère la session #}
 		
 		{% set currentSchoolYear = "Since 2019" %}
 		{% set schoolName = "FREESCHOOL" %}
+		{% set subSystem = "Francophone / French Speaker" %}
 
 		{% set currentUser = app.user %}
 
@@ -115,9 +206,9 @@
 			{# On recupère le nom de l'établissement francophone ou anglophone #}
 			{# {% if  mySession.school is not null %} #}
 				{% if app.request.locale == 'fr' %}
-					{% set schoolName = school ? school.frenchName :  "FreeSchool" %}
+					{% set schoolName = school is defined and school ? school.frenchName|default('FreeSchool') : 'FreeSchool' %}
 					{% elseif app.request.locale == 'en' %}
-					{% set schoolName = school ? school.englishName : "FreeSchool" %}
+					{% set schoolName = school is defined and school ? school.englishName|default('FreeSchool') : 'FreeSchool' %}
 				{% endif %}
 				
 			{# {% endif %} #}
@@ -127,6 +218,34 @@
 		<div id="global-loader" >
 			<img src="{{ asset ('build/custom2/images/svgs/loader3.svg')}}" alt="loader" style="width: 74px; height: 74px;">
 		</div>
+
+		<script>
+			(function () {
+				'use strict';
+
+				var loader = document.getElementById('global-loader');
+				var hidden = false;
+
+				function hideGlobalLoader() {
+					if (!loader || hidden) return;
+					hidden = true;
+					loader.classList.add('fs-global-loader--hidden');
+					loader.setAttribute('aria-hidden', 'true');
+					window.setTimeout(function () {
+						if (loader) loader.style.display = 'none';
+					}, 220);
+				}
+
+				window.fsHideGlobalLoader = hideGlobalLoader;
+				document.addEventListener('DOMContentLoaded', hideGlobalLoader, { once: true });
+				window.addEventListener('load', hideGlobalLoader, { once: true });
+				window.addEventListener('pageshow', hideGlobalLoader);
+
+				/* Garde-fou : même si une ressource externe répond lentement, le contenu
+				   devient accessible rapidement et les scripts continuent de charger. */
+				window.setTimeout(hideGlobalLoader, 850);
+			})();
+		</script>
 
 		<!--- End Global-loader-->
 		<!-- Page -->
@@ -140,8 +259,93 @@
 					{# {{ encore_entry_link_tags('app') }} #}
 				{% endblock %}
 
+				<style id="fs4-role-page-start-fix">
+					/* Alignement final des débuts de pages côté enseignant, après les CSS propres aux templates. */
+					@media (min-width: 992px) {
+						body.fs4-has-header.fs4-has-menu .page-main > .hor-content.main-content.fs-mark-page,
+						body.fs4-has-header.fs4-has-menu .page-main > .hor-content.main-content.fs-ta-page,
+						body.fs4-has-header.fs4-has-menu .page-main > .hor-content.main-content.fs-term-stats-page,
+						body.fs4-has-header.fs4-has-menu .page-main > .hor-content.main-content.fs-assumed-duty-page,
+						body.fs4-has-header.fs4-has-menu .page-main > .hor-content.main-content.fs-done-page,
+						body.fs4-has-header.fs4-has-menu .page-main > .hor-content.main-content.fs-plan-form-page,
+						body.fs4-has-header.fs4-has-menu .page-main > .hor-content.main-content.fs-plan-page,
+						body.fs4-has-header.fs4-has-menu .page-main > .hor-content.main-content.fs-lesson-done-page {
+							margin-top: 0 !important;
+							padding-top: calc(var(--fs4-desktop-menu-height, 58px) + 8px) !important;
+						}
+
+						body.fs4-has-header.fs4-has-menu .page-main > .hor-content.main-content.fs-mark-page > .container,
+						body.fs4-has-header.fs4-has-menu .page-main > .hor-content.main-content.fs-ta-page > .container,
+						body.fs4-has-header.fs4-has-menu .page-main > .hor-content.main-content.fs-term-stats-page > .container,
+						body.fs4-has-header.fs4-has-menu .page-main > .hor-content.main-content.fs-assumed-duty-page > .container,
+						body.fs4-has-header.fs4-has-menu .page-main > .hor-content.main-content.fs-done-page > .container,
+						body.fs4-has-header.fs4-has-menu .page-main > .hor-content.main-content.fs-plan-form-page > .container,
+						body.fs4-has-header.fs4-has-menu .page-main > .hor-content.main-content.fs-plan-page > .container,
+						body.fs4-has-header.fs4-has-menu .page-main > .hor-content.main-content.fs-lesson-done-page > .container {
+							padding-top: 0 !important;
+							margin-top: 0 !important;
+						}
+
+						body.fs4-has-header.fs4-has-menu .hor-content.main-content.fs-mark-page > .container > .fs-mark-hero:first-child,
+						body.fs4-has-header.fs4-has-menu .hor-content.main-content.fs-ta-page > .container > .fs-ta-hero:first-child,
+						body.fs4-has-header.fs4-has-menu .hor-content.main-content.fs-term-stats-page > .container > .fs-term-stats-hero:first-child,
+						body.fs4-has-header.fs4-has-menu .hor-content.main-content.fs-assumed-duty-page > .container > .fs-assumed-duty-hero:first-child,
+						body.fs4-has-header.fs4-has-menu .hor-content.main-content.fs-done-page > .container > .fs-done-hero:first-child,
+						body.fs4-has-header.fs4-has-menu .hor-content.main-content.fs-plan-form-page > .container > .fs-plan-hero:first-child,
+						body.fs4-has-header.fs4-has-menu .hor-content.main-content.fs-plan-page > .container > .fs-plan-hero:first-child,
+						body.fs4-has-header.fs4-has-menu .hor-content.main-content.fs-lesson-done-page > .container > .fs-lesson-done-hero:first-child {
+							margin-top: .5rem !important;
+						}
+					}
+
+					
+				</style>
+
 				{% block javascripts %}
 					{# {{ encore_entry_script_tags('app') }} #}
+					<script>
+						(function () {
+							document.addEventListener('submit', function (event) {
+								const form = event.target;
+								if (!form) return;
+	
+								const submitter = event.submitter || form.querySelector('button[type="submit"], input[type="submit"]');
+								const target = (form.getAttribute('target') || '').toLowerCase();
+								const visibleLabel = submitter && submitter.textContent ? submitter.textContent.toLowerCase() : '';
+								const action = (form.getAttribute('action') || '').toLowerCase();
+								const isPrintSubmission =
+									form.dataset.noSpinner === '1' ||
+									target === '_blank' ||
+									/(print|imprim|pdf)/i.test(visibleLabel + ' ' + action);
+	
+								if (!isPrintSubmission) return;
+	
+								const buttons = Array.from(form.querySelectorAll('button[type="submit"], input[type="submit"]'));
+								const snapshots = buttons.map(function (button) {
+									return {
+										button: button,
+										disabled: button.disabled,
+										html: button.tagName === 'BUTTON' ? button.innerHTML : null,
+										className: button.className
+									};
+								});
+	
+								// Après tous les autres handlers de submit, on restaure immédiatement le bouton d'impression.
+								window.setTimeout(function () {
+									form.dataset.submitting = '0';
+									snapshots.forEach(function (snapshot) {
+										const button = snapshot.button;
+										button.disabled = snapshot.disabled;
+										button.className = snapshot.className;
+										if (snapshot.html !== null) {
+											button.innerHTML = snapshot.html;
+										}
+										delete button.dataset.originalHtml;
+									});
+								}, 0);
+							}, true);
+						})();
+					</script>
 				{% endblock %}
 
 				{% block body %}{% endblock %}
@@ -328,10 +532,9 @@
 		<script src="{{ asset ('build/custom2/plugins/sweet-alert/sweetalert.min.js')}}"></script>
 		<script src="{{ asset ('build/custom2/js/sweet-alert.js')}}"></script>
 		
-
 		{% set mySession = app.session %}
-
-		{% if mySession.get('ajout') is defined %}
+		
+		{% if mySession.get('ajout') is not null %}
 			<!-- NOTIFICATIONS js-->
 			<script src="{{ asset ('build/custom2/js/notifications.js')}}"></script>
 
@@ -347,7 +550,7 @@
 				{% for message in app.flashes('info') %}
 					{% set notificationSuccess = message %}
 				{% endfor %}
-
+				{% if notificationSuccess is not empty %}
 				<script>
 
 					{# swal('Success !', '{{ notificationSuccess }}', 'success'); #}
@@ -375,10 +578,11 @@
 							}
 						});
 				</script>
+				{% endif %}
 			{% endif %}
 		{% endif %}
 
-		{% if mySession.get('saisiNotes') is defined %}
+		{% if mySession.get('saisiNotes') is not null %}
 			<!-- NOTIFICATIONS js-->
 			<script src="{{ asset ('build/custom2/js/notifications.js')}}"></script>
 
@@ -394,7 +598,7 @@
 				{% for message in app.flashes('info') %}
 					{% set notificationSuccess = message %}
 				{% endfor %}
-
+				{% if notificationSuccess is not empty %}
 				<script>
 					{# swal({
 						title: "{% trans %}Congratulations{% endtrans %}",
@@ -430,10 +634,11 @@
 						});
 						} #}
 				</script>
+				{% endif %}
 			{% endif %}
 		{% endif %}
 
-		{% if mySession.get('miseAjour') is defined %}
+		{% if mySession.get('miseAjour') is not null %}
 			<!-- NOTIFICATIONS js-->
 			<script src="{{ asset ('build/custom2/js/notifications.js')}}"></script>
 
@@ -449,7 +654,7 @@
 				{% for message in app.flashes('info') %}
 					{% set notificationSuccess = message %}
 				{% endfor %}
-
+				{% if notificationSuccess is not empty %}
 				<script>
 
 					{# swal('Success !', '{{ notificationSuccess }}', 'success'); #}
@@ -477,10 +682,11 @@
 							}
 						});
 				</script>
+				{% endif %}
 			{% endif %}
 		{% endif %}
 
-		{% if mySession.get('suppression') is defined %}
+		{% if mySession.get('suppression') is not null %}
 			<!-- NOTIFICATIONS js-->
 			<script src="{{ asset ('build/custom2/js/notifications.js')}}"></script>
 
@@ -495,7 +701,7 @@
 				{% for message in app.flashes('info') %}
 					{% set notificationSuppression = message %}
 				{% endfor %}
-
+				{% if notificationSuppression is not empty %}
 				<script>
 					{# swal({
 						title: "{% trans %}Suppression{% endtrans %}",
@@ -513,9 +719,10 @@
 					});
 				</script>
 			{% endif %}
+			{% endif %}
 		{% endif %}
 		
-		{% if mySession.get('resetPwd') is defined %}
+		{% if mySession.get('resetPwd') is not null %}
 			<!-- NOTIFICATIONS js-->
 			<script src="{{ asset ('build/custom2/js/notifications.js')}}"></script>
 
@@ -545,6 +752,118 @@
 				</script>
 			{% endif %}
 		{% endif %}
+
+		{% if mySession.get('sessionExpiree') is not null %}
+			<!-- NOTIFICATIONS js-->
+			<script src="{{ asset ('build/custom2/js/notifications.js')}}"></script>
+
+			<!-- INTERNAL Notifications js -->
+			<script src="{{ asset ('build/custom2/plugins/notify/js/rainbow.js')}}"></script>
+			<script src="{{ asset ('build/custom2/plugins/notify/js/sample.js')}}"></script>
+			<script src="{{ asset ('build/custom2/plugins/notify/js/notifIt.js')}}"></script>
+			
+			{% if mySession.get('sessionExpiree') == 1 %}
+				{% set notificationSuccess = "" %}
+
+				{% for message in app.flashes('info') %}
+					{% set notificationSuccess = message %}
+				{% endfor %}
+				{% if notificationSuccess is not empty %}
+				<script>
+
+					// Exemple d'utilisation de SweetAlert2
+						Swal.fire({
+							title: '{{ notificationSuccess }}',
+							text: "Please connect !",
+							icon: 'error',
+							allowOutsideClick: false,
+							allowEscapeKey: false,
+							allowEnterKey: false,
+							showConfirmButton: true,
+							confirmButtonText: "OK",
+						}).then((result) => {
+							if (result.isConfirmed) {
+								// Redirection vers une autre page ou rafraîchissement de la page actuelle
+								window.location.href = "{{ path ('app_logout') }}"; // Exemple de redirection
+							}
+						});
+						// Empêcher toute interaction utilisateur
+
+				</script>
+			{% endif %}
+			{% endif %}
+		{% endif %}
+		<script>
+			(function () {
+				document.addEventListener('submit', function (event) {
+					const form = event.target;
+					if (!form || form.dataset.submitting === '1') {
+						return;
+					}
+
+					if (form.checkValidity && !form.checkValidity()) {
+						return;
+					}
+
+					const submitter = event.submitter || form.querySelector('button[type="submit"], input[type="submit"]');
+
+					const target = (form.getAttribute('target') || '').toLowerCase();
+					const submitterSignature = [
+						submitter && submitter.textContent,
+						form.getAttribute('action')
+					].filter(Boolean).join(' ').toLowerCase();
+
+					// Les impressions/PDF ne doivent jamais verrouiller le bouton ni afficher de spinner.
+					const isPrintSubmission =
+						form.dataset.noSpinner === '1' ||
+						target === '_blank' ||
+						/(print|imprim|pdf)/i.test(submitterSignature);
+
+					if (isPrintSubmission) {
+						return;
+					}
+
+					if (submitter && submitter.name) {
+						const hiddenSubmitter = document.createElement('input');
+						hiddenSubmitter.type = 'hidden';
+						hiddenSubmitter.name = submitter.name;
+						hiddenSubmitter.value = submitter.value || '1';
+						form.appendChild(hiddenSubmitter);
+					}
+
+					form.dataset.submitting = '1';
+
+					const buttons = form.querySelectorAll('button[type="submit"], input[type="submit"]');
+					buttons.forEach(function (button) {
+						button.disabled = true;
+
+						if (button.tagName === 'BUTTON') {
+							const label = button.textContent.trim() || 'Traitement...';
+							button.dataset.originalHtml = button.innerHTML;
+							button.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>' + label;
+						}
+					});
+
+					if ((form.getAttribute('target') || '').toLowerCase() === '_blank') {
+						window.setTimeout(function () {
+							form.dataset.submitting = '0';
+							buttons.forEach(function (button) {
+								button.disabled = false;
+
+								if (button.dataset.originalHtml) {
+									button.innerHTML = button.dataset.originalHtml;
+								}
+							});
+						}, 3000);
+					}
+				}, true);
+			})();
+		</script>
+
+		{% include "includes/_saas_premium_theme.html.twig" %}
+
+	
+		{% include "includes/_premium_layout_behaviour.html.twig" %}
 
 	</body>
 </html>

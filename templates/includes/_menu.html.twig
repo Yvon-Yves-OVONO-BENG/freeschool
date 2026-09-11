@@ -1,830 +1,2554 @@
-<!--app header-->
-				<div class="hor-header header top-header" style="background-image: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 51%, rgba(0,212,255,1) 80%);">
-					<div class="container">
-						<div class="d-flex">
-							<a class="animated-arrow hor-toggle horizontal-navtoggle"><span></span></a>
-							<a class="header-brand" href="javascript:void(0);">
-								<img src="{{asset('build/custom2/images/brand/logo_white.png')}}" class="header-brand-img desktop-lgo" alt="Freedom logo">
-								<img src="{{asset('build/custom2/images/brand/logo_white.png')}}" class="header-brand-img dark-logo" alt="Freedom logo">
-								<img src="{{asset('build/custom2/images/brand/favicon.png')}}" class="header-brand-img mobile-logo" alt="Freedom logo">
-								<img src="{{asset('build/custom2/images/brand/favicon1.png')}}" class="header-brand-img darkmobile-logo" alt="Freedom logo">
-							</a>
-							<div class="mt-1 d-md-block d-none text-center">
-								<form class="form-inline text-center">
-									<div class="search-element text-center">
-										<h3 class="page-title mb-0 text-primary" style="font-size: 16px; text-align:center; color: #ffffff !important; "><b>{{ schoolName }} - {{ currentSchoolYear }}</b></h3>
-										
-										<h3 class="page-title mb-0 text-primary" style="font-size: 14px; text-align:center; color: #ffffff !important;">
-											{% if subSystem == 'Francophone / French Speaker' %}
-												<img src="{{asset('build/custom/images/fr.png')}}" alt="img" class="me-2 country">
-												{% else %}
-													<img src="{{asset('build/custom/images/en.png')}}" alt="img" class="me-2 country">
-											{% endif %}
-											<b> {% trans %}Section : {% endtrans %} {{ subSystem }}</b>
-										</h3>
+<style>
+	:root {
+		--fs4-primary: #2563eb;
+		--fs4-primary-dark: #1d4ed8;
+		--fs4-text: #0f172a;
+		--fs4-muted: #64748b;
+		--fs4-border: #e2e8f0;
+		--fs4-soft: #f8fafc;
+		--fs4-shadow: 0 20px 55px rgba(15, 23, 42, .18);
 
-									</div>
-								</form>
-							</div>
-							<!-- SEARCH --><!-- SEARCH -->
-							<div class="d-flex order-lg-2 ms-auto main-header-end">
-								<button  class="navbar-toggler navresponsive-toggler d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent-4" aria-controls="navbarSupportedContent-4" aria-expanded="true" aria-label="Toggle navigation">
-									<i class="fe fe-more-vertical header-icons navbar-toggler-icon"></i>
-								</button>
-								<div class="navbar navbar-expand-lg navbar-collapse responsive-navbar p-0">
-									<div class="collapse navbar-collapse" id="navbarSupportedContent-4">
-										<div class="d-flex order-lg-2">
-											<!-- SEARCH -->
-											<div class="dropdown d-flex">
-												<a class="nav-link icon theme-layout nav-link-bg layout-setting">
-													<span class="light-layout"><svg xmlns="http://www.w3.org/2000/svg" class="header-icon" width="24" height="24" viewBox="0 0 24 24"><path d="M20.742 13.045a8.088 8.088 0 0 1-2.077.271c-2.135 0-4.14-.83-5.646-2.336a8.025 8.025 0 0 1-2.064-7.723A1 1 0 0 0 9.73 2.034a10.014 10.014 0 0 0-4.489 2.582c-3.898 3.898-3.898 10.243 0 14.143a9.937 9.937 0 0 0 7.072 2.93 9.93 9.93 0 0 0 7.07-2.929 10.007 10.007 0 0 0 2.583-4.491 1.001 1.001 0 0 0-1.224-1.224zm-2.772 4.301a7.947 7.947 0 0 1-5.656 2.343 7.953 7.953 0 0 1-5.658-2.344c-3.118-3.119-3.118-8.195 0-11.314a7.923 7.923 0 0 1 2.06-1.483 10.027 10.027 0 0 0 2.89 7.848 9.972 9.972 0 0 0 7.848 2.891 8.036 8.036 0 0 1-1.484 2.059z"/></svg></span>
-													<span class="dark-layout"><svg xmlns="http://www.w3.org/2000/svg" class="header-icon" width="24" height="24" viewBox="0 0 24 24"><path d="M6.993 12c0 2.761 2.246 5.007 5.007 5.007s5.007-2.246 5.007-5.007S14.761 6.993 12 6.993 6.993 9.239 6.993 12zM12 8.993c1.658 0 3.007 1.349 3.007 3.007S13.658 15.007 12 15.007 8.993 13.658 8.993 12 10.342 8.993 12 8.993zM10.998 19h2v3h-2zm0-17h2v3h-2zm-9 9h3v2h-3zm17 0h3v2h-3zM4.219 18.363l2.12-2.122 1.415 1.414-2.12 2.122zM16.24 6.344l2.122-2.122 1.414 1.414-2.122 2.122zM6.342 7.759 4.22 5.637l1.415-1.414 2.12 2.122zm13.434 10.605-1.414 1.414-2.122-2.122 1.414-1.414z"/></svg></span>
-												</a>
-											</div><!-- Theme-Layout -->
-											<div class="dropdown  header-fullscreen d-flex" >
-												<a  class="nav-link icon full-screen-link p-0"  id="fullscreen-button">
-													<svg xmlns="http://www.w3.org/2000/svg" class="header-icon" width="24" height="24" viewBox="0 0 24 24"><path d="M5 5h5V3H3v7h2zm5 14H5v-5H3v7h7zm11-5h-2v5h-5v2h7zm-2-4h2V3h-7v2h5z"/></svg>
-												</a>
-											</div>
-											<div class="dropdown country-selector d-flex">
-												<a href="javascript:void(0);" class="nav-link leading-none" data-bs-toggle="dropdown">
-													<span class="header-avatar1">
-													{% if app.request.locale == 'fr' %}
-														<img src="{{asset('build/custom/images/fr.png')}}" alt="img" class="me-2 country">
-														{% elseif app.request.locale == 'en' %}
-														<img src="{{asset('build/custom/images/en.png')}}" alt="img" class="me-2 country">
-													{% endif %}
-														<span class="fs-14 font-weight-semibold mt-2">{% trans %}Langue{% endtrans %} </span>
-													</span>
-												</a>
-												<div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow animated border-primary">
-													{% for locale in locales %}
-														{% if locale == 'fr' %}
-														<a class="dropdown-item d-flex" href="{{ path('translation_changeLocale', {'locale': locale}) }}">
-															<img src="{{asset('build/custom/images/fr.png')}}" alt="img" class="me-2 country mt-1">
-															<span class="fs-13">{% trans %}Français{% endtrans %} </span>
-														</a>
-														{% endif %}
+		--fs4-header-z: 30000;
+		--fs4-menu-z: 29900;
+		--fs4-dropdown-z: 32000;
+		--fs4-submenu-z: 31000;
+		--fs4-overlay-z: 29000;
 
-														{% if locale == 'en' %}
-															<a class="dropdown-item d-flex" href="{{ path('translation_changeLocale', {'locale': locale}) }}">
-																<img src="{{asset('build/custom/images/en.png')}}" alt="img" class="me-2 country mt-1">
-																<span class="fs-13">{% trans %}Anglais{% endtrans %} </span>
-															</a>
-														{% endif %}
-													
-													{% endfor %}
-												</div>
-											</div>
-											
-											<div class="dropdown profile-dropdown d-flex">
-												<a href="javascript:void(0);" class="nav-link pe-0 leading-none" data-bs-toggle="dropdown">
-													<span class="header-avatar1">
-														{# <img src="{{asset('build/custom2/images/users/2.jpg" alt="img')}}" class="avatar avatar-md brround"> #}
-														<svg class="header-icon me-2" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM7.07 18.28c.43-.9 3.05-1.78 4.93-1.78s4.51.88 4.93 1.78C15.57 19.36 13.86 20 12 20s-3.57-.64-4.93-1.72zm11.29-1.45c-1.43-1.74-4.9-2.33-6.36-2.33s-4.93.59-6.36 2.33C4.62 15.49 4 13.82 4 12c0-4.41 3.59-8 8-8s8 3.59 8 8c0 1.82-.62 3.49-1.64 4.83zM12 6c-1.94 0-3.5 1.56-3.5 3.5S10.06 13 12 13s3.5-1.56 3.5-3.5S13.94 6 12 6zm0 5c-.83 0-1.5-.67-1.5-1.5S11.17 8 12 8s1.5.67 1.5 1.5S12.83 11 12 11z"/></svg>
+		--fs4-desktop-header-height: 72px;
+		--fs4-desktop-menu-height: 58px;
+		--fs4-mobile-header-height: 64px;
+	}
 
-														{{ currentUser ? currentUser.fullName : 'Anonyme'}}
-														 
-													</span>
-													
-												</a>
-												{% if currentUser %}
-													<div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow animated border-primary">
-														<a class="dropdown-item d-flex" href="{{path('edit_my_password')}}">
+	/* =========================================================
+	   HEADER FIXE
+	   ========================================================= */
 
-															<svg class="header-icon me-2" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-key" viewBox="0 0 16 16">
-																<path d="M0 8a4 4 0 0 1 7.465-2H14a.5.5 0 0 1 .354.146l1.5 1.5a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0L13 9.207l-.646.647a.5.5 0 0 1-.708 0L11 9.207l-.646.647a.5.5 0 0 1-.708 0L9 9.207l-.646.647A.5.5 0 0 1 8 10h-.535A4 4 0 0 1 0 8zm4-3a3 3 0 1 0 2.712 4.285A.5.5 0 0 1 7.163 9h.63l.853-.854a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.793-.793-1-1h-6.63a.5.5 0 0 1-.451-.285A3 3 0 0 0 4 5z"/>
-																<path d="M4 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
-															</svg>
+	.fs4-header,
+	.hor-header.fs4-header,
+	.header.fs4-header,
+	.top-header.fs4-header {
+		position: fixed !important;
+		top: 0 !important;
+		left: 0 !important;
+		right: 0 !important;
+		width: 100% !important;
+		z-index: var(--fs4-header-z) !important;
+		overflow: visible !important;
+		background: linear-gradient(90deg, #050816 0%, #14143c 45%, #342c82 100%) !important;
+		box-shadow: 0 10px 30px rgba(15, 23, 42, .22) !important;
+		border-bottom: 1px solid rgba(255,255,255,.12) !important;
+	}
 
-															<div class="fs-13"> {% trans %}Edit my password{% endtrans %} </div>
-														</a>
+	body.fs4-has-header {
+		padding-top: var(--fs4-desktop-header-height) !important;
+	}
 
-														<a class="dropdown-item d-flex" href="{{path('reponse_question')}}">
+	body.fs4-has-header.fs4-has-menu {
+		padding-top: var(--fs4-desktop-header-height) !important;
+	}
 
-															<svg class="header-icon me-2" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-key" viewBox="0 0 16 16">
-																<path d="M0 8a4 4 0 0 1 7.465-2H14a.5.5 0 0 1 .354.146l1.5 1.5a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0L13 9.207l-.646.647a.5.5 0 0 1-.708 0L11 9.207l-.646.647a.5.5 0 0 1-.708 0L9 9.207l-.646.647A.5.5 0 0 1 8 10h-.535A4 4 0 0 1 0 8zm4-3a3 3 0 1 0 2.712 4.285A.5.5 0 0 1 7.163 9h.63l.853-.854a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.793-.793-1-1h-6.63a.5.5 0 0 1-.451-.285A3 3 0 0 0 4 5z"/>
-																<path d="M4 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
-															</svg>
+	.sticky.fs4-menu-shell {
+		margin-bottom: 0 !important;
+	}
 
-															<div class="fs-13"> {% trans %}Secret question{% endtrans %} </div>
-														</a>
+	.fs4-menu-shell + *,
+	.fs4-menu-shell ~ .app-content,
+	.fs4-menu-shell ~ .main-content,
+	.fs4-menu-shell ~ .page,
+	.fs4-menu-shell ~ .page-main {
+		margin-top: 0 !important;
+		padding-top: 0 !important;
+	}
 
-														<a class="dropdown-item d-flex" href="{{path('app_logout')}}">
+	.fs4-header .container,
+	.fs4-header-inner,
+	.fs4-actions,
+	.fs4-actions .dropdown {
+		overflow: visible !important;
+	}
 
-															<svg class="header-icon me-2" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-left" viewBox="0 0 16 16">
-																<path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0v2z"/>
-																<path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z"/>
-															</svg>
-															<div class="fs-13"> {% trans %}Sign Out{% endtrans %} </div>
-														</a>
-													</div>
-												{% endif %}
+	.fs4-header-inner {
+		position: relative;
+		min-height: var(--fs4-desktop-header-height);
+		display: grid;
+		grid-template-columns: 240px minmax(0, 1fr) minmax(320px, 440px);
+		align-items: center;
+		gap: 16px;
+	}
 
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
+	.fs4-brand {
+		display: inline-flex;
+		align-items: center;
+		text-decoration: none;
+		min-width: 0;
+	}
+
+	.fs4-brand img {
+		max-height: 52px;
+		width: auto;
+		object-fit: contain;
+	}
+
+	.fs4-center {
+		text-align: center;
+		color: #fff;
+		min-width: 0;
+		padding: 0 10px;
+	}
+
+	.fs4-school-name {
+		display: block;
+		font-size: 15px;
+		font-weight: 800;
+		letter-spacing: -.02em;
+		line-height: 1.15;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.fs4-school-section {
+		margin-top: 7px;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+		max-width: 100%;
+		font-size: 12px;
+		font-weight: 600;
+		color: rgba(255,255,255,.82);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.fs4-flag {
+		width: 19px;
+		height: 19px;
+		border-radius: 50%;
+		object-fit: cover;
+		box-shadow: 0 0 0 2px rgba(255,255,255,.22);
+	}
+
+	.fs4-actions {
+		position: relative;
+		z-index: var(--fs4-dropdown-z) !important;
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		gap: 9px;
+		min-width: 0;
+	}
+
+	.fs4-actions .dropdown {
+		position: relative !important;
+		z-index: var(--fs4-dropdown-z) !important;
+	}
+
+	.fs4-pill {
+		height: 42px;
+		display: inline-flex;
+		align-items: center;
+		gap: 9px;
+		padding: 0 13px;
+		border-radius: 14px;
+		border: 1px solid rgba(255,255,255,.16);
+		background: rgba(255,255,255,.13);
+		color: #fff !important;
+		text-decoration: none;
+		backdrop-filter: blur(12px);
+		transition: .18s ease;
+		max-width: 100%;
+	}
+
+	.fs4-pill:hover,
+	.fs4-pill[aria-expanded="true"] {
+		background: rgba(255,255,255,.22);
+		color: #fff !important;
+	}
+
+	.fs4-pill-icon {
+		width: 28px;
+		height: 28px;
+		min-width: 28px;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 10px;
+		background: rgba(255,255,255,.18);
+		font-size: 14px;
+	}
+
+	.fs4-pill-text {
+		font-size: 13px;
+		font-weight: 700;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.fs4-avatar {
+		width: 28px;
+		height: 28px;
+		min-width: 28px;
+		border-radius: 10px;
+		background: #fff;
+		color: var(--fs4-primary-dark);
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 13px;
+		font-weight: 900;
+	}
+
+	.fs4-dropdown,
+	.fs4-header .dropdown-menu.fs4-dropdown,
+	.fs4-header .dropdown-menu.show.fs4-dropdown,
+	.fs4-header .dropdown-menu[data-bs-popper].fs4-dropdown {
+		position: absolute !important;
+		top: calc(100% + 8px) !important;
+		right: 0 !important;
+		left: auto !important;
+		inset: auto 0 auto auto !important;
+		transform: none !important;
+		z-index: var(--fs4-dropdown-z) !important;
+		margin: 0 !important;
+		padding: 9px !important;
+		border: 1px solid var(--fs4-border) !important;
+		border-radius: 18px !important;
+		box-shadow: var(--fs4-shadow) !important;
+		min-width: 240px;
+		background: #fff !important;
+	}
+
+	.fs4-dropdown .dropdown-item {
+		display: flex !important;
+		align-items: center;
+		gap: 10px;
+		padding: 10px 12px !important;
+		border-radius: 12px;
+		color: #334155 !important;
+		font-size: 13px;
+		font-weight: 600;
+		transition: transform .18s ease, background-color .18s ease, color .18s ease;
+	}
+
+	.fs4-dropdown .dropdown-item:hover {
+		transform: translateX(6px);
+		background: #eff6ff !important;
+		color: var(--fs4-primary-dark) !important;
+	}
+
+	.fs4-dropdown .dropdown-item i {
+		width: 18px;
+		text-align: center;
+		color: var(--fs4-primary);
+	}
+
+	.fs4-dropdown .dropdown-item[href*="logout"],
+	.fs4-dropdown .dropdown-item:last-child {
+		color: #dc2626 !important;
+	}
+
+	.fs4-dropdown .dropdown-item[href*="logout"] i,
+	.fs4-dropdown .dropdown-item:last-child i {
+		color: #dc2626 !important;
+	}
+
+	.fs4-dropdown .dropdown-item[href*="logout"]:hover,
+	.fs4-dropdown .dropdown-item:last-child:hover {
+		background: #fef2f2 !important;
+		color: #b91c1c !important;
+	}
+
+	.fs4-mobile-btn {
+		display: none;
+		width: 44px;
+		height: 44px;
+		min-width: 44px;
+		border: 1px solid rgba(255,255,255,.18);
+		border-radius: 14px;
+		background: rgba(255,255,255,.13);
+		color: #fff;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		box-shadow: inset 0 1px 0 rgba(255,255,255,.15), 0 8px 20px rgba(15,23,42,.15);
+		backdrop-filter: blur(12px);
+		transition: transform .18s ease, background-color .18s ease, border-color .18s ease;
+	}
+
+	.fs4-mobile-btn:hover,
+	body.fs4-menu-open #fs4MenuToggle,
+	body.fs4-actions-open #fs4ActionsToggle {
+		background: rgba(255,255,255,.22);
+		border-color: rgba(255,255,255,.28);
+	}
+
+	.fs4-mobile-btn:active {
+		transform: scale(.96);
+	}
+
+	.fs4-mobile-btn i {
+		font-size: 22px;
+		line-height: 1;
+	}
+
+	.fs4-hamburger-lines {
+		width: 22px;
+		height: 18px;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		gap: 5px;
+	}
+
+	.fs4-hamburger-lines span {
+		display: block;
+		width: 100%;
+		height: 2px;
+		border-radius: 99px;
+		background: #fff;
+		transform-origin: center;
+		transition: transform .22s ease, opacity .18s ease;
+	}
+
+	body.fs4-menu-open .fs4-hamburger-lines span:nth-child(1) {
+		transform: translateY(7px) rotate(45deg);
+	}
+
+	body.fs4-menu-open .fs4-hamburger-lines span:nth-child(2) {
+		opacity: 0;
+	}
+
+	body.fs4-menu-open .fs4-hamburger-lines span:nth-child(3) {
+		transform: translateY(-7px) rotate(-45deg);
+	}
+
+	/* =========================================================
+	   MENU DESKTOP FIXE
+	   ========================================================= */
+
+	.fs4-menu-overlay {
+		display: none;
+	}
+
+	@media (min-width: 992px) {
+		.sticky.fs4-menu-shell {
+			position: fixed !important;
+			top: var(--fs4-desktop-header-height) !important;
+			left: 0 !important;
+			right: 0 !important;
+			width: 100% !important;
+			z-index: var(--fs4-menu-z) !important;
+			background: #fff !important;
+			overflow: visible !important;
+		}
+
+		.fs4-horizontal,
+		.horizontal-main.fs4-horizontal {
+			position: relative !important;
+			z-index: var(--fs4-menu-z) !important;
+			background: rgba(255,255,255,.98) !important;
+			border-bottom: 1px solid var(--fs4-border) !important;
+			box-shadow: 0 8px 24px rgba(15,23,42,.06) !important;
+			overflow: visible !important;
+			backdrop-filter: blur(14px);
+		}
+
+		.fs4-horizontal .horizontal-mainwrapper {
+			width: 100% !important;
+			max-width: 100% !important;
+			min-height: var(--fs4-desktop-menu-height) !important;
+			display: flex !important;
+			align-items: center !important;
+			padding-left: 18px !important;
+			padding-right: 18px !important;
+			overflow: visible !important;
+		}
+
+		.fs4-horizontal .horizontalMenu {
+			width: 100% !important;
+			overflow: visible !important;
+		}
+
+		.fs4-horizontal .horizontalMenu-list {
+			position: relative !important;
+			width: 100% !important;
+			display: flex !important;
+			align-items: center !important;
+			justify-content: center !important;
+			flex-wrap: nowrap !important;
+			gap: 4px !important;
+			margin: 0 !important;
+			padding: 7px 0 !important;
+			list-style: none !important;
+			overflow: visible !important;
+		}
+
+		.fs4-horizontal .horizontalMenu-list > li {
+			position: relative !important;
+			flex: 0 0 auto !important;
+		}
+
+		.fs4-horizontal .horizontalMenu-list > li.fs4-mega-item {
+			position: static !important;
+		}
+
+		.fs4-horizontal .horizontalMenu-list > li > a {
+			min-height: 38px !important;
+			display: inline-flex !important;
+			align-items: center !important;
+			gap: 6px !important;
+			padding: 0 10px !important;
+			border-radius: 13px !important;
+			color: #334155 !important;
+			font-size: 12.5px !important;
+			font-weight: 600 !important;
+			text-decoration: none !important;
+			white-space: nowrap !important;
+			transition: .18s ease !important;
+		}
+
+		.fs4-horizontal .horizontalMenu-list > li > a:hover,
+		.fs4-horizontal .horizontalMenu-list > li:hover > a {
+			background: #eff6ff !important;
+			color: var(--fs4-primary-dark) !important;
+		}
+
+		.fs4-horizontal .hor-icon,
+		.fs4-horizontal i.fe,
+		.fs4-horizontal i.si {
+			width: 16px !important;
+			min-width: 16px !important;
+			height: 16px !important;
+			display: inline-flex !important;
+			align-items: center !important;
+			justify-content: center !important;
+			text-align: center !important;
+			color: var(--fs4-primary) !important;
+			font-size: 14px !important;
+		}
+
+		.fs4-horizontal .horizontal-icon {
+			margin-left: 2px !important;
+			font-size: 12px !important;
+			color: var(--fs4-primary) !important;
+			transition: transform .18s ease !important;
+		}
+
+		.fs4-horizontal .horizontalMenu-list > li:hover > a .horizontal-icon {
+			transform: rotate(180deg);
+		}
+
+		/* Sous-menus simples */
+		.fs4-horizontal .sub-menu {
+			position: absolute !important;
+			top: 100% !important;
+			left: 0 !important;
+			display: none !important;
+			min-width: 285px !important;
+			padding: 8px !important;
+			border: 1px solid var(--fs4-border) !important;
+			border-radius: 18px !important;
+			background: #fff !important;
+			box-shadow: 0 22px 55px rgba(15, 23, 42, .16) !important;
+			overflow: visible !important;
+			z-index: var(--fs4-submenu-z) !important;
+		}
+
+		.fs4-horizontal li:hover > .sub-menu,
+		.fs4-horizontal .sub-menu:hover {
+			display: block !important;
+		}
+
+		.fs4-horizontal .horizontalMenu-list > li > .sub-menu::before,
+		.fs4-horizontal .horizontalMenu-list > li > .horizontal-megamenu::before {
+			content: "";
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: -12px;
+			height: 12px;
+			background: transparent;
+		}
+
+		/* Sous-sous-menus */
+		.fs4-horizontal .sub-menu-sub {
+			position: relative !important;
+		}
+
+		.fs4-horizontal .sub-menu-sub > a::after {
+			content: "›";
+			margin-left: auto;
+			color: #94a3b8;
+			font-size: 18px;
+			font-weight: 900;
+			line-height: 1;
+		}
+
+		.fs4-horizontal .sub-menu-sub > .sub-menu {
+			position: absolute !important;
+			top: 0 !important;
+			left: calc(100% + 8px) !important;
+			display: none !important;
+			min-width: 305px !important;
+			max-height: 72vh !important;
+			overflow-y: auto !important;
+			overflow-x: visible !important;
+			z-index: calc(var(--fs4-submenu-z) + 1) !important;
+		}
+
+		.fs4-horizontal .sub-menu-sub:hover > .sub-menu,
+		.fs4-horizontal .sub-menu-sub > .sub-menu:hover {
+			display: block !important;
+		}
+
+		/* Méga-menus : ouverture uniquement du li survolé */
+		.fs4-horizontal .horizontal-megamenu {
+			position: absolute !important;
+			top: 100% !important;
+			left: 18px !important;
+			right: 18px !important;
+			display: none !important;
+			width: auto !important;
+			max-width: none !important;
+			max-height: calc(100vh - 155px) !important;
+			overflow-y: auto !important;
+			overflow-x: hidden !important;
+			padding: 0 !important;
+			border: 1px solid var(--fs4-border) !important;
+			border-radius: 22px !important;
+			background: #fff !important;
+			box-shadow: 0 24px 65px rgba(15, 23, 42, .18) !important;
+			z-index: var(--fs4-submenu-z) !important;
+			pointer-events: none !important;
+		}
+
+		.fs4-horizontal .fs4-mega-item:hover > .horizontal-megamenu {
+			display: block !important;
+			pointer-events: auto !important;
+		}
+
+		.fs4-horizontal .horizontal-megamenu > .container {
+			width: 100% !important;
+			max-width: 100% !important;
+			padding: 0 !important;
+		}
+
+		.fs4-horizontal .mega-menubg {
+			border: 0 !important;
+			border-radius: 22px !important;
+			padding: 14px !important;
+			background: #fff !important;
+			box-shadow: none !important;
+		}
+
+		.fs4-horizontal .mega-menubg .row {
+			margin: 0 !important;
+			row-gap: 8px !important;
+		}
+
+		.fs4-horizontal .mega-menubg [class*="col-"] {
+			padding: 0 8px !important;
+		}
+
+		.fs4-horizontal .link-list ul {
+			margin: 0 !important;
+			padding: 0 !important;
+			list-style: none !important;
+		}
+
+		.fs4-horizontal .link-list li a,
+		.fs4-horizontal .sub-menu li a {
+			min-height: 38px !important;
+			display: flex !important;
+			align-items: center !important;
+			gap: 9px !important;
+			padding: 9px 10px !important;
+			border-radius: 12px !important;
+			color: #334155 !important;
+			font-size: 12.5px !important;
+			font-weight: 600 !important;
+			text-decoration: none !important;
+			line-height: 1.25 !important;
+			transition: transform .18s ease, background-color .18s ease, color .18s ease !important;
+		}
+
+		.fs4-horizontal .link-list li a:hover,
+		.fs4-horizontal .sub-menu li a:hover {
+			background: #eff6ff !important;
+			color: var(--fs4-primary-dark) !important;
+			transform: translateX(4px) !important;
+		}
+
+		.fs4-horizontal .link-list h3 {
+			min-height: 40px !important;
+			margin: 0 0 6px !important;
+			padding: 10px 12px !important;
+			border-radius: 14px !important;
+			background: #f8fafc !important;
+			color: var(--fs4-text) !important;
+			font-size: 12.5px !important;
+			font-weight: 900 !important;
+			display: flex !important;
+			align-items: center !important;
+			gap: 9px !important;
+		}
+
+		/* Chef's space : n'ouvre plus quand on survole un autre menu */
+		.fs4-horizontal .fs4-chef-item > .fs4-chef-megamenu {
+			left: 18px !important;
+			right: 18px !important;
+			width: auto !important;
+		}
+
+		.fs4-horizontal .fs4-chef-megamenu .row {
+			display: grid !important;
+			grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+			gap: 14px !important;
+			margin: 0 !important;
+		}
+
+		.fs4-horizontal .fs4-chef-megamenu [class*="col-"] {
+			width: auto !important;
+			max-width: none !important;
+			flex: none !important;
+			padding: 0 !important;
+		}
+
+		.fs4-horizontal .fs4-chef-megamenu .link-list ul {
+			display: grid !important;
+			gap: 6px !important;
+		}
+	}
+
+	/* =========================================================
+	   MOBILE - CORRECTION DEFINITIVE
+	   ========================================================= */
+
+	@media (max-width: 991.98px) {
+		body.fs4-has-header,
+		body.fs4-has-header.fs4-has-menu {
+			padding-top: var(--fs4-mobile-header-height) !important;
+		}
+
+		body.fs4-menu-open {
+			overflow: hidden !important;
+		}
+
+		.fs4-header-inner {
+			min-height: var(--fs4-mobile-header-height) !important;
+			display: grid !important;
+			grid-template-columns: 48px minmax(0, 1fr) 48px !important;
+			gap: 8px !important;
+		}
+
+		.fs4-mobile-btn {
+			display: inline-flex !important;
+		}
+
+		@media (max-width: 991.98px) {
+
+	.fs4-brand-school {
+		display: block !important;
+		min-width: 0;
+		width: 100%;
+	}
+
+	.fs4-brand-school .fs4-brand {
+		display: none !important;
+	}
+
+	.fs4-brand-school .fs4-center {
+		display: block !important;
+		width: 100%;
+		padding: 0 !important;
+		text-align: center !important;
+	}
+
+	.fs4-brand-school .fs4-school-name {
+		display: block;
+		width: 100%;
+		white-space: nowrap !important;
+		overflow: hidden !important;
+		text-overflow: ellipsis !important;
+		text-align: center !important;
+	}
+
+	.fs4-brand-school .fs4-school-section {
+		display: none !important;
+	}
+}
+
+		.fs4-center {
+			padding: 0 !important;
+			text-align: center !important;
+		}
+
+		.fs4-school-name {
+			font-size: 13px !important;
+			font-weight: 800 !important;
+		}
+
+		.fs4-school-section {
+			display: none !important;
+		}
+
+		/* Overlay - grise la page */
+		.fs4-menu-overlay {
+			position: fixed !important;
+			top: var(--fs4-mobile-header-height) !important;
+			left: 0 !important;
+			right: 0 !important;
+			bottom: 0 !important;
+			z-index: var(--fs4-overlay-z) !important;
+			display: block !important;
+			background: rgba(15, 23, 42, 0.5) !important;
+			opacity: 0 !important;
+			pointer-events: none !important;
+			transition: opacity 0.3s ease !important;
+		}
+
+		body.fs4-menu-open .fs4-menu-overlay {
+			opacity: 1 !important;
+			pointer-events: auto !important;
+		}
+
+		/*
+		 * Menu mobile : la carte flottante est portée par le conteneur .fs4-menu-shell.
+		 * Cela évite que les styles historiques de .sticky/.horizontal-main créent
+		 * un contexte d'empilement qui place le menu derrière l'overlay.
+		 */
+		.sticky.fs4-menu-shell {
+			position: fixed !important;
+			top: calc(var(--fs4-mobile-header-height) + 8px) !important;
+			left: 12px !important;
+			right: 12px !important;
+			width: auto !important;
+			height: auto !important;
+			max-height: calc(100dvh - var(--fs4-mobile-header-height) - 24px) !important;
+			z-index: calc(var(--fs4-header-z) + 2) !important;
+			display: block !important;
+			visibility: hidden !important;
+			opacity: 0 !important;
+			pointer-events: none !important;
+			transform: translateY(-12px) scale(.98) !important;
+			transform-origin: top center !important;
+			transition: opacity .24s ease, transform .28s cubic-bezier(.2,.8,.2,1), visibility 0s linear .28s !important;
+			overflow-y: auto !important;
+			overflow-x: hidden !important;
+			overscroll-behavior: contain !important;
+			-webkit-overflow-scrolling: touch !important;
+			padding: 10px !important;
+			margin: 0 !important;
+			background: #ffffff !important;
+			border: 1px solid var(--fs4-border) !important;
+			border-radius: 20px !important;
+			box-shadow: var(--fs4-shadow) !important;
+			isolation: isolate !important;
+		}
+
+		body.fs4-menu-open .sticky.fs4-menu-shell {
+			visibility: visible !important;
+			opacity: 1 !important;
+			pointer-events: auto !important;
+			transform: translateY(0) scale(1) !important;
+			transition-delay: 0s !important;
+		}
+
+		.fs4-horizontal,
+		.horizontal-main.fs4-horizontal {
+			position: static !important;
+			top: auto !important;
+			left: auto !important;
+			right: auto !important;
+			inset: auto !important;
+			display: block !important;
+			visibility: visible !important;
+			width: 100% !important;
+			height: auto !important;
+			max-height: none !important;
+			z-index: auto !important;
+			transform: none !important;
+			opacity: 1 !important;
+			pointer-events: auto !important;
+			transition: none !important;
+			overflow: visible !important;
+			padding: 0 !important;
+			margin: 0 !important;
+			background: transparent !important;
+			border: 0 !important;
+			border-radius: 0 !important;
+			box-shadow: none !important;
+		}
+
+		/* Header reste visible au-dessus */
+		body.fs4-menu-open .fs4-header {
+			z-index: calc(var(--fs4-header-z) + 3) !important;
+		}
+
+		/* Actions */
+		.fs4-actions {
+			position: fixed !important;
+			top: calc(var(--fs4-mobile-header-height) + 8px) !important;
+			left: 12px !important;
+			right: 12px !important;
+			z-index: calc(var(--fs4-dropdown-z) + 2) !important;
+			display: none;
+			flex-direction: column;
+			align-items: stretch;
+			padding: 10px;
+			border-radius: 20px;
+			background: #fff;
+			border: 1px solid var(--fs4-border);
+			box-shadow: var(--fs4-shadow);
+			max-height: calc(100vh - var(--fs4-mobile-header-height) - 24px) !important;
+			overflow-y: auto !important;
+			overflow-x: visible !important;
+		}
+
+		.fs4-actions.fs4-actions-open {
+			display: flex !important;
+		}
+
+		.fs4-actions .dropdown {
+			width: 100% !important;
+		}
+
+		.fs4-actions .fs4-pill {
+			width: 100%;
+			background: #f8fafc;
+			border-color: var(--fs4-border);
+			color: var(--fs4-text) !important;
+			justify-content: flex-start;
+		}
+
+		.fs4-actions .fs4-pill:hover,
+		.fs4-actions .fs4-pill[aria-expanded="true"] {
+			background: #eff6ff !important;
+			border-color: #bfdbfe !important;
+			color: var(--fs4-primary-dark) !important;
+		}
+
+		.fs4-actions .fs4-pill-icon {
+			background: #e0ecff;
+		}
+
+		.fs4-actions .dropdown-menu.fs4-dropdown,
+		.fs4-actions .dropdown-menu.show.fs4-dropdown,
+		.fs4-actions .dropdown-menu[data-bs-popper].fs4-dropdown {
+			position: static !important;
+			inset: auto !important;
+			transform: none !important;
+			width: 100% !important;
+			min-width: 100% !important;
+			margin: 8px 0 6px !important;
+			box-shadow: none !important;
+			z-index: auto !important;
+		}
+
+		.fs4-horizontal .horizontal-mainwrapper,
+		.fs4-horizontal .horizontalMenu,
+		.fs4-horizontal .horizontalMenu-list {
+			width: 100% !important;
+			max-width: 100% !important;
+			padding: 0 !important;
+			margin: 0 !important;
+			display: block !important;
+			visibility: visible !important;
+			opacity: 1 !important;
+		}
+
+		.fs4-horizontal .horizontalMenu-list {
+			display: flex !important;
+			flex-direction: column !important;
+			align-items: stretch;
+			gap: 9px !important;
+			list-style: none !important;
+		}
+
+		.fs4-horizontal .horizontalMenu-list > li {
+			width: 100% !important;
+			display: block !important;
+		}
+
+		.fs4-horizontal .horizontalMenu-list > li > a {
+			position: relative;
+			width: 100% !important;
+			min-height: 50px !important;
+			padding: 0 14px 0 12px !important;
+			display: flex !important;
+			align-items: center !important;
+			gap: 12px !important;
+			border: 1px solid #e2e8f0 !important;
+			border-radius: 16px !important;
+			background: #ffffff !important;
+			color: #0f172a !important;
+			box-shadow: 0 8px 22px rgba(15, 23, 42, .045) !important;
+			font-size: 13px !important;
+			font-weight: 700 !important;
+			line-height: 1.2 !important;
+			text-decoration: none !important;
+		}
+
+		.fs4-horizontal .horizontalMenu-list > li > a:hover,
+		.fs4-horizontal .horizontalMenu-list > li.fs4-open > a {
+			background: #eff6ff !important;
+			border-color: #bfdbfe !important;
+			color: #1d4ed8 !important;
+		}
+
+		.fs4-horizontal .horizontalMenu-list > li > a .hor-icon {
+			width: 34px !important;
+			height: 34px !important;
+			min-width: 34px !important;
+			display: inline-flex !important;
+			align-items: center !important;
+			justify-content: center !important;
+			border-radius: 12px !important;
+			background: #e0ecff !important;
+			color: #2563eb !important;
+			font-size: 17px !important;
+		}
+
+		.fs4-horizontal .horizontal-icon,
+		.fs4-horizontal .fe-chevron-down {
+			margin-left: auto !important;
+			color: #94a3b8 !important;
+			font-size: 15px !important;
+			transition: transform 0.25s ease !important;
+		}
+
+		.fs4-horizontal li.fs4-open > a .horizontal-icon,
+		.fs4-horizontal li.fs4-open > a .fe-chevron-down {
+			transform: rotate(180deg);
+			color: #2563eb !important;
+		}
+
+		.fs4-horizontal .sub-menu,
+		.fs4-horizontal .horizontal-megamenu {
+			position: static !important;
+			display: none !important;
+			width: 100% !important;
+			min-width: 0 !important;
+			max-height: none !important;
+			margin: 7px 0 0 !important;
+			padding: 8px !important;
+			border: 1px solid #e2e8f0 !important;
+			border-radius: 16px !important;
+			background: #ffffff !important;
+			box-shadow: none !important;
+			overflow: hidden !important;
+		}
+
+		.fs4-horizontal li.fs4-open > .sub-menu,
+		.fs4-horizontal li.fs4-open > .horizontal-megamenu {
+			display: block !important;
+			animation: fs4SlideDown 0.25s ease forwards !important;
+		}
+
+		@keyframes fs4SlideDown {
+			from {
+				opacity: 0;
+				transform: translateY(-8px);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		.fs4-horizontal .sub-menu li a,
+		.fs4-horizontal .link-list li a {
+			min-height: 42px !important;
+			padding: 9px 10px !important;
+			display: flex !important;
+			align-items: center !important;
+			gap: 10px !important;
+			border-radius: 12px !important;
+			background: transparent !important;
+			color: #334155 !important;
+			font-size: 12.5px !important;
+			font-weight: 600 !important;
+			text-decoration: none !important;
+		}
+
+		.fs4-horizontal .sub-menu li a:hover,
+		.fs4-horizontal .link-list li a:hover {
+			background: #f1f5f9 !important;
+			color: #1d4ed8 !important;
+		}
+
+		.fs4-horizontal .sub-menu li a i,
+		.fs4-horizontal .link-list li a i {
+			width: 28px !important;
+			height: 28px !important;
+			min-width: 28px !important;
+			display: inline-flex !important;
+			align-items: center !important;
+			justify-content: center !important;
+			border-radius: 10px !important;
+			background: #eff6ff !important;
+			color: #2563eb !important;
+			font-size: 14px !important;
+		}
+
+		.fs4-horizontal .horizontal-megamenu .container {
+			width: 100% !important;
+			max-width: 100% !important;
+			padding: 0 !important;
+		}
+
+		.fs4-horizontal .mega-menubg {
+			padding: 0 !important;
+			border: 0 !important;
+			box-shadow: none !important;
+			background: transparent !important;
+		}
+
+		.fs4-horizontal .mega-menubg .row {
+			display: block !important;
+			margin: 0 !important;
+		}
+
+		.fs4-horizontal .mega-menubg [class*="col-"] {
+			padding: 0 !important;
+		}
+
+		.fs4-horizontal .link-list ul {
+			margin: 0 !important;
+			padding: 0 !important;
+			list-style: none !important;
+		}
+	}
+
+	@media (max-width: 575.98px) {
+		.fs4-school-name {
+			font-size: 12.5px !important;
+		}
+	}
+
+	/* =========================================================
+	   MOBILE V3 — PANNEAU GAUCHE ISOLÉ DU PLUGIN HORIZONTAL-MENU
+	   Le menu desktop reste strictement inchangé.
+	   ========================================================= */
+
+	.fs4-mobile-left-panel,
+	.fs4-mobile-left-overlay {
+		display: none;
+	}
+
+	@media (max-width: 991.98px) {
+		/*
+		 * Le plugin horizontal-menu chargé par le template continue de manipuler
+		 * .horizontalMenu-list sur mobile. On masque donc uniquement son conteneur
+		 * mobile d'origine et on affiche une copie isolée, directement sous <body>.
+		 */
+		.sticky.fs4-menu-shell {
+			display: none !important;
+		}
+
+		.fs4-menu-overlay {
+			display: none !important;
+		}
+
+		.fs4-mobile-left-overlay {
+			position: fixed !important;
+			top: var(--fs4-mobile-header-height) !important;
+			left: 0 !important;
+			right: 0 !important;
+			bottom: 0 !important;
+			display: block !important;
+			z-index: 31990 !important;
+			background: rgba(15, 23, 42, .50) !important;
+			opacity: 0 !important;
+			visibility: hidden !important;
+			pointer-events: none !important;
+			transition: opacity .22s ease, visibility 0s linear .22s !important;
+		}
+
+		body.fs4-menu-open .fs4-mobile-left-overlay {
+			opacity: 1 !important;
+			visibility: visible !important;
+			pointer-events: auto !important;
+			transition-delay: 0s !important;
+		}
+
+		.fs4-mobile-left-panel {
+			position: fixed !important;
+			top: calc(var(--fs4-mobile-header-height) + 8px) !important;
+			left: 12px !important;
+			right: 12px !important;
+			display: block !important;
+			width: auto !important;
+			height: auto !important;
+			max-height: calc(100dvh - var(--fs4-mobile-header-height) - 24px) !important;
+			margin: 0 !important;
+			padding: 10px !important;
+			z-index: 32010 !important;
+			overflow-x: hidden !important;
+			overflow-y: auto !important;
+			overscroll-behavior: contain !important;
+			-webkit-overflow-scrolling: touch !important;
+			background: #fff !important;
+			border: 1px solid var(--fs4-border) !important;
+			border-radius: 20px !important;
+			box-shadow: 0 25px 60px rgba(15, 23, 42, .30) !important;
+			opacity: 0 !important;
+			visibility: hidden !important;
+			pointer-events: none !important;
+			transform: translateY(-12px) scale(.98) !important;
+			transform-origin: top center !important;
+			transition:
+				opacity .22s ease,
+				transform .26s cubic-bezier(.2, .8, .2, 1),
+				visibility 0s linear .26s !important;
+		}
+
+		body.fs4-menu-open .fs4-mobile-left-panel {
+			opacity: 1 !important;
+			visibility: visible !important;
+			pointer-events: auto !important;
+			transform: translateY(0) scale(1) !important;
+			transition-delay: 0s !important;
+		}
+
+		.fs4-mobile-left-list,
+		.fs4-mobile-left-list ul {
+			margin: 0 !important;
+			padding: 0 !important;
+			list-style: none !important;
+		}
+
+		.fs4-mobile-left-list {
+			position: static !important;
+			inset: auto !important;
+			display: flex !important;
+			flex-direction: column !important;
+			align-items: stretch !important;
+			width: 100% !important;
+			height: auto !important;
+			gap: 9px !important;
+			opacity: 1 !important;
+			visibility: visible !important;
+			transform: none !important;
+		}
+
+		.fs4-mobile-left-list > li {
+			position: static !important;
+			display: block !important;
+			float: none !important;
+			width: 100% !important;
+			height: auto !important;
+			margin: 0 !important;
+			padding: 0 !important;
+		}
+
+		.fs4-mobile-left-list > li > a {
+			position: relative !important;
+			display: flex !important;
+			align-items: center !important;
+			width: 100% !important;
+			min-height: 50px !important;
+			margin: 0 !important;
+			padding: 7px 14px 7px 12px !important;
+			gap: 12px !important;
+			border: 1px solid #e2e8f0 !important;
+			border-radius: 16px !important;
+			background: #fff !important;
+			box-shadow: 0 8px 22px rgba(15, 23, 42, .045) !important;
+			color: #0f172a !important;
+			font-size: 13px !important;
+			font-weight: 700 !important;
+			line-height: 1.25 !important;
+			text-decoration: none !important;
+			white-space: normal !important;
+		}
+
+		.fs4-mobile-left-list > li.fs4-mobile-open > a,
+		.fs4-mobile-left-list > li > a:hover {
+			background: #eff6ff !important;
+			border-color: #bfdbfe !important;
+			color: #1d4ed8 !important;
+		}
+
+		.fs4-mobile-left-list > li > a .hor-icon {
+			display: inline-flex !important;
+			align-items: center !important;
+			justify-content: center !important;
+			flex: 0 0 34px !important;
+			width: 34px !important;
+			height: 34px !important;
+			min-width: 34px !important;
+			margin: 0 !important;
+			border-radius: 12px !important;
+			background: #e0ecff !important;
+			color: #2563eb !important;
+			font-size: 17px !important;
+		}
+
+		.fs4-mobile-left-list .horizontal-icon,
+		.fs4-mobile-left-list > li > a > .fe-chevron-down {
+			margin-left: auto !important;
+			color: #94a3b8 !important;
+			font-size: 15px !important;
+			transition: transform .22s ease !important;
+		}
+
+		.fs4-mobile-left-list li.fs4-mobile-open > a .horizontal-icon,
+		.fs4-mobile-left-list li.fs4-mobile-open > a > .fe-chevron-down {
+			color: #2563eb !important;
+			transform: rotate(180deg) !important;
+		}
+
+		.fs4-mobile-left-panel .sub-menu,
+		.fs4-mobile-left-panel .horizontal-megamenu {
+			position: static !important;
+			inset: auto !important;
+			display: none !important;
+			float: none !important;
+			width: 100% !important;
+			min-width: 0 !important;
+			max-width: 100% !important;
+			height: auto !important;
+			max-height: none !important;
+			margin: 7px 0 0 !important;
+			padding: 8px !important;
+			overflow: visible !important;
+			border: 1px solid #e2e8f0 !important;
+			border-radius: 16px !important;
+			background: #fff !important;
+			box-shadow: none !important;
+			opacity: 1 !important;
+			visibility: visible !important;
+			transform: none !important;
+			pointer-events: auto !important;
+		}
+
+		.fs4-mobile-left-panel li.fs4-mobile-open > .sub-menu,
+		.fs4-mobile-left-panel li.fs4-mobile-open > .horizontal-megamenu {
+			display: block !important;
+			animation: fs4MobileLeftOpen .20s ease both !important;
+		}
+
+		@keyframes fs4MobileLeftOpen {
+			from {
+				opacity: 0;
+				transform: translateY(-6px);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		.fs4-mobile-left-panel .horizontal-megamenu > .container,
+		.fs4-mobile-left-panel .mega-menubg,
+		.fs4-mobile-left-panel .mega-menubg .row,
+		.fs4-mobile-left-panel .mega-menubg [class*="col-"] {
+			position: static !important;
+			display: block !important;
+			float: none !important;
+			width: 100% !important;
+			max-width: 100% !important;
+			height: auto !important;
+			margin: 0 !important;
+			padding: 0 !important;
+			border: 0 !important;
+			background: transparent !important;
+			box-shadow: none !important;
+			transform: none !important;
+		}
+
+		.fs4-mobile-left-panel .link-list {
+			margin-bottom: 7px !important;
+		}
+
+		.fs4-mobile-left-panel .link-list:last-child {
+			margin-bottom: 0 !important;
+		}
+
+		.fs4-mobile-left-panel .sub-menu li,
+		.fs4-mobile-left-panel .link-list li {
+			position: static !important;
+			display: block !important;
+			float: none !important;
+			width: 100% !important;
+			height: auto !important;
+			margin: 0 !important;
+			padding: 0 !important;
+		}
+
+		.fs4-mobile-left-panel .sub-menu li + li,
+		.fs4-mobile-left-panel .link-list li + li {
+			margin-top: 4px !important;
+		}
+
+		.fs4-mobile-left-panel .sub-menu li > a,
+		.fs4-mobile-left-panel .link-list li > a {
+			position: relative !important;
+			display: flex !important;
+			align-items: center !important;
+			width: 100% !important;
+			min-height: 42px !important;
+			margin: 0 !important;
+			padding: 8px 10px !important;
+			gap: 10px !important;
+			border: 0 !important;
+			border-radius: 12px !important;
+			background: transparent !important;
+			color: #334155 !important;
+			font-size: 12.5px !important;
+			font-weight: 600 !important;
+			line-height: 1.3 !important;
+			text-decoration: none !important;
+			white-space: normal !important;
+			transform: none !important;
+		}
+
+		.fs4-mobile-left-panel .sub-menu li > a:hover,
+		.fs4-mobile-left-panel .link-list li > a:hover,
+		.fs4-mobile-left-panel .sub-menu li.fs4-mobile-open > a {
+			background: #f1f5f9 !important;
+			color: #1d4ed8 !important;
+		}
+
+		.fs4-mobile-left-panel .sub-menu li > a i,
+		.fs4-mobile-left-panel .link-list li > a i {
+			display: inline-flex !important;
+			align-items: center !important;
+			justify-content: center !important;
+			flex: 0 0 28px !important;
+			width: 28px !important;
+			height: 28px !important;
+			min-width: 28px !important;
+			margin: 0 !important;
+			border-radius: 10px !important;
+			background: #eff6ff !important;
+			color: #2563eb !important;
+			font-size: 14px !important;
+		}
+
+		.fs4-mobile-left-panel .link-list h3 {
+			display: flex !important;
+			align-items: center !important;
+			width: 100% !important;
+			min-height: 40px !important;
+			margin: 0 0 5px !important;
+			padding: 9px 10px !important;
+			gap: 9px !important;
+			border-radius: 12px !important;
+			background: #f8fafc !important;
+			color: #0f172a !important;
+			font-size: 12.5px !important;
+			font-weight: 800 !important;
+			line-height: 1.3 !important;
+		}
+
+		.fs4-mobile-left-panel .sub-menu-sub > a::after {
+			content: "›" !important;
+			margin-left: auto !important;
+			color: #94a3b8 !important;
+			font-size: 18px !important;
+			font-weight: 900 !important;
+			line-height: 1 !important;
+			transition: transform .22s ease !important;
+		}
+
+		.fs4-mobile-left-panel .sub-menu-sub.fs4-mobile-open > a::after {
+			color: #2563eb !important;
+			transform: rotate(90deg) !important;
+		}
+	}
+
+
+	/* =========================================================
+   LOGO + ÉTABLISSEMENT ALIGNÉS À GAUCHE
+   ========================================================= */
+
+.fs4-brand-school {
+	min-width: 0;
+	display: flex;
+	align-items: center;
+	gap: 18px;
+}
+
+/* Desktop */
+@media (min-width: 992px) {
+
+	.fs4-header-inner {
+		grid-template-columns: minmax(0, 1fr) auto !important;
+		gap: 18px !important;
+	}
+
+	.fs4-brand-school {
+		width: 100%;
+		justify-content: flex-start;
+		overflow: visible !important;
+	}
+
+	.fs4-brand {
+		flex: 0 0 auto;
+		margin: 0 !important;
+		padding: 0 !important;
+	}
+
+	.fs4-brand img {
+		display: block;
+		width: auto;
+		height: 52px;
+		max-width: 190px;
+		object-fit: contain;
+	}
+
+	.fs4-center {
+		flex: 1 1 auto;
+		min-width: 0;
+		padding: 0 !important;
+		text-align: left !important;
+		overflow: visible !important;
+	}
+
+	.fs4-school-name {
+		display: block;
+		width: 100%;
+		margin: 0;
+		color: #fff;
+		font-size: 14px !important;
+		font-weight: 800 !important;
+		line-height: 1.25;
+		text-align: left !important;
+
+		/* Ne plus masquer le nom */
+		white-space: normal !important;
+		overflow: visible !important;
+		text-overflow: clip !important;
+	}
+
+	.fs4-school-section {
+		display: flex !important;
+		align-items: center;
+		justify-content: flex-start !important;
+		width: 100%;
+		max-width: 100%;
+		margin-top: 6px;
+		text-align: left !important;
+
+		/* Ne plus masquer la section */
+		white-space: normal !important;
+		overflow: visible !important;
+		text-overflow: clip !important;
+	}
+
+	.fs4-school-section > span {
+		display: block;
+		min-width: 0;
+		white-space: normal !important;
+		overflow: visible !important;
+		text-overflow: clip !important;
+		line-height: 1.25;
+	}
+
+	.fs4-actions {
+		flex: 0 0 auto;
+		justify-self: end;
+		white-space: nowrap;
+	}
+}
+</style>
+
+{% set menuSchoolName = schoolName|default('FreeSchool') %}
+{% set menuCurrentSchoolYear = currentSchoolYear|default('') %}
+{% set menuSubSystem = subSystem|default('Francophone / French Speaker') %}
+
+			<!--app header-->
+			<div class="hor-header header top-header fs4-header">
+				<div class="container">
+					<div class="fs4-header-inner">
+
+						<button type="button" class="fs4-mobile-btn" id="fs4MenuToggle" aria-label="{% trans %}Menu{% endtrans %}" aria-expanded="false" aria-controls="fs4HorizontalMenu">
+							<span class="fs4-hamburger-lines">
+								<span></span>
+								<span></span>
+								<span></span>
+							</span>
+						</button>
+
+						<div class="fs4-brand-school">
+
+				<a class="header-brand fs4-brand" href="javascript:void(0);">
+					<img
+						src="{{ asset('build/custom2/images/brand/logo_white.png') }}"
+						alt="Freedom logo"
+					>
+				</a>
+
+				<div class="fs4-center">
+					<span class="fs4-school-name">
+						{{ menuSchoolName }}{% if menuCurrentSchoolYear %} - {{ menuCurrentSchoolYear }}{% endif %}
+					</span>
+
+					<span class="fs4-school-section">
+						{% if menuSubSystem == 'Francophone / French Speaker' %}
+							<img
+								src="{{ asset('build/custom/images/fr.png') }}"
+								alt="Français"
+								class="fs4-flag"
+							>
+						{% else %}
+							<img
+								src="{{ asset('build/custom/images/en.png') }}"
+								alt="English"
+								class="fs4-flag"
+							>
+						{% endif %}
+
+						<span>
+							{% trans %}Section : {% endtrans %} {{ menuSubSystem }}
+						</span>
+					</span>
+				</div>
+
+			</div>
+
+			<button type="button" class="fs4-mobile-btn" id="fs4ActionsToggle" aria-label="{% trans %}Actions{% endtrans %}" aria-expanded="false" aria-controls="fs4Actions">
+				<i class="fe fe-more-vertical"></i>
+			</button>
+
+			<div class="fs4-actions" id="fs4Actions">
+				<div class="fs4-pill">
+					<span class="fs4-pill-icon" id="fs4GreetingIcon">☀️</span>
+					<span class="fs4-pill-text" id="fs4GreetingText">{% trans %}Hello{% endtrans %}</span>
+				</div>
+
+				<div class="dropdown">
+					<a href="javascript:void(0);" class="fs4-pill" data-bs-toggle="dropdown">
+						<span class="fs4-pill-icon">
+							{% if app.request.locale == 'fr' %}
+								<img src="{{ asset('build/custom/images/fr.png') }}" alt="img" class="fs4-flag">
+							{% elseif app.request.locale == 'en' %}
+								<img src="{{ asset('build/custom/images/en.png') }}" alt="img" class="fs4-flag">
+							{% endif %}
+						</span>
+						<span class="fs4-pill-text">{% trans %}Langue{% endtrans %}</span>
+						<i class="fe fe-chevron-down ms-auto"></i>
+					</a>
+
+					<div class="dropdown-menu dropdown-menu-end fs4-dropdown">
+						{% for locale in locales %}
+							{% if locale == 'fr' %}
+								<a class="dropdown-item" href="{{ path('translation_changeLocale', {'locale': locale}) }}">
+									<img src="{{ asset('build/custom/images/fr.png') }}" alt="img" class="fs4-flag">
+									<span>{% trans %}French{% endtrans %}</span>
+								</a>
+							{% endif %}
+
+							{% if locale == 'en' %}
+								<a class="dropdown-item" href="{{ path('translation_changeLocale', {'locale': locale}) }}">
+									<img src="{{ asset('build/custom/images/en.png') }}" alt="img" class="fs4-flag">
+									<span>{% trans %}Anglais{% endtrans %}</span>
+								</a>
+							{% endif %}
+						{% endfor %}
 					</div>
 				</div>
-				<!--/app header-->
 
-				{% if home is not defined %}
-					<!--Horizontal-main -->
-					<div class="sticky">
-						<div class="horizontal-main hor-menu clearfix">
-							<div class="horizontal-mainwrapper container clearfix">
-								<nav class="horizontalMenu clearfix">
-									<ul class="horizontalMenu-list">
-										<li aria-haspopup="true">
-											<a href="{{ path('home_dashboard') }}" class="sub-icon">
-												<svg class="hor-icon" xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" width="24" height="24" viewBox="0 0 24 24"><path d="M3 13h1v7c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-7h1a1 1 0 0 0 .707-1.707l-9-9a.999.999 0 0 0-1.414 0l-9 9A1 1 0 0 0 3 13zm7 7v-5h4v5h-4zm2-15.586 6 6V15l.001 5H16v-5c0-1.103-.897-2-2-2h-4c-1.103 0-2 .897-2 2v5H6v-9.586l6-6z"/></svg>
-											</a>
-										</li>
+				<div class="dropdown">
+					<a href="javascript:void(0);" class="fs4-pill" data-bs-toggle="dropdown">
+						<span class="fs4-avatar">{{ currentUser ? currentUser.fullName|slice(0, 1)|upper : 'A' }}</span>
+						<span class="fs4-pill-text">{{ currentUser ? currentUser.fullName : 'Anonyme' }}</span>
+						<i class="fe fe-chevron-down ms-auto"></i>
+					</a>
 
-										{% if is_granted('ROLE_PROVISEUR') 
-											or is_granted('ROLE_ADMIN')
-											or is_granted ('ROLE_SUPER_ADMIN') 
-											or is_granted('ROLE_CENSEUR') 
-											or is_granted('ROLE_SECRETAIRE') 
-											or is_granted('ROLE_CONSEILLER') %}
-											{% if is_granted('ROLE_PROVISEUR') 
-												or is_granted('ROLE_ADMIN') 
-												or is_granted ('ROLE_SUPER_ADMIN')
-												or is_granted('ROLE_SECRETAIRE') 
-												or is_granted('ROLE_CENSEUR') %}
-												<li aria-haspopup="true">
-													<a href="javascript:void(0);" class="sub-icon">
-														<svg class="hor-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-server" viewBox="0 0 16 16">
-															<path d="M1.333 2.667C1.333 1.194 4.318 0 8 0s6.667 1.194 6.667 2.667V4c0 1.473-2.985 2.667-6.667 2.667S1.333 5.473 1.333 4V2.667z"/>
-															<path d="M1.333 6.334v3C1.333 10.805 4.318 12 8 12s6.667-1.194 6.667-2.667V6.334a6.51 6.51 0 0 1-1.458.79C11.81 7.684 9.967 8 8 8c-1.966 0-3.809-.317-5.208-.876a6.508 6.508 0 0 1-1.458-.79z"/>
-															<path d="M14.667 11.668a6.51 6.51 0 0 1-1.458.789c-1.4.56-3.242.876-5.21.876-1.966 0-3.809-.316-5.208-.876a6.51 6.51 0 0 1-1.458-.79v1.666C1.333 14.806 4.318 16 8 16s6.667-1.194 6.667-2.667v-1.665z"/>
-														</svg>
+					{% if currentUser %}
+						<div class="dropdown-menu dropdown-menu-end fs4-dropdown">
+							
+							<a class="dropdown-item" href="{{ path('changer_sous_system') }}">
+								<i class="fe fe-shuffle"></i>
+								<span>{% trans %}Change subsystem{% endtrans %}</span>
+							</a>
+							
+							<a class="dropdown-item" href="{{ path('edit_my_password') }}">
+								<i class="fa fa-key"></i>
+								<span>{% trans %}Edit my password{% endtrans %}</span>
+							</a>
 
-														<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" viewBox="0 0 0 0"></svg>
+							<a class="dropdown-item" href="{{ path('reponse_question') }}">
+								<i class="fe fe-help-circle"></i>
+								<span>{% trans %}Secret question{% endtrans %}</span>
+							</a>
 
-														{% trans %}Data{% endtrans %} <i class="fa fa-angle-down horizontal-icon"></i>
-													</a>
-													<div class="horizontal-megamenu clearfix">
-														<div class="container">
-															<div class="mega-menubg border-primary">
-																<div class="row">
-																	<div class="col-lg-2 col-md-12 col-xs-12 link-list">
-																		<ul>
-																			<li aria-haspopup="true"><a href="{{ path('grade_displayGrade', {'a': 1 }) }}"><i class="fa fa-paper-plane"></i>{% trans %}Ranks{% endtrans %}</a></li>
-																			<li aria-haspopup="true"><a href="{{ path('diploma_displayDiploma', {'a': 1 }) }}"><i class="fa fa-mortar-board"></i>{% trans %}Diplomas{% endtrans %}</a></li>
-																		</ul>
-																	</div>
-																	<div class="col-lg-2 col-md-12 col-xs-12 link-list">
-																		<ul>
-																			
-																			{# <li aria-haspopup="true"><a href="{{ path('student_displayStudent') }}"><i class="fa fa-group"></i>{% trans %}Students{% endtrans %}</a></li> #}
-																			{% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
-																				<li aria-haspopup="true"><a href="{{ path('student_saveStudent') }}"><i class="fe fe-user-plus"></i>{% trans %}Add Student{% endtrans %}</a></li>
-																			{% endif %}
-																			
-																			<li aria-haspopup="true">
-																				<a href="{{ path('student_displayStudent', {'a': 1 }) }}">
-																					<i class="fa fa-group"></i>{% trans %}Students{% endtrans %}
-																				</a>
-																			</li>
-																			
-																			{% if is_granted('ROLE_CENSEUR') %}
-																				<li aria-haspopup="true">
-																					<a href="{{ path('my_transcripts', {'slug': currentUser.teacher.slug }) }}">
-																						<i class="fa fa-file-pdf me-2"></i>
-																						{% trans %}Transcripts{% endtrans %}
-																					</a>
-																				</li>
-																			{% endif %}
-																			
-																		</ul>
-																	</div>
+							<a class="dropdown-item" href="{{ path('app_logout') }}">
+								<i class="fe fe-log-out"></i>
+								<span>{% trans %}Sign Out{% endtrans %}</span>
+							</a>
+						</div>
+					{% endif %}
+				</div>
+			</div>
 
-																	<div class="col-lg-2 col-md-12 col-xs-12 link-list">
-																		<ul>
-																			<li aria-haspopup="true"><a href="{{ path('teacher_displayTeacher', {'displayLaters': 0, 'a': 1 }) }}"><i class="fa fa-group"></i>{% trans %}Staff{% endtrans %}</a></li>
+		</div>
+	</div>
+</div>
+<!--/app header-->
 
-																			<li aria-haspopup="true"><a href="{{ path('department_displayDepartment', {'a': 1 }) }}"><i class="fa fa-th"></i>{% trans %}Departments{% endtrans %}</a></li>
-																		</ul>
-																	</div>
 
-																	<div class="col-lg-2 col-md-12 col-xs-12 link-list">
-																		<ul>
-																			<li aria-haspopup="true"><a href="{{ path('subject_displaySubject', {'a': 1 }) }}"><i class="fa fa-book"></i>{% trans %}Subject{% endtrans %}</a></li>
-																		
-																			<li aria-haspopup="true"><a href="{{ path('lesson_displayLesson', {'a': 1 }) }}"><i class="fa fa-briefcase"></i>{% trans %}Courses{% endtrans %}</a></li>
+{% if home is not defined %}
+	<!--Horizontal-main -->
+	<div class="fs4-menu-overlay" id="fs4MenuOverlay"></div>
 
-																		</ul>
-																	</div>
+	<div class="sticky fs4-menu-shell">
+		<div class="horizontal-main hor-menu clearfix fs4-horizontal" id="fs4HorizontalMenu">
+			<div class="horizontal-mainwrapper container clearfix">
+				<nav class="horizontalMenu clearfix">
+					<ul class="horizontalMenu-list">
+						<li aria-haspopup="true">
+							<a href="{{ path('home_dashboard') }}" class="sub-icon">
+								<i class="fe fe-home hor-icon"></i>
 
-																	{% if is_granted('ROLE_PROVISEUR') or is_granted('ROLE_CENSEUR') %}
-																		<div class="col-lg-2 col-md-12 col-xs-12 link-list">
-																			<ul>
-																				<li aria-haspopup="true"><a href="{{ path('lesson_done') }}">
-																					<i class="fa fa-check"></i>
-																					{% trans %}Validation of lessons learned{% endtrans %}</a>
-																				</li>
+								<span>{% trans %}Accueil{% endtrans %}</span></a>
+						</li>
 
-																				<li aria-haspopup="true"><a href="{{ path('display_lesson_plain') }}">
-																					<i class="fa fa-calendar"></i>
-																					{% trans %}Add Number of lessons planned{% endtrans %}</a>
-																				</li> 
-
-																				
-																			</ul>
-																		</div>
-
-																	{% endif %}
-
-																	<div class="col-lg-2 col-md-12 col-xs-12 link-list">
-																		<ul>
-																			{% if is_granted('ROLE_PROVISEUR') or is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') %}
-																				<li aria-haspopup="true"><a href="{{ path('classroom_displayClassroom', {'a': 1 }) }}"><i class="fa fa-building"></i>{% trans %}Classes{% endtrans %}</a></li>
-
-																				<li aria-haspopup="true"><a href="{{ path('school_editSchool') }}"><i class="fa fa-building"></i>{% trans %}Establishment{% endtrans %}</a></li>
-																			{% endif %}
-																		</ul>
-																	</div>
-
-																	<div class="col-lg-2 col-md-12 col-xs-12 link-list">
-																		<ul>
-																			{% if is_granted('ROLE_PROVISEUR') or is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') %}
-																				<li aria-haspopup="true"><a href="{{ path('fees_updateFees', {'a': 1 }) }}"><i class="fa fa-dollar"></i>{% trans %}Fees{% endtrans %}</a></li>
-
-																				<li aria-haspopup="true"><a href="{{ path('display_time_table') }}"><i class="fa fa-calendar"></i>{% trans %}Time Table{% endtrans %}</a></li>
-
-																				 
-																			{% endif %}
-																		</ul>
-																	</div>
-
-																</div>
-															</div>
-														</div>
+						{% if is_granted('ROLE_PROVISEUR')
+							or is_granted('ROLE_ADMIN')
+							or is_granted ('ROLE_SUPER_ADMIN')
+							or is_granted('ROLE_CENSEUR')
+							or is_granted('ROLE_SECRETAIRE')
+							or is_granted('ROLE_CONSEILLER') %}
+							{% if is_granted('ROLE_PROVISEUR')
+								or is_granted('ROLE_ADMIN')
+								or is_granted ('ROLE_SUPER_ADMIN')
+								or is_granted('ROLE_SECRETAIRE')
+								or is_granted('ROLE_CENSEUR') %}
+								<li aria-haspopup="true" class="fs4-mega-item fs4-data-item">
+									<a href="javascript:void(0);" class="sub-icon">
+										<i class="fe fe-database hor-icon"></i>
+										{% trans %}Data{% endtrans %} <i class="fe fe-chevron-down horizontal-icon"></i>
+									</a>
+									<div class="horizontal-megamenu clearfix fs4-data-megamenu">
+										<div class="container">
+											<div class="mega-menubg border-primary">
+												<div class="row">
+													<div class="col-lg-2 col-md-12 col-xs-12 link-list">
+														<ul>
+															<li aria-haspopup="true"><a href="{{ path('grade_displayGrade', {'a': 1 }) }}"><i class="fe fe-send"></i>{% trans %}Ranks{% endtrans %}</a></li>
+															<li aria-haspopup="true"><a href="{{ path('diploma_displayDiploma', {'a': 1 }) }}"><i class="fe fe-award"></i>{% trans %}Diplomas{% endtrans %}</a></li>
+														</ul>
 													</div>
-												</li>
-											{% endif %}
+													<div class="col-lg-2 col-md-12 col-xs-12 link-list">
+														<ul>
 
-											{% if is_granted('ROLE_ADMIN')
-											 	or is_granted ('ROLE_SUPER_ADMIN') 
-												or is_granted('ROLE_PROVISEUR') 
-												or is_granted('ROLE_CENSEUR')  
-												or is_granted('ROLE_SECRETAIRE') %}
-												<li aria-haspopup="true">
-													<a href="javascript:void(0);" class="sub-icon">
-														<svg class="hor-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-server" viewBox="0 0 16 16">
-															<path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/>
-															<path d="M7 5.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0zM7 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z"/>
-														</svg>
-		
-														<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" viewBox="0 0 0 0"></svg>
-														{% trans %}Report and school cards{% endtrans %} <i class="fa fa-angle-down horizontal-icon"></i>
-													</a>
-													<ul class="sub-menu border-primary">
-														<li aria-haspopup="true"><a href="{{ path('report_report') }}">
-															<i class="fa fa-file-text"></i>
-															{% trans %}Report{% endtrans %}</a>
-														</li>
-														<li aria-haspopup="true"><a href="{{ path('transcript_student') }}">
-															<i class="fe fe-file-text"></i>
-															{% trans %}Transcript's students{% endtrans %}</a>
-														</li>
-														<li aria-haspopup="true"><a href="{{ path('report_rollOfHonor') }}">
-															<i class="si si-badge"></i>
-															{% trans %}Honor rolls{% endtrans %}</a>
-														</li>
-														<li aria-haspopup="true"><a href="{{ path('report_studentCard') }}">
-															<i class="fa fa-address-card"></i>
-															{% trans %}School cards{% endtrans %}</a>
-														</li>
-														<li aria-haspopup="true"><a href="{{ path('fiche_sport') }}">
-															<i class="fa fa-address-card"></i>
-															{% trans %}Sport Sheet{% endtrans %}</a>
-														</li>
-														<li aria-haspopup="true"><a href="{{ path('generation_qr_code') }}">
-															<i class="fa fa-qrcode"></i>
-															{% trans %}Generate QR code{% endtrans %}</a>
-														</li>
-													</ul>
-												</li>
-											{% endif %}
+															{# <li aria-haspopup="true"><a href="{{ path('student_displayStudent') }}"><i class="fe fe-users"></i>{% trans %}Students{% endtrans %}</a></li> #}
+															{% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+																<li aria-haspopup="true"><a href="{{ path('student_saveStudent') }}"><i class="fe fe-user-plus"></i>{% trans %}Add Student{% endtrans %}</a></li>
+															{% endif %}
 
-											<li aria-haspopup="true">
-												<a href="javascript:void(0);" class="sub-icon">
-													<svg class="hor-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-server" viewBox="0 0 16 16">
-														<path d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1V2zm1 12h2V2h-2v12zm-3 0V7H7v7h2zm-5 0v-3H2v3h2z"/>
-													</svg>
-
-													<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" viewBox="0 0 0 0"></svg>
-													{% trans %}Statistics{% endtrans %} <i class="fa fa-angle-down horizontal-icon"></i>
-												</a>
-												<ul class="sub-menu border-primary">
-
-													<li aria-haspopup="true"><a href="{{ path('statistic_rateOfPresencePerClass') }}">
-														<i class="fa fa-table"></i>
-														{% trans %}Student attendance status{% endtrans %}</a></li>
-
-													{% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_CENSEUR') or is_granted('ROLE_SECRETAIRE')  or is_granted('ROLE_CONSEILLER') %}
-														<li aria-haspopup="true"><a href="{{ path('statistic_printDeliberationRecap')}}" target="_blank">
-															<i class="fa fa-table"></i>{% trans %}Status of deliberations{% endtrans %}</a></li>
-
-														<li aria-haspopup="true"><a href="{{ path('statistic_slipPerSubject') }}">
-															<i class="fa fa-bar-chart"></i>{% trans %}Statistical sheets by subject{% endtrans %}</a></li>
-
-														<li aria-haspopup="true"><a href="{{ path('statistic_classCouncil') }}">
-															<i class="fa fa-file-text"></i>{% trans %}Class council sheets{% endtrans %}</a></li>
-
-														<li aria-haspopup="true"><a href="{{ path('statistic_rateOfSuccessPerClass') }}">
-															<i class="fa fa-percent"></i>{% trans %}Success rate by class{% endtrans %}</a>
-														</li>
-
-														<li aria-haspopup="true"><a href="{{ path('data_collection_sheet') }}">
-															<i class="fa fa-database"></i>{% trans %}Data collection sheet{% endtrans %}</a>
-														</li>
-
-														{# <li aria-haspopup="true"><a href="{{ path('statistic_printSlipPerSubject') }}" target="_blank">
-															<i class="fa fa-percent"></i>{% trans %}Pedagogical summary sheet{% endtrans %}</a>
-														</li> #}
-													{% endif %}
-
-												</ul>
-											</li>
-											
-											<li aria-haspopup="true">
-												<a href="javascript:void(0);" class="sub-icon">
-													<svg class="hor-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-server" viewBox="0 0 16 16">
-														<path fill-rule="evenodd" d="M6 1h6v7a.5.5 0 0 1-.757.429L9 7.083 6.757 8.43A.5.5 0 0 1 6 8V1z"/>
-														<path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"/>
-														<path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/>
-													</svg>
-													<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" viewBox="0 0 0 0"></svg>
-													{% trans %}Registers and lists{% endtrans %} <i class="fa fa-angle-down horizontal-icon"></i>
-												</a>
-												<ul class="sub-menu border-primary">
-													<li aria-haspopup="true" class="sub-menu-sub"><a href="javascript:void(0);">
-														<i class="fa fa-file-pdf"></i>{% trans %}Lists{% endtrans %}</a>
-														<ul class="sub-menu border-danger">
 															<li aria-haspopup="true">
-																<a href="{{ path('register_and_list_printAllStudentList') }}" target="_blank">
-																<i class="fa fa-list"></i>{% trans %}List of students{% endtrans %}
+																<a href="{{ path('student_displayStudent', {'a': 1 }) }}">
+																	<i class="fe fe-users"></i>{% trans %}Students{% endtrans %}
 																</a>
 															</li>
 
-															<li aria-haspopup="true">
-																<a href="{{ path('register_and_list_studentList') }}">
-																	<i class="fa fa-list"></i>{% trans %}List of students per classroom{% endtrans %}</a></li>
-
-															<li aria-haspopup="true">
-																<a href="{{ path('register_and_list_studentResponsabilityList') }}" target="_blank">
-																<i class="fa fa-list"></i>{% trans %}List of class leaders{% endtrans %}</a></li>
-
-															{% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_CENSEUR') or is_granted('ROLE_SECRETAIRE') or is_granted('ROLE_CONSEILLER') %}
-
-																<li aria-haspopup="true"><a href="{{ path('register_and_list_printSchoolStructure', {'staff': 1}) }}" target="_blank">
-																<i class="fa fa-list"></i>{% trans %}Personnel list{% endtrans %}</a></li>
-
-																<li aria-haspopup="true"><a href="{{ path('register_and_list_educationalFacilitatorList') }}" target="_blank">
-																<i class="fa fa-list"></i>{% trans %}List of APs{% endtrans %}</a></li>
-															
-																
+															{% if is_granted('ROLE_CENSEUR') %}
+																<li aria-haspopup="true">
+																	<a href="{{ path('my_transcripts', {'slug': currentUser.teacher.slug }) }}">
+																		<i class="fe fe-file-text me-2"></i>
+																		{% trans %}Transcripts{% endtrans %}
+																	</a>
+																</li>
 															{% endif %}
 
 														</ul>
-													</li>
-													<li aria-haspopup="true" class="sub-menu-sub"><a href="javascript:void(0);">
-														<i class="fa fa-group"></i>Effective</a>
-														<ul class="sub-menu border-danger">
-															<li aria-haspopup="true"><a href="{{ path('headmaster_countTeachers') }}" target="_blank">
-																<i class="fa fa-group"></i>{% trans %}Effective of staff{% endtrans %}</a></li>
+													</div>
 
-															<li aria-haspopup="true"><a href="{{ path('headmaster_printStudentAge') }}" target="_blank">
-																<i class="fa fa-group"></i>{% trans %}Number of students by age group{% endtrans %}</a></li>
+													<div class="col-lg-2 col-md-12 col-xs-12 link-list">
+														<ul>
+															<li aria-haspopup="true"><a href="{{ path('teacher_displayTeacher', {'displayLaters': 0, 'a': 1 }) }}"><i class="fe fe-users"></i>{% trans %}Staff{% endtrans %}</a></li>
+
+															<li aria-haspopup="true"><a href="{{ path('department_displayDepartment', {'a': 1 }) }}"><i class="fe fe-grid"></i>{% trans %}Departments{% endtrans %}</a></li>
 														</ul>
-													</li>
-													<li aria-haspopup="true" class="sub-menu-sub"><a href="javascript:void(0);">
-														<i class="fa fa-pencil"></i>{% trans %}Statements{% endtrans %}</a>
-														<ul class="sub-menu border-danger">
-															<li aria-haspopup="true"><a href="{{ path('register_and_list_markReport') }}">
-																<i class="fa fa-pencil"></i>{% trans %}Transcripts{% endtrans %}</a></li>
+													</div>
 
-															<li aria-haspopup="true"><a href="{{ path('register_and_list_absenceReport') }}">
-																<i class="fa fa-pencil"></i>{% trans %}Hours of absence{% endtrans %}</a></li>
+													<div class="col-lg-2 col-md-12 col-xs-12 link-list">
+														<ul>
+															<li aria-haspopup="true"><a href="{{ path('subject_displaySubject', {'a': 1 }) }}"><i class="fe fe-book-open"></i>{% trans %}Subject{% endtrans %}</a></li>
+
+															<li aria-haspopup="true"><a href="{{ path('lesson_displayLesson', {'a': 1 }) }}"><i class="fe fe-briefcase"></i>{% trans %}Courses{% endtrans %}</a></li>
+
 														</ul>
-													</li>
+													</div>
 
-													{% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_CENSEUR') or is_granted('ROLE_CONSEILLER')  %}
+													{% if is_granted('ROLE_PROVISEUR') or is_granted('ROLE_CENSEUR') %}
+														<div class="col-lg-2 col-md-12 col-xs-12 link-list">
+															<ul>
+																<li aria-haspopup="true"><a href="{{ path('lesson_done') }}">
+																	<i class="fe fe-check-circle"></i>
+																	{% trans %}Validation of lessons learned{% endtrans %}</a>
+																</li>
 
-														<li aria-haspopup="true"><a href="{{ path('register_and_list_printSchoolStructure') }}" target="_blank">
-															<i class="fa fa-building"></i>{% trans %}Structure of the establishment{% endtrans %}</a>
-														</li>
+																<li aria-haspopup="true"><a href="{{ path('display_lesson_plain') }}">
+																	<i class="fe fe-calendar"></i>
+																	{% trans %}Add Number of lessons planned{% endtrans %}</a>
+																</li>
 
-														<li aria-haspopup="true"><a href="{{ path('register_and_list_referenceRegister') }}">
-															<i class="fa fa-book"></i>{% trans %}Reference registers{% endtrans %}</a>
-														</li>
 
-														<li aria-haspopup="true"><a href="{{ path('register_and_list_referenceRegister', {'pv': 1}) }}">
-															<i class="fa fa-book"></i>{% trans %}Minutes of notes{% endtrans %}</a>
-														</li>
+															</ul>
+														</div>
 
-														<li aria-haspopup="true"><a href="{{ path('best_result_per_term') }}">
-															<i class="si si-badge"></i>{% trans %}Best Results{% endtrans %}</a>
-														</li>
-
-														{# <li aria-haspopup="true"><a href="{{ path('best_result_of_year') }}">
-															<i class="si si-badge"></i>{% trans %}Best Results of year{% endtrans %}</a>
-														</li> #}
 													{% endif %}
-												</ul>
+
+													<div class="col-lg-2 col-md-12 col-xs-12 link-list">
+														<ul>
+															{% if is_granted('ROLE_PROVISEUR') or is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') %}
+																<li aria-haspopup="true"><a href="{{ path('classroom_displayClassroom', {'a': 1 }) }}"><i class="fe fe-home"></i>{% trans %}Classs{% endtrans %}</a></li>
+
+																<li aria-haspopup="true"><a href="{{ path('school_editSchool') }}"><i class="fe fe-home"></i>{% trans %}Establishment{% endtrans %}</a></li>
+															{% endif %}
+														</ul>
+													</div>
+
+													<div class="col-lg-2 col-md-12 col-xs-12 link-list">
+														<ul>
+															{% if is_granted('ROLE_PROVISEUR') or is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') %}
+																<li aria-haspopup="true"><a href="{{ path('fees_updateFees', {'a': 1 }) }}"><i class="fe fe-dollar-sign"></i>{% trans %}Fees{% endtrans %}</a></li>
+
+																<li aria-haspopup="true"><a href="{{ path('display_time_table') }}"><i class="fe fe-calendar"></i>{% trans %}Time Table{% endtrans %}</a></li>
+
+
+															{% endif %}
+														</ul>
+													</div>
+
+												</div>
+											</div>
+										</div>
+									</div>
+								</li>
+							{% endif %}
+
+							{% if is_granted('ROLE_ADMIN')
+								or is_granted ('ROLE_SUPER_ADMIN')
+								or is_granted('ROLE_PROVISEUR')
+								or is_granted('ROLE_CENSEUR')
+								or is_granted('ROLE_SECRETAIRE') %}
+								<li aria-haspopup="true">
+									<a href="javascript:void(0);" class="sub-icon">
+								<i class="fe fe-file-text hor-icon"></i>
+								{% trans %}Report and school cards{% endtrans %} <i class="fe fe-chevron-down horizontal-icon"></i>
+									</a>
+									<ul class="sub-menu border-primary">
+										<li aria-haspopup="true"><a href="{{ path('report_report') }}">
+											<i class="fe fe-file-text"></i>
+											{% trans %}Report{% endtrans %}</a>
+										</li>
+										<li aria-haspopup="true"><a href="{{ path('transcript_student') }}">
+											<i class="fe fe-file-text"></i>
+											{% trans %}Transcript's students{% endtrans %}</a>
+										</li>
+										<li aria-haspopup="true"><a href="{{ path('report_rollOfHonor') }}">
+											<i class="fe fe-award"></i>
+											{% trans %}Honor rolls{% endtrans %}</a>
+										</li>
+										<li aria-haspopup="true"><a href="{{ path('report_studentCard') }}">
+											<i class="fe fe-credit-card"></i>
+											{% trans %}School cards{% endtrans %}</a>
+										</li>
+										<li aria-haspopup="true"><a href="{{ path('fiche_sport') }}">
+											<i class="fe fe-credit-card"></i>
+											{% trans %}Sport Sheet - Level 4{% endtrans %}</a>
+										</li>
+										<li aria-haspopup="true"><a href="{{ path('fiche_sport_obc') }}">
+											<i class="fe fe-award"></i>
+											{% trans %}OBC Sport Sheets - Levels 6 and 7{% endtrans %}</a>
+										</li>
+										<li aria-haspopup="true"><a href="{{ path('generation_qr_code') }}">
+											<i class="fe fe-grid"></i>
+											{% trans %}Generate QR code{% endtrans %}</a>
+										</li>
+										<li aria-haspopup="true"><a href="{{ path('ajout_slug_student') }}">
+											<i class="fe fe-grid"></i>
+											{% trans %}Generate Slug{% endtrans %}</a>
+										</li>
+									</ul>
+								</li>
+							{% endif %}
+
+							<li aria-haspopup="true">
+								<a href="javascript:void(0);" class="sub-icon">
+								<i class="fe fe-bar-chart-2 hor-icon"></i>
+								{% trans %}Statistics{% endtrans %} <i class="fe fe-chevron-down horizontal-icon"></i>
+								</a>
+								<ul class="sub-menu border-primary">
+
+									<li aria-haspopup="true"><a href="{{ path('statistic_rateOfPresencePerClass') }}">
+										<i class="fe fe-list"></i>
+										{% trans %}Student attendance status{% endtrans %}</a></li>
+
+									{% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_CENSEUR') or is_granted('ROLE_SECRETAIRE')  or is_granted('ROLE_CONSEILLER') %}
+										<li aria-haspopup="true"><a href="{{ path('statistic_printDeliberationRecap')}}" target="_blank">
+											<i class="fe fe-list"></i>{% trans %}Status of deliberations{% endtrans %}</a></li>
+
+										<li aria-haspopup="true"><a href="{{ path('statistic_slipPerSubject') }}">
+											<i class="fe fe-bar-chart-2"></i>{% trans %}Statistical sheets by subject{% endtrans %}</a></li>
+
+										<li aria-haspopup="true"><a href="{{ path('statistic_classCouncil') }}">
+											<i class="fe fe-file-text"></i>{% trans %}Class council sheets{% endtrans %}</a></li>
+
+										<li aria-haspopup="true"><a href="{{ path('statistic_rateOfSuccessPerClass') }}">
+											<i class="fe fe-percent"></i>{% trans %}Success rate by class{% endtrans %}</a>
+										</li>
+
+										<li aria-haspopup="true"><a href="{{ path('data_collection_sheet') }}">
+											<i class="fe fe-database"></i>{% trans %}Data collection sheet{% endtrans %}</a>
+										</li>
+
+										{# <li aria-haspopup="true"><a href="{{ path('statistic_printSlipPerSubject') }}" target="_blank">
+											<i class="fe fe-percent"></i>{% trans %}Pedagogical summary sheet{% endtrans %}</a>
+										</li> #}
+									{% endif %}
+
+								</ul>
+							</li>
+
+							<li aria-haspopup="true">
+								<a href="javascript:void(0);" class="sub-icon">
+								<i class="fe fe-list hor-icon"></i>
+								{% trans %}Registers and lists{% endtrans %} <i class="fe fe-chevron-down horizontal-icon"></i>
+								</a>
+								<ul class="sub-menu border-primary">
+									<li aria-haspopup="true" class="sub-menu-sub"><a href="javascript:void(0);">
+										<i class="fe fe-file-text"></i>{% trans %}Lists{% endtrans %}</a>
+										<ul class="sub-menu border-danger">
+											<li aria-haspopup="true">
+												<a href="{{ path('register_and_list_printAllStudentList') }}" target="_blank">
+												<i class="fe fe-list"></i>{% trans %}List of students{% endtrans %}
+												</a>
 											</li>
 
-											{% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
-												<li aria-haspopup="true">
-													<a href="javascript:void(0);" class="sub-icon">
-														<svg class="hor-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-server" viewBox="0 0 16 16">
-															<path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-															<path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-														</svg>
-														<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" viewBox="0 0 0 0"></svg>
-														{% trans %}Marks and absences{% endtrans %}<i class="fa fa-angle-down horizontal-icon"></i>
-													</a>
-													{% set currentTeacherId = currentUser ? (currentUser.teacher ? currentUser.teacher.id : 0 ) : 0 %}
-													<ul class="sub-menu border-primary">
-														{% if is_granted('ROLE_PROVISEUR') 
-														or is_granted('ROLE_CHEF_SS') 
-														or is_granted('ROLE_CHEF_SERVICE_DES_SPORTS_SCOLAIRE')
-														or is_granted('ROLE_ENSEIGNANT') 
-														or is_granted('ROLE_CENSEUR') 
-														or is_granted('ROLE_SURVEILLANT_GENERAL') %}
-															<li aria-haspopup="true">
-																<a  href="{{ path('evaluation_markRecorder', {'slugTeacher': currentUser.teacher.slug }) }}">
-																<i class="fa fa-pencil"></i>{% trans %}Enter note{% endtrans %}</a>
-															</li>
-														{% endif %}
+											<li aria-haspopup="true">
+												<a href="{{ path('register_and_list_studentList') }}">
+													<i class="fe fe-list"></i>{% trans %}List of students per classroom{% endtrans %}</a></li>
 
-														<li aria-haspopup="true"><a  href="{{ path('evaluation_updateMarkByAdmin') }}">
-															<i class="fa fa-edit"></i>{% trans %}Edit a note{% endtrans %}</a>
-														</li>
+											<li aria-haspopup="true">
+												<a href="{{ path('register_and_list_studentResponsabilityList') }}" target="_blank">
+												<i class="fe fe-list"></i>{% trans %}List of class leaders{% endtrans %}</a></li>
 
-														<li aria-haspopup="true"><a href="{{ path('absence_updateAbsenceByAdmin') }}">
-															<i class="fa fa-edit"></i>{% trans %}Edit student's absence{% endtrans %}</a>
-														</li>
+											{% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_CENSEUR') or is_granted('ROLE_SECRETAIRE') or is_granted('ROLE_CONSEILLER') %}
 
-														<li aria-haspopup="true">
-															<a href="{{ path('afficher_historique_teacher', {'a': 1 }) }}" >
-																<i class="fa fa-eye"></i>{% trans %}Display hours teacher's{% endtrans %} 
-															</a>
-														</li>
+												<li aria-haspopup="true"><a href="{{ path('register_and_list_printSchoolStructure', {'staff': 1}) }}" target="_blank">
+												<i class="fe fe-list"></i>{% trans %}Personnel list{% endtrans %}</a></li>
 
-														{% if is_granted('ROLE_SURVEILLANT_GENERAL') %}
-															<li aria-haspopup="true">
-																<a href="{{ path('ajout_historique_teacher') }}" >
-																	<i class="fa fa-save"></i>{% trans %}Save Absence Teacher Recorder{% endtrans %} 
-																</a>
-															</li>
-														{% endif %}
-														
+												<li aria-haspopup="true"><a href="{{ path('register_and_list_educationalFacilitatorList') }}" target="_blank">
+												<i class="fe fe-list"></i>{% trans %}List of APs{% endtrans %}</a></li>
 
-														<li aria-haspopup="true"><a href="{{ path('absence_updateAbsenceTeacherByAdmin') }}">
-															<i class="fa fa-edit"></i>{% trans %}Edit teacher's absence{% endtrans %}</a>
-														</li>
 
-														<li aria-haspopup="true"><a href="{{ path('display_problems') }}">
-															<i class="fa fa-wrench"></i>{% trans %}Report reconstruction{% endtrans %} {% trans %}and{% endtrans %} {% trans %}Problems{% endtrans %}</a>
-														</li>
-													</ul>
-												</li>
 											{% endif %}
 
-											{% if is_granted('ROLE_PROVISEUR') or is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') %}
-												<li aria-haspopup="true">
-													<a href="javascript:void(0);" class="sub-icon">
-														<svg class="hor-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-server" viewBox="0 0 16 16">
-															<path fill-rule="evenodd" d="M11.5 1.246c.832-.855 2.913.642 0 2.566-2.913-1.924-.832-3.421 0-2.566ZM9 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm-9 8c0 1 1 1 1 1h10s1 0 1-1-1-4-6-4-6 3-6 4Zm13.5-8.09c1.387-1.425 4.855 1.07 0 4.277-4.854-3.207-1.387-5.702 0-4.276ZM15 2.165c.555-.57 1.942.428 0 1.711-1.942-1.283-.555-2.281 0-1.71Z"/>
-														</svg>
+										</ul>
+									</li>
+									<li aria-haspopup="true" class="sub-menu-sub"><a href="javascript:void(0);">
+										<i class="fe fe-users"></i>{% trans %}Effective{% endtrans %}</a>
+										<ul class="sub-menu border-danger">
+											<li aria-haspopup="true"><a href="{{ path('headmaster_countTeachers') }}" target="_blank">
+												<i class="fe fe-users"></i>{% trans %}Effective of staff{% endtrans %}</a></li>
 
-														<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" viewBox="0 0 0 0"></svg>
-														{% trans %}Chef's space{% endtrans %}<i class="fa fa-angle-down horizontal-icon"></i>
-													</a>
-													<div class="horizontal-megamenu clearfix">
-														<div class="container">
-															<div class="mega-menubg border-primary">
-																<div class="row">
-																	<div class="col-lg-3 col-md-12 col-xs-12 link-list">
-																		<ul>
-																			<li><h3 class="fs-14 font-weight-bold">
-																				
-																				<i class="fa fa-gavel"></i>
-																				{% trans %}Deliberations{% endtrans %}</h3>
-																			</li>
-																			{% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_CENSEUR') %}
-																				
-																				<li aria-haspopup="true"><a  href="{{ path('deliberation_displayDeliberation') }}">
-																				<i class="fa fa-check"></i>{% trans %}Deliberate{% endtrans %}</a></li>
-																			
-																			{% endif %}
-																			<li aria-haspopup="true"><a href="{{ path('deliberation_deliberationList') }}">
-																				<i class="fa fa-file-pdf"></i>{% trans %}Lists of deliberations{% endtrans %}</a></li>
+											<li aria-haspopup="true"><a href="{{ path('headmaster_printStudentAge') }}" target="_blank">
+												<i class="fe fe-users"></i>{% trans %}Number of students by age group{% endtrans %}</a></li>
+										</ul>
+									</li>
+									<li aria-haspopup="true" class="sub-menu-sub"><a href="javascript:void(0);">
+										<i class="fe fe-edit-3"></i>{% trans %}Statements{% endtrans %}</a>
+										<ul class="sub-menu border-danger">
+											<li aria-haspopup="true"><a href="{{ path('register_and_list_markReport') }}">
+												<i class="fe fe-edit-3"></i>{% trans %}Transcripts{% endtrans %}</a></li>
 
-																			<li aria-haspopup="true"><a href="{{ path('delibeartion_studentProvisoryList') }}">
-																				<i class="fa fa-file-pdf"></i>{% trans %}Provisional lists{% endtrans %}</a></li>
-																		</ul>
-																	</div>
-																	<div class="col-lg-3 col-md-12 col-xs-12 link-list">
-																		<ul>
-																			{% if is_granted('ROLE_PROVISEUR') or is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') %}
-																			{# <li aria-haspopup="true"><a href="{{ path('registration_feesStatement') }}">
-																				<i class="fa fa-check"></i> {% trans %}Validate a receipt{% endtrans %}</a></li> #}
+											<li aria-haspopup="true"><a href="{{ path('register_and_list_absenceReport') }}">
+												<i class="fe fe-edit-3"></i>{% trans %}Hours of absence{% endtrans %}</a></li>
+										</ul>
+									</li>
 
-																				<li aria-haspopup="true"><a href="{{ path('registration_feesStatement') }}">
-																				<i class="fa fa-money"></i> {% trans %}Statements of expenses{% endtrans %}</a></li>
+									{% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_CENSEUR') or is_granted('ROLE_CONSEILLER')  %}
 
-																				<li aria-haspopup="true"><a href="{{ path('teacher_displayAssumedDuty') }}"><i class="fa fa-file-pdf"></i>{% trans %}Testimony{% endtrans %}</a></li>
-																				<li aria-haspopup="true"><a class="nav-link" data-toggle="" href="{{ path('verrou_displayLockOption') }}" data-parent=""><i class="fa fa-fw fa-lock"></i>{% trans %}Lock any changes{% endtrans %}</a></li>
-																				{# <li aria-haspopup="true"><a class="nav-link" data-toggle="" href="{{ path('list_student_trash', {'a': 1 }) }}" data-parent=""><i class="fa fa-fw fa-trash"></i>{% trans %}Students deleted{% endtrans %}</a></li> #}
-																			{% endif %}
-																		</ul>
-																	</div>
-																	<div class="col-lg-3 col-md-12 col-xs-12 link-list">
-																		<ul>
-																			{# <li><h3 class="fs-14 font-weight-bold">
-																				<i class="fa fa-money"></i>{% trans %}Finance{% endtrans %}</h3>
-																			</li> #}
-																			<li aria-haspopup="true">
-																				<a href="{{ path('etat_finance') }}" class="sub-icon">
-																					<i class="fa fa-check-square"></i>
-																					{% trans %}State finance{% endtrans %}
-																				</a>
-																			</li>
-					
-																			<li aria-haspopup="true">
-																				<a href="{{ path('display_depense') }}" class="sub-icon"><i class="fa fa-usd"></i>
-																					{% trans %}Expenses{% endtrans %}
-																				</a>
-																			</li>
-																			{% if is_granted ('ROLE_PROVISEUR') or is_granted ('ROLE_SUPER_ADMIN') %}
-																				<li aria-haspopup="true">
-																					<a href="{{ path('add_administrator') }}" class="sub-icon">
-																						<i class="fa fa-user-plus"></i>
-																						{% trans %}Add an administrator{% endtrans %}
-																					</a>
-																				</li>
-																				<li aria-haspopup="true">
-																					<a href="{{ path('list_administrators') }}" class="sub-icon">
-																						<i class="fa fa-users"></i>
-																						{% trans %}
-																						List of administrators{% endtrans %}
-																					</a>
-																				</li>
-																			{% endif %}
-																			
+										<li aria-haspopup="true"><a href="{{ path('register_and_list_printSchoolStructure') }}" target="_blank">
+											<i class="fe fe-home"></i>{% trans %}Structure of the establishment{% endtrans %}</a>
+										</li>
 
-																			{% if is_granted('ROLE_PROVISEUR') %}
-																				<li><h3 class="fs-14 font-weight-bold"><a href="{{ path('display_lesson_plain') }}">
-																					<i class="fa fa-calendar"></i>
-																					{% trans %}Add Number of lessons planned{% endtrans %}</a></h3>
-																				</li>
-																			{% endif %}
-																		</ul>
-																		
-																	</div>
+										<li aria-haspopup="true"><a href="{{ path('register_and_list_referenceRegister') }}">
+											<i class="fe fe-book-open"></i>{% trans %}Reference registers{% endtrans %}</a>
+										</li>
 
-																	<div class="col-lg-3 col-md-12 col-xs-12 link-list">
-																		<ul>
-																			<li><h3 class="fs-14 font-weight-bold">
-																				<i class="fa fa-codiepie"></i>{% trans %}Software License{% endtrans %}</h3></li>
-																			<li aria-haspopup="true">
-																				<a href="{{ path('activation_key') }}" class="sub-icon">
-																					<i class="fa fa-calendar-check"></i>
-																					{% trans %}Activate{% endtrans %}
-																				</a>
-																			</li>
-			
-																		</ul>
-																	</div>
-																</div>
-															</div>
-														</div>
-													</div>
-												</li>
-											{% endif %}
+										<li aria-haspopup="true"><a href="{{ path('register_and_list_referenceRegister', {'pv': 1}) }}">
+											<i class="fe fe-book-open"></i>{% trans %}Minutes of notes{% endtrans %}</a>
+										</li>
+
+										<li aria-haspopup="true"><a href="{{ path('best_result') }}">
+											<i class="fe fe-award"></i>{% trans %}Best Results{% endtrans %}</a>
+										</li>
+
+										{# <li aria-haspopup="true"><a href="{{ path('best_result_of_year') }}">
+											<i class="fe fe-award"></i>{% trans %}Best Results of year{% endtrans %}</a>
+										</li> #}
+									{% endif %}
+								</ul>
+							</li>
+
+							{% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') %}
+								<li aria-haspopup="true">
+									<a href="javascript:void(0);" class="sub-icon">
+									<i class="fe fe-edit-3 hor-icon"></i>
+									{% trans %}Marks and absences{% endtrans %}<i class="fe fe-chevron-down horizontal-icon"></i>
+									</a>
+									{% set currentTeacherId = currentUser ? (currentUser.teacher ? currentUser.teacher.id : 0 ) : 0 %}
+									<ul class="sub-menu border-primary">
+										{% if is_granted('ROLE_PROVISEUR')
+										or is_granted('ROLE_CHEF_SS')
+										or is_granted('ROLE_CHEF_SERVICE_DES_SPORTS_SCOLAIRE')
+										or is_granted('ROLE_ENSEIGNANT')
+										or is_granted('ROLE_CENSEUR')
+										or is_granted('ROLE_SURVEILLANT_GENERAL') %}
+											<li aria-haspopup="true">
+												<a  href="{{ path('evaluation_markRecorder', {'slugTeacher': currentUser.teacher.slug }) }}">
+												<i class="fe fe-edit-3"></i>{% trans %}Enter note{% endtrans %}</a>
+											</li>
 										{% endif %}
+
+										<li aria-haspopup="true"><a href="{{ path('evaluation_updateMarkByAdmin') }}" data-fs-modal="true" data-modal-size="xl" data-modal-title="{% trans %}Edit a note{% endtrans %}">
+											<i class="fe fe-edit"></i>{% trans %}Edit a note{% endtrans %}</a>
+										</li>
+
+										<li aria-haspopup="true"><a href="{{ path('absence_updateAbsenceByAdmin') }}" data-fs-modal="true" data-modal-size="xl" data-modal-title="{% trans %}Edit student's absence{% endtrans %}">
+											<i class="fe fe-edit"></i>{% trans %}Edit student's absence{% endtrans %}</a>
+										</li>
+
+										<li aria-haspopup="true">
+											<a href="{{ path('afficher_historique_teacher', {'a': 1 }) }}" >
+												<i class="fe fe-eye"></i>{% trans %}Display hours teacher's{% endtrans %}
+											</a>
+										</li>
 
 										{% if is_granted('ROLE_SURVEILLANT_GENERAL') %}
 											<li aria-haspopup="true">
-												<a href="javascript:void(0);" class="sub-icon">
-													<svg class="hor-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-server" viewBox="0 0 16 16">
-														<path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
-														<path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
-													</svg>
-
-													<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" viewBox="0 0 0 0"></svg>
-													
-													{% trans %}Student Recorder{% endtrans %}<i class="fa fa-angle-down horizontal-icon"></i>
+												<a href="{{ path('ajout_historique_teacher') }}" >
+													<i class="fe fe-save"></i>{% trans %}Save Absence Teacher Recorder{% endtrans %}
 												</a>
-												<ul class="sub-menu border-primary">
-													
-													<li aria-haspopup="true">
-														<a href="{{ path('absence_absenceRecorder', {'slug': app.user.teacher.slug}) }}" >
-															{% trans %}Absence Student Recorder{% endtrans %} 
-														</a>
-													</li>
-													<li aria-haspopup="true">
-														<a href="{{ path('conseil_conseilRecorder', {'slug': app.user.teacher.slug}) }}" >
-															{% trans %}Council Decision Recorder{% endtrans %} 
-														</a>
-													</li>
-
-												</ul>
 											</li>
-
-											<li aria-haspopup="true">
-												<a href="javascript:void(0);" class="sub-icon">
-													<svg class="hor-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-server" viewBox="0 0 16 16">
-														<path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
-														<path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
-													</svg>
-
-													<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" viewBox="0 0 0 0"></svg>
-													
-													{% trans %}Teacher Recorder{% endtrans %}<i class="fa fa-angle-down horizontal-icon"></i>
-												</a>
-												<ul class="sub-menu border-primary">
-
-													<li aria-haspopup="true">
-														<a href="{{ path('absence_absenceTeacherRecorder', {'slug': app.user.teacher.slug }) }}" >
-															{% trans %}Absence Teacher Recorder{% endtrans %} 
-														</a>
-													</li>
-													<li aria-haspopup="true">
-														<a href="{{ path('afficher_historique_teacher', {'a': 1 }) }}" >
-															{% trans %}Display hours teacher's{% endtrans %} 
-														</a>
-													</li>
-													<li aria-haspopup="true">
-														<a href="{{ path('ajout_historique_teacher') }}" >
-															{% trans %}Save Absence Teacher Recorder{% endtrans %} 
-														</a>
-													</li>
-
-												</ul>
-											</li>
-											
 										{% endif %}
 
-										{% if is_granted('ROLE_RAPPS') 
-											or is_granted('ROLE_CHEF_SS') 
-											or is_granted('ROLE_CHEF_SERVICE_DES_SPORTS_SCOLAIRE')
-											or is_granted('ROLE_CONSEILLER') 
-											or is_granted('ROLE_INTENDANT') 
-											or is_granted('ROLE_ENSEIGNANT') 
-											or is_granted('ROLE_CENSEUR') 
-											or is_granted('ROLE_SURVEILLANT_GENERAL') 
-											or is_granted('ROLE_AP') 
-											or is_granted('ROLE_ANIMATEUR_PEDAGOGIQUE')
-											or is_granted('ROLE_CT') 
-											or is_granted('ROLE_CHEF_DES_TRAVAUX') %}
-											
-											{% set currentTeacherId = currentUser ? (currentUser.teacher ? currentUser.teacher.id : 0 ) : 0 %}
-											<li aria-haspopup="true">
-												<a href="{{ path('teacher_editTeacher', {'slug': currentUser.teacher.slug, 'pe': 1}) }}">
-													<svg class="hor-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-server" viewBox="0 0 16 16">
-														<path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/>
-														<path d="M4.603 12.087a.81.81 0 0 1-.438-.42c-.195-.388-.13-.776.08-1.102.198-.307.526-.568.897-.787a7.68 7.68 0 0 1 1.482-.645 19.701 19.701 0 0 0 1.062-2.227 7.269 7.269 0 0 1-.43-1.295c-.086-.4-.119-.796-.046-1.136.075-.354.274-.672.65-.823.192-.077.4-.12.602-.077a.7.7 0 0 1 .477.365c.088.164.12.356.127.538.007.187-.012.395-.047.614-.084.51-.27 1.134-.52 1.794a10.954 10.954 0 0 0 .98 1.686 5.753 5.753 0 0 1 1.334.05c.364.065.734.195.96.465.12.144.193.32.2.518.007.192-.047.382-.138.563a1.04 1.04 0 0 1-.354.416.856.856 0 0 1-.51.138c-.331-.014-.654-.196-.933-.417a5.716 5.716 0 0 1-.911-.95 11.642 11.642 0 0 0-1.997.406 11.311 11.311 0 0 1-1.021 1.51c-.29.35-.608.655-.926.787a.793.793 0 0 1-.58.029zm1.379-1.901c-.166.076-.32.156-.459.238-.328.194-.541.383-.647.547-.094.145-.096.25-.04.361.01.022.02.036.026.044a.27.27 0 0 0 .035-.012c.137-.056.355-.235.635-.572a8.18 8.18 0 0 0 .45-.606zm1.64-1.33a12.647 12.647 0 0 1 1.01-.193 11.666 11.666 0 0 1-.51-.858 20.741 20.741 0 0 1-.5 1.05zm2.446.45c.15.162.296.3.435.41.24.19.407.253.498.256a.107.107 0 0 0 .07-.015.307.307 0 0 0 .094-.125.436.436 0 0 0 .059-.2.095.095 0 0 0-.026-.063c-.052-.062-.2-.152-.518-.209a3.881 3.881 0 0 0-.612-.053zM8.078 5.8a6.7 6.7 0 0 0 .2-.828c.031-.188.043-.343.038-.465a.613.613 0 0 0-.032-.198.517.517 0 0 0-.145.04c-.087.035-.158.106-.196.283-.04.192-.03.469.046.822.024.111.054.227.09.346z"/>
-													</svg>
 
-													<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" viewBox="0 0 0 0"></svg>
+										<li aria-haspopup="true"><a href="{{ path('absence_updateAbsenceTeacherByAdmin') }}" data-fs-modal="true" data-modal-size="xl" data-modal-title="{% trans %}Edit teacher's absence{% endtrans %}">
+											<i class="fe fe-edit"></i>{% trans %}Edit teacher's absence{% endtrans %}</a>
+										</li>
 
-													{% trans %}Testimony{% endtrans %}
-												</a>
-												{# <ul class="sub-menu border-primary"> #}
-													{# <li aria-haspopup="true"><a href="{{ path('teacher_editTeacher', {'id': currentTeacherId, 'pe': 1}) }}">{% trans %}Start/Restart of service and Actual presence{% endtrans %}</a></li> #}
-												{# </ul> #}
-											</li>
-											<li aria-haspopup="true">
-												<a href="{{ path('evaluation_markRecorder', {'slugTeacher': currentUser.teacher.slug }) }}" class="sub-icon">
-													<svg class="hor-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-server" viewBox="0 0 16 16">
-														<path d="M2.873 11.297V4.142H1.699L0 5.379v1.137l1.64-1.18h.06v5.961h1.174Zm3.213-5.09v-.063c0-.618.44-1.169 1.196-1.169.676 0 1.174.44 1.174 1.106 0 .624-.42 1.101-.807 1.526L4.99 10.553v.744h4.78v-.99H6.643v-.069L8.41 8.252c.65-.724 1.237-1.332 1.237-2.27C9.646 4.849 8.723 4 7.308 4c-1.573 0-2.36 1.064-2.36 2.15v.057h1.138Zm6.559 1.883h.786c.823 0 1.374.481 1.379 1.179.01.707-.55 1.216-1.421 1.21-.77-.005-1.326-.419-1.379-.953h-1.095c.042 1.053.938 1.918 2.464 1.918 1.478 0 2.642-.839 2.62-2.144-.02-1.143-.922-1.651-1.551-1.714v-.063c.535-.09 1.347-.66 1.326-1.678-.026-1.053-.933-1.855-2.359-1.845-1.5.005-2.317.88-2.348 1.898h1.116c.032-.498.498-.944 1.206-.944.703 0 1.206.435 1.206 1.07.005.64-.504 1.106-1.2 1.106h-.75v.96Z"/>
-													</svg>
-
-													<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" viewBox="0 0 0 0"></svg>
-
-													{% trans %}Enter Notes{% endtrans %}
-													{# <i class="fa fa-angle-down horizontal-icon"></i> #}
-												</a>
-												{# <ul class="sub-menu">
-													<li aria-haspopup="true"><a href="{{ path('call_recorder', {'id': currentTeacherId}) }}">{% trans %}Enter notes{% endtrans %}</a></li>
-												</ul> #}
-											</li>
-
-
-										{% endif %}
-
-										{% if is_granted('ROLE_ENSEIGNANT') 
-											or is_granted('ROLE_SURVEILLANT_GENERAL') 
-											or is_granted('ROLE_CONSEILLER') 
-											or is_granted('ROLE_DIRECTEUR') 
-											or is_granted('ROLE_INTENDANT') 
-											or is_granted('ROLE_SECRETAIRE') 
-											or is_granted('ROLE_ECONOME') 
-											or is_granted('ROLE_COMPTABLE') 
-											or is_granted('ROLE_ACTION SOCIALE') 
-											or is_granted('ROLE_CHEF_SERVICE_ORIENTATION') 
-											or is_granted('ROLE_RESPONSABLE_APPS') 
-											or is_granted('ROLE_CHEF_SERVICE_DES_SPORTS') 
-											or is_granted('ROLE_AUTRE') 
-											or is_granted('ROLE_ANIMATEUR PEDAGOGIQUE') 
-											or is_granted('ROLE_CHEF_DES_TRAVAUX') 
-											or is_granted('ROLE_PERSONNEL_APPUI') 
-											or is_granted('ROLE_PERSONNEL_ADMINISTRATIF') 
-											or is_granted('ROLE_CHEF_SERVICE_DES_SPORTS_SCOLAIRE') %}
-											<li aria-haspopup="true">
-												<a href="javascript:void(0);" class="sub-icon">
-													<svg class="hor-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-server" viewBox="0 0 16 16">
-														<path fill-rule="evenodd" d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2Z"/>
-													</svg>
-
-													<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" viewBox="0 0 0 0"></svg>
-
-													{% trans %}Progress{% endtrans %}<i class="fa fa-angle-down horizontal-icon"></i>
-												</a>
-												<ul class="sub-menu border-primary">
-													{% set currentTeacherId = currentUser ? (currentUser.teacher ? currentUser.teacher.id : 0 ) : 0 %}
-									
-													<li aria-haspopup="true"><a href="{{ path('display_lesson_plain') }}">
-														<i class="fa fa-calendar"></i>
-														{% trans %}Add Number of lessons planned{% endtrans %}</a>
-													</li> 
-
-													{# {% if is_granted('ROLE_PROVISEUR') or is_granted('ROLE_DIRECTEUR') or is_granted('ROLE_CENSEUR') or is_granted('_GENERAL') or is_granted('ROLE_ENSEIGNANT')%}
-														<li aria-haspopup="true"><a href="{{ path('lesson_done') }}">
-															<i class="fa fa-check"></i>
-															{% trans %}Check Number of lessons done{% endtrans %}</a>
-														</li> 
-													{% endif %} #}
-												</ul>
-											</li>
-											
-													
-										{% endif %}
-										
-										{% if is_granted('ROLE_INTENDANT') or is_granted('ROLE_SECRETAIRE')%}
-
-												<li aria-haspopup="true">
-													<a href="{{ path('registration_feesStatement') }}" class="sub-icon">
-													<svg class="hor-icon" xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" width="16" height="16" fill="currentColor" class="bi bi-cash-coin" viewBox="0 0 16 16">
-														<path fill-rule="evenodd" d="M11 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm5-4a5 5 0 1 1-10 0 5 5 0 0 1 10 0z"/>
-														<path d="M9.438 11.944c.047.596.518 1.06 1.363 1.116v.44h.375v-.443c.875-.061 1.386-.529 1.386-1.207 0-.618-.39-.936-1.09-1.1l-.296-.07v-1.2c.376.043.614.248.671.532h.658c-.047-.575-.54-1.024-1.329-1.073V8.5h-.375v.45c-.747.073-1.255.522-1.255 1.158 0 .562.378.92 1.007 1.066l.248.061v1.272c-.384-.058-.639-.27-.696-.563h-.668zm1.36-1.354c-.369-.085-.569-.26-.569-.522 0-.294.216-.514.572-.578v1.1h-.003zm.432.746c.449.104.655.272.655.569 0 .339-.257.571-.709.614v-1.195l.054.012z"/>
-														<path d="M1 0a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h4.083c.058-.344.145-.678.258-1H3a2 2 0 0 0-2-2V3a2 2 0 0 0 2-2h10a2 2 0 0 0 2 2v3.528c.38.34.717.728 1 1.154V1a1 1 0 0 0-1-1H1z"/>
-														<path d="M9.998 5.083 10 5a2 2 0 1 0-3.132 1.65 5.982 5.982 0 0 1 3.13-1.567z"/>
-													</svg>
-
-													<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" viewBox="0 0 0 0"></svg>
-
-													{% trans %}Registration management{% endtrans %} 
-												</a>
-												</li>
-											
-											{% if is_granted('ROLE_INTENDANT')%}
-												<li aria-haspopup="true"><a href="{{ path('student_displayStudent') }}">
-											
-													<svg class="hor-icon" xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" width="16" height="16" fill="currentColor" class="bi bi-cash-coin" viewBox="0 0 16 16">
-															<path fill-rule="evenodd" d="M11 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm5-4a5 5 0 1 1-10 0 5 5 0 0 1 10 0z"/>
-															<path d="M9.438 11.944c.047.596.518 1.06 1.363 1.116v.44h.375v-.443c.875-.061 1.386-.529 1.386-1.207 0-.618-.39-.936-1.09-1.1l-.296-.07v-1.2c.376.043.614.248.671.532h.658c-.047-.575-.54-1.024-1.329-1.073V8.5h-.375v.45c-.747.073-1.255.522-1.255 1.158 0 .562.378.92 1.007 1.066l.248.061v1.272c-.384-.058-.639-.27-.696-.563h-.668zm1.36-1.354c-.369-.085-.569-.26-.569-.522 0-.294.216-.514.572-.578v1.1h-.003zm.432.746c.449.104.655.272.655.569 0 .339-.257.571-.709.614v-1.195l.054.012z"/>
-															<path d="M1 0a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h4.083c.058-.344.145-.678.258-1H3a2 2 0 0 0-2-2V3a2 2 0 0 0 2-2h10a2 2 0 0 0 2 2v3.528c.38.34.717.728 1 1.154V1a1 1 0 0 0-1-1H1z"/>
-															<path d="M9.998 5.083 10 5a2 2 0 1 0-3.132 1.65 5.982 5.982 0 0 1 3.13-1.567z"/>
-														</svg>
-
-													<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" viewBox="0 0 0 0"></svg>
-
-													{% trans %}Students{% endtrans %}</a>
-												</li>
-
-												<li aria-haspopup="true"><a href="{{ path('fees_updateFees', {'a': 1 }) }}">
-											
-													<svg class="hor-icon" xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" width="16" height="16" fill="currentColor" class="bi bi-cash-coin" viewBox="0 0 16 16">
-															<path fill-rule="evenodd" d="M11 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm5-4a5 5 0 1 1-10 0 5 5 0 0 1 10 0z"/>
-															<path d="M9.438 11.944c.047.596.518 1.06 1.363 1.116v.44h.375v-.443c.875-.061 1.386-.529 1.386-1.207 0-.618-.39-.936-1.09-1.1l-.296-.07v-1.2c.376.043.614.248.671.532h.658c-.047-.575-.54-1.024-1.329-1.073V8.5h-.375v.45c-.747.073-1.255.522-1.255 1.158 0 .562.378.92 1.007 1.066l.248.061v1.272c-.384-.058-.639-.27-.696-.563h-.668zm1.36-1.354c-.369-.085-.569-.26-.569-.522 0-.294.216-.514.572-.578v1.1h-.003zm.432.746c.449.104.655.272.655.569 0 .339-.257.571-.709.614v-1.195l.054.012z"/>
-															<path d="M1 0a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h4.083c.058-.344.145-.678.258-1H3a2 2 0 0 0-2-2V3a2 2 0 0 0 2-2h10a2 2 0 0 0 2 2v3.528c.38.34.717.728 1 1.154V1a1 1 0 0 0-1-1H1z"/>
-															<path d="M9.998 5.083 10 5a2 2 0 1 0-3.132 1.65 5.982 5.982 0 0 1 3.13-1.567z"/>
-														</svg>
-
-													<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" viewBox="0 0 0 0"></svg>
-
-													{% trans %}Fees{% endtrans %}</a>
-												</li>
-
-												
-											{% endif %}
-										{% endif %}
-
+										<li aria-haspopup="true"><a href="{{ path('display_problems') }}">
+											<i class="fa fa-cog"></i>{% trans %}Report reconstruction{% endtrans %} {% trans %}and{% endtrans %} {% trans %}Problems{% endtrans %}</a>
+										</li>
 									</ul>
-								</nav>
-								<!--Nav-->
-							</div>
-						</div>
-					</div>
-					<!--/Horizontal-main -->
-				{% endif %}
+								</li>
+							{% endif %}
+
+							{% if is_granted('ROLE_PROVISEUR') or is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') %}
+								<li aria-haspopup="true" class="fs4-mega-item fs4-chef-item">
+									<a href="javascript:void(0);" class="sub-icon">
+								<i class="fe fe-shield hor-icon"></i>
+								{% trans %}Chef's space{% endtrans %}<i class="fe fe-chevron-down horizontal-icon"></i>
+									</a>
+									<div class="horizontal-megamenu clearfix fs4-chef-megamenu">
+										<div class="container">
+											<div class="mega-menubg border-primary">
+												<div class="row">
+													<div class="col-lg-3 col-md-12 col-xs-12 link-list">
+														<ul>
+															<li><h3 class="fs-14 font-weight-bold">
+
+																<i class="fe fe-award"></i>
+																{% trans %}Deliberations{% endtrans %}</h3>
+															</li>
+															{% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_CENSEUR') %}
+
+																<li aria-haspopup="true"><a  href="{{ path('deliberation_displayDeliberation') }}">
+																<i class="fe fe-check-circle"></i>{% trans %}Deliberate{% endtrans %}</a></li>
+
+															{% endif %}
+															<li aria-haspopup="true"><a href="{{ path('deliberation_deliberationList') }}">
+																<i class="fe fe-file-text"></i>{% trans %}Lists of deliberations{% endtrans %}</a></li>
+
+															<li aria-haspopup="true"><a href="{{ path('delibeartion_studentProvisoryList') }}">
+																<i class="fe fe-file-text"></i>{% trans %}Provisional lists{% endtrans %}</a></li>
+														</ul>
+													</div>
+													<div class="col-lg-3 col-md-12 col-xs-12 link-list">
+														<ul>
+															{% if is_granted('ROLE_PROVISEUR') or is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') %}
+															<li aria-haspopup="true"><a href="{{ path('registration_feesStatement') }}">
+																<i class="fe fe-check-circle"></i> {% trans %}Validate a receipt{% endtrans %}</a></li>
+
+																<li aria-haspopup="true"><a href="{{ path('registration_feesStatement') }}">
+																	<i class="fe fe-credit-card"></i> {% trans %}Statements of expenses{% endtrans %}</a>
+																</li>
+
+																<li aria-haspopup="true"><a href="{{ path('teacher_displayAssumedDuty') }}">
+																	<i class="fe fe-file-text"></i>{% trans %}Testimony{% endtrans %}</a>
+																</li>
+																<li aria-haspopup="true"><a class="nav-link" data-toggle="" href="{{ path('verrou_displayLockOption') }}" data-parent="">
+																	<i class="fe fe-lock"></i>{% trans %}Lock any changes{% endtrans %}</a>
+																</li>
+																{# <li aria-haspopup="true"><a class="nav-link" data-toggle="" href="{{ path('list_student_trash', {'a': 1 }) }}" data-parent=""><i class="fe fe-trash-2"></i>{% trans %}Students deleted{% endtrans %}</a></li> #}
+															{% endif %}
+														</ul>
+													</div>
+													<div class="col-lg-3 col-md-12 col-xs-12 link-list">
+														<ul>
+															{# <li><h3 class="fs-14 font-weight-bold">
+																<i class="fe fe-credit-card"></i>{% trans %}Finance{% endtrans %}</h3>
+															</li> #}
+															<li aria-haspopup="true">
+																<a href="{{ path('etat_finance') }}" class="sub-icon">
+																	<i class="fe fe-check-square"></i>
+																	{% trans %}State finance{% endtrans %}
+																</a>
+															</li>
+
+															<li aria-haspopup="true">
+																<a href="{{ path('display_depense') }}" class="sub-icon"><i class="fe fe-dollar-sign"></i>
+																	{% trans %}Expenses{% endtrans %}
+																</a>
+															</li>
+															{% if is_granted ('ROLE_PROVISEUR') or is_granted ('ROLE_SUPER_ADMIN') %}
+																<li aria-haspopup="true">
+																	<a href="{{ path('add_administrator') }}" class="sub-icon">
+																		<i class="fe fe-user-plus"></i>
+																		{% trans %}Add an administrator{% endtrans %}
+																	</a>
+																</li>
+																<li aria-haspopup="true">
+																	<a href="{{ path('list_administrators') }}" class="sub-icon">
+																		<i class="fe fe-users"></i>
+																		{% trans %}
+																		List of administrators{% endtrans %}
+																	</a>
+																</li>
+															{% endif %}
+
+
+															{% if is_granted('ROLE_PROVISEUR') %}
+																<li><h3 class="fs-14 font-weight-bold"><a href="{{ path('display_lesson_plain') }}">
+																	<i class="fe fe-calendar"></i>
+																	{% trans %}Add Number of lessons planned{% endtrans %}</a></h3>
+																</li>
+															{% endif %}
+														</ul>
+													</div>
+
+													<div class="col-lg-3 col-md-12 col-xs-12 link-list">
+														<ul>
+															{# <li><h3 class="fs-14 font-weight-bold">
+																<i class="fe fe-box"></i>
+																{% trans %}Software License{% endtrans %}</h3>
+															</li> #}
+															<li aria-haspopup="true">
+																<a href="{{ path('activation_key') }}" class="sub-icon">
+																	<i class="fe fe-calendar"></i>
+																	{% trans %}Activate lisence{% endtrans %}
+																</a>
+															</li>
+
+															
+															<li aria-haspopup="true">
+																<a href="{{ path('school_ai_universal_index') }}">
+																	<i class="fe fe-zap"></i> {% trans %}Universal AI Assistant{% endtrans %}
+																</a>
+															</li>
+
+															{# <li aria-haspopup="true">
+																<a href="{{ path('admin_user_log') }}">
+																	<i class="fe fe-users"></i>
+																	{% trans %}User's log{% endtrans %}
+																</a>
+															</li> #}
+
+														</ul>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</li>
+							{% endif %}
+						{% endif %}
+
+						{% if is_granted('ROLE_SURVEILLANT_GENERAL') %}
+							<li aria-haspopup="true">
+								<a href="javascript:void(0);" class="sub-icon">
+								<i class="fe fe-user-check hor-icon"></i>
+								{% trans %}Student Recorder{% endtrans %}<i class="fe fe-chevron-down horizontal-icon"></i>
+								</a>
+								<ul class="sub-menu border-primary">
+
+									<li aria-haspopup="true">
+										<a href="{{ path('absence_absenceRecorder', {'slug': app.user.teacher.slug}) }}" >
+											<i class="fe fe-user-x"></i>{% trans %}Absence Student Recorder{% endtrans %}
+										</a>
+									</li>
+									<li aria-haspopup="true">
+										<a href="{{ path('conseil_conseilRecorder', {'slug': app.user.teacher.slug}) }}" >
+											<i class="fe fe-clipboard"></i>{% trans %}Council Decision Recorder{% endtrans %}
+										</a>
+									</li>
+
+								</ul>
+							</li>
+
+							<li aria-haspopup="true">
+								<a href="javascript:void(0);" class="sub-icon">
+								<i class="fe fe-clipboard hor-icon"></i>
+								{% trans %}Teacher Recorder{% endtrans %}<i class="fe fe-chevron-down horizontal-icon"></i>
+								</a>
+								<ul class="sub-menu border-primary">
+
+									<li aria-haspopup="true">
+										<a href="{{ path('absence_absenceTeacherRecorder', {'slug': app.user.teacher.slug }) }}" >
+											<i class="fe fe-user-x"></i>{% trans %}Absence Teacher Recorder{% endtrans %}
+										</a>
+									</li>
+									<li aria-haspopup="true">
+										<a href="{{ path('afficher_historique_teacher', {'a': 1 }) }}" >
+											<i class="fe fe-clock"></i>{% trans %}Display hours teacher's{% endtrans %}
+										</a>
+									</li>
+									<li aria-haspopup="true">
+										<a href="{{ path('ajout_historique_teacher') }}" >
+											<i class="fe fe-save"></i>{% trans %}Save Absence Teacher Recorder{% endtrans %}
+										</a>
+									</li>
+
+								</ul>
+							</li>
+
+						{% endif %}
+
+						{% if is_granted('ROLE_RAPPS')
+							or is_granted('ROLE_CHEF_SS')
+							or is_granted('ROLE_CHEF_SERVICE_DES_SPORTS_SCOLAIRE')
+							or is_granted('ROLE_CONSEILLER')
+							or is_granted('ROLE_INTENDANT')
+							or is_granted('ROLE_ENSEIGNANT')
+							or is_granted('ROLE_CENSEUR')
+							or is_granted('ROLE_SURVEILLANT_GENERAL')
+							or is_granted('ROLE_AP')
+							or is_granted('ROLE_ANIMATEUR_PEDAGOGIQUE')
+							or is_granted('ROLE_CT')
+							or is_granted('ROLE_CHEF_DES_TRAVAUX') %}
+
+							{% set currentTeacherId = currentUser ? (currentUser.teacher ? currentUser.teacher.id : 0 ) : 0 %}
+							<li aria-haspopup="true">
+								<a href="{{ path('teacher_editTeacher', {'slug': currentUser.teacher.slug, 'pe': 1}) }}">
+								<i class="fe fe-file-text hor-icon"></i>
+								{% trans %}Testimony{% endtrans %}
+								</a>
+								{# <ul class="sub-menu border-primary"> #}
+									{# <li aria-haspopup="true"><a href="{{ path('teacher_editTeacher', {'id': currentTeacherId, 'pe': 1}) }}">{% trans %}Start/Restart of service and Actual presence{% endtrans %}</a></li> #}
+								{# </ul> #}
+							</li>
+							<li aria-haspopup="true">
+								<a href="{{ path('evaluation_markRecorder', {'slugTeacher': currentUser.teacher.slug }) }}" class="sub-icon">
+								<i class="fe fe-edit-3 hor-icon"></i>
+								{% trans %}Enter Notes{% endtrans %}
+									{# <i class="fe fe-chevron-down horizontal-icon"></i> #}
+								</a>
+								{# <ul class="sub-menu">
+									<li aria-haspopup="true"><a href="{{ path('call_recorder', {'id': currentTeacherId}) }}">{% trans %}Enter notes{% endtrans %}</a></li>
+								</ul> #}
+							</li>
+
+
+						{% endif %}
+
+						{% if is_granted('ROLE_ENSEIGNANT')
+							or is_granted('ROLE_SURVEILLANT_GENERAL')
+							or is_granted('ROLE_CONSEILLER')
+							or is_granted('ROLE_DIRECTEUR')
+							or is_granted('ROLE_INTENDANT')
+							or is_granted('ROLE_SECRETAIRE')
+							or is_granted('ROLE_ECONOME')
+							or is_granted('ROLE_COMPTABLE')
+							or is_granted('ROLE_ACTION SOCIALE')
+							or is_granted('ROLE_CHEF_SERVICE_ORIENTATION')
+							or is_granted('ROLE_RESPONSABLE_APPS')
+							or is_granted('ROLE_CHEF_SERVICE_DES_SPORTS')
+							or is_granted('ROLE_AUTRE')
+							or is_granted('ROLE_ANIMATEUR PEDAGOGIQUE')
+							or is_granted('ROLE_CHEF_DES_TRAVAUX')
+							or is_granted('ROLE_PERSONNEL_APPUI')
+							or is_granted('ROLE_PERSONNEL_ADMINISTRATIF')
+							or is_granted('ROLE_CHEF_SERVICE_DES_SPORTS_SCOLAIRE') %}
+							<li aria-haspopup="true">
+								<a href="javascript:void(0);" class="sub-icon">
+								<i class="fe fe-trending-up hor-icon"></i>
+								{% trans %}Progress{% endtrans %}<i class="fe fe-chevron-down horizontal-icon"></i>
+								</a>
+								<ul class="sub-menu border-primary">
+									{% set currentTeacherId = currentUser ? (currentUser.teacher ? currentUser.teacher.id : 0 ) : 0 %}
+
+									<li aria-haspopup="true"><a href="{{ path('display_lesson_plain') }}">
+										<i class="fe fe-calendar"></i>
+										{% trans %}Add Number of lessons planned{% endtrans %}</a>
+									</li>
+
+									{# {% if is_granted('ROLE_PROVISEUR') or is_granted('ROLE_DIRECTEUR') or is_granted('ROLE_CENSEUR') or is_granted('_GENERAL') or is_granted('ROLE_ENSEIGNANT')%}
+										<li aria-haspopup="true"><a href="{{ path('lesson_done') }}">
+											<i class="fe fe-check-circle"></i>
+											{% trans %}Check Number of lessons done{% endtrans %}</a>
+										</li>
+									{% endif %} #}
+								</ul>
+							</li>
+
+
+						{% endif %}
+
+						{% if is_granted('ROLE_INTENDANT') or is_granted('ROLE_SECRETAIRE')%}
+
+								<li aria-haspopup="true">
+									<a href="{{ path('registration_feesStatement') }}" class="sub-icon">
+								<i class="fe fe-credit-card hor-icon"></i>
+								{% trans %}Registration management{% endtrans %}
+								</a>
+								</li>
+
+							{% if is_granted('ROLE_INTENDANT')%}
+								<li aria-haspopup="true"><a href="{{ path('student_displayStudent') }}">
+								<i class="fe fe-users hor-icon"></i>
+								{% trans %}Students{% endtrans %}</a>
+								</li>
+
+								<li aria-haspopup="true"><a href="{{ path('fees_updateFees', {'a': 1 }) }}">
+								<i class="fe fe-dollar-sign hor-icon"></i>
+								{% trans %}Fees{% endtrans %}</a>
+								</li>
+
+
+							{% endif %}
+						{% endif %}
+
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</div>
+	<!--/Horizontal-main -->
+{% endif %}
+
+<script>
+	(function () {
+		'use strict';
+
+		function directSubmenu(li) {
+			if (!li) return null;
+
+			for (const child of li.children) {
+				if (
+					child.classList &&
+					(
+						child.classList.contains('sub-menu') ||
+						child.classList.contains('horizontal-megamenu')
+					)
+				) {
+					return child;
+				}
+			}
+
+			return null;
+		}
+
+		function buildMobileLeftMenu() {
+			const body = document.body;
+			const header = document.querySelector('.fs4-header');
+			const horizontalMenu = document.getElementById('fs4HorizontalMenu');
+			const sourceList = horizontalMenu
+				? horizontalMenu.querySelector('.horizontalMenu-list')
+				: null;
+
+			if (header) {
+				body.classList.add('fs4-has-header');
+			}
+
+			if (horizontalMenu) {
+				body.classList.add('fs4-has-menu');
+			}
+
+			document.getElementById('fs4MobileLeftPanel')?.remove();
+			document.getElementById('fs4MobileLeftOverlay')?.remove();
+
+			if (!sourceList) {
+				return;
+			}
+
+			const overlay = document.createElement('div');
+			overlay.id = 'fs4MobileLeftOverlay';
+			overlay.className = 'fs4-mobile-left-overlay';
+			overlay.setAttribute('aria-hidden', 'true');
+
+			const panel = document.createElement('nav');
+			panel.id = 'fs4MobileLeftPanel';
+			panel.className = 'fs4-mobile-left-panel';
+			panel.setAttribute('aria-label', 'Menu principal');
+			panel.setAttribute('aria-hidden', 'true');
+
+			const clonedList = sourceList.cloneNode(true);
+			clonedList.className = 'fs4-mobile-left-list';
+
+			clonedList.querySelectorAll('.fs4-open').forEach(function (item) {
+				item.classList.remove('fs4-open');
+			});
+
+			clonedList.querySelectorAll('[style]').forEach(function (item) {
+				item.style.removeProperty('display');
+				item.style.removeProperty('left');
+				item.style.removeProperty('right');
+				item.style.removeProperty('top');
+				item.style.removeProperty('height');
+				item.style.removeProperty('max-height');
+				item.style.removeProperty('transform');
+				item.style.removeProperty('opacity');
+				item.style.removeProperty('visibility');
+			});
+
+			panel.appendChild(clonedList);
+			body.appendChild(overlay);
+			body.appendChild(panel);
+		}
+
+		function closeMenu() {
+			const body = document.body;
+			const menuToggle = document.getElementById('fs4MenuToggle');
+			const panel = document.getElementById('fs4MobileLeftPanel');
+
+			body.classList.remove('fs4-menu-open');
+			body.style.overflow = '';
+			document.documentElement.style.overflow = '';
+
+			if (menuToggle) {
+				menuToggle.setAttribute('aria-expanded', 'false');
+			}
+
+			if (panel) {
+				panel.setAttribute('aria-hidden', 'true');
+				panel.querySelectorAll('.fs4-mobile-open').forEach(function (item) {
+					item.classList.remove('fs4-mobile-open');
+				});
+				panel.querySelectorAll('[aria-expanded="true"]').forEach(function (item) {
+					item.setAttribute('aria-expanded', 'false');
+				});
+			}
+		}
+
+		function openMenu() {
+			const body = document.body;
+			const menuToggle = document.getElementById('fs4MenuToggle');
+			const panel = document.getElementById('fs4MobileLeftPanel');
+
+			closeActions();
+			body.classList.add('fs4-menu-open');
+			body.style.overflow = 'hidden';
+			document.documentElement.style.overflow = 'hidden';
+
+			if (menuToggle) {
+				menuToggle.setAttribute('aria-expanded', 'true');
+			}
+
+			if (panel) {
+				panel.setAttribute('aria-hidden', 'false');
+				panel.scrollTop = 0;
+			}
+		}
+
+		function closeActions() {
+			const body = document.body;
+			const actions = document.getElementById('fs4Actions');
+			const actionsToggle = document.getElementById('fs4ActionsToggle');
+
+			if (actions) {
+				actions.classList.remove('fs4-actions-open');
+			}
+
+			if (actionsToggle) {
+				actionsToggle.setAttribute('aria-expanded', 'false');
+			}
+
+			body.classList.remove('fs4-actions-open');
+		}
+
+		function openActions() {
+			const body = document.body;
+			const actions = document.getElementById('fs4Actions');
+			const actionsToggle = document.getElementById('fs4ActionsToggle');
+
+			closeMenu();
+
+			if (actions) {
+				actions.classList.add('fs4-actions-open');
+			}
+
+			if (actionsToggle) {
+				actionsToggle.setAttribute('aria-expanded', 'true');
+			}
+
+			body.classList.add('fs4-actions-open');
+		}
+
+		function updateGreeting() {
+			const greetingIcon = document.getElementById('fs4GreetingIcon');
+			const greetingText = document.getElementById('fs4GreetingText');
+
+			if (!greetingIcon || !greetingText) {
+				return;
+			}
+
+			const hour = new Date().getHours();
+
+			if (hour >= 18 || hour < 6) {
+				greetingIcon.textContent = '🌙';
+				greetingText.textContent = '{% trans %}Good evening{% endtrans %}';
+			} else if (hour >= 12) {
+				greetingIcon.textContent = '🌤️';
+				greetingText.textContent = '{% trans %}Good afternoon{% endtrans %}';
+			} else {
+				greetingIcon.textContent = '☀️';
+				greetingText.textContent = '{% trans %}Hello{% endtrans %}';
+			}
+		}
+
+		function initializeMenu() {
+			buildMobileLeftMenu();
+			updateGreeting();
+			closeMenu();
+			closeActions();
+		}
+
+		if (!window.__fs4MobileLeftMenuV3Bound) {
+			window.__fs4MobileLeftMenuV3Bound = true;
+
+			document.addEventListener('click', function (event) {
+				const menuToggle = event.target.closest('#fs4MenuToggle');
+				const actionsToggle = event.target.closest('#fs4ActionsToggle');
+				const overlay = event.target.closest('#fs4MobileLeftOverlay');
+				const panel = event.target.closest('#fs4MobileLeftPanel');
+				const actions = document.getElementById('fs4Actions');
+
+				if (menuToggle) {
+					event.preventDefault();
+					event.stopPropagation();
+
+					if (!document.getElementById('fs4MobileLeftPanel')) {
+						buildMobileLeftMenu();
+					}
+
+					if (document.body.classList.contains('fs4-menu-open')) {
+						closeMenu();
+					} else {
+						openMenu();
+					}
+
+					return;
+				}
+
+				if (actionsToggle) {
+					event.preventDefault();
+					event.stopPropagation();
+
+					if (document.body.classList.contains('fs4-actions-open')) {
+						closeActions();
+					} else {
+						openActions();
+					}
+
+					return;
+				}
+
+				if (overlay) {
+					event.preventDefault();
+					closeMenu();
+					return;
+				}
+
+				if (panel) {
+					const link = event.target.closest('a');
+
+					if (!link || !panel.contains(link)) {
+						return;
+					}
+
+					const li = link.closest('li');
+					const submenu = directSubmenu(li);
+
+					if (!submenu) {
+						closeMenu();
+						return;
+					}
+
+					event.preventDefault();
+					event.stopPropagation();
+
+					const parentList = li.parentElement;
+
+					if (parentList) {
+						Array.from(parentList.children).forEach(function (sibling) {
+							if (
+								sibling !== li &&
+								sibling.classList &&
+								sibling.classList.contains('fs4-mobile-open')
+							) {
+								sibling.classList.remove('fs4-mobile-open');
+
+								const siblingLink = sibling.querySelector(':scope > a');
+								if (siblingLink) {
+									siblingLink.setAttribute('aria-expanded', 'false');
+								}
+							}
+						});
+					}
+
+					const willOpen = !li.classList.contains('fs4-mobile-open');
+					li.classList.toggle('fs4-mobile-open', willOpen);
+					link.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+					return;
+				}
+
+				if (
+					actions &&
+					document.body.classList.contains('fs4-actions-open') &&
+					!actions.contains(event.target)
+				) {
+					closeActions();
+				}
+			}, true);
+
+			document.addEventListener('keydown', function (event) {
+				if (event.key === 'Escape') {
+					closeMenu();
+					closeActions();
+				}
+			});
+
+			window.addEventListener('resize', function () {
+				if (window.innerWidth >= 992) {
+					closeMenu();
+					closeActions();
+				}
+			});
+		}
+
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', function () {
+				initializeMenu();
+				window.setTimeout(buildMobileLeftMenu, 0);
+			}, { once: true });
+		} else {
+			initializeMenu();
+			window.setTimeout(buildMobileLeftMenu, 0);
+		}
+
+		document.addEventListener('turbo:load', initializeMenu);
+	})();
+</script>

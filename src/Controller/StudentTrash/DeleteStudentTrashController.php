@@ -13,11 +13,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/student")]
 class DeleteStudentTrashController extends AbstractController
 {
@@ -54,10 +50,15 @@ class DeleteStudentTrashController extends AbstractController
             return $this->redirectToRoute('home_mainMenu');
         }
 
-        $studentTrash = $this->studentRepository->findOneBySlug([
+        $studentTrash = $this->studentRepository->findOneBy([
             'slug' => $slug
         ]);
         
+        if (!$studentTrash) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
+
         $this->studentTrashService->deleteStudentTrash($studentTrash);
         // $studentTrash->setSupprime(0);
         // $this->em->persist($studentTrash);

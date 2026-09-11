@@ -18,20 +18,18 @@ use App\Repository\VerrouInsolvableRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\RegistrationHistoryRepository;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/report")]
 class ReportController extends AbstractController
 {
     public function __construct(
         protected FeesService $feesService, 
         protected TermRepository $termRepository, 
+        protected TranslatorInterface $translator,
         protected FeesRepository $feesRepository, 
         protected SchoolRepository $schoolRepository,
         protected ClassroomService $classroomService, 
@@ -108,6 +106,12 @@ class ReportController extends AbstractController
                 $apeeFees = $fees->getApeeFees2();
                 $computerFees = $fees->getComputerFees2();
             }
+        }
+
+        if (!$fees) 
+        {
+            $this->addFlash('error', $this->translator->trans('The fees is empty. Please save fees'));
+            return $this->redirectToRoute('fees_updateFees');
         }
 
         $medicalBookletFees = $fees->getMedicalBookletFees();

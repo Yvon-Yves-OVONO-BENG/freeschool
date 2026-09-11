@@ -3,1142 +3,339 @@
 {% block title %}{% trans %}Display Time Table{% endtrans %}{% endblock %}
 
 {% block subTitle %}
-    {% trans %}TIME TABLES MANAGMENT{% endtrans %}
+    {% trans %}TIME TABLES MANAGEMENT{% endtrans %}
 {% endblock %}
+
 {% block infoMessage %}
-    {% include "includes/_info_message.html.twig" %}
+    {% include 'includes/_info_message.html.twig' %}
 {% endblock %}
 
 {% block stylesheets %}
-	<style>
-		th,
-		tfoot, .hours {
-			font-size: 15px !important;
-			text-align: center !important;
-			font-weight: bold !important;
-			background-color: #F1F1F1 !important;
-            vertical-align: middle !important;
-		}
-
-		td:hover {
-			background-color: rgba(62, 128, 235, 0.2) !important;
-			color: #3e80eb !important;
-		}
-
-        .td {
-            text-align: center !important;
-        }
-
-        .permanance {
-            text-align: center !important;
-            background-color: rgba(200, 200, 200, 0.2) !important;
-        }
-	</style>
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-timetable-premium.css') }}">
+    <link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-timetable-v5-hotfix.css') }}">
+    <link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-form-select-clarity-hotfix.css') }}">
+    <link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-timetable-ajax-hotfix.css') }}">
 {% endblock %}
 
 {% block body %}
- <!-- App-Content -->
-	<div class="hor-content main-content">
-		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary">
-                        <i class="fa fa-calendar me-2"></i>{% trans %}TIME TABLES MANAGMENT{% endtrans %}
-                    </h4>
-                </div>
-                <div class="page-rightheader">
-                    <div class="btn-list">
-                        {% if is_granted('ROLE_ADMIN') or is_granted ('ROLE_SUPER_ADMIN') or is_granted('ROLE_PROVISEUR') or is_granted('ROLE_CENSEUR') %}
-                                {% if mySession.get('verrou').verrou is not null and mySession.get('verrou').verrou == 0 %}
-                                    <form action="{{ path('save_time_table') }}" method="post">
-                                        <div class="form-group">
-                                            <button type="submit" class="btn btn-outline-primary" name="addLesson">
-                                                <i class="fa fa-plus"></i>
-                                            {% trans %}Add new time table{% endtrans %}
-                                            </button>
-                                        </div>
-                                    </form>
-                                {% endif %}
-                            {% endif %}
-                    </div>
-                </div>
-            </div>
-            <!--End Page header-->
+<div class="hor-content main-content fs-tt-page">
+    <div class="container">
+        <div class="fs-tt-menu-safe-space" aria-hidden="true"></div>
 
-            <div class="card border-primary">
-                <div class="card-header">
-                    <div class="col-md-5">
-                        <form action="{{ path('display_time_table') }}" method="post">
-                            <div class="row">
-                                <div class="col-md-5">
-                                    <div class="form-group">
-                                        <select class="form-control select2-show-search" data-placeholder="Choose a classroom" name="classroom" id="classroom" required style="border: 1px solid #0f0;">
-                                            <option label="Choose a classroom">
-                                                {% trans %}Choose classroom{% endtrans %}
-                                            </option>
-                                            {% if subSystem == 'Francophone / French Speaker' %}
-                                                {% if school.education.education == 'Général' %}
-                                                    {% include "includes/_selectClassrooms.html.twig" %}
-                                                    {% else %}
-                                                        {% include "includes/_selectClassroomsTech.html.twig" %}
-                                                {% endif %}
-                                                {% else %}
-                                                    {% include "includes/_selectClassroomsEn.html.twig" %}
-                                            {% endif %}
-                                            
-                                            
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-5">
-                                    <div class="form-group">
-                                        <button class="btn btn-outline-primary" type="submit" name="displayStudents">
-                                            <i class="fa fa-eye"></i>
-                                            {% trans %}Display{% endtrans %}
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
+        <section class="fs-tt-hero">
+            <div class="fs-tt-hero__content">
+                <div>
+                    <span class="fs-tt-eyebrow">
+                        <i class="fe fe-calendar"></i>
+                        {% trans %}Timetable workspace{% endtrans %}
+                    </span>
+
+                    <h1 class="fs-tt-title">{% trans %}Smart Timetable Management{% endtrans %}</h1>
+                    <p class="fs-tt-subtitle">
+                        {% trans %}Display one classroom, drag lessons from the left panel, assign teachers and subjects visually, manage double periods and customize the school schedule up to late afternoon with a refined SaaS premium workspace.{% endtrans %}
+                    </p>
+                </div>
+
+                <div class="fs-tt-hero__stats">
+                    <div class="fs-tt-stat-card">
+                        <span class="fs-tt-stat-card__icon"><i class="fe fe-layers"></i></span>
+                        <span class="fs-tt-stat-card__label">{% trans %}Classrooms{% endtrans %}</span>
+                        <strong class="fs-tt-stat-card__value">{{ classrooms|length }}</strong>
                     </div>
+
+                    <div class="fs-tt-stat-card">
+                        <span class="fs-tt-stat-card__icon"><i class="fe fe-clock"></i></span>
+                        <span class="fs-tt-stat-card__label">{% trans %}Daily slots{% endtrans %}</span>
+                        <strong class="fs-tt-stat-card__value">{{ courseSlotCount }}</strong>
+                    </div>
+
+                    {% if selectedClassroom %}
+                        <div class="fs-tt-stat-card fs-tt-stat-card--active">
+                            <span class="fs-tt-stat-card__icon"><i class="fe fe-check-circle"></i></span>
+                            <span class="fs-tt-stat-card__label">{% trans %}Active classroom{% endtrans %}</span>
+                            <strong class="fs-tt-stat-card__value fs-tt-stat-card__value--small">{{ selectedClassroom.classroom }}</strong>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
-            {% if methodIsPost %}
-                <div class="card border-primary">
-                    <div class="card-header">  
-                            <div class="col-md-9"> 
-                                <button type="button" class="btn btn-primary">
-                                    <span>{% trans %}Classroom{% endtrans %}</span>
-                                    <span class="badge bg-white text-dark rounded-pill">{{ selectedClassroom.classroom }}</span>
-                                </button>
-                            </div>  
-                            <div class="col-md-3 text-right"> 
-                                <a href="{{ path('print_timetable_classroom', {'slug': selectedClassroom.slug }) }}" class="btn btn-outline-primary" target="_blank"><i class="fa fa-print"></i> {% trans %}Print{% endtrans %}</a>
-                            </div>
-                        
-                        
-                    </div>
-                    <div class="card-body ">
-                        <div class="table-responsive">
-                            {% if methodIsPost %}
-                            <table border="1" class="table table-bordered text-nowrap" id="example2" width="100%" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th class="wd-15p border-bottom-0">{% trans %}Hours{% endtrans %}</th>
-                                        <th class="wd-15p border-bottom-0">{% trans %}Monday{% endtrans %}</th>
-                                        <th class="border-bottom-0 green-gradient">{% trans %}Tuesday{% endtrans %}</th>
-                                        <th class="border-bottom-0 orange-gradient">{% trans %}Wednesday{% endtrans %}</th>
-                                        <th class="border-bottom-0 blue-gradient">{% trans %}Thursday{% endtrans %}</th>
-                                        <th class="border-bottom-0 indigo-gradient">{% trans %}Friday{% endtrans %}</th>
-                                            
-                                    </tr>
-                                </thead>
-                                <tfoot>
-                                    <tr>
-                                        <th class="wd-15p border-bottom-0">{% trans %}Hours{% endtrans %}</th>
-                                        <th class="wd-15p border-bottom-0">{% trans %}Monday{% endtrans %}</th>
-                                        <th class="border-bottom-0 green-gradient">{% trans %}Tuesday{% endtrans %}</th>
-                                        <th class="border-bottom-0 orange-gradient">{% trans %}Wednesday{% endtrans %}</th>
-                                        <th class="border-bottom-0 blue-gradient">{% trans %}Thursday{% endtrans %}</th>
-                                        <th class="border-bottom-0 indigo-gradient">{% trans %}Friday{% endtrans %}</th>
-                                            
-                                    </tr>
-                                </tfoot>
-                                <tbody>
-                                    {#-------------------DEBUT 07:30:00-08:20:00---------------- #}
-                                    
-                                {% set lundi7H30 = "" %}
-                                {% set mardi7H30 = "" %}
-                                {% set mercredi7H30 = "" %}
-                                {% set jeudi7H30 = "" %}
-                                {% set vendredi7H30 = "" %}
-
-                                {#///////////////////////////////////////////#}
-                                {% set lundi8H25 = "" %}
-                                {% set mardi8H25 = "" %}
-                                {% set mercredi8H25 = "" %}
-                                {% set jeudi8H25 = "" %}
-                                {% set vendredi8H25 = "" %}
-
-                                {#///////////////////////////////////////////#}
-                                {% set lundi9H20 = "" %}
-                                {% set mardi9H20 = "" %}
-                                {% set mercredi9H20 = "" %}
-                                {% set jeudi9H20 = "" %}
-                                {% set vendredi9H20 = "" %}
-
-                                {#///////////////////////////////////////////#}
-                                {% set lundi10H30 = "" %}
-                                {% set mardi10H30 = "" %}
-                                {% set mercredi10H30 = "" %}
-                                {% set jeudi10H30 = "" %}
-                                {% set vendredi10H30 = "" %}
-
-                                {#///////////////////////////////////////////#}
-                                {% set lundi11H25 = "" %}
-                                {% set mardi11H25 = "" %}
-                                {% set mercredi11H25 = "" %}
-                                {% set jeudi11H25 = "" %}
-                                {% set vendredi11H25 = "" %}
-
-                                {#///////////////////////////////////////////#}
-                                {% set lundi12H20 = "" %}
-                                {% set mardi12H20 = "" %}
-                                {% set mercredi12H20 = "" %}
-                                {% set jeudi12H20 = "" %}
-                                {% set vendredi12H20 = "" %}
-
-                                {#///////////////////////////////////////////#}
-                                {% set lundi13H40 = "" %}
-                                {% set mardi13H40 = "" %}
-                                {% set mercredi13H40 = "" %}
-                                {% set jeudi13H40 = "" %}
-                                {% set vendredi13H40 = "" %}
-
-
-                                {#///////////////////////////////////////////#}
-                                {% set lundi14H35 = "" %}
-                                {% set mardi14H35 = "" %}
-                                {% set mercredi14H35 = "" %}
-                                {% set jeudi14H35 = "" %}
-                                {% set vendredi14H35 = "" %}
-
-                                {#///////////////////////////////////////////#}
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Lundi/Monday' and timeTable.startTime == '07:30:00' %}
-                                        {% set lundi7H30 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Mardi/Tuesday' and timeTable.startTime == '07:30:00' %}
-                                        {% set mardi7H30 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Mercredi/Wednesday' and timeTable.startTime == '07:30:00' %}
-                                        {% set mercredi7H30 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Jeudi/Thursday' and timeTable.startTime == '07:30:00' %}
-                                        {% set jeudi7H30 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Vendredi/Friday' and timeTable.startTime == '07:30:00' %}
-                                        {% set vendredi7H30 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-
-                                {#///////////////////////////////////////////#}
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Lundi/Monday' and timeTable.startTime == '08:25:00' %}
-                                        {% set lundi8H25 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Mardi/Tuesday' and timeTable.startTime == '08:25:00' %}
-                                        {% set mardi8H25 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Mercredi/Wednesday' and timeTable.startTime == '08:25:00' %}
-                                        {% set mercredi8H25 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Jeudi/Thursday' and timeTable.startTime == '08:25:00' %}
-                                        {% set jeudi8H25 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Vendredi/Friday' and timeTable.startTime == '08:25:00' %}
-                                        {% set vendredi8H25 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-
-                                {#///////////////////////////////////////////#}
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Lundi/Monday' and timeTable.startTime == '09:20:00' %}
-                                        {% set lundi9H20 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Mardi/Tuesday' and timeTable.startTime == '09:20:00' %}
-                                        {% set mardi9H20 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Mercredi/Wednesday' and timeTable.startTime == '09:20:00' %}
-                                        {% set mercredi9H20 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Jeudi/Thursday' and timeTable.startTime == '09:20:00' %}
-                                        {% set jeudi9H20 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Vendredi/Friday' and timeTable.startTime == '09:20:00' %}
-                                        {% set vendredi9H20 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {#///////////////////////////////////////////#}
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Lundi/Monday' and timeTable.startTime == '10:30:00' %}
-                                        {% set lundi10H30 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Mardi/Tuesday' and timeTable.startTime == '10:30:00' %}
-                                        {% set mardi10H30 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Mercredi/Wednesday' and timeTable.startTime == '10:30:00' %}
-                                        {% set mercredi10H30 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Jeudi/Thursday' and timeTable.startTime == '10:30:00' %}
-                                        {% set jeudi10H30 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Vendredi/Friday' and timeTable.startTime == '10:30:00' %}
-                                        {% set vendredi10H30 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {#///////////////////////////////////////////#}
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Lundi/Monday' and timeTable.startTime == '11:25:00' %}
-                                        {% set lundi11H25 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Mardi/Tuesday' and timeTable.startTime == '11:25:00' %}
-                                        {% set mardi11H25 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Mercredi/Wednesday' and timeTable.startTime == '11:25:00' %}
-                                        {% set mercredi11H25 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Jeudi/Thursday' and timeTable.startTime == '11:25:00' %}
-                                        {% set jeudi11H25 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Vendredi/Friday' and timeTable.startTime == '11:25:00' %}
-                                        {% set vendredi11H25 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-
-                                {#///////////////////////////////////////////#}
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Lundi/Monday' and timeTable.startTime == '12:20:00' %}
-                                        {% set lundi12H20 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Mardi/Tuesday' and timeTable.startTime == '12:20:00' %}
-                                        {% set mardi12H20 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Mercredi/Wednesday' and timeTable.startTime == '12:20:00' %}
-                                        {% set mercredi12H20 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Jeudi/Thursday' and timeTable.startTime == '12:20:00' %}
-                                        {% set jeudi12H20 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Vendredi/Friday' and timeTable.startTime == '12:20:00' %}
-                                        {% set vendredi12H20 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {#///////////////////////////////////////////#}
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Lundi/Monday' and timeTable.startTime == '13:40:00' %}
-                                        {% set lundi13H40 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Mardi/Tuesday' and timeTable.startTime == '13:40:00' %}
-                                        {% set mardi13H40 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Mercredi/Wednesday' and timeTable.startTime == '13:40:00' %}
-                                        {% set mercredi13H40 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Jeudi/Thursday' and timeTable.startTime == '13:40:00' %}
-                                        {% set jeudi13H40 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Vendredi/Friday' and timeTable.startTime == '13:40:00' %}
-                                        {% set vendredi13H40 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {#///////////////////////////////////////////#}
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Lundi/Monday' and timeTable.startTime == '14:35:00' %}
-                                        {% set lundi14H35 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Mardi/Tuesday' and timeTable.startTime == '14:35:00' %}
-                                        {% set mardi14H35 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Mercredi/Wednesday' and timeTable.startTime == '14:35:00' %}
-                                        {% set mercredi14H35 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Jeudi/Thursday' and timeTable.startTime == '14:35:00' %}
-                                        {% set jeudi14H35 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                {% for timeTable in timeTables %}
-                                    {% if timeTable.day.day == 'Vendredi/Friday' and timeTable.startTime == '14:35:00' %}
-                                        {% set vendredi14H35 = timeTable %}
-                                    {% endif %}
-                                {% endfor %}
-
-
-                                    <tr>
-                                        <td class="hours">07:30-08:25</td>
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ lundi7H30 ? lundi7H30.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ lundi7H30 ? lundi7H30.teacher.fullName : "" }}</span><br>
-                                            
-                                            {% if lundi7H30 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': lundi7H30.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': lundi7H30.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            
-                                            {% endif %}
-                                            
-                                        </td>
-                                            
-                                        
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ mardi7H30 ? mardi7H30.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ mardi7H30 ? mardi7H30.teacher.fullName : "" }}</span><br>
-                                            
-                                            {% if mardi7H30 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': mardi7H30.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': mardi7H30.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            
-                                            {% endif %}
-                                            
-                                        </td>
-                                        
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ mercredi7H30 ? mercredi7H30.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ mercredi7H30 ? mercredi7H30.teacher.fullName : "" }}</span><br>
-                                            
-                                            {% if mercredi7H30 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': mercredi7H30.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': mercredi7H30.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            
-                                            {% endif %}
-                                            
-                                        </td>
-                                        
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ jeudi7H30 ? jeudi7H30.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ jeudi7H30 ? jeudi7H30.teacher.fullName : "" }}</span><br>
-                                            
-                                            {% if jeudi7H30 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': jeudi7H30.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': jeudi7H30.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            
-                                            {% endif %}
-                                            
-                                        </td>
-                                        
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ vendredi7H30 ? vendredi7H30.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ vendredi7H30 ? vendredi7H30.teacher.fullName : "" }}</span><br>
-                                            
-                                            {% if vendredi7H30 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': vendredi7H30.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': vendredi7H30.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            
-                                            {% endif %}
-                                            
-                                        </td>
-                                        
-                                    </tr>
-
-                                    {#-------------------FIN 07:30:00-08:20:00---------------- #}
-
-                                    {#-------------------DEBUT 08:25:00-09:20:00---------------- #}
-                                    <tr>
-                                        <td class="hours">08:25-09:20</td>
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ lundi8H25 ? lundi8H25.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ lundi8H25 ? lundi8H25.teacher.fullName : "" }}</span><br>
-                                            
-                                            {% if lundi8H25 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': lundi8H25.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': lundi8H25.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            
-                                            {% endif %}
-                                            
-                                        </td>
-                                        
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ mardi8H25 ? mardi8H25.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ mardi8H25 ? mardi8H25.teacher.fullName : "" }}</span><br>
-                                            
-                                            {% if mardi8H25 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': mardi8H25.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': mardi8H25.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            
-                                            {% endif %}
-                                            
-                                        </td>
-
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ mercredi8H25 ? mercredi8H25.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ mercredi8H25 ? mercredi8H25.teacher.fullName : "" }}</span><br>
-                                            
-                                            {% if mercredi8H25 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': mercredi8H25.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': mercredi8H25.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            
-                                            {% endif %}
-                                            
-                                        </td>
-
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ jeudi8H25 ? jeudi8H25.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ jeudi8H25 ? jeudi8H25.teacher.fullName : "" }}</span><br>
-                                            
-                                            {% if jeudi8H25 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': jeudi8H25.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': jeudi8H25.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            
-                                            {% endif %}
-                                            
-                                        </td>
-
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ vendredi8H25 ? vendredi8H25.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ vendredi8H25 ? vendredi8H25.teacher.fullName : "" }}</span><br>
-                                            
-                                            {% if vendredi8H25 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': vendredi8H25.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': vendredi8H25.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            
-                                            {% endif %}
-                                            
-                                        </td>
-                                        
-                                    </tr>
-                                    {#-------------------FIN 08:20:00-09:10:00---------------- #}
-
-                                    {#-------------------DEBUT 09:20:00-10:00:00---------------- #}
-                                    <tr>
-                                        <td class="hours">09:20-10:15</td>
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ lundi9H20 ? lundi9H20.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ lundi9H20 ? lundi9H20.teacher.fullName : "" }}</span><br>
-                                            
-                                            {% if lundi9H20 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': lundi9H20.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': lundi9H20.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            
-                                            {% endif %}
-                                            
-                                        </td>
-                                        
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ mardi9H20 ? mardi9H20.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ mardi9H20 ? mardi9H20.teacher.fullName : "" }}</span><br>
-                                            
-                                            {% if mardi9H20 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': mardi9H20.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': mardi9H20.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            
-                                            {% endif %}
-                                            
-                                        </td>
-                                        
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ mercredi9H20 ? mercredi9H20.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ mercredi9H20 ? mercredi9H20.teacher.fullName : "" }}</span><br>
-                                            
-                                            {% if mercredi9H20 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': mercredi9H20.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': mercredi9H20.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            
-                                            {% endif %}
-                                            
-                                        </td>
-
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ jeudi9H20 ? jeudi9H20.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ jeudi9H20 ? jeudi9H20.teacher.fullName : "" }}</span><br>
-                                            
-                                            {% if jeudi9H20 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': jeudi9H20.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': jeudi9H20.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            
-                                            {% endif %}
-                                            
-                                        </td>
-
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ vendredi9H20 ? vendredi9H20.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ vendredi9H20 ? vendredi9H20.teacher.fullName : "" }}</span><br>
-                                            
-                                            {% if vendredi9H20 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': vendredi9H20.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': vendredi9H20.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            
-                                            {% endif %}
-                                            
-                                        </td>
-                                    </tr>
-                                    {# -----------------FIN 09:10:00-10:00:00 --------------------#}
-
-
-                                    {# -----------------DEBUT 10:00:00-10:15:00 --------------------#}
-                                    <tr>
-                                        <td class="hours">10:15-10:30</td>
-                                        <td class="hours" colspan="6">PETITE PAUSE</td>
-                                    </tr>
-                                    {# -----------------FIN 10:00:00-10:15:00 --------------------#}
-
-                                    {# -----------------DEBUT 10:15:00-11:05:00 --------------------#}
-                                    <tr>    
-                                        <td class="hours">10:30-11:25</td>
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ lundi10H30 ? lundi10H30.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ lundi10H30 ? lundi10H30.teacher.fullName : "" }}</span><br>
-                                            
-                                            {% if lundi10H30 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': lundi10H30.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': lundi10H30.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            
-                                            {% endif %}
-                                            
-                                        </td>
-
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ mardi10H30 ? mardi10H30.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ mardi10H30 ? mardi10H30.teacher.fullName : "" }}</span><br>
-                                            
-                                            {% if mardi10H30 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': mardi10H30.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': mardi10H30.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            
-                                            {% endif %}
-                                            
-                                        </td>
-                                        
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ mercredi10H30 ? mercredi10H30.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ mercredi10H30 ? mercredi10H30.teacher.fullName : "" }}</span><br>
-                                            
-                                            {% if mercredi10H30 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': mercredi10H30.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': mercredi10H30.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            
-                                            {% endif %}
-                                            
-                                        </td>
-
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ jeudi10H30 ? jeudi10H30.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ jeudi10H30 ? jeudi10H30.teacher.fullName : "" }}</span><br>
-                                            
-                                            {% if jeudi10H30 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': jeudi10H30.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': jeudi10H30.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            
-                                            {% endif %}
-                                            
-                                        </td>
-
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ vendredi10H30 ? vendredi10H30.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ vendredi10H30 ? vendredi10H30.teacher.fullName : "" }}</span><br>
-                                            
-                                            {% if vendredi10H30 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': vendredi10H30.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': vendredi10H30.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            
-                                            {% endif %}
-                                            
-                                        </td>
-
-                                    </tr>
-                                    <tr>
-                                        <td class="hours">11:25-12:20</td>
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ lundi11H25 ? lundi11H25.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ lundi11H25 ? lundi11H25.teacher.fullName : "" }}</span><br>
-                                            
-                                            {% if lundi11H25 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': lundi11H25.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': lundi11H25.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            
-                                            {% endif %}
-                                            
-                                        </td>
-
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ mardi11H25 ? mardi11H25.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ mardi11H25 ? mardi11H25.teacher.fullName : "" }}</span><br>
-                                            
-                                            {% if mardi11H25 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': mardi11H25.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': mardi11H25.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            
-                                            {% endif %}
-                                            
-                                        </td>
-                                        
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ mercredi11H25 ? mercredi11H25.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ mercredi11H25 ? mercredi11H25.teacher.fullName : "" }}</span><br>
-                                            
-                                            {% if mercredi11H25 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': mercredi11H25.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': mercredi11H25.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            
-                                            {% endif %}
-                                            
-                                        </td>
-
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ jeudi11H25 ? jeudi11H25.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ jeudi11H25 ? jeudi11H25.teacher.fullName : "" }}</span><br>
-                                            
-                                            {% if jeudi11H25 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': jeudi11H25.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': jeudi11H25.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            
-                                            {% endif %}
-                                        </td>
-                                            
-
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ vendredi11H25 ? vendredi11H25.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ vendredi11H25 ? vendredi11H25.teacher.fullName : "" }}</span><br>
-                                            
-                                            {% if vendredi11H25 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': vendredi11H25.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': vendredi11H25.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            
-                                            {% endif %}
-                                        </td>
-
-                                    </tr>
-
-                                    <tr>
-                                        <td class="hours">12:20-13:15</td>
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ lundi12H20 ? lundi12H20.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ lundi12H20 ? lundi12H20.teacher.fullName : "" }}</span><br>
-                                            
-                                            {% if lundi12H20 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': lundi12H20.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': lundi12H20.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            
-                                            {% endif %}
-                                        </td>
-
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ mardi12H20 ? mardi12H20.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ mardi12H20 ? mardi12H20.teacher.fullName : "" }}</span><br>
-                                            
-                                            {% if mardi12H20 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': mardi12H20.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': mardi12H20.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            
-                                            {% endif %}
-                                        </td>
-                                        
-
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ mercredi12H20 ? mercredi12H20.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ mercredi12H20 ? mercredi12H20.teacher.fullName : "" }}</span><br>
-                                            
-                                            {% if mercredi12H20 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': mercredi12H20.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': mercredi12H20.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            
-                                            {% endif %}
-                                        </td>
-
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ jeudi12H20 ? jeudi12H20.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ jeudi12H20 ? jeudi12H20.teacher.fullName : "" }}</span><br>
-                                            
-                                            {% if jeudi12H20 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': jeudi12H20.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': jeudi12H20.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            
-                                            {% endif %}
-                                        </td>
-
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ vendredi12H20 ? vendredi12H20.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ vendredi12H20 ? vendredi12H20.teacher.fullName : '//' }}</span><br>
-                                            
-                                            {% if vendredi12H20 %}
-                                                <a href="{{ path('edit_time_table', {'slug': vendredi12H20.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': vendredi12H20.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-
-                                            {% endif %}
-
-                                        </td>
-
-                                    </tr>
-
-                                    <tr>
-                                        <td class="hours">13:15-13:40</td>
-                                        <td class="hours" colspan="6">GRANDE PAUSE</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="hours">13:40-14:35</td>
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ lundi13H40 ? lundi13H40.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ lundi13H40 ? lundi13H40.teacher.fullName : '//' }}</span><br>
-                                            
-                                            {% if lundi13H40 %}
-                                                <a href="{{ path('edit_time_table', {'slug': lundi13H40.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': lundi13H40.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-
-                                            {% endif %}
-
-                                        </td>
-                                        
-
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ mardi13H40 ? mardi13H40.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ mardi13H40 ? mardi13H40.teacher.fullName : '//' }}</span><br>
-                                            
-                                            {% if mardi13H40 %}
-                                                <a href="{{ path('edit_time_table', {'slug': mardi13H40.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': mardi13H40.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-
-                                            {% endif %}
-
-                                        </td>
-
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ mercredi13H40 ? mercredi13H40.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ mercredi13H40 ? mercredi13H40.teacher.fullName : '//' }}</span><br>
-                                            
-                                            {% if mercredi13H40 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': mercredi13H40.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': mercredi13H40.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            {% endif %}
-                                            
-                                        </td>
-
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ jeudi13H40 ? jeudi13H40.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ jeudi13H40 ? jeudi13H40.teacher.fullName : '//' }}</span><br>
-                                            
-                                            {% if jeudi13H40 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': jeudi13H40.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': jeudi13H40.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            {% endif %}
-                                            
-                                        </td>
-
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ vendredi13H40 ? vendredi13H40.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ vendredi13H40 ? vendredi13H40.teacher.fullName : '//' }}</span><br>
-                                            
-                                            {% if vendredi13H40 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': vendredi13H40.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': vendredi13H40.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            {% endif %}
-                                            
-                                        </td>
-                                        
-                                    </tr>
-                                    <tr>
-                                        <td class="hours">14:35-15:30</td>
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ lundi14H35 ? lundi14H35.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ lundi14H35 ? lundi14H35.teacher.fullName : '//' }}</span><br>
-                                            
-                                            {% if lundi14H35 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': lundi14H35.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': lundi14H35.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            {% endif %}
-                                            
-                                        </td>
-                                        
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ mardi14H35 ? mardi14H35.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ mardi14H35 ? mardi14H35.teacher.fullName : '//' }}</span><br>
-                                            
-                                            {% if mardi14H35 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': mardi14H35.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': mardi14H35.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            {% endif %}
-                                            
-                                        </td>
-                                        
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ mercredi14H35 ? mercredi14H35.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ mercredi14H35 ? mercredi14H35.teacher.fullName : '//' }}</span><br>
-                                            
-                                            {% if mercredi14H35 %}
-                                                <a href="{{ path('edit_time_table', {'slug': mercredi14H35.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': mercredi14H35.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            
-                                            {% endif %}
-                                            
-                                        </td>
-
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ jeudi14H35 ? jeudi14H35.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ jeudi14H35 ? jeudi14H35.teacher.fullName : '//' }}</span><br>
-                                            
-                                            {% if jeudi14H35 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': jeudi14H35.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': jeudi14H35.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            {% endif %}
-                                            
-                                        </td>
-
-                                        <td class="td">
-                                            <span class="badge badge-default mt-2"><i class="fa fa-book"></i> {{ vendredi14H35 ? vendredi14H35.subject.subject: "" }}</span> <br>
-                                            <span class="badge bg-primary mt-2"><i class="fa fa-user"></i> {{ vendredi14H35 ? vendredi14H35.teacher.fullName : '//' }}</span><br>
-                                            
-                                            {% if vendredi14H35 %}
-
-                                                <a href="{{ path('edit_time_table', {'slug': vendredi14H35.slug }) }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-edit"></i> {% trans %}Edit{% endtrans %}</span></a>
-
-                                                <a href="{{ path('delete_time_table', {'slug': vendredi14H35.slug }) }}" data-bs-toggle="tooltip" title="Delete this time table"><span class="badge bg-danger mt-2"><i class="fa fa-trash"></i> {% trans %}Delete{% endtrans %}</span></a>
-                                                {% else %}
-                                                    <a href="{{ path('save_time_table') }}" data-bs-toggle="tooltip" title="Update this time table"><span class="badge bg-success mt-2"><i class="fa fa-plus"></i> {% trans %}Add{% endtrans %}</span></a>
-                                            {% endif %}
-                                            
-                                        </td>
-
-                                    </tr>
-                                </tbody>
-                            </table>
-                            {% endif %}
+        </section>
+
+        <section class="fs-tt-filter-card">
+            <div class="fs-tt-filter-card__header">
+                <div>
+                    <span class="fs-tt-section-chip"><i class="fe fe-filter"></i>{% trans %}Display a classroom timetable{% endtrans %}</span>
+                    <h2>{% trans %}Choose a classroom{% endtrans %}</h2>
+                </div>
+
+                <div class="fs-tt-filter-card__actions">
+                    {% if selectedClassroom %}
+                        <button type="button" class="fs-tt-btn fs-tt-btn--ghost js-open-slots-modal">
+                            <i class="fe fe-settings"></i>
+                            <span>{% trans %}Schedule settings{% endtrans %}</span>
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+
+            <form action="{{ path('display_time_table') }}" method="post" class="fs-tt-selector-form">
+                <div class="fs-tt-field fs-tt-field--select fs-select-clean-field">
+                    <label for="classroom">{% trans %}Classroom{% endtrans %}</label>
+                    <select name="classroom" id="classroom" class="form-control form-control-sm fs-select-clean-control">
+                        <option value="">{% trans %}Choose classroom{% endtrans %}</option>
+                        {% for classroom in classrooms %}
+                            <option value="{{ classroom.id }}" {{ selectedClassroom and selectedClassroom.id == classroom.id ? 'selected' : '' }}>
+                                {{ classroom.classroom }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <button type="submit" class="fs-tt-btn fs-tt-btn--primary">
+                    <i class="fe fe-eye"></i>
+                    <span>{% trans %}Display{% endtrans %}</span>
+                </button>
+            </form>
+        </section>
+
+        {% if selectedClassroom %}
+            <section
+                class="fs-tt-workspace"
+                data-save-entry-url="{{ path('timetable_planner_save_entry') }}"
+                data-save-slots-url="{{ path('timetable_planner_save_slots') }}"
+                data-selected-classroom-id="{{ selectedClassroom.id }}"
+                data-selected-classroom-slug="{{ selectedClassroom.slug }}"
+            >
+                <aside class="fs-tt-sidebar">
+                    <div class="fs-tt-sidebar__header">
+                        <div>
+                            <span class="fs-tt-section-chip"><i class="fe fe-book-open"></i>{% trans %}Drag source{% endtrans %}</span>
+                            <h3>{% trans %}Lessons and assigned teachers{% endtrans %}</h3>
+                            <p>{% trans %}Drag one lesson into the planner. Use 2 slots for subjects that run over two consecutive periods.{% endtrans %}</p>
+                        </div>
+
+                        <div class="fs-tt-sidebar__counter">
+                            {{ lessons|length }} {% trans %}lessons{% endtrans %}
                         </div>
                     </div>
+
+                    <div class="fs-tt-sidebar__search">
+                        <i class="fe fe-search"></i>
+                        <input type="text" class="form-control form-control-sm js-lesson-search" placeholder="{% trans %}Search subject or teacher...{% endtrans %}">
+                    </div>
+
+                    <div class="fs-tt-lesson-list">
+                        {% for lesson in lessons %}
+                            <article
+                                class="fs-tt-lesson-card js-lesson-card"
+                                draggable="true"
+                                data-lesson-id="{{ lesson.id }}"
+                                data-subject-name="{{ lesson.subject ? lesson.subject.subject : '' }}"
+                                data-teacher-name="{{ lesson.teacher ? lesson.teacher.fullName : '' }}"
+                                data-default-duration="{{ lesson.weekHours is not null and lesson.weekHours >= 2 ? 2 : 1 }}"
+                            >
+                                <div class="fs-tt-lesson-card__head">
+                                    <div class="fs-tt-lesson-card__subject">
+                                        <span class="fs-tt-lesson-card__icon"><i class="fe fe-book"></i></span>
+                                        <div>
+                                            <strong>{{ lesson.subject ? lesson.subject.subject : '---' }}</strong>
+                                            <small>{{ lesson.teacher ? lesson.teacher.fullName : '---' }}</small>
+                                        </div>
+                                    </div>
+
+                                    <span class="fs-tt-pill fs-tt-pill--soft">{{ lesson.classroom.classroom }}</span>
+                                </div>
+
+                                <div class="fs-tt-lesson-card__meta">
+                                    <span class="fs-tt-mini-pill"><i class="fe fe-clock"></i>{{ lesson.weekHours ?? 0 }}{% trans %}h / sem.{% endtrans %}</span>
+                                    <span class="fs-tt-mini-pill"><i class="fe fe-award"></i>{% trans %}Coef{% endtrans %} {{ lesson.coefficient }}</span>
+                                </div>
+
+                                <div class="fs-tt-duration-toggle-wrap" role="group" aria-label="{% trans %}Duration{% endtrans %}">
+                                    <span class="fs-tt-duration-toggle-label fs-tt-duration-toggle-label--one">{% trans %}1 period{% endtrans %}</span>
+
+                                    <label class="fs-tt-duration-toggle">
+                                        <input
+                                            type="checkbox"
+                                            class="js-duration-toggle"
+                                            aria-label="{% trans %}Change the lesson duration{% endtrans %}"
+                                            {% if lesson.weekHours is not null and lesson.weekHours >= 2 %}checked{% endif %}
+                                        >
+                                        <span class="fs-tt-duration-toggle__slider">
+                                            <span class="fs-tt-duration-toggle__dot"></span>
+                                        </span>
+                                    </label>
+
+                                    <span class="fs-tt-duration-toggle-label fs-tt-duration-toggle-label--two">{% trans %}2 periods{% endtrans %}</span>
+                                </div>
+                            </article>
+                        {% else %}
+                            <div class="fs-tt-empty-block">
+                                <i class="fe fe-alert-circle"></i>
+                                <p>{% trans %}No lesson has been assigned to this classroom yet. Create the classroom lessons first, then come back to plan the timetable.{% endtrans %}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </aside>
+
+                <div class="fs-tt-board-card">
+                    <div class="fs-tt-board-card__header">
+                        <div>
+                            <span class="fs-tt-section-chip"><i class="fe fe-grid"></i>{% trans %}Interactive board{% endtrans %}</span>
+                            <h3>{% trans %}Weekly planner{% endtrans %}</h3>
+                            <p>{% trans %}Drop a lesson on the desired time slot. Drag an existing scheduled lesson to move it. Delete it directly from the timetable card when needed.{% endtrans %}</p>
+                        </div>
+
+                        <div class="fs-tt-board-card__actions">
+                            <div class="fs-tt-board-classroom-pill">
+                                <span>{% trans %}Classroom{% endtrans %}</span>
+                                <strong>{{ selectedClassroom.classroom }}</strong>
+                            </div>
+
+                            <button type="button" class="fs-tt-btn fs-tt-btn--ghost js-open-slots-modal">
+                                <i class="fe fe-sliders"></i>
+                                <span>{% trans %}Edit hours{% endtrans %}</span>
+                            </button>
+
+                            <a href="{{ path('print_timetable_classroom', {'slug': selectedClassroom.slug}) }}" target="_blank" class="fs-tt-btn fs-tt-btn--light">
+                                <i class="fe fe-printer"></i>
+                                <span>{% trans %}Print{% endtrans %}</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="fs-tt-board-wrapper">
+                        <table class="fs-tt-board-table">
+                            <thead>
+                                <tr>
+                                    <th>{% trans %}Hours{% endtrans %}</th>
+                                    {% for day in days %}
+                                        <th>{{ day.day|split('/')|last }}</th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in boardRows %}
+                                    {% if row.type == 'break' %}
+                                        <tr class="fs-tt-break-row">
+                                            <td class="fs-tt-hours-cell fs-tt-hours-cell--break">{{ row.timeLabel }}</td>
+                                            <td colspan="{{ days|length }}" class="fs-tt-break-cell">{{ row.label ?: 'BREAK' }}</td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td class="fs-tt-hours-cell">{{ row.timeLabel }}</td>
+                                            {% for day in days %}
+                                                {% set cell = row.cells[day.id] ?? null %}
+                                                {% if cell and not cell.skip %}
+                                                    <td
+                                                        class="fs-tt-slot-cell js-slot-cell {{ cell.entry ? 'is-occupied' : 'is-empty' }}"
+                                                        data-day-id="{{ day.id }}"
+                                                        data-day-label="{% trans %}{{ day.day|split('/')|last }}{% endtrans %}"
+                                                        data-start-time="{{ row.start }}"
+                                                        data-slot-label="{% trans %}{{ row.timeLabel }}{% endtrans %}"
+                                                        {% if cell.rowspan > 1 %}rowspan="{{ cell.rowspan }}"{% endif %}
+                                                    >
+                                                        {% if cell.entry %}
+                                                            <div
+                                                                class="fs-tt-scheduled-card js-scheduled-card"
+                                                                draggable="true"
+                                                                data-entry-id="{{ cell.entry.id }}"
+                                                                {% set scheduledLessonKey = cell.entry.subject and cell.entry.teacher ? cell.entry.teacher.id ~ '_' ~ cell.entry.subject.id : '' %}
+                                                                data-lesson-id="{{ lessonMap[scheduledLessonKey]|default('') }}"
+                                                                data-duration="{{ cell.duration }}"
+                                                            >
+                                                                <div class="fs-tt-scheduled-card__top">
+                                                                    <span class="fs-tt-scheduled-card__subject">{{ cell.entry.subject ? cell.entry.subject.subject : '---' }}</span>
+                                                                    <button type="button" class="fs-tt-card-delete js-delete-entry" data-entry-id="{{ cell.entry.id }}" data-delete-url="{{ path('timetable_planner_delete_entry', {'id': cell.entry.id}) }}" title="{% trans %}Delete this lesson{% endtrans %}" aria-label="{% trans %}Delete this lesson{% endtrans %}">
+                                                                        <i class="fe fe-trash-2"></i>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="fs-tt-scheduled-card__teacher">{{ cell.entry.teacher ? cell.entry.teacher.fullName : '---' }}</div>
+                                                                <div class="fs-tt-scheduled-card__footer">
+                                                                    <span class="fs-tt-mini-pill fs-tt-mini-pill--filled"><i class="fe fe-clock"></i>{{ cell.entry.startTime|slice(0,5) }} - {{ cell.entry.endTime|slice(0,5) }}</span>
+                                                                    <span class="fs-tt-mini-pill fs-tt-mini-pill--filled"><i class="fe fe-copy"></i>{{ cell.duration }} {% trans %}period{% endtrans %}{{ cell.duration > 1 ? 's' : '' }}</span>
+                                                                </div>
+                                                            </div>
+                                                        {% else %}
+                                                            <div class="fs-tt-slot-empty-state">
+                                                                <i class="fe fe-plus-circle"></i>
+                                                                <span>{% trans %}Drop here{% endtrans %}</span>
+                                                            </div>
+                                                        {% endif %}
+                                                    </td>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            {% endif %}
-        </div>
+            </section>
+        {% else %}
+            <section class="fs-tt-empty-state-card">
+                <div class="fs-tt-empty-state-card__icon"><i class="fe fe-calendar"></i></div>
+                <h3>{% trans %}No classroom selected yet{% endtrans %}</h3>
+                <p>{% trans %}Start by selecting a classroom above to open the interactive timetable planner, drag lessons and organize the weekly schedule beautifully.{% endtrans %}</p>
+            </section>
+        {% endif %}
     </div>
 </div>
+
+{% if selectedClassroom %}
+    <div class="fs-tt-modal js-slots-modal" aria-hidden="true">
+        <div class="fs-tt-modal__backdrop js-close-slots-modal"></div>
+        <div class="fs-tt-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="fs-tt-slots-title">
+            <div class="fs-tt-modal__header">
+                <div>
+                    <span class="fs-tt-section-chip"><i class="fe fe-clock"></i>{% trans %}Schedule designer{% endtrans %}</span>
+                    <h3 id="fs-tt-slots-title">{% trans %}Edit school hours{% endtrans %}</h3>
+                    <p>{% trans %}Adjust the daily timetable for institutions that finish earlier or later. The configuration is saved permanently in the database for the current school year and subsystem.{% endtrans %}</p>
+                </div>
+                <button type="button" class="fs-tt-modal__close js-close-slots-modal"><i class="fe fe-x"></i></button>
+            </div>
+
+            <div class="fs-tt-modal__body">
+                <div class="fs-tt-slots-builder js-slots-builder">
+                    {% for slot in slotConfiguration %}
+                        <div class="fs-tt-slot-row js-slot-row">
+                            <select class="form-control form-control-sm js-slot-type">
+                                <option value="course" {{ slot.type == 'course' ? 'selected' : '' }}>{% trans %}Course{% endtrans %}</option>
+                                <option value="break" {{ slot.type == 'break' ? 'selected' : '' }}>{% trans %}Break{% endtrans %}</option>
+                            </select>
+                            <input type="time" class="form-control form-control-sm js-slot-start" value="{{ slot.start|slice(0,5) }}">
+                            <input type="time" class="form-control form-control-sm js-slot-end" value="{{ slot.end|slice(0,5) }}">
+                            <input type="text" class="form-control form-control-sm js-slot-label" placeholder="{% trans %}Label (for break rows){% endtrans %}" value="{{ slot.label }}">
+                            <button type="button" class="fs-tt-row-delete js-remove-slot-row"><i class="fe fe-trash-2"></i></button>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <button type="button" class="fs-tt-btn fs-tt-btn--light js-add-slot-row">
+                    <i class="fe fe-plus"></i>
+                    <span>{% trans %}Add row{% endtrans %}</span>
+                </button>
+            </div>
+
+            <div class="fs-tt-modal__footer">
+                <button type="button" class="fs-tt-btn fs-tt-btn--ghost js-close-slots-modal">
+                    <i class="fe fe-x"></i>
+                    <span>{% trans %}Close{% endtrans %}</span>
+                </button>
+                <button type="button" class="fs-tt-btn fs-tt-btn--primary js-save-slot-settings">
+                    <span class="fs-tt-btn__spinner"></span>
+                    <i class="fe fe-save"></i>
+                    <span>{% trans %}Save schedule{% endtrans %}</span>
+                </button>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('build/custom/js/freeschool-timetable-premium.js') }}"></script>
+    <script src="{{ asset('build/custom/js/freeschool-timetable-ajax-hotfix.js') }}"></script>
 {% endblock %}

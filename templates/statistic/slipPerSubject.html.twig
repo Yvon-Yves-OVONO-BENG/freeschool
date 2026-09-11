@@ -3,245 +3,289 @@
 {% block title %}{% trans %}Slip Per Subject{% endtrans %}{% endblock %}
 
 {% block subTitle %}
-    {% trans %}STATISTIC SHEETS PER SUBJECT MANAGMENT{% endtrans %}
+	{% trans %}STATISTIC SHEETS PER SUBJECT MANAGMENT{% endtrans %}
+{% endblock %}
+
+{% block infoMessage %}
+	{% include "includes/_info_message.html.twig" %}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-statistics-suite-premium.css') }}">
 {% endblock %}
 
 {% block body %}
-<!-- App-Content -->
-	<div class="hor-content main-content">
+	<div class="hor-content main-content fs-stat-page">
 		<div class="container">
-        
-            <!--Page header-->
-            <div class="page-header">
-                <div class="page-leftheader">
-                    <h4 class="page-title mb-0 text-primary"><i class="fa fa-bar-chart me-2"></i>{% trans %}Statistics of subjects{% endtrans %}</h4>
-                </div>
-                <div class="page-rightheader">
-                    <div class="btn-list">
-                        
-                    </div>
-                </div>
-            </div>
-            <!--End Page header-->
+			<div class="fs-stat-menu-safe-space" aria-hidden="true"></div>
 
-            <div class="card border-primary">
-                <div class="card-header">
-                    <span class="page-title mb-0 text-primary">
-                        <i class="fa fa-bar-chart me-2"></i>{% trans %}Statistics by discipline{% endtrans %}
-                    </span>
-                </div>
-                <div class="card-body ">
-                    <form action="{{ path('statistic_printSlipPerSubject') }}" method="post" target="_blank">
-                        <div class="row">
-                            <div class="col-md-1">
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <select name="subject" id="subject" class="form-control select2-show-search" data-placeholder="Choose a subject" required>
-                                        <option label="Choose a subject">Choose a subject</option>
-                                        <option value="0">{% trans %}All Subjects{% endtrans %}</option>
-                                        {% for subject in subjects %}
-                                            <option value="{{ subject.id }}">{{ subject.subject }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <select name="period" id="period" class="form-control select2-show-search" data-placeholder="Choose a period" required>
-                                        <option label="Choose a period">{% trans %}Choose a period{% endtrans %}</option>
-                                        <optgroup label="Evaluations">
-                                            {% for sequence in sequences %}
-                                                <option value="s{{ sequence.id }}">{% trans %}Evaluation{% endtrans %} {{ sequence.sequence }}</option>
-                                            {% endfor %}
-                                        </optgroup>
-                                        <optgroup label="Trimestres">
-                                            {% for term in terms %}
-                                                {% if term.term != annualTerm %}
-                                                    <option value="t{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </optgroup>
-                                            {% for term in terms %}
-                                                {% if term.term == annualTerm %}
-                                                    <option value="a{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
-                                                {% endif %}
-                                            {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-1">
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printSlipPerSubject">
-                                        <i class="fa fa-print"></i>
-                                        {% trans %}Print{% endtrans %}</button>
-                                </div>
-                            </div>
-                            <div class="col-md-1">
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            
-            <div class="card border-primary">
-                <div class="card-header text-center">
-                    <span class="page-title mb-0 text-primary">
-                        <i class="fa fa-bar-chart me-2"></i>{% trans %}Overall summary of performance by subject{% endtrans %}
-                    </span>
-                </div>
-                <div class="card-body my-background">
-                    <form action="{{ path('statistic_printSlipPerSubject', {'resume': 1}) }}" method="post" target="_blank">
-                        <div class="row">
-                            
-                                <div class="form-group">
-                                    <select name="subject" id="subject" class="form-control" required hidden>
-                                        <option value="0">Toutes les matières</option>
-                                    </select>
-                                </div>
-                            <div class="col-md-3"></div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <select name="period" id="period" class="form-control select2-show-search" data-placeholder="Choisir une période"  required>
-                                        <option label="Choisir une période"></option>
-                                        <optgroup label="Evaluations">
-                                            {% for sequence in sequences %}
-                                                <option value="s{{ sequence.id }}">Evaluation {{ sequence.sequence }}</option>
-                                            {% endfor %}
-                                        </optgroup>
-                                        <optgroup label="Trimestres">
-                                            {% for term in terms %}
-                                                {% if term.term != annualTerm %}
-                                                    <option value="t{{ term.id }}">Trimestre {{ term.term }}</option>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </optgroup>
-                                            {% for term in terms %}
-                                                {% if term.term == annualTerm %}
-                                                    <option value="a{{ term.id }}">Annuel</option>
-                                                {% endif %}
-                                            {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printSlipPerSubject"><i class="fe fe-printer me-2"></i> {% trans %}Print{% endtrans %}</button>
-                                </div>
-                            </div>
-                            <div class="col-md-3"></div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        
-            <div class="card border-primary">
-                <div class="card-header text-center">
-                    <span class="page-title mb-0 text-primary">
-                        <i class="fa fa-bar-chart me-2"></i>{% trans %}Summary of student performance by subject{% endtrans %}
-                    </span>
-                </div>
-                <div class="card-body my-background">
-                    <form action="{{ path('statistic_printFicheSyntheseDesElevesParMatiere', {'resume': 1}) }}" method="post" target="_blank">
-                        <div class="row">
-                            
-                                <div class="form-group">
-                                    <select name="subject" id="subject" class="form-control" required hidden>
-                                        <option value="0">Toutes les matières</option>
-                                    </select>
-                                </div>
-                            <div class="col-md-3"></div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <select name="period" id="period" class="form-control select2-show-search" data-placeholder="Choisir une période"  required>
-                                        <option label="Choisir une période"></option>
-                                        <optgroup label="Evaluations">
-                                            {% for sequence in sequences %}
-                                                <option value="s{{ sequence.id }}">Evaluation {{ sequence.sequence }}</option>
-                                            {% endfor %}
-                                        </optgroup>
-                                        <optgroup label="Trimestres">
-                                            {% for term in terms %}
-                                                {% if term.term != annualTerm %}
-                                                    <option value="t{{ term.id }}">Trimestre {{ term.term }}</option>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </optgroup>
-                                            {% for term in terms %}
-                                                {% if term.term == annualTerm %}
-                                                    <option value="a{{ term.id }}">Annuel</option>
-                                                {% endif %}
-                                            {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printSlipPerSubject"><i class="fe fe-printer me-2"></i> {% trans %}Print{% endtrans %}</button>
-                                </div>
-                            </div>
-                            <div class="col-md-3"></div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-                
-            <div class="card border-primary">
-                <div class="card-header text-center">
-                    <span class="page-title mb-0 text-primary">
-                        <i class="fa fa-bar-chart me-2"></i>{% trans %}Teaching hours and programm coverage synthesis form per subject{% endtrans %}
-                    </span>
-                </div>
-                <div class="card-body my-background">
-                    <form action="{{ path('statistic_printFicheSyntheseDeLaCouvertureDesHeuresEtProgrammesParMatiere', {'resume': 1}) }}" method="post" target="_blank">
-                        <div class="row">
-                            
-                                <div class="form-group">
-                                    <select name="subject" id="subject" class="form-control" required hidden>
-                                        <option value="0">Toutes les matières</option>
-                                    </select>
-                                </div>
-                            <div class="col-md-3"></div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <select name="period" id="period" class="form-control select2-show-search" data-placeholder="Choisir une période"  required>
-                                        <option label="Choisir une période"></option>
-                                        <optgroup label="Evaluations">
-                                            {% for sequence in sequences %}
-                                                <option value="s{{ sequence.id }}">Evaluation {{ sequence.sequence }}</option>
-                                            {% endfor %}
-                                        </optgroup>
-                                        <optgroup label="Trimestres">
-                                            {% for term in terms %}
-                                                {% if term.term != annualTerm %}
-                                                    <option value="t{{ term.id }}">Trimestre {{ term.term }}</option>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </optgroup>
-                                            {% for term in terms %}
-                                                {% if term.term == annualTerm %}
-                                                    <option value="a{{ term.id }}">Annuel</option>
-                                                {% endif %}
-                                            {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <button class="btn btn-outline-primary btn-medium w-100 br-7" type="submit" name="printSlipPerSubject"><i class="fe fe-printer me-2"></i> {% trans %}Print{% endtrans %}</button>
-                                </div>
-                            </div>
-                            <div class="col-md-3"></div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            
+			<section class="fs-stat-hero">
+				<div class="fs-stat-hero__content">
+					<div>
+						<span class="fs-stat-eyebrow">
+							<i class="fa fa-bar-chart"></i>
+							{% trans %}Subject statistics{% endtrans %}
+						</span>
 
-        </div>
-    </div>
+						<h1 class="fs-stat-title">{% trans %}Statistics of subjects{% endtrans %}</h1>
+
+						<p class="fs-stat-subtitle">
+							{% trans %}Print discipline statistics, performance summaries, teaching hours and program coverage reports.{% endtrans %}
+						</p>
+					</div>
+
+					<div class="fs-stat-hero__actions">
+						
+						<div class="fs-stat-hero-stat">
+							<span class="fs-stat-hero-stat__icon">
+								<i class="fe fe-printer"></i>
+							</span>
+							<span class="fs-stat-hero-stat__label">{% trans %}Output{% endtrans %}</span>
+							<strong class="fs-stat-hero-stat__value">{% trans %}PDF{% endtrans %}</strong>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<div class="fs-stat-grid ">
+				
+<section class="fs-stat-card">
+	<div class="fs-stat-card__header">
+		<div>
+			<span class="fs-stat-chip">
+				<i class="fa fa-bar-chart"></i>
+				{% trans %}Printing workspace{% endtrans %}
+			</span>
+			<h2 class="fs-stat-card__title">{% trans %}Statistics by discipline{% endtrans %}</h2>
+			<p class="fs-stat-card__subtitle">{% trans %}Choose a subject and period to print statistics by discipline.{% endtrans %}</p>
+		</div>
+		<span class="fs-stat-card__icon">
+			<i class="fa fa-bar-chart"></i>
+		</span>
+	</div>
+	<div class="fs-stat-card__body">
+		<form action="{{ path('statistic_printSlipPerSubject') }}" method="post" target="_blank" class="fs-stat-form needs-validation" novalidate data-no-spinner="1">
+			<div class="fs-floating-field fs-required-field">
+	<select name="subject" id="subject_discipline" class="form-control select2-show-search fs-floating-control" data-placeholder="" required>
+		<option value="" label=""></option>
+		<option value="0">{% trans %}All Subjects{% endtrans %}</option>
+		{% for subject in subjects %}
+			<option value="{{ subject.id }}">{{ subject.subject }}</option>
+		{% endfor %}
+	</select>
+	<label class="fs-floating-label" for="subject_discipline">
+		<i class="fe fe-book"></i>
+		{% trans %}Subject{% endtrans %}
+	</label>
+	<div class="invalid-feedback">{% trans %}Please choose a subject !{% endtrans %}</div>
 </div>
+<div class="fs-floating-field fs-required-field">
+	<select name="period" id="period_discipline" class="form-control select2-show-search fs-floating-control" data-placeholder="" required>
+		<option value="" label=""></option>
+		<optgroup label="{% trans %}Evaluations{% endtrans %}">
+			{% for sequence in sequences %}
+				<option value="s{{ sequence.id }}">{% trans %}Evaluation{% endtrans %} {{ sequence.sequence }}</option>
+			{% endfor %}
+		</optgroup>
+		<optgroup label="{% trans %}Trimestres{% endtrans %}">
+			{% for term in terms %}
+				{% if term.term != annualTerm %}
+					<option value="t{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
+				{% endif %}
+			{% endfor %}
+		</optgroup>
+		{% for term in terms %}
+			{% if term.term == annualTerm %}
+				<option value="a{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
+			{% endif %}
+		{% endfor %}
+	</select>
+	<label class="fs-floating-label" for="period_discipline">
+		<i class="fe fe-calendar"></i>
+		{% trans %}Period{% endtrans %}
+	</label>
+	<div class="invalid-feedback">{% trans %}Please choose a period !{% endtrans %}</div>
+</div>
+			<div class="fs-stat-form__actions">
+				<button class="fs-stat-btn fs-stat-btn--primary fs-stat-submit-btn" type="submit" name="printSlipPerSubject">
+					<i class="fa fa-print fs-stat-submit-icon"></i>
+					<span>{% trans %}Print{% endtrans %}</span>
+				</button>
+			</div>
+		</form>
+		
+	</div>
+</section>
 
+<section class="fs-stat-card">
+	<div class="fs-stat-card__header">
+		<div>
+			<span class="fs-stat-chip">
+				<i class="fa fa-area-chart"></i>
+				{% trans %}Printing workspace{% endtrans %}
+			</span>
+			<h2 class="fs-stat-card__title">{% trans %}Overall summary of performance by subject{% endtrans %}</h2>
+			<p class="fs-stat-card__subtitle">{% trans %}Choose a period to print the overall performance summary for all subjects.{% endtrans %}</p>
+		</div>
+		<span class="fs-stat-card__icon">
+			<i class="fa fa-area-chart"></i>
+		</span>
+	</div>
+	<div class="fs-stat-card__body">
+		<form action="{{ path('statistic_printSlipPerSubject', {'resume': 1}) }}" method="post" target="_blank" class="fs-stat-form fs-stat-form--one needs-validation" novalidate data-no-spinner="1">
+			<input type="hidden" name="subject" value="0"><div class="fs-floating-field fs-required-field">
+	<select name="period" id="period_overall" class="form-control select2-show-search fs-floating-control" data-placeholder="" required>
+		<option value="" label=""></option>
+		<optgroup label="{% trans %}Evaluations{% endtrans %}">
+			{% for sequence in sequences %}
+				<option value="s{{ sequence.id }}">{% trans %}Evaluation{% endtrans %} {{ sequence.sequence }}</option>
+			{% endfor %}
+		</optgroup>
+		<optgroup label="{% trans %}Trimestres{% endtrans %}">
+			{% for term in terms %}
+				{% if term.term != annualTerm %}
+					<option value="t{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
+				{% endif %}
+			{% endfor %}
+		</optgroup>
+		{% for term in terms %}
+			{% if term.term == annualTerm %}
+				<option value="a{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
+			{% endif %}
+		{% endfor %}
+	</select>
+	<label class="fs-floating-label" for="period_overall">
+		<i class="fe fe-calendar"></i>
+		{% trans %}Period{% endtrans %}
+	</label>
+	<div class="invalid-feedback">{% trans %}Please choose a period !{% endtrans %}</div>
+</div>
+			<div class="fs-stat-form__actions">
+				<button class="fs-stat-btn fs-stat-btn--primary fs-stat-submit-btn" type="submit" name="printSlipPerSubject">
+					<i class="fa fa-print fs-stat-submit-icon"></i>
+					<span>{% trans %}Print{% endtrans %}</span>
+				</button>
+			</div>
+		</form>
+		
+	</div>
+</section>
+
+<section class="fs-stat-card">
+	<div class="fs-stat-card__header">
+		<div>
+			<span class="fs-stat-chip">
+				<i class="fa fa-users"></i>
+				{% trans %}Printing workspace{% endtrans %}
+			</span>
+			<h2 class="fs-stat-card__title">{% trans %}Summary of student performance by subject{% endtrans %}</h2>
+			<p class="fs-stat-card__subtitle">{% trans %}Choose a period to print the student performance synthesis by subject.{% endtrans %}</p>
+		</div>
+		<span class="fs-stat-card__icon">
+			<i class="fa fa-users"></i>
+		</span>
+	</div>
+	<div class="fs-stat-card__body">
+		<form action="{{ path('statistic_printFicheSyntheseDesElevesParMatiere', {'resume': 1}) }}" method="post" target="_blank" class="fs-stat-form fs-stat-form--one needs-validation" novalidate data-no-spinner="1">
+			<input type="hidden" name="subject" value="0"><div class="fs-floating-field fs-required-field">
+	<select name="period" id="period_students_subject" class="form-control select2-show-search fs-floating-control" data-placeholder="" required>
+		<option value="" label=""></option>
+		<optgroup label="{% trans %}Evaluations{% endtrans %}">
+			{% for sequence in sequences %}
+				<option value="s{{ sequence.id }}">{% trans %}Evaluation{% endtrans %} {{ sequence.sequence }}</option>
+			{% endfor %}
+		</optgroup>
+		<optgroup label="{% trans %}Trimestres{% endtrans %}">
+			{% for term in terms %}
+				{% if term.term != annualTerm %}
+					<option value="t{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
+				{% endif %}
+			{% endfor %}
+		</optgroup>
+		{% for term in terms %}
+			{% if term.term == annualTerm %}
+				<option value="a{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
+			{% endif %}
+		{% endfor %}
+	</select>
+	<label class="fs-floating-label" for="period_students_subject">
+		<i class="fe fe-calendar"></i>
+		{% trans %}Period{% endtrans %}
+	</label>
+	<div class="invalid-feedback">{% trans %}Please choose a period !{% endtrans %}</div>
+</div>
+			<div class="fs-stat-form__actions">
+				<button class="fs-stat-btn fs-stat-btn--primary fs-stat-submit-btn" type="submit" name="printSlipPerSubject">
+					<i class="fa fa-print fs-stat-submit-icon"></i>
+					<span>{% trans %}Print{% endtrans %}</span>
+				</button>
+			</div>
+		</form>
+		
+	</div>
+</section>
+
+<section class="fs-stat-card">
+	<div class="fs-stat-card__header">
+		<div>
+			<span class="fs-stat-chip">
+				<i class="fa fa-clock-o"></i>
+				{% trans %}Printing workspace{% endtrans %}
+			</span>
+			<h2 class="fs-stat-card__title">{% trans %}Teaching hours and programm coverage synthesis form per subject{% endtrans %}</h2>
+			<p class="fs-stat-card__subtitle">{% trans %}Choose a period to print teaching hours and program coverage synthesis by subject.{% endtrans %}</p>
+		</div>
+		<span class="fs-stat-card__icon">
+			<i class="fa fa-clock-o"></i>
+		</span>
+	</div>
+	<div class="fs-stat-card__body">
+		<form action="{{ path('statistic_printFicheSyntheseDeLaCouvertureDesHeuresEtProgrammesParMatiere', {'resume': 1}) }}" method="post" target="_blank" class="fs-stat-form fs-stat-form--one needs-validation" novalidate data-no-spinner="1">
+			<input type="hidden" name="subject" value="0"><div class="fs-floating-field fs-required-field">
+	<select name="period" id="period_hours" class="form-control select2-show-search fs-floating-control" data-placeholder="" required>
+		<option value="" label=""></option>
+		<optgroup label="{% trans %}Evaluations{% endtrans %}">
+			{% for sequence in sequences %}
+				<option value="s{{ sequence.id }}">{% trans %}Evaluation{% endtrans %} {{ sequence.sequence }}</option>
+			{% endfor %}
+		</optgroup>
+		<optgroup label="{% trans %}Trimestres{% endtrans %}">
+			{% for term in terms %}
+				{% if term.term != annualTerm %}
+					<option value="t{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>
+				{% endif %}
+			{% endfor %}
+		</optgroup>
+		{% for term in terms %}
+			{% if term.term == annualTerm %}
+				<option value="a{{ term.id }}">{% trans %}Annual{% endtrans %}</option>
+			{% endif %}
+		{% endfor %}
+	</select>
+	<label class="fs-floating-label" for="period_hours">
+		<i class="fe fe-calendar"></i>
+		{% trans %}Period{% endtrans %}
+	</label>
+	<div class="invalid-feedback">{% trans %}Please choose a period !{% endtrans %}</div>
+</div>
+			<div class="fs-stat-form__actions">
+				<button class="fs-stat-btn fs-stat-btn--primary fs-stat-submit-btn" type="submit" name="printSlipPerSubject">
+					<i class="fa fa-print fs-stat-submit-icon"></i>
+					<span>{% trans %}Print{% endtrans %}</span>
+				</button>
+			</div>
+		</form>
+		
+	</div>
+</section>
+
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-statistics-suite-premium.js') }}"></script>
 {% endblock %}

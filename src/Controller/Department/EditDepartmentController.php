@@ -17,11 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
-
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route("/department")]
 class EditDepartmentController extends AbstractController
 {
@@ -71,9 +67,15 @@ class EditDepartmentController extends AbstractController
         // on ecupère le schoolYear de la BD pour qu'il soit suivi par le EntityManager au moment du persist
         $schoolYear = $this->schoolYearRepository->find($mySession->get('schoolYear')->getId());
         
-        $department = $this->departmentRepository->findOneBySlug([
-            'slug' => $slug
+        $department = $this->departmentRepository->findOneBy([
+            'slug' => $slug,
+            'schoolYear' => $schoolYear
         ]);
+
+        if (!$department) 
+        {
+            return $this->redirectToRoute('page_error');
+        }
 
         $form = $this->createForm(DepartmentType::class, $department);
 

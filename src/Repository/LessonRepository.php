@@ -537,7 +537,7 @@ class LessonRepository extends ServiceEntityRepository
 
 
     /**
-     * relevé anneul d'un élève
+     * relevé annuel d'un élève
      *
      * @param [type] $studentId
      * @return void

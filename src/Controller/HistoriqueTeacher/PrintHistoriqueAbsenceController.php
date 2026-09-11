@@ -12,10 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 #[Route('/historiqueTeacher')]
 class PrintHistoriqueAbsenceController extends AbstractController
 {
@@ -28,7 +25,7 @@ class PrintHistoriqueAbsenceController extends AbstractController
     {}
 
     #[Route('/print-historic-teacher/{slug}/{all<[0-1]>}/{periode}', name: 'print_historic_teacher')]
-    public function printHistoricTeacher(Request $request, $slug = 0, int $all = 0, int $periode = 0): Response
+    public function printHistoricTeacher(Request $request, $slug = 0, int $all = 0, int $periode = 0)
     {
         $mySession = $request->getSession();
 
@@ -69,9 +66,14 @@ class PrintHistoriqueAbsenceController extends AbstractController
 
         if($slug != 0)
         {
-            $teacher = $this->teacherRepository->findOneBySlug([
+            $teacher = $this->teacherRepository->findOneBy([
                 'slug' => $slug
             ]);
+
+            if (!$teacher) 
+            {
+                return $this->redirectToRoute('page_error');
+            }
             
             $pdf = $this->historiqueAbsenceTeacherService->printHistoricAttendance($school, $schoolYear, $teacher);
             

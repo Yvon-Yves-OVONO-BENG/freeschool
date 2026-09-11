@@ -49,6 +49,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $fullName = null;
 
+    #[ORM\Column(length: 180, nullable: true)]
+    private ?string $email = null;
+
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?Teacher $teacher = null;
 
@@ -76,8 +79,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?bool $bloque = null;
 
+    /**
+     * Lorsque ce droit est activé par le proviseur, l'administrateur ne peut
+     * plus ajouter ni modifier un élève. Les autres fonctions restent intactes.
+     */
+    #[ORM\Column(options: ['default' => false])]
+    private bool $studentManagementBlocked = false;
+
     #[ORM\Column(nullable: true)]
     private ?bool $supprime = null;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserLog::class)]
+    private Collection $userLogs;
 
     public function __construct()
     {
@@ -90,6 +103,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->conseils = new ArrayCollection();
         $this->userUpdated = new ArrayCollection();
         $this->historiqueTeachers = new ArrayCollection();
+        $this->userLogs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -272,6 +286,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setFullName(string $fullName): self
     {
         $this->fullName = $fullName;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(?string $email): self
+    {
+        $this->email = $email !== null ? strtolower(trim($email)) : null;
 
         return $this;
     }
@@ -492,6 +518,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function isStudentManagementBlocked(): bool
+    {
+        return $this->studentManagementBlocked;
+    }
+
+    public function setStudentManagementBlocked(bool $studentManagementBlocked): self
+    {
+        $this->studentManagementBlocked = $studentManagementBlocked;
+
+        return $this;
+    }
+
     public function isSupprime(): ?bool
     {
         return $this->supprime;
@@ -500,6 +538,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setSupprime(?bool $supprime): self
     {
         $this->supprime = $supprime;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserLog>
+     */
+    public function getUserLogs(): Collection
+    {
+        return $this->userLogs;
+    }
+
+    public function addUserLog(UserLog $userLog): self
+    {
+        if (!$this->userLogs->contains($userLog)) {
+            $this->userLogs->add($userLog);
+            $userLog->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserLog(UserLog $userLog): self
+    {
+        if ($this->userLogs->removeElement($userLog)) {
+            // set the owning side to null (unless already changed)
+            if ($userLog->getUser() === $this) {
+                $userLog->setUser(null);
+            }
+        }
 
         return $this;
     }

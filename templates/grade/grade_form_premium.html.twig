@@ -1,0 +1,160 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Grade{% endtrans %}{% endblock %}
+
+{% block subTitle %}
+	{% if slug != 0 %}
+		{% trans %}UPDATING RANK{% endtrans %}
+	{% else %}
+		{% trans %}ADDING NEW RANK{% endtrans %}
+	{% endif %}
+{% endblock %}
+
+{% block infoMessage %}
+	{% include "includes/_info_message.html.twig" %}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('build/custom/css/freeschool-rank-form-premium.css') }}">
+{% endblock %}
+
+{% block body %}
+	<div class="hor-content main-content fs-rank-page">
+		<div class="container">
+
+			<div class="fs-rank-hero">
+				<div class="fs-rank-hero__content">
+					<span class="fs-rank-eyebrow">
+						<i class="fa fa-graduation-cap"></i>
+						{% trans %}School configuration{% endtrans %}
+					</span>
+
+					<h1 class="fs-rank-title">
+						{% if slug != 0 %}
+							{% trans %}UPDATING RANK{% endtrans %}
+						{% else %}
+							{% trans %}ADDING NEW RANK{% endtrans %}
+						{% endif %}
+					</h1>
+
+					<p class="fs-rank-subtitle">
+						{% trans %}Create and manage staff ranks with a clean, secure and responsive workspace.{% endtrans %}
+					</p>
+				</div>
+
+				<div class="fs-rank-hero__actions">
+					<a href="{{ path('grade_displayGrade', {'notification':0}) }}" class="fs-rank-btn fs-rank-btn--light">
+						<i class="fa fa-list"></i>
+						<span>{% trans %}Display registered ranks{% endtrans %}</span>
+					</a>
+				</div>
+			</div>
+
+			<div class="fs-rank-grid">
+				<div class="fs-rank-stat-card">
+					<div class="fs-rank-stat-card__icon">
+						<i class="fa fa-layer-group"></i>
+					</div>
+					<div>
+						<span class="fs-rank-stat-card__label">{% trans %}Number of registered ranks{% endtrans %}</span>
+						<strong class="fs-rank-stat-card__value">{{ grades|length }}</strong>
+					</div>
+				</div>
+
+				<div class="fs-rank-stat-card fs-rank-stat-card--soft">
+					<div class="fs-rank-stat-card__icon">
+						{% if slug != 0 %}
+							<i class="fa fa-edit"></i>
+						{% else %}
+							<i class="fa fa-plus"></i>
+						{% endif %}
+					</div>
+					<div>
+						<span class="fs-rank-stat-card__label">{% trans %}Current action{% endtrans %}</span>
+						<strong class="fs-rank-stat-card__value fs-rank-stat-card__value--small">
+							{% if slug != 0 %}
+								{% trans %}Update{% endtrans %}
+							{% else %}
+								{% trans %}Creation{% endtrans %}
+							{% endif %}
+						</strong>
+					</div>
+				</div>
+			</div>
+
+			<div class="fs-rank-card {% if slug == 0 %}fs-rank-card--create{% else %}fs-rank-card--edit{% endif %}">
+				<div class="fs-rank-card__header">
+					<div>
+						<span class="fs-rank-card__badge">
+							{% if slug != 0 %}
+								<i class="fa fa-edit"></i>
+								{% trans %}Edit mode{% endtrans %}
+							{% else %}
+								<i class="fa fa-plus"></i>
+								{% trans %}Creation mode{% endtrans %}
+							{% endif %}
+						</span>
+
+						<h2 class="fs-rank-card__title">
+							{% if slug != 0 %}
+								{% trans %}UPDATING RANK{% endtrans %}
+							{% else %}
+								{% trans %}ADDING NEW RANK{% endtrans %}
+							{% endif %}
+						</h2>
+					</div>
+				</div>
+
+				<div class="fs-rank-card__body">
+					{{ form_start(formGrade, {'attr': {'class': 'fs-rank-form', 'novalidate': 'novalidate'}}) }}
+
+						<div class="fs-floating-field">
+							{{ form_widget(formGrade.grade, {
+								'attr': {
+									'class': 'fs-floating-control',
+									'placeholder': ' '
+								}
+							}) }}
+
+							<label class="fs-floating-label">
+								<i class="fa fa-paper-plane"></i>
+								{% trans %}Rank{% endtrans %}
+							</label>
+
+							<div class="fs-floating-error">
+								{{ form_errors(formGrade.grade) }}
+							</div>
+						</div>
+
+						<div class="fs-rank-form__actions">
+							<a href="{{ path('grade_displayGrade', {'notification':0}) }}" class="fs-rank-btn fs-rank-btn--ghost">
+								<i class="fa fa-arrow-left"></i>
+								<span>{% trans %}Back{% endtrans %}</span>
+							</a>
+
+							{% if slug == 0 %}
+								<button type="submit" class="fs-rank-btn fs-rank-btn--primary" name="addGrade">
+									<i class="fa fa-save"></i>
+									<span>{% trans %}Save{% endtrans %}</span>
+								</button>
+							{% else %}
+								<button type="submit" class="fs-rank-btn fs-rank-btn--primary" name="editGrade">
+									<i class="fa fa-save"></i>
+									<span>{% trans %}Save changes{% endtrans %}</span>
+								</button>
+							{% endif %}
+						</div>
+
+					{{ form_end(formGrade) }}
+				</div>
+			</div>
+
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('build/custom/js/freeschool-rank-form-premium.js') }}"></script>
+{% endblock %}

@@ -13,10 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/**
- * @IsGranted("ROLE_USER", message="Accès refusé. Espace reservé uniquement aux abonnés")
- *
- */ 
+#[IsGranted('ROLE_USER', message: 'Accès refusé. Connectez-vous')]
 class ResetPasswordController extends AbstractController
 {
     public function __construct(

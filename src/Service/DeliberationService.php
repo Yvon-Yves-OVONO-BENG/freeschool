@@ -161,6 +161,9 @@ class DeliberationService
             {
                 $id = 1;
             }
+
+            dump($teacher);
+            
             $newTeacher->setGrade($teacher->getGrade())
                 ->setSex($teacher->getSex())
                 ->setSchoolYear($nextSchoolYear)
@@ -205,6 +208,8 @@ class DeliberationService
             }
             $this->em->flush(); 
         }
+        
+        
     }
 
      /**
@@ -257,8 +262,8 @@ class DeliberationService
     {
         $classroomsToTransfer = $this->getClassroomsToTransfer($request);
         
-         // on recupère le next year
-         $nextSchoolYear = $this->schoolYearService->getNextSchoolYear();
+        // on recupère le next year
+        $nextSchoolYear = $this->schoolYearService->getNextSchoolYear();
 
         foreach ($classroomsToTransfer as $classroom)
         {
@@ -283,7 +288,6 @@ class DeliberationService
             $dernierClassroom = $this->classroomRepository->findBy([],['id' => 'DESC'],1,0);
 
             /////je récupère l'id du sernier utilisateur
-            
             if ($dernierClassroom) 
             {
                 $id = $dernierClassroom[0]->getId();
@@ -302,7 +306,7 @@ class DeliberationService
                 ->setSubSystem($classroom->getSubSystem())
                 ->setPrincipalTeacher($this->teacherRepository->findOneBy([
                     'schoolYear' => $nextSchoolYear,
-                    'administrativeNumber' => $classroom->getPrincipalTeacher()->getAdministrativeNumber()
+                    'administrativeNumber' => $classroom->getPrincipalTeacher()
                 ]))
                 ->setSlug($slug.$id);
 
@@ -671,82 +675,41 @@ class DeliberationService
 
     }
 
-    public function createVerrouReport()
+    public function createVerrouReport(): void
     {
-        // on recupère le next year
         $nextSchoolYear = $this->schoolYearService->getNextSchoolYear();
 
-        // on recupère les trimestres
-        $term1 = $this->termRepository->findOneByTerm(1);
-        $term2 = $this->termRepository->findOneByTerm(2);
-        $term3 = $this->termRepository->findOneByTerm(3);
-        $term0 = $this->termRepository->findOneByTerm(0);
+        $terms = [
+            $this->termRepository->findOneByTerm(1),
+            $this->termRepository->findOneByTerm(2),
+            $this->termRepository->findOneByTerm(3),
+            $this->termRepository->findOneByTerm(0),
+        ];
 
-        // on recupère les verrouReport du nextYear
-        $nextVerrouReportTerm1 = $this->verrouReportRepository->findOneBy([
-            'schoolYear' => $nextSchoolYear,
-            'term' => $term1
-        ]);
-        $nextVerrouReportTerm2 = $this->verrouReportRepository->findOneBy([
-            'schoolYear' => $nextSchoolYear,
-            'term' => $term2
-        ]);
-        $nextVerrouReportTerm3 = $this->verrouReportRepository->findOneBy([
-            'schoolYear' => $nextSchoolYear,
-            'term' => $term3
-        ]);
-        $nextVerrouReportTerm0 = $this->verrouReportRepository->findOneBy([
-            'schoolYear' => $nextSchoolYear,
-            'term' => $term0
-        ]);
+        foreach ($terms as $term) {
+            if (!$term) {
+                continue;
+            }
 
-        if(is_null($nextVerrouReportTerm1))
-        {
-            $newVerrouReport = new VerrouReport;
-            $newVerrouReport->setSchoolYear($nextSchoolYear)
-                ->setTerm($term1)
-                ->setVerrouReport(false)
-                ;
+            $existingVerrouReport = $this->verrouReportRepository->findOneBy([
+                'schoolYear' => $nextSchoolYear,
+                'term' => $term,
+            ]);
 
-            $this->em->persist($newVerrouReport);
-        }
+            if ($existingVerrouReport) {
+                continue;
+            }
 
-        if(is_null($nextVerrouReportTerm2))
-        {
-            $newVerrouReport = new VerrouReport;
-            $newVerrouReport->setSchoolYear($nextSchoolYear)
-                ->setTerm($term2)
-                ->setVerrouReport(false)
-                ;
+            $verrouReport = new VerrouReport();
+            $verrouReport
+                ->setSchoolYear($nextSchoolYear)
+                ->setTerm($term)
+                ->setVerrouReport(false);
 
-            $this->em->persist($newVerrouReport);
-        }
-
-        if(is_null($nextVerrouReportTerm3))
-        {
-            $newVerrouReport = new VerrouReport;
-            $newVerrouReport->setSchoolYear($nextSchoolYear)
-                ->setTerm($term3)
-                ->setVerrouReport(false)
-                ;
-
-            $this->em->persist($newVerrouReport);
-        }
-
-        if(is_null($nextVerrouReportTerm0))
-        {
-            $newVerrouReport = new VerrouReport;
-            $newVerrouReport->setSchoolYear($nextSchoolYear)
-                ->setTerm($term0)
-                ->setVerrouReport(false)
-                ;
-
-            $this->em->persist($newVerrouReport);
+            $this->em->persist($verrouReport);
         }
 
         $this->em->flush();
-
-
     }
 
     public function createVerrouSequence()
@@ -860,6 +823,12 @@ class DeliberationService
 
     }
 
+    /**
+     * 
+     * Fonction qui transfert les frais
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return void
+     */
     public function TransferFees(Request $request)
     {
         $mySession = $request->getSession();
@@ -1054,7 +1023,7 @@ class DeliberationService
 
 
     /**
-     * Retourne les classes de nieau suivant à une classe donnée
+     * Retourne les classes de niveau suivant à une classe donnée
      *
      * @param Classroom $classroom
      * @return array

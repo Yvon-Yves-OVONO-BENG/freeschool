@@ -229,7 +229,7 @@
 														{% elseif app.request.locale == 'en' %}
 														<img src="{{asset('build/custom2/images/us_flag.jpg')}}" alt="img" class="me-2 country">
 													{% endif %}
-														<span class="fs-14 font-weight-semibold">{% trans %}Langue{% endtrans %} </span>
+														<span class="fs-14 font-weight-semibold">{% trans %}Language{% endtrans %} </span>
 													</span>
 												</a>
 												<div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow animated">
@@ -244,7 +244,7 @@
 														{% if locale == 'en' %}
 															<a class="dropdown-item d-flex" href="{{ path('translation_changeLocale', {'locale': locale}) }}">
 															<img src="{{asset('build/custom2/images/us_flag.jpg')}}" alt="img" class="me-2 country mt-1">
-															<span class="fs-13">{% trans %}Anglais{% endtrans %} </span>
+															<span class="fs-13">{% trans %}English{% endtrans %} </span>
 															</a>
 														{% endif %}
 													

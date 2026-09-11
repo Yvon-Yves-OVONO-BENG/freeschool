@@ -91,7 +91,7 @@
 				<option value="s{{ sequence.id }}">{% trans %}Evaluation{% endtrans %} {{ sequence.sequence }}</option>
 			{% endfor %}
 		</optgroup>
-		<optgroup label="{% trans %}Trimestres{% endtrans %}">
+		<optgroup label="{% trans %}Terms{% endtrans %}">
 			{% for term in terms %}
 				{% if term.term != annualTerm %}
 					<option value="t{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>

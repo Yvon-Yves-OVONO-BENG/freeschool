@@ -39,7 +39,7 @@
 {% endif %}
 
 {% if classrooms.level5|length > 0 %}
-    <optgroup label="{% trans %}Seconde{% endtrans %}">
+    <optgroup label="{% trans %}Form 5{% endtrans %}">
         {% for classroom in  classrooms.level5 %}
         <option value="{{ classroom.id }}">
                 {{ classroom.classroom }}
@@ -59,7 +59,7 @@
 {% endif %}
 
 {% if classrooms.level7|length > 0 %}
-    <optgroup label="{% trans %}Terminale{% endtrans %}">
+    <optgroup label="{% trans %}Upper Sixth{% endtrans %}">
         {% for classroom in  classrooms.level7 %}
         <option value="{{ classroom.id }}">
                 {{ classroom.classroom }}

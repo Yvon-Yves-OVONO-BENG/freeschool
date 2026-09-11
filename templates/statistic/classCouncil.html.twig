@@ -88,7 +88,7 @@
 <div class="fs-floating-field fs-required-field">
 	<select name="term" id="term" class="form-control select2 custom-select fs-floating-control" data-placeholder="" required>
 		<option value="" label=""></option>
-		<optgroup label="{% trans %}Trimestres{% endtrans %}">
+		<optgroup label="{% trans %}Terms{% endtrans %}">
 			{% for term in terms %}
 				{% if term.term != annualTerm %}
 					<option value="{{ term.id }}">{% trans %}Term{% endtrans %} {{ term.term }}</option>

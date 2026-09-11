@@ -64,7 +64,7 @@ class ImporterStudentController extends AbstractController
             && $currentUser->isStudentManagementBlocked()
         ) {
             $this->addFlash('error', $this->translator->trans(
-                "Le proviseur a désactivé votre autorisation d'ajouter ou de modifier un élève."
+                "The Principal has disabled your permission to add or edit a student."
             ));
 
             return $this->redirectToRoute('student_displayStudent', [

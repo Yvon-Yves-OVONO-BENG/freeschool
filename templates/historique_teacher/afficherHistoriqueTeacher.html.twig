@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{% trans %}Display Historique Teacher{% endtrans %}{% endblock %}
+{% block title %}{% trans %}Display Teacher History{% endtrans %}{% endblock %}
 
 {% block infoMessage %}
 	{% include "includes/_info_message.html.twig" %}
@@ -154,7 +154,7 @@
 								</th>
 								<th>
 									<button type="button" class="fs-th-sort" data-sort-index="4">
-										<span>{% trans %}Plage{% endtrans %}</span>
+										<span>{% trans %}Range{% endtrans %}</span>
 										<i class="fe fe-chevron-down"></i>
 									</button>
 								</th>
@@ -205,7 +205,7 @@
 										<span class="fs-th-pill fs-th-pill--violet">{{ historiqueTeacher.sequence.sequence }}</span>
 									</td>
 
-									<td data-label="{% trans %}Plage{% endtrans %}">
+									<td data-label="{% trans %}Range{% endtrans %}">
 										<div class="fs-th-time-cell">
 											<strong>{{ historiqueTeacher.heureDebut }} - {{ historiqueTeacher.heureFin }}</strong>
 											<small>{% trans %}On{% endtrans %} : {{ historiqueTeacher.enregistreLeAt|date('d-m-Y') }}</small>

@@ -1531,7 +1531,7 @@
 								<img src="{{ asset('build/custom/images/en.png') }}" alt="img" class="fs4-flag">
 							{% endif %}
 						</span>
-						<span class="fs4-pill-text">{% trans %}Langue{% endtrans %}</span>
+						<span class="fs4-pill-text">{% trans %}Language{% endtrans %}</span>
 						<i class="fe fe-chevron-down ms-auto"></i>
 					</a>
 
@@ -1547,7 +1547,7 @@
 							{% if locale == 'en' %}
 								<a class="dropdown-item" href="{{ path('translation_changeLocale', {'locale': locale}) }}">
 									<img src="{{ asset('build/custom/images/en.png') }}" alt="img" class="fs4-flag">
-									<span>{% trans %}Anglais{% endtrans %}</span>
+									<span>{% trans %}English{% endtrans %}</span>
 								</a>
 							{% endif %}
 						{% endfor %}
@@ -1607,7 +1607,7 @@
 							<a href="{{ path('home_dashboard') }}" class="sub-icon">
 								<i class="fe fe-home hor-icon"></i>
 
-								<span>{% trans %}Accueil{% endtrans %}</span></a>
+								<span>{% trans %}Home{% endtrans %}</span></a>
 						</li>
 
 						{% if is_granted('ROLE_PROVISEUR')

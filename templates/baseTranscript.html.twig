@@ -8,7 +8,7 @@
 		<meta content="Yvon Yves Noel OVONO BENG" name="author">
 		<meta name="keywords" content="admin, admin template, dashboard, admin dashboard, responsive, bootstrap, bootstrap 5, admin theme, admin themes, bootstrap admin template, scss, ui, crm, modern, flat">
 		<title>
-			{% block title %}{% trans %}Bienvenue{% endtrans %}
+			{% block title %}{% trans %}Welcome{% endtrans %}
 			{% endblock %}
 		</title>
 
@@ -135,7 +135,7 @@
 														{% elseif app.request.locale == 'en' %}
 														<img src="{{asset('build/custom/images/en.png')}}" alt="img" class="me-2 country">
 													{% endif %}
-														<span class="fs-14 font-weight-semibold mt-2">{% trans %}Langue{% endtrans %} </span>
+														<span class="fs-14 font-weight-semibold mt-2">{% trans %}Language{% endtrans %} </span>
 													</span>
 												</a>
 												<div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow animated border-primary">
@@ -150,7 +150,7 @@
 														{% if locale == 'en' %}
 															<a class="dropdown-item d-flex" href="{{ path('translation_changeLocale', {'locale': locale}) }}">
 																<img src="{{asset('build/custom/images/en.png')}}" alt="img" class="me-2 country mt-1">
-																<span class="fs-13">{% trans %}Anglais{% endtrans %} </span>
+																<span class="fs-13">{% trans %}English{% endtrans %} </span>
 															</a>
 														{% endif %}
 													

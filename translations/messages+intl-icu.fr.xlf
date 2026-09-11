@@ -9479,10 +9479,389 @@
         <source>Thank you for trusting</source>
         <target>Merci de faire confiance à</target>
       </trans-unit>
-
       <trans-unit id="uVDurOv" resname="Thank you for your confidence in">
         <source>Thank you for your confidence in</source>
         <target>Merci pour la confiance que vous accordez à</target>
+      </trans-unit>
+      <trans-unit id="dzaEKHt" resname="The Principal has disabled your permission to add or edit a student.">
+        <source>The Principal has disabled your permission to add or edit a student.</source>
+        <target>Le proviseur a désactivé votre autorisation d'ajouter ou de modifier un élève.</target>
+      </trans-unit>
+      <trans-unit id="nXy1JU6" resname="Horizontal bars">
+        <source>Horizontal bars</source>
+        <target>Barres horizontales</target>
+      </trans-unit>
+      <trans-unit id=".HBj1Q6" resname="Student add / edit">
+        <source>Student add / edit</source>
+        <target>Ajout / modification d'un élève</target>
+      </trans-unit>
+      <trans-unit id="GPKglH_" resname="Blocked">
+        <source>Blocked</source>
+        <target>Bloqué</target>
+      </trans-unit>
+      <trans-unit id="G7IB0Yg" resname="Allowed">
+        <source>Allowed</source>
+        <target>Autorisé</target>
+      </trans-unit>
+      <trans-unit id="KRfxt6P" resname="Checked: student addition and modification are blocked">
+        <source>Checked: student addition and modification are blocked</source>
+        <target>Coché : l'ajout et la modification des élèves sont bloqués</target>
+      </trans-unit>
+      <trans-unit id="pP5lJk7" resname="Language">
+        <source>Language</source>
+        <target>Langue</target>
+      </trans-unit>
+      <trans-unit id="P0I9GqG" resname="Deliberation actions">
+        <source>Deliberation actions</source>
+        <target>Actions de délibération</target>
+      </trans-unit>
+      <trans-unit id="bE5v.1Z" resname="Update mode">
+        <source>Update mode</source>
+        <target>Mode modification</target>
+      </trans-unit>
+      <trans-unit id="zi3u9Bk" resname="Edit the decision for">
+        <source>Edit the decision for</source>
+        <target>Modifier la décision de</target>
+      </trans-unit>
+      <trans-unit id="mQGcBeP" resname="Reason for exclusion">
+        <source>Reason for exclusion</source>
+        <target>Motif d'exclusion</target>
+      </trans-unit>
+      <trans-unit id="QGhBqGp" resname="T1 :">
+        <source>T1 :</source>
+        <target>T1 :</target>
+      </trans-unit>
+      <trans-unit id="Aplz4JR" resname="T2 :">
+        <source>T2 :</source>
+        <target>T2 :</target>
+      </trans-unit>
+      <trans-unit id="R49fT88" resname="T3 :">
+        <source>T3 :</source>
+        <target>T3 :</target>
+      </trans-unit>
+      <trans-unit id="ceAKwHI" resname="Save expense">
+        <source>Save expense</source>
+        <target>Enregistrer la dépense</target>
+      </trans-unit>
+      <trans-unit id="ihUY6cG" resname="Choose a course">
+        <source>Choose a course</source>
+        <target>Choisir un cours</target>
+      </trans-unit>
+      <trans-unit id="qHw9HI1" resname="Visual statistics">
+        <source>Visual statistics</source>
+        <target>Statistiques visuelles</target>
+      </trans-unit>
+      <trans-unit id="wQ_HVGT" resname="A clearer and more visual overview of classroom performance.">
+        <source>A clearer and more visual overview of classroom performance.</source>
+        <target>Une vue d'ensemble plus claire et plus visuelle des performances de la classe.</target>
+      </trans-unit>
+      <trans-unit id="x2vrzr0" resname="Classroom effective">
+        <source>Classroom effective</source>
+        <target>Effectif de la classe</target>
+      </trans-unit>
+      <trans-unit id="zyWeB8U" resname="Highest note in class">
+        <source>Highest note in class</source>
+        <target>Note la plus élevée de la classe</target>
+      </trans-unit>
+      <trans-unit id="dMbAoA7" resname="Success rate by group">
+        <source>Success rate by group</source>
+        <target>Taux de réussite par groupe</target>
+      </trans-unit>
+      <trans-unit id="Bx2duCp" resname="Average vs sub-average">
+        <source>Average vs sub-average</source>
+        <target>Moyenne et sous-moyenne</target>
+      </trans-unit>
+      <trans-unit id="nskMHI6" resname="Minimum and maximum notes">
+        <source>Minimum and maximum notes</source>
+        <target>Notes minimale et maximale</target>
+      </trans-unit>
+      <trans-unit id="6yVZmpI" resname="Edit the targeted skill">
+        <source>Edit the targeted skill</source>
+        <target>Modifier la compétence visée</target>
+      </trans-unit>
+      <trans-unit id="OBeKILR" resname="No.">
+        <source>No.</source>
+        <target>N°</target>
+      </trans-unit>
+      <trans-unit id="0WHoqEf" resname="Edit the grade for">
+        <source>Edit the grade for</source>
+        <target>Modifier la note de</target>
+      </trans-unit>
+      <trans-unit id="MaEWuiZ" resname="Chart.js is not loaded.">
+        <source>Chart.js is not loaded.</source>
+        <target>Chart.js n'est pas chargé.</target>
+      </trans-unit>
+      <trans-unit id="swjQym6" resname="Grade 9 stamp fees">
+        <source>Grade 9 stamp fees</source>
+        <target>Frais de timbre de 3e</target>
+      </trans-unit>
+      <trans-unit id="OYJkaNg" resname="Lower Sixth stamp fees">
+        <source>Lower Sixth stamp fees</source>
+        <target>Frais de timbre de Première</target>
+      </trans-unit>
+      <trans-unit id="9Dr74rB" resname="Upper Sixth stamp fees">
+        <source>Upper Sixth stamp fees</source>
+        <target>Frais de timbre de Terminale</target>
+      </trans-unit>
+      <trans-unit id="s6eAgTy" resname="Grade 9 exam fees">
+        <source>Grade 9 exam fees</source>
+        <target>Frais d'examen de 3e</target>
+      </trans-unit>
+      <trans-unit id="POcUhwZ" resname="Lower Sixth exam fees">
+        <source>Lower Sixth exam fees</source>
+        <target>Frais d'examen de Première</target>
+      </trans-unit>
+      <trans-unit id="EtesSLx" resname="Upper Sixth exam fees">
+        <source>Upper Sixth exam fees</source>
+        <target>Frais d'examen de Terminale</target>
+      </trans-unit>
+      <trans-unit id="zAJGfAq" resname="Teacher History">
+        <source>Teacher History</source>
+        <target>Historique de l'enseignant</target>
+      </trans-unit>
+      <trans-unit id="OnhpU4i" resname="Home">
+        <source>Home</source>
+        <target>Accueil</target>
+      </trans-unit>
+      <trans-unit id="V4ZYTKX" resname="Sport Sheet - Level 4">
+        <source>Sport Sheet - Level 4</source>
+        <target>Fiche de sport - Niveau 4</target>
+      </trans-unit>
+      <trans-unit id="DgWAOHX" resname="OBC Sport Sheets - Levels 6 and 7">
+        <source>OBC Sport Sheets - Levels 6 and 7</source>
+        <target>Fiches de sport OBC - Niveaux 6 et 7</target>
+      </trans-unit>
+      <trans-unit id="1PMhCAb" resname="Form 5">
+        <source>Form 5</source>
+        <target>Seconde</target>
+      </trans-unit>
+      <trans-unit id="N3JZorF" resname="Upper Sixth">
+        <source>Upper Sixth</source>
+        <target>Terminale</target>
+      </trans-unit>
+      <trans-unit id="70igxWg" resname="Resend / start over">
+        <source>Resend / start over</source>
+        <target>Renvoyer / recommencer</target>
+      </trans-unit>
+      <trans-unit id="O5N64Xm" resname="Clearance">
+        <source>Clearance</source>
+        <target>Quitus</target>
+      </trans-unit>
+      <trans-unit id="OsGp7E_" resname="Currency">
+        <source>Currency</source>
+        <target>Devise</target>
+      </trans-unit>
+      <trans-unit id="KHD_OW9" resname="Print order">
+        <source>Print order</source>
+        <target>Ordre d'impression</target>
+      </trans-unit>
+      <trans-unit id="Xbh9p_." resname="Registration number">
+        <source>Registration number</source>
+        <target>Matricule</target>
+      </trans-unit>
+      <trans-unit id="8i9YPFh" resname="Professional assistant connected securely to school data. Ask naturally and get precise answers, tables or export files.">
+        <source>Professional assistant connected securely to school data. Ask naturally and get precise answers, tables or export files.</source>
+        <target>Assistant professionnel connecté de manière sécurisée aux données scolaires. Posez vos questions naturellement et obtenez des réponses précises, des tableaux ou des fichiers d'exportation.</target>
+      </trans-unit>
+      <trans-unit id="VtwT8jO" resname="Full AI active">
+        <source>Full AI active</source>
+        <target>IA complète activée</target>
+      </trans-unit>
+      <trans-unit id="6NUFwbH" resname="Local mode">
+        <source>Local mode</source>
+        <target>Mode local</target>
+      </trans-unit>
+      <trans-unit id="U7I0mRL" resname="All database results are automatically limited to the school year selected at login.">
+        <source>All database results are automatically limited to the school year selected at login.</source>
+        <target>Tous les résultats de la base de données sont automatiquement limités à l'année scolaire sélectionnée lors de la connexion.</target>
+      </trans-unit>
+      <trans-unit id="vZ0DffI" resname="The assistant can answer common questions in local mode. To understand any database question, configure OPENAI_API_KEY in .env.local.">
+        <source>The assistant can answer common questions in local mode. To understand any database question, configure OPENAI_API_KEY in .env.local.</source>
+        <target>L'assistant peut répondre aux questions courantes en mode local. Pour comprendre toute question relative à la base de données, configurez OPENAI_API_KEY dans .env.local.</target>
+      </trans-unit>
+      <trans-unit id="ezCR1Zr" resname="What would you like to know?">
+        <source>What would you like to know?</source>
+        <target>Que souhaitez-vous savoir ?</target>
+      </trans-unit>
+      <trans-unit id="eCpaBqJ" resname="Ask about students, classes, teachers, grades, averages, absences, payments, expenses or any other information recorded in FreeSchool.">
+        <source>Ask about students, classes, teachers, grades, averages, absences, payments, expenses or any other information recorded in FreeSchool.</source>
+        <target>Posez une question sur les élèves, les classes, les enseignants, les notes, les moyennes, les absences, les paiements, les dépenses ou toute autre information enregistrée dans FreeSchool.</target>
+      </trans-unit>
+      <trans-unit id="YD9L1xO" resname="Students per class">
+        <source>Students per class</source>
+        <target>Élèves par classe</target>
+      </trans-unit>
+      <trans-unit id="iZ5vJCL" resname="Top 10 averages">
+        <source>Top 10 averages</source>
+        <target>Top 10 des moyennes</target>
+      </trans-unit>
+      <trans-unit id="GzkE9CQ" resname="Total payments">
+        <source>Total payments</source>
+        <target>Total des paiements</target>
+      </trans-unit>
+      <trans-unit id="eJiyS6O" resname="Absences by class">
+        <source>Absences by class</source>
+        <target>Absences par classe</target>
+      </trans-unit>
+      <trans-unit id="vgNT443" resname="Question for FreeSchool AI">
+        <source>Question for FreeSchool AI</source>
+        <target>Question pour l'IA FreeSchool</target>
+      </trans-unit>
+      <trans-unit id="kGE4O44" resname="Response">
+        <source>Response</source>
+        <target>Réponse</target>
+      </trans-unit>
+      <trans-unit id="faW2d4k" resname="Read-only access · Selected school year only">
+        <source>Read-only access · Selected school year only</source>
+        <target>Accès en lecture seule · Année scolaire sélectionnée uniquement</target>
+      </trans-unit>
+      <trans-unit id="LektM4B" resname="FreeSchool AI is analyzing your question…">
+        <source>FreeSchool AI is analyzing your question…</source>
+        <target>L'IA FreeSchool analyse votre question…</target>
+      </trans-unit>
+      <trans-unit id="eKQcT1V" resname="Unable to contact the assistant. Check your connection and try again.">
+        <source>Unable to contact the assistant. Check your connection and try again.</source>
+        <target>Impossible de contacter l'assistant. Vérifiez votre connexion et réessayez.</target>
+      </trans-unit>
+      <trans-unit id="1Wf6Km2" resname="The analysis took too long. Please try again.">
+        <source>The analysis took too long. Please try again.</source>
+        <target>L'analyse a pris trop de temps. Veuillez réessayer.</target>
+      </trans-unit>
+      <trans-unit id="QtxJwI9" resname="Please enter a question.">
+        <source>Please enter a question.</source>
+        <target>Veuillez saisir une question.</target>
+      </trans-unit>
+      <trans-unit id="bgLdAiG" resname="Download the generated file">
+        <source>Download the generated file</source>
+        <target>Télécharger le fichier généré</target>
+      </trans-unit>
+      <trans-unit id="UEJ8iKI" resname="Unable to answer">
+        <source>Unable to answer</source>
+        <target>Impossible de répondre</target>
+      </trans-unit>
+      <trans-unit id="C2mOBXY" resname="OBC sport sheets">
+        <source>OBC sport sheets</source>
+        <target>Fiches de sport OBC</target>
+      </trans-unit>
+      <trans-unit id="jjwHlsO" resname="Sport sheets - level 4">
+        <source>Sport sheets - level 4</source>
+        <target>Fiches de sport - Niveau 4</target>
+      </trans-unit>
+      <trans-unit id="ScJmuqq" resname="Search">
+        <source>Search</source>
+        <target>Rechercher</target>
+      </trans-unit>
+      <trans-unit id="1gQxCni" resname="Showing">
+        <source>Showing</source>
+        <target>Affichage</target>
+      </trans-unit>
+      <trans-unit id="mMdtjQP" resname="No student">
+        <source>No student</source>
+        <target>Aucun élève</target>
+      </trans-unit>
+      <trans-unit id="I86cB2g" resname="No matching student">
+        <source>No matching student</source>
+        <target>Aucun élève correspondant</target>
+      </trans-unit>
+      <trans-unit id="pXsIpIC" resname="Previous">
+        <source>Previous</source>
+        <target>Précédent</target>
+      </trans-unit>
+      <trans-unit id="H.V6Kdf" resname="Next">
+        <source>Next</source>
+        <target>Suivant</target>
+      </trans-unit>
+      <trans-unit id="xByKSrH" resname="Official sport sheets">
+        <source>Official sport sheets</source>
+        <target>Fiches de sport officielles</target>
+      </trans-unit>
+      <trans-unit id="Gn8pzhz" resname="OBC practical sport sheets">
+        <source>OBC practical sport sheets</source>
+        <target>Fiches pratiques de sport OBC</target>
+      </trans-unit>
+      <trans-unit id="Ynqo.aS" resname="Sport sheets - level 4 only">
+        <source>Sport sheets - level 4 only</source>
+        <target>Fiches de sport - Niveau 4 uniquement</target>
+      </trans-unit>
+      <trans-unit id="UMWSyst" resname="Select a level 6 or 7 classroom, choose the candidates and generate the official OBC practical PE sheets.">
+        <source>Select a level 6 or 7 classroom, choose the candidates and generate the official OBC practical PE sheets.</source>
+        <target>Sélectionnez une classe de niveau 6 ou 7, choisissez les candidats et générez les fiches pratiques officielles d'EPS de l'OBC.</target>
+      </trans-unit>
+      <trans-unit id="Ebhg3WG" resname="This workspace is limited to level 4 classrooms. Select a classroom, then choose the students whose sheets should be printed.">
+        <source>This workspace is limited to level 4 classrooms. Select a classroom, then choose the students whose sheets should be printed.</source>
+        <target>Cet espace est limité aux classes de niveau 4. Sélectionnez une classe, puis choisissez les élèves dont les fiches doivent être imprimées.</target>
+      </trans-unit>
+      <trans-unit id="aVm0FZV" resname="Session">
+        <source>Session</source>
+        <target>Session</target>
+      </trans-unit>
+      <trans-unit id="A2vI0E_" resname="Level 4 sheets">
+        <source>Level 4 sheets</source>
+        <target>Fiches du niveau 4</target>
+      </trans-unit>
+      <trans-unit id="CuSkq4." resname="OBC sheets - levels 6 and 7">
+        <source>OBC sheets - levels 6 and 7</source>
+        <target>Fiches OBC - Niveaux 6 et 7</target>
+      </trans-unit>
+      <trans-unit id="4dG1Y6R" resname="Level 6 or 7 classroom">
+        <source>Level 6 or 7 classroom</source>
+        <target>Classe de niveau 6 ou 7</target>
+      </trans-unit>
+      <trans-unit id="Y22_1WE" resname="Level 4 classroom">
+        <source>Level 4 classroom</source>
+        <target>Classe de niveau 4</target>
+      </trans-unit>
+      <trans-unit id="EgLukQv" resname="No classroom is registered for the requested levels in the connected school year.">
+        <source>No classroom is registered for the requested levels in the connected school year.</source>
+        <target>Aucune classe n'est enregistrée pour les niveaux demandés durant l'année scolaire sélectionnée.</target>
+      </trans-unit>
+      <trans-unit id="RgsvJSp" resname="Select the students to print or use the print all button.">
+        <source>Select the students to print or use the print all button.</source>
+        <target>Sélectionnez les élèves à imprimer ou utilisez le bouton « Tout imprimer ».</target>
+      </trans-unit>
+      <trans-unit id="CDI_CaD" resname="student(s)">
+        <source>student(s)</source>
+        <target>élève(s)</target>
+      </trans-unit>
+      <trans-unit id="18u7aIs" resname="selected">
+        <source>selected</source>
+        <target>sélectionné(s)</target>
+      </trans-unit>
+      <trans-unit id="3Q7KNLc" resname="Print selection">
+        <source>Print selection</source>
+        <target>Imprimer la sélection</target>
+      </trans-unit>
+      <trans-unit id="Qf0LhxF" resname="Print all">
+        <source>Print all</source>
+        <target>Tout imprimer</target>
+      </trans-unit>
+      <trans-unit id="yUswweg" resname="Select all students">
+        <source>Select all students</source>
+        <target>Sélectionner tous les élèves</target>
+      </trans-unit>
+      <trans-unit id="OEzsVC9" resname="Individual printing">
+        <source>Individual printing</source>
+        <target>Impression individuelle</target>
+      </trans-unit>
+      <trans-unit id="86XWmOT" resname="No student is registered in this classroom for the connected school year.">
+        <source>No student is registered in this classroom for the connected school year.</source>
+        <target>Aucun élève n'est enregistré dans cette classe pour l'année scolaire sélectionnée.</target>
+      </trans-unit>
+      <trans-unit id="ZQsJdTM" resname="The headmaster has disabled your permission to add or edit students.">
+        <source>The headmaster has disabled your permission to add or edit students.</source>
+        <target>Le proviseur a désactivé votre autorisation d'ajouter ou de modifier des élèves.</target>
+      </trans-unit>
+      <trans-unit id="CTI9326" resname="Statistics by Term">
+        <source>Statistics by Term</source>
+        <target>Statistiques par trimestre</target>
+      </trans-unit>
+      <trans-unit id="O9qSYTF" resname="Assignment date">
+        <source>Assignment date</source>
+        <target>Date d'affectation</target>
+      </trans-unit>
+      <trans-unit id="a.rxQnD" resname="Assignment note">
+        <source>Assignment note</source>
+        <target>Note d'affectation</target>
       </trans-unit>
     </body>
   </file>
